@@ -1,0 +1,71 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Ficha Participante</title>
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+    <link rel="stylesheet" href="/css/common.css"/>
+
+</head>
+<script th:inline="javascript">
+
+    $(document).ready(function () {
+        $("#selectorParticipantes").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".dropdown-menu li").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(value) > -1)
+            });
+        });
+
+        document.getElementById("botonSeleccionar").onclick = function () {
+            if($("#dropdown").hasClass("open")){
+                $("#dropdown").removeClass("open");
+            } else {
+                $("#dropdown").addClass("open");
+            }
+
+        }
+    });
+
+    $(document).keypress(function (e) {
+        if(!$("#dropdown").hasClass("open")){
+            $("#dropdown").addClass("open");
+        }
+        document.getElementById("selectorParticipantes").focus();
+    });
+
+
+</script>
+<body class="cubosbg">
+<div class="vertical-flex-wrapper">
+    <div class="login-content">
+        <form class="whitePanel" style="min-width: 500px">
+            <img src="/img/aes_logo.png" style="width: 250px"></img>
+            <h1>Campeonato Nacional Online 2020</h1>
+            <p>A continuación puedes buscar el nombre de un participante para ver sus resultados:</p>
+            <div th:if="${param.error}" class="alert alert-error">
+                Usuario y/o contraseña inválidos.
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success">
+                Has cerrado sesión.
+            </div>
+
+            <div class="container" style="width: min-content">
+                <div id="dropdown" class="dropdown">
+                    <button id="botonSeleccionar" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                        Seleccionar participante
+                        <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <input autocomplete="off" class="form-control" id="selectorParticipantes" type="text"
+                               placeholder="Busca..."/>
+                        <li th:each="participante : ${participantes}"><a th:href="@{|/participante/${participante}|}"
+                                                                         th:text="${participante}"></a></li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+    <footer th:replace="fragments/footer :: creditFooter"/>
+</div>
+
+
+</body>
+</html>

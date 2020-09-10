@@ -1,0 +1,77 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Mis tiempos</title>
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.js"></script>
+    <script type="text/javascript" src="/js/DatatableUtils.js"></script>
+
+</head>
+
+<script>
+    $(document).ready(function () {
+
+        var numberOfTables = 0;
+
+        do {
+            var tabla = document.getElementById('dataTable' + numberOfTables);
+            if (tabla) {initialize(tabla.id, tabla.getAttribute("data-numTiempos"));}
+            numberOfTables++;
+
+        } while (tabla)
+
+    });
+</script>
+<body class="cubosbg">
+    <div class="backContainer">
+        <a href="/" class="backContainer">
+            <img class="backButton" src="/img/backbutton.png"/>
+        </a>
+    </div>
+<div class="vertical-flex-wrapper">
+    <div class="whitePanel" style="margin-top: 15px;">
+        <h1><span th:text="${participante}">ATRIBUTO_USUARIO_NO_ENCONTRADO</span></h1>
+    </div>
+    <div th:each="categoria, iStat : ${resultado.getCategoriasParticipadas()}" class="whitePanel"
+         style="margin-top: 15px; background-color: rgba(255,255,255,0.96); z-index: 2">
+        <h1 th:text="${categoria.nombre}"></h1>
+        <table th:data-numTiempos="${categoria.numTiempos}" th:id="'dataTable'+ ${iStat.index}" class="table centerTds"
+               th:name="${categoria.nombre}">
+            <thead>
+            <tr>
+                <th>Jornada</th>
+                <th>Posición</th>
+                <th>Tiempo 1</th>
+                <th>Tiempo 2</th>
+                <th>Tiempo 3</th>
+                <th>Tiempo 4</th>
+                <th>Tiempo 5</th>
+                <th>Single</th>
+                <th>Media</th>
+                <th>Solución</th>
+                <th>Explicación</th>
+                <th>Puntos Jornada</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="jornada: ${categoria.getJornadasParticipadas()}">
+                <td th:text="'Jornada ' + ${jornada.numJornada}"></td>
+                <td style="font-weight: bold" th:text="${jornada.posicion}"></td>
+                <td style="border-left: solid 1px rgba(0,0,0,0.5)" th:text="${jornada.tiempo1}"></td>
+                <td th:text="${jornada.tiempo2}"></td>
+                <td th:text="${jornada.tiempo3}"></td>
+                <td th:text="${jornada.tiempo4}"></td>
+                <td th:text="${jornada.tiempo5}"></td>
+                <td style="font-weight: bold; border-left: solid 1px rgba(0,0,0,0.5)" th:text="${jornada.single}"></td>
+                <td style="font-weight: bold" th:text="${jornada.media}"></td>
+                <td th:text="${jornada.solucion}"></td>
+                <td th:text="${jornada.explicacion}"></td>
+                <td style="font-weight: bold" th:text="${jornada.puntos}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <footer th:replace="fragments/footer :: creditFooter"/>
+</div>
+</body>
+</html>

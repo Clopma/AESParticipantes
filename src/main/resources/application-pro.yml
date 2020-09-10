@@ -1,0 +1,24 @@
+spring:
+    datasource:
+        initialization-mode: always
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/aesparticipantes?serverTimezone=Europe/Madrid
+        username: rodrisan
+        password: rodripass
+    jpa:
+        hibernate:
+            ddl-auto: none
+    resources:
+        static-locations: classpath:/static/
+
+server:
+    ssl:
+        key-store: classpath:keystore/ccc.p12
+        key-store-password: th1s1smyksp4ss
+        key-store-type: pkcs12
+        key-alias: "*.carloslopezmari.com"
+        key-password: th1s1smyksp4ss
+    port: 8443 #80 forwards to 8080 and 8080 redirects to 433, which forwards to 8443
+
+aes:
+    enable-redirect: true
