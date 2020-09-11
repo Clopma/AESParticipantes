@@ -77,6 +77,9 @@ public class Tiempo implements Comparable<Tiempo> {
     @NotNull
     private double tiempo5;
 
+    @Transient
+    private double media;
+
     public static final String SOLUCION = "solucion";
     @Column(name = SOLUCION)
     private String solucion;
@@ -88,10 +91,9 @@ public class Tiempo implements Comparable<Tiempo> {
     @Override
     public int compareTo(Tiempo t){
 
-        if (categoria.getPosicion() < t.getCategoria().getPosicion()) return -1;
-        if (categoria.getPosicion() == t.getCategoria().getPosicion()) return 0;
+        if (categoria.getOrden() < t.getCategoria().getOrden()) return -1;
+        if (categoria.getOrden() == t.getCategoria().getOrden()) return 0;
         return 1;
-
 
     }
 

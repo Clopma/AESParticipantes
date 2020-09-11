@@ -3,6 +3,7 @@ package com.example.miwebbase.Controllers;
 import com.example.miwebbase.Entities.Categoria;
 import com.example.miwebbase.Models.Resultado;
 import com.example.miwebbase.Entities.Tiempo;
+import com.example.miwebbase.Utils.RubikUtils;
 import com.example.miwebbase.repositories.TiempoRepository;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,6 @@ import java.util.stream.Collectors;
 @Controller
 public class TiemposController {
 
-
-    int numberOfDNFs;
-
-
     @Autowired
     private TiempoRepository tiempoRepository;
 
@@ -36,7 +33,7 @@ public class TiemposController {
         model.addAttribute("participante", nombreParticipante);
         List<Tiempo> tiemposParticipante = tiempoRepository.getTiemposOfParticipante(nombreParticipante);
 
-        Map<Integer, List<Tiempo>> categoriasInformadas = tiemposParticipante.stream().collect(Collectors.groupingBy(t -> t.getCategoria().getPosicion()));
+        Map<Integer, List<Tiempo>> categoriasInformadas = tiemposParticipante.stream().collect(Collectors.groupingBy(t -> t.getCategoria().getOrden()));
 
         Resultado resultado = new Resultado();
         resultado.setCategoriasParticipadas(new ArrayList<>());
@@ -47,6 +44,7 @@ public class TiemposController {
             Categoria categoria = categoriaEntry.getValue().get(0).getCategoria();
             categoriaObj.setNombre(categoria.getNombre());
             categoriaObj.setNumTiempos(categoria.getNumTiempos());
+            categoriaObj.setPosicion(categoria.getPosicionDeParticipante(nombreParticipante, categoria, tiempoRepository));
 
             resultado.getCategoriasParticipadas().add(categoriaObj);
 
@@ -65,52 +63,31 @@ public class TiemposController {
                 jornadaObj.setSolucion(tiempo.getSolucion() == null ? "" : tiempo.getSolucion());
                 jornadaObj.setExplicacion(tiempo.getExplicacion() == null ? "" : tiempo.getExplicacion());
 
-                numberOfDNFs = 0;
-
                 List<Double> tiempos = new ArrayList<>();
+                tiempos.add(tiempo.getTiempo1());
+                tiempos.add(tiempo.getTiempo2());
+                tiempos.add(tiempo.getTiempo3());
+                tiempos.add(tiempo.getTiempo4());
+                tiempos.add(tiempo.getTiempo5());
 
-                double tiempo1, tiempo2, tiempo3, tiempo4, tiempo5;
-
-                tiempo1 = tiempo.getTiempo1();
-                tiempos.add(tiempo1);
-                jornadaObj.setTiempo1(tiempo1 == 0 ? setDNF() : formatTime(tiempo1));
+                jornadaObj.setTiempo1(tiempo.getTiempo1() == 0 ? RubikUtils.DNF : formatTime(tiempo.getTiempo1()));
 
                 if (categoria.getNumTiempos() > 1) {
-                    tiempo2 = tiempo.getTiempo2();
-                    tiempos.add(tiempo2);
-                    tiempo3 = tiempo.getTiempo3();
-                    tiempos.add(tiempo3);
 
-                    jornadaObj.setTiempo2(tiempo2 == 0 ? setDNF() : formatTime(tiempo2));
-                    jornadaObj.setTiempo3(tiempo3 == 0 ? setDNF() : formatTime(tiempo3));
+                    jornadaObj.setTiempo2(tiempo.getTiempo2() == 0 ? RubikUtils.DNF : formatTime(tiempo.getTiempo2()));
+                    jornadaObj.setTiempo3(tiempo.getTiempo3() == 0 ? RubikUtils.DNF : formatTime(tiempo.getTiempo3()));
                 }
+
                 if (categoria.getNumTiempos() > 3) {
-                    tiempo4 = tiempo.getTiempo4();
-                    tiempos.add(tiempo4);
-                    tiempo5 = tiempo.getTiempo5();
-                    tiempos.add(tiempo5);
 
-                    jornadaObj.setTiempo4(tiempo4 == 0 ? setDNF() : formatTime(tiempo4));
-                    jornadaObj.setTiempo5(tiempo5 == 0 ? setDNF() : formatTime(tiempo5));
+                    jornadaObj.setTiempo4(tiempo.getTiempo4() == 0 ? RubikUtils.DNF : formatTime(tiempo.getTiempo4()));
+                    jornadaObj.setTiempo5(tiempo.getTiempo5() == 0 ? RubikUtils.DNF : formatTime(tiempo.getTiempo5()));
                 }
 
-                double mejorTiempo = tiempos.stream().filter(i -> i > 0).mapToDouble(d -> d).min().orElse(0);
-                jornadaObj.setSingle(mejorTiempo == 0 ? "DNF" : formatTime(mejorTiempo));
 
-                Collections.sort(tiempos);
-
-                if (categoria.getNumTiempos() == 5) {
-
-                    if (numberOfDNFs == 1) {
-                        tiempos.remove(0);
-                        tiempos.remove(0);
-                    } else if (numberOfDNFs == 0) {
-                        tiempos.remove(0);
-                        tiempos.remove(4 - 1);
-                    }
-                }
-
-                jornadaObj.setMedia(tiempos.contains(0.0) ? "DNF" : formatTime(tiempos.stream().mapToDouble(d -> d).average().getAsDouble()));
+                double[] singleYMedia = RubikUtils.getTiemposCalculados(tiempos, categoria);
+                jornadaObj.setSingle(singleYMedia[0] == 0 ? RubikUtils.DNF : formatTime(singleYMedia[0]));
+                jornadaObj.setMedia(singleYMedia[1] == 0 ? RubikUtils.DNF : formatTime(singleYMedia[1]));
 
                 jornadaObj.setPuntos(tiempo.getPuntosTotales());
                 categoriaObj.getJornadasParticipadas().add(jornadaObj);
@@ -123,10 +100,6 @@ public class TiemposController {
         return "tiempo";
     }
 
-    private String setDNF() {
-        numberOfDNFs++;
-        return "DNF";
-    }
 
     private String formatTime(double time) {
 

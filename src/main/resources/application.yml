@@ -5,6 +5,7 @@ spring:
     url: jdbc:mysql://localhost:3306/aesparticipantes?serverTimezone=Europe/Madrid
     username: root
     password: karateka123
+#    separator: ^;
   jpa:
     hibernate:
       ddl-auto: create-drop

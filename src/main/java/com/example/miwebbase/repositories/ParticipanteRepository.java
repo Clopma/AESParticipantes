@@ -13,4 +13,5 @@ public interface ParticipanteRepository extends CrudRepository<Participante, Lon
     @Query("select nombre from Participante")
     public List<String> getAllNames();
 
+
 }

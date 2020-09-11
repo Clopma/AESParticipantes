@@ -1,4 +1,5 @@
-Insert into categorias (nombre, posicion, num_Tiempos) values
+
+INSERT INTO categorias (nombre, orden, num_Tiempos) values
 ('3x3x3', 1, 5),
 ('2x2x2', 2, 5),
 ('4x4x4', 3, 5),
@@ -14,130 +15,159 @@ Insert into categorias (nombre, posicion, num_Tiempos) values
 ('Megaminx', 13, 5);
 
 
-INSERT INTO participantes (nombre) VALUES
-('Adrián Martínez Macías'),
-('Adrian Sanchez Montoro'),
-('Agustín Wals'),
-('Alba Camacho Valenciano'),
-('Alberto Arias Guerrero'),
-('Alberto Romero'),
-('Aldara Prado Martínez'),
-('Alejandro González Abejón'),
-('Alejandro Martín López'),
-('Alejandro Soriano Compta'),
-('Alejandro Suárez'),
-('Alex Pérez Cano'),
-('Álvaro Aguilar Salobreña'),
-('Ana Torres Martinez'),
-('Ander Sevilla Hernández (Pi)'),
-('Andrés Rodríguez Galán'),
-('Ángel Pérez Pérez'),
-('Antoni Guiscafrè Rosselló'),
-('Antonio López'),
-('Arnau Tous Mateu'),
-('Artur Miralles Hernàndez'),
-('Ayyob assaidi'),
-('Beñat Asensio Ayarza'),
-('Berta García Parra'),
-('Biel Salmons Gonzalez'),
-('Carlos López Marí'),
-('Carmen Centelles'),
-('Christian Ocaña Ávila'),
-('Cristian Fernández Díaz'),
-('Dani Cófreces Jaureguizar'),
-('Daniel Gracia Ortiz'),
-('Daniel Rodríguez Espinosa'),
-('Darío Hammad Vayá'),
-('David Bautista García'),
-('David Rodrigo Agudo'),
-('David Sánchez Hommen'),
-('Diego Alejandro Gil González'),
-('Eder Olivencia González'),
-('Eduardo Calvo Cianchetti'),
-('Ekaitz Rey González'),
-('Eki González García'),
-('Elies Qin Lloret Garcia'),
-('Erik Folch Castello'),
-('Erik Subirats Cruz'),
-('Fernando Astasio Ávila'),
-('Fernando Cascares'),
-('Fernando Curto Anoll'),
-('Fernando Sáez Lázaro'),
-('Héctor Álvarez Bartolomé'),
-('Héctor Haro Guerrero'),
-('Hugo Azcona Merino'),
-('Ibai Tobar Argaiz'),
-('Iker Utrillas Callarisa'),
-('Iñigo Mallo Lizaso'),
-('Iván Brigidano Pérez'),
-('Izan Cantero Herrera'),
-('Jaime Botello García'),
-('Javier López Fernández'),
-('Javier Salvatierra Molina'),
-('Javier Tovar Castro'),
-('Jefferson Andrés Durango Argaez'),
-('Jesús Lindo García'),
-('Jhon sebastian mejia'),
-('Jorge Arto García'),
-('Jorge Marín Segovia'),
-('Jorge Martín Espinosa'),
-('Jose Antonio Navarro Sánchez'),
-('Jose Luis Molina López'),
-('José Miguel Beguiristain'),
-('Juan Antonio Fernández Martínez'),
-('Juan Pablo Rodríguez'),
-('Julen Simón Iriarte'),
-('Julio Perugorria Lorente'),
-('Laura Freitas Martín'),
-('Laura Tarrés Gimeno'),
-('Leon Jakub Wyrobek'),
-('Lorenzo Escobar Kraskouskaya'),
-('Luis Flores'),
-('Maider Arce López De Ipiña'),
-('Manuel Ortega'),
-('Manuel Prieto de Antón'),
-('Mar Mañanes Picazo'),
-('Marc Colldeforns Armero'),
-('Marc Garcia Diaz'),
-('Marcos Castelló Pastor'),
-('Marcos Plaza Nocito'),
-('Mari Gracia Abella'),
-('María del Mar Gallego Vicente'),
-('Mauro Andrés García'),
-('Mauro Moisés Ortega López'),
-('Miguel Alonso Gil'),
-('Miguel Ángel Galdeano Medina'),
-('Miguel Ángel González-Herrero García'),
-('Miguel Martín Rodríguez'),
-('Miguel Núñez Fernández'),
-('Naiara Conesa Pérez-Calderón'),
-('Nicolas Cano Bolado'),
-('Nicolás Martínez-Losa Narvarte'),
-('Nicolás Ruiz'),
-('Noé Rico Castro'),
-('Nuria Perez Casas'),
-('Oscar Sánchez Najarro'),
-('Pablo Fernández Castillo'),
-('Pedro Sanz Rodríguez'),
-('Pere Garcia Miguel'),
-('Pol Juny Sánchez'),
-('Quirze Ricart Besalu'),
-('Rafael Alférez Robisco'),
-('Rafael Rodriguez Santana'),
-('Raquel Mena Marcos'),
-('Raúl Cuevas Castillo'),
-('Raúl Martínez Redondo'),
-('Raúl Morales Hidalgo'),
-('Richar González Ortiz'),
-('Rosalía Martinez'),
-('Rubén López de Juan'),
-('Rubén Moreno Martínez'),
-('Rubén Pérez Pérez'),
-('Saleth Santiago Solano Salamanca'),
-('Santiago Borrego Verde'),
-('Santiago Osorio Cristóbal'),
-('Sergio Torrijos Santano'),
-('Vittorio Maria Perucatti');
+INSERT INTO participantes(Nombre) VALUES
+ ('Adrián Martínez Macías')
+,('Adrian Sanchez Montoro')
+,('Agustín Wals')
+,('Alba Camacho Valenciano')
+,('Alberto Arias Guerrero')
+,('Alberto Masó Molina')
+,('Alberto Romero')
+,('Aldara Prado Martínez')
+,('Alejandro González Abejón')
+,('Alejandro Martín López')
+,('Alejandro Nicolay')
+,('Alejandro Soriano Compta')
+,('Alejandro Suárez')
+,('Alex Pérez Cano')
+,('Alex Pineño Sanchez')
+,('Alexander Olleta del Molino')
+,('Álvaro Aguilar Salobreña')
+,('Ana Torres Martinez')
+,('Anas Meziani')
+,('Ander Sevilla Hernández (Pi)')
+,('Andrés Rodríguez Galán')
+,('Ángel Pérez Pérez')
+,('Antoni Guiscafrè Rosselló')
+,('Antonio López')
+,('Arnau Tous Mateu')
+,('Arnold Pozo Rivera')
+,('Artur Miralles Hernàndez')
+,('Ayyob assaidi')
+,('Beñat Asensio Ayarza')
+,('Berta García Parra')
+,('Biel Salmons Gonzalez')
+,('Carlos Gordillo Rizo')
+,('Carlos López Marí')
+,('Carlos Molina Alcolea')
+,('Carlos Tapp')
+,('Carmen Centelles')
+,('César Pérez García')
+,('Christian Ocaña Ávila')
+,('Cristian Fernández Díaz')
+,('Dani Cófreces Jaureguizar')
+,('Daniel Caillaux')
+,('Daniel Gracia Ortiz')
+,('Daniel Rodríguez Espinosa')
+,('Darío Hammad Vayá')
+,('David Bautista García')
+,('David Rodrigo Agudo')
+,('David Sánchez Hommen')
+,('Diego Alejandro Gil González')
+,('Eder Olivencia González')
+,('Eduardo Calvo Cianchetti')
+,('Ekaitz Rey González')
+,('Eki González García')
+,('Elies Qin Lloret Garcia')
+,('Erik Folch Castello')
+,('Erik Subirats Cruz')
+,('Fabian Andrey Montenegro Barrero')
+,('Fabio Alejandro Garcia Porta')
+,('Fernando Astasio Ávila')
+,('Fernando Cascares')
+,('Fernando Curto Anoll')
+,('Fernando Sáez Lázaro')
+,('Garai Medrano Kareaga')
+,('Héctor Álvarez Bartolomé')
+,('Héctor Haro Guerrero')
+,('Héctor Stiven Ortiz Rey')
+,('Hugo Azcona Merino')
+,('Ibai Tobar Argaiz')
+,('Iker Utrillas Callarisa')
+,('Iñigo Mallo Lizaso')
+,('Irene Vélez Moreno')
+,('Iván Brigidano Pérez')
+,('Izan Cantero Herrera')
+,('Jaime Botello García')
+,('Javier López Fernández')
+,('Javier Lozano Muñoz')
+,('Javier Salvatierra Molina')
+,('Javier Tovar Castro')
+,('Jefferson Andrés Durango Argaez')
+,('Jesús Lindo García')
+,('Jhoan Carlos Andrade Prado')
+,('Jhon sebastian mejia')
+,('Jorge Arto García')
+,('Jorge Marín Segovia')
+,('Jorge Martín Espinosa')
+,('Jose Antonio Navarro Sánchez')
+,('Jose Guirado Fernández')
+,('Jose Luis Molina López')
+,('José Miguel Beguiristain')
+,('Joseph Bejarano Ramos')
+,('Juan Antonio Fernández Martínez')
+,('Juan David Carmona Vásquez')
+,('Juan Pablo Rodríguez')
+,('Julen Simón Iriarte')
+,('Julio Perugorria Lorente')
+,('Laura Freitas Martín')
+,('Laura Tarrés Gimeno')
+,('Leon Jakub Wyrobek')
+,('Lorenzo Escobar Kraskouskaya')
+,('Lucía Pascual Muñoz')
+,('Luis Flores')
+,('Maider Arce López De Ipiña')
+,('Manuel García Tendero')
+,('Manuel Ortega')
+,('Manuel Prieto de Antón')
+,('Mar Mañanes Picazo')
+,('Marc Colldeforns Armero')
+,('Marc Garcia Diaz')
+,('Marcos Castelló Pastor')
+,('Marcos Plaza Nocito')
+,('Mari Gracia Abella')
+,('María del Mar Gallego Vicente')
+,('Mauro Andrés García')
+,('Mauro Moisés Ortega López')
+,('Miguel Alonso Gil')
+,('Miguel Ángel Galdeano Medina')
+,('Miguel Ángel González-Herrero García')
+,('Miguel Martín Rodríguez')
+,('Miguel Núñez Fernández')
+,('Naiara Conesa Pérez-Calderón')
+,('Nicolas Cano Bolado')
+,('Nicolás Martínez-Losa Narvarte')
+,('Nicolás Ruiz')
+,('Noé Rico Castro')
+,('Nuria Perez Casas')
+,('Oscar Sánchez Najarro')
+,('Óscar Serrano Sobrino')
+,('Pablo Fernández Castillo')
+,('Pablo Manzano Martín')
+,('Pedro Sanz Rodríguez')
+,('Pere Garcia Miguel')
+,('Pol Juny Sánchez')
+,('Quirze Ricart Besalu')
+,('Rafael Alférez Robisco')
+,('Rafael Rodriguez Santana')
+,('Ramsés Amaya Vanegas')
+,('Raquel Mena Marcos')
+,('Raúl Cuevas Castillo')
+,('Raúl Martínez Redondo')
+,('Raúl Morales Hidalgo')
+,('Richar González Ortiz')
+,('Rosalía Martinez')
+,('Rubén López de Juan')
+,('Rubén Moreno Martínez')
+,('Rubén Pérez Pérez')
+,('Saleth Santiago Solano Salamanca')
+,('Santiago Borrego Verde')
+,('Santiago Osorio Cristóbal')
+,('Santino Pino')
+,('Sebastián Pulgarín Manrique')
+,('Sergio Torrijos Santano')
+,('Vittorio Maria Perucatti');
+
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"2x2x2",	1,	"Mauro Moisés Ortega López",	2.09,	1.42,	1.47,	1.58,	1.93,	100.00,	25),

@@ -18,6 +18,7 @@ public class Resultado {
         String nombre;
         int numTiempos;
         List<Jornada> jornadasParticipadas;
+        int posicion;
 
         @Setter
         @Getter

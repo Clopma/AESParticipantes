@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface CategoriaRepository extends CrudRepository<Categoria, Long> {
-    @Query("select nombre from Categoria ")
+    @Query("select nombre from Categoria")
     public List<String> getAllNames();
 }
