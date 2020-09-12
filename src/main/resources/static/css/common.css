@@ -106,7 +106,6 @@ a.backContainer{
     transform: rotate(15deg);
     display: inline;
     font: 40px Helvetica, Sans-Serif;
-    letter-spacing: -3px;
     /*-webkit-text-stroke: 1px #000000;*/
     color: rgba(0, 0, 0, 0.76);
 }

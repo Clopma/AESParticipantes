@@ -10,10 +10,12 @@ public class RubikUtils {
 
     public static String DNF = "DNF";
 
+    //devuelve un double[]{single, media}
     public static double[] getTiemposCalculados(List<Double> tiempos, Categoria categoria) {
 
         tiempos = tiempos.stream().filter(t -> t > 0).collect(Collectors.toList());
 
+        //TODO: ese filter no hace falta, creo
         double mejorTiempo = tiempos.stream().filter(i -> i > 0).mapToDouble(d -> d).min().orElse(0);
 
         Collections.sort(tiempos);
@@ -22,14 +24,13 @@ public class RubikUtils {
 
             if (tiempos.size() == 4) {
                 tiempos.remove(0);
-                tiempos.remove(0);
             } else if (tiempos.size() == 5) {
                 tiempos.remove(0);
                 tiempos.remove(4 - 1);
             }
         }
 
-        // tiempos.size() siempre = 3
+
         return new double[] {mejorTiempo, tiempos.size() < 3 ? 0 : tiempos.stream().mapToDouble(d -> d).average().getAsDouble()};
     }
 
