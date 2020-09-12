@@ -22,7 +22,7 @@ table.centerTds td{
 footer.credit {
     width: 100%;
     text-align: center;
-    background-color: rgba(240, 248, 255, 0.5);
+    background-color: rgba(240, 248, 255, 0.75);
 }
 
 .vertical-flex-wrapper {
@@ -44,8 +44,6 @@ footer.credit {
     border-radius: 0;
     background: #f1f1f1;
 }
-
-
 
 
 div.backContainer{

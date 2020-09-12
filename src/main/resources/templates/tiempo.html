@@ -33,7 +33,7 @@
         <h1><span th:text="${participante}">ATRIBUTO_USUARIO_NO_ENCONTRADO</span></h1>
     </div>
     <div th:each="categoria, iStat : ${resultado.getCategoriasParticipadas()}" class="whitePanel"
-         style="margin-top: 15px; margin-left: 250px; margin-right: 250px; z-index: 2; position: relative;">
+         style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; position: relative;">
         <h1 class="puntuacion whitePanel" th:text="${categoria.posicion} + 'ª POSICIÓN'"></h1>
         <h1 th:text="${categoria.nombre}"></h1>
         <table th:data-numTiempos="${categoria.numTiempos}" th:id="'dataTable'+ ${iStat.index}" class="table centerTds"
