@@ -3,6 +3,7 @@
     <title>Ficha Participante</title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <link rel="stylesheet" href="/css/common.css"/>
+    <script type="text/javascript" src="js/TiempoUtils.js"></script>
 
 </head>
 <script th:inline="javascript">
@@ -26,6 +27,10 @@
     });
 
     $(document).keypress(function (e) {
+        if(e.which == 13) {
+            Array.from(document.getElementById("listaParticipantes").querySelectorAll("li")).filter(li => li.style.display != "none")[0].firstChild.click();
+        }
+
         if(!$("#dropdown").hasClass("open")){
             $("#dropdown").addClass("open");
         }
@@ -33,11 +38,12 @@
     });
 
 
+
 </script>
 <body class="cubosbg">
 <div class="vertical-flex-wrapper">
     <div class="login-content">
-        <form class="whitePanel" style="min-width: 500px">
+        <div class="whitePanel" style="min-width: 500px">
             <img src="/img/aes_logo.png" style="width: 250px"></img>
             <h1>Campeonato Nacional Online 2020</h1>
             <p>A continuación puedes buscar el nombre de un participante para ver sus resultados:</p>
@@ -53,15 +59,15 @@
                     <button id="botonSeleccionar" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                         Seleccionar participante
                         <span class="caret"></span></button>
-                    <ul class="dropdown-menu">
+                    <ul id="listaParticipantes" class="dropdown-menu">
                         <input autocomplete="off" class="form-control" id="selectorParticipantes" type="text"
                                placeholder="Busca..."/>
-                        <li th:each="participante : ${participantes}"><a th:href="@{|/participante/${participante}|}"
+                        <li id="participante" th:each="participante : ${participantes}"><a th:href="@{|/participante/${participante}|}"
                                                                          th:text="${participante}"></a></li>
                     </ul>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
     <footer th:replace="fragments/footer :: creditFooter"/>
 </div>

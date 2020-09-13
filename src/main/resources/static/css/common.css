@@ -1,11 +1,12 @@
 .cubosbg {
     background-image: url("../img/rubikColours.png");
-    background-size:     cover;
+    background-size: cover;
 }
 
-table.centerTds td{
+table.centerTds td {
     text-align: center;
 }
+
 .login-content {
     height: 100%;
     display: flex;
@@ -13,18 +14,17 @@ table.centerTds td{
     text-align: center;
 }
 
-.whitePanel{
+.whitePanel {
     background-color: rgba(255, 255, 255, 0.65);
     padding: 20px;
     margin: 5px;
-    margin-left: 250px;
-    margin-right: 250px;
     border-radius: 20px;
 }
+
 footer.credit {
     width: 100%;
     text-align: center;
-    background-color: rgba(240, 248, 255, 0.5);
+    background-color: rgba(240, 248, 255, 0.75);
 }
 
 .vertical-flex-wrapper {
@@ -34,7 +34,7 @@ footer.credit {
     height: 100%;
 }
 
-.flexCenter{
+.flexCenter {
     display: flex;
     justify-content: center;
 }
@@ -48,18 +48,16 @@ footer.credit {
 }
 
 
+div.backContainer {
 
-
-div.backContainer{
-
-    position:absolute;
+    position: absolute;
     top: -30px;
     transition: 0.3s;
     height: 300px;
     width: 300px;
 }
 
-a.backContainer{
+a.backContainer {
 
     z-index: 1;
     height: 100%;
@@ -69,17 +67,17 @@ a.backContainer{
 
 }
 
-.backButton{
+.backButton {
 
     transition: 0.3s;
     height: 65%;
     width: 65%;
     -webkit-filter: drop-shadow(7px 7px 7px #222);
-    filter:         drop-shadow(7px 7px 7px #222);
+    filter: drop-shadow(7px 7px 7px #222);
 
 }
 
-.backButton:hover{
+.backButton:hover {
 
     animation: bounce 0.3s;
     height: 80%;
@@ -99,3 +97,18 @@ a.backContainer{
     }
 
 }
+
+
+.puntuacion {
+
+    padding: 10px !important; /* white panel */
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    transform: rotate(15deg);
+    display: inline;
+    font: 40px Helvetica, Sans-Serif;
+    /*-webkit-text-stroke: 1px #000000;*/
+    color: rgba(0, 0, 0, 0.76);
+
+

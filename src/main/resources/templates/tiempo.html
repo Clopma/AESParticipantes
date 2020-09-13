@@ -15,7 +15,7 @@
 
         do {
             var tabla = document.getElementById('dataTable' + numberOfTables);
-            if (tabla) {initialize(tabla.id, tabla.getAttribute("data-numTiempos"));}
+            if (tabla) {initialize(tabla.id, tabla.getAttribute("data-numTiempos"), tabla.getAttribute("data-nombreCat"));}
             numberOfTables++;
 
         } while (tabla)
@@ -33,9 +33,12 @@
         <h1><span th:text="${participante}">ATRIBUTO_USUARIO_NO_ENCONTRADO</span></h1>
     </div>
     <div th:each="categoria, iStat : ${resultado.getCategoriasParticipadas()}" class="whitePanel"
-         style="margin-top: 15px; background-color: rgba(255,255,255,0.96); z-index: 2">
+         style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; position: relative;">
+
+        <h1 class="puntuacion whitePanel" th:text="${categoria.posicion} + 'ª POSICIÓN'" th:style="'font: '+(35 / ${categoria.posicion} + 25)+'px Helvetica, Sans-Serif'"></h1>
+
         <h1 th:text="${categoria.nombre}"></h1>
-        <table th:data-numTiempos="${categoria.numTiempos}" th:id="'dataTable'+ ${iStat.index}" class="table centerTds"
+        <table th:data-numTiempos="${categoria.numTiempos}" th:data-nombreCat="${categoria.nombre}" th:id="'dataTable'+ ${iStat.index}" class="table centerTds"
                th:name="${categoria.nombre}">
             <thead>
             <tr>
@@ -71,7 +74,5 @@
             </tbody>
         </table>
     </div>
-    <footer th:replace="fragments/footer :: creditFooter"/>
-</div>
 </body>
 </html>

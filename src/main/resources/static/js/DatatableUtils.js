@@ -1,4 +1,4 @@
-function initialize(id, numTiempos) {
+function initialize(id, numTiempos, categoria) {
 
     var t = $('#' + id).DataTable({
         "paging": false,
@@ -23,6 +23,9 @@ function initialize(id, numTiempos) {
     if (numTiempos < 5) {
         t.columns(5).visible(false);
         t.columns(6).visible(false);
+        if (categoria === 'BLD'){
+            t.columns(8).visible(false);
+        }
     }
     if (numTiempos < 3) {
         t.columns(3).visible(false);

@@ -18,6 +18,8 @@ public class Resultado {
         String nombre;
         int numTiempos;
         List<Jornada> jornadasParticipadas;
+        int posicion;
+        double tamano;
 
         @Setter
         @Getter
