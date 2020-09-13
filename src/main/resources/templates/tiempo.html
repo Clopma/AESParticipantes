@@ -35,7 +35,7 @@
     <div th:each="categoria, iStat : ${resultado.getCategoriasParticipadas()}" class="whitePanel"
          style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; position: relative;">
 
-        <h1 class="puntuacion whitePanel" th:text="${categoria.posicion} + 'ª POSICIÓN'" th:style="'font: '+ (5940/(${categoria.posicion}+197))+'px Helvetica, Sans-Serif'"></h1>
+        <h1 class="puntuacion whitePanel" th:text="${categoria.posicion} + 'ª POSICIÓN'" th:style="'font: '+(35 / ${categoria.posicion} + 25)+'px Helvetica, Sans-Serif'"></h1>
 
         <h1 th:text="${categoria.nombre}"></h1>
         <table th:data-numTiempos="${categoria.numTiempos}" th:data-nombreCat="${categoria.nombre}" th:id="'dataTable'+ ${iStat.index}" class="table centerTds"
@@ -74,7 +74,5 @@
             </tbody>
         </table>
     </div>
-    <footer th:replace="fragments/footer :: creditFooter"/>
-</div>
 </body>
 </html>

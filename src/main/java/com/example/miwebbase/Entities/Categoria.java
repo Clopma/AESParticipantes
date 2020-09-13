@@ -9,7 +9,6 @@ import lombok.Getter;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.security.KeyPair;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -73,7 +72,7 @@ public class Categoria {
             } else {
 
                 //Desempatar por media
-                List<Tiempo> tiemposEmpatados = tiempoRepository.getTiemposDeVariosParticipantes(categoria, puntuacionesPersonasEmpatadasPorPuntuacionTotal.keySet());
+                List<Tiempo> tiemposEmpatados = tiempoRepository.getTiemposDeVariosParticipantes(categoria, puntuacionesPersonasEmpatadasPorPuntuacionesIndividuales.keySet());
                 tiemposEmpatados.stream().forEach(t -> t.setMedia(RubikUtils.getTiemposCalculados(Arrays.asList(t.getTiempo1(), t.getTiempo2(), t.getTiempo3(), t.getTiempo4(), t.getTiempo5()), categoria)[1]));
 
                 Tiempo mejorMedia = tiemposEmpatados.stream().reduce((acc, val) -> (acc.getMedia() > 0) && (acc.getMedia() < val.getMedia()) ? acc : val).get();

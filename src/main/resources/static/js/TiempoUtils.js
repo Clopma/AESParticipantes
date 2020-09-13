@@ -1,6 +1,6 @@
 function formatTiempos(text, categoria, numTiempos, jornada) {
 
-    var re = /(\d):(\d{1,2}),(\d{1,2})/g;
+    var re = /(\d):(\d{1,2})(,(\d{1,2}))?/g;
     var match;
     var CONTROL_EXP = "#####!!!!!";
 
@@ -8,7 +8,7 @@ function formatTiempos(text, categoria, numTiempos, jornada) {
     do {
         match = re.exec(text);
         if (match) {
-            const matchInSeconds = (parseInt(match[1]) * 60 + parseInt(match[2])) + "," + match[3];
+            const matchInSeconds = (parseInt(match[1]) * 60 + parseInt(match[2])) + (match[3] ? "," + match[4]: "");
             text = text.replace(match[0], matchInSeconds)
             re.lastIndex = 0;
         }

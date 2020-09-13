@@ -19,6 +19,7 @@ public class Resultado {
         int numTiempos;
         List<Jornada> jornadasParticipadas;
         int posicion;
+        double tamano;
 
         @Setter
         @Getter

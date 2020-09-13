@@ -1,24 +1,21 @@
 package com.example.miwebbase.Controllers;
 
 import com.example.miwebbase.Entities.Categoria;
-import com.example.miwebbase.Models.Resultado;
 import com.example.miwebbase.Entities.Tiempo;
+import com.example.miwebbase.Models.Resultado;
 import com.example.miwebbase.Utils.RubikUtils;
 import com.example.miwebbase.repositories.TiempoRepository;
-import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -26,6 +23,7 @@ public class TiemposController {
 
     @Autowired
     private TiempoRepository tiempoRepository;
+
 
     @RequestMapping("/participante/{nombre}")
     public String inicio(Model model, @PathVariable("nombre") String nombreParticipante) throws Exception {
@@ -45,6 +43,7 @@ public class TiemposController {
             categoriaObj.setNombre(categoria.getNombre());
             categoriaObj.setNumTiempos(categoria.getNumTiempos());
             categoriaObj.setPosicion(categoria.getPosicionDeParticipante(nombreParticipante, categoria, tiempoRepository));
+            //categoriaObj.setTamano(3600/(Math.pow(categoriaObj.getPosicion(), 2) + 118)+10);
 
             resultado.getCategoriasParticipadas().add(categoriaObj);
 
