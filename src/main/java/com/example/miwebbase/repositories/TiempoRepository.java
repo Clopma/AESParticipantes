@@ -2,7 +2,8 @@ package com.example.miwebbase.repositories;
 
 import com.example.miwebbase.Entities.Categoria;
 import com.example.miwebbase.Entities.Tiempo;
-import com.example.miwebbase.Models.PuntuacionRanking;
+import com.example.miwebbase.Models.PuntuacionIndividual;
+import com.example.miwebbase.Models.PuntuacionTotal;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -16,19 +17,27 @@ public interface TiempoRepository extends CrudRepository<Tiempo, Long> {
     @Query("from Tiempo where participante.nombre = ?1")
     List<Tiempo> getTiemposOfParticipante(String nombreParticipante);
 
-    @Query("select new com.example.miwebbase.Models.PuntuacionRanking(" +
+    @Query("select new com.example.miwebbase.Models.PuntuacionTotal(" +
             "participante.nombre, SUM(puntosBonus + puntosTiempo)) from Tiempo " +
             "where categoria = ?1 " +
             "group by participante.nombre " +
             "order by SUM(puntosBonus + puntosTiempo) desc")
-    List<PuntuacionRanking> getParticipantesPuntosTotalesCategoria(Categoria categoria);
+    List<PuntuacionTotal> getParticipantesPuntosTotalesCategoria(Categoria categoria);
 
 
-    @Query("select (puntosTiempo + puntosBonus) as puntos_totales from Tiempo " +
+    @Query("select new com.example.miwebbase.Models.PuntuacionIndividual(" +
+            "participante.nombre, jornada, puntosBonus + puntosTiempo) from Tiempo " +
+            "where categoria = ?1 " +
+            "group by participante.nombre, jornada " +
+            "order by puntosBonus + puntosTiempo desc")
+    List<PuntuacionIndividual> getParticipantesPuntosIndividualesCategoria(Categoria categoria);
+
+
+    @Query("select new com.example.miwebbase.Models.PuntuacionIndividual(participante.nombre, jornada, puntosTiempo + puntosBonus) from Tiempo " +
             "where categoria = ?1 " +
             "AND participante.nombre = ?2 " +
-            "order by puntos_totales desc")
-    List<Integer> getPosicionesParticipanteEnCategoria(Categoria categoria, String nombreParticipante);
+            "order by puntosBonus + puntosTiempo desc")
+    List<PuntuacionIndividual> getPosicionesParticipanteEnCategoria(Categoria categoria, String nombreParticipante);
 
 
     @Query( "from Tiempo " +

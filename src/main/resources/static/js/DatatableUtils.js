@@ -1,6 +1,6 @@
-function initialize(id, numTiempos, categoria) {
+function initializeForParticipante(tabla, numTiempos, categoria) {
 
-    var t = $('#' + id).DataTable({
+    var t = tabla.DataTable({
         "paging": false,
         "ordering": true,
         "info": false,
@@ -35,5 +35,28 @@ function initialize(id, numTiempos, categoria) {
         t.columns(9).visible(true);
         t.columns(10).visible(true);
     }
+
+}
+
+function initializeForCategoria(tabla) {
+
+
+    tabla.DataTable({
+        "paging": false,
+        "ordering": true,
+        "info": false,
+        "searching": false,
+        "autoWidth": false,
+        columnDefs: [{
+            orderable: true,
+            className: 'select-checkbox select-checkbox-all',
+            targets: 0
+        }],
+        select: {
+            style: 'multi',
+            selector: 'td:first-child'
+        }
+    });
+
 
 }

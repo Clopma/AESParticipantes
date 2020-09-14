@@ -7,7 +7,7 @@ spring:
         password: rodripass
     jpa:
         hibernate:
-            ddl-auto: create-drop
+            ddl-auto: update
     resources:
         static-locations: classpath:/static/
 

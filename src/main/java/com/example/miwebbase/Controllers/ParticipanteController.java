@@ -3,7 +3,7 @@ package com.example.miwebbase.Controllers;
 import com.example.miwebbase.Entities.Categoria;
 import com.example.miwebbase.Entities.Tiempo;
 import com.example.miwebbase.Models.Resultado;
-import com.example.miwebbase.Utils.RubikUtils;
+import com.example.miwebbase.Utils.AESUtils;
 import com.example.miwebbase.repositories.TiempoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,14 +19,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
-public class TiemposController {
+public class ParticipanteController {
 
     @Autowired
     private TiempoRepository tiempoRepository;
 
 
-    @RequestMapping("/participante/{nombre}")
-    public String inicio(Model model, @PathVariable("nombre") String nombreParticipante) throws Exception {
+    @RequestMapping("/participante/{nombreParticipante}")
+    public String inicio(Model model, @PathVariable("nombreParticipante") String nombreParticipante) throws Exception {
 
         model.addAttribute("participante", nombreParticipante);
         List<Tiempo> tiemposParticipante = tiempoRepository.getTiemposOfParticipante(nombreParticipante);
@@ -42,8 +42,8 @@ public class TiemposController {
             Categoria categoria = categoriaEntry.getValue().get(0).getCategoria();
             categoriaObj.setNombre(categoria.getNombre());
             categoriaObj.setNumTiempos(categoria.getNumTiempos());
-            categoriaObj.setPosicion(categoria.getPosicionDeParticipante(nombreParticipante, categoria, tiempoRepository));
-            //categoriaObj.setTamano(3600/(Math.pow(categoriaObj.getPosicion(), 2) + 118)+10);
+            categoriaObj.setPosicion(AESUtils.getPosicionDeParticipante(nombreParticipante, categoria, tiempoRepository.getParticipantesPuntosTotalesCategoria(categoria), tiempoRepository));
+            categoriaObj.setTamano(50.0/Math.pow(categoriaObj.getPosicion(), 0.3) + 10);
 
             resultado.getCategoriasParticipadas().add(categoriaObj);
 
@@ -69,24 +69,24 @@ public class TiemposController {
                 tiempos.add(tiempo.getTiempo4());
                 tiempos.add(tiempo.getTiempo5());
 
-                jornadaObj.setTiempo1(tiempo.getTiempo1() == 0 ? RubikUtils.DNF : formatTime(tiempo.getTiempo1()));
+                jornadaObj.setTiempo1(tiempo.getTiempo1() == 0 ? AESUtils.DNF : formatTime(tiempo.getTiempo1()));
 
                 if (categoria.getNumTiempos() > 1) {
 
-                    jornadaObj.setTiempo2(tiempo.getTiempo2() == 0 ? RubikUtils.DNF : formatTime(tiempo.getTiempo2()));
-                    jornadaObj.setTiempo3(tiempo.getTiempo3() == 0 ? RubikUtils.DNF : formatTime(tiempo.getTiempo3()));
+                    jornadaObj.setTiempo2(tiempo.getTiempo2() == 0 ? AESUtils.DNF : formatTime(tiempo.getTiempo2()));
+                    jornadaObj.setTiempo3(tiempo.getTiempo3() == 0 ? AESUtils.DNF : formatTime(tiempo.getTiempo3()));
                 }
 
                 if (categoria.getNumTiempos() > 3) {
 
-                    jornadaObj.setTiempo4(tiempo.getTiempo4() == 0 ? RubikUtils.DNF : formatTime(tiempo.getTiempo4()));
-                    jornadaObj.setTiempo5(tiempo.getTiempo5() == 0 ? RubikUtils.DNF : formatTime(tiempo.getTiempo5()));
+                    jornadaObj.setTiempo4(tiempo.getTiempo4() == 0 ? AESUtils.DNF : formatTime(tiempo.getTiempo4()));
+                    jornadaObj.setTiempo5(tiempo.getTiempo5() == 0 ? AESUtils.DNF : formatTime(tiempo.getTiempo5()));
                 }
 
 
-                double[] singleYMedia = RubikUtils.getTiemposCalculados(tiempos, categoria);
-                jornadaObj.setSingle(singleYMedia[0] == 0 ? RubikUtils.DNF : formatTime(singleYMedia[0]));
-                jornadaObj.setMedia(singleYMedia[1] == 0 ? RubikUtils.DNF : formatTime(singleYMedia[1]));
+                double[] singleYMedia = AESUtils.getTiemposCalculados(tiempos, categoria);
+                jornadaObj.setSingle(singleYMedia[0] == 0 ? AESUtils.DNF : formatTime(singleYMedia[0]));
+                jornadaObj.setMedia(singleYMedia[1] == 0 ? AESUtils.DNF : formatTime(singleYMedia[1]));
 
                 jornadaObj.setPuntos(tiempo.getPuntosTotales());
                 categoriaObj.getJornadasParticipadas().add(jornadaObj);
@@ -96,7 +96,7 @@ public class TiemposController {
 
         model.addAttribute("resultado", resultado);
 
-        return "tiempo";
+        return "participante";
     }
 
 

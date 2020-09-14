@@ -1,0 +1,47 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Mis tiempos</title>
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+    <th:block th:include="fragments/head :: datatablesHead"></th:block>
+
+</head>
+
+<script>
+    $(document).ready(function () {
+            initializeForCategoria($("#dataTableRanking"));
+    });
+</script>
+
+<body class="cubosbg">
+<div class="backContainer">
+    <a href="/" class="backContainer">
+        <img class="backButton" src="/img/backbutton.png"/>
+    </a>
+</div>
+<div class="vertical-flex-wrapper">
+<div class="whitePanel" style="margin-top: 15px;">
+    <h1><span th:text="${nombreCategoria}">ATRIBUTO_CATEGORIA_NO_ENCONTRADO</span></h1>
+</div>
+<div class="whitePanel"
+     style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; background-color: rgba(255,255,255,0.91)">
+    <table id="dataTableRanking" class="table centerCols">
+        <thead>
+        <tr>
+            <th>Posición</th>
+            <th>Nombre</th>
+            <th th:each="jornada, iStat : ${columnasJornada}" th:text="'Jornada '+(${iStat.index}+1)"></th>
+            <th>Puntos Totales</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="posicion: ${posiciones}">
+            <td th:text="${posicion.posicion}"></td>
+            <td> <a th:text="${posicion.nombre}" th:href="'/participante/'+${posicion.nombre}+'#'+${nombreCategoria}"></a></td>
+            <td th:each="jornada, iStat : ${columnasJornada}" th:text="${posicion.getPuntuacionIndividual(iStat.index)}" th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''" ></td>
+            <td style="font-weight: bold" th:text="${posicion.puntuacion_total}" class="borderLeftColumn"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
