@@ -68,7 +68,10 @@ public class AESUtils {
 
             // Desempatar por jornadas individuales
             // Copia de la lista siempre para jugar con los arrays y no afectar a los de la original
-            List<PuntuacionTotal> puntuacionesEmpatadasPorPuntuacionesIndividuales = puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream().map(PuntuacionTotal::clone).filter(p -> p.getPuntuaciones_indivduales().get(0).getPuntuacion_jornada() == mejorPuntuacionJornada)
+            List<PuntuacionTotal> puntuacionesEmpatadasPorPuntuacionesIndividuales = puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream().map(PuntuacionTotal::clone)
+                    .filter(p -> p.getPuntuaciones_indivduales().stream()
+                            .reduce((acc, val) -> acc.getPuntuacion_jornada() > val.getPuntuacion_jornada() ? acc : val)
+                            .get().getPuntuacion_jornada() == mejorPuntuacionJornada)
                     .collect(Collectors.toList());
 
             if (puntuacionesEmpatadasPorPuntuacionesIndividuales.size() == 1) {

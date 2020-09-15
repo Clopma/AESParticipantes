@@ -29,7 +29,7 @@ public interface TiempoRepository extends CrudRepository<Tiempo, Long> {
             "participante.nombre, jornada, puntosBonus + puntosTiempo) from Tiempo " +
             "where categoria = ?1 " +
             "group by participante.nombre, jornada " +
-            "order by puntosBonus + puntosTiempo desc")
+            "order by jornada")
     List<PuntuacionIndividual> getParticipantesPuntosIndividualesCategoria(Categoria categoria);
 
 

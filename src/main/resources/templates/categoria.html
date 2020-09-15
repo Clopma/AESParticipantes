@@ -1,6 +1,6 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Mis tiempos</title>
+    <title>Ranking</title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
 
@@ -8,40 +8,47 @@
 
 <script>
     $(document).ready(function () {
-            initializeForCategoria($("#dataTableRanking"));
+        initializeForCategoria($("#dataTableRanking"));
+
+
+
+        var url = decodeURIComponent(window.location.toString());
+        var p = document.getElementById(url.substring(url.indexOf("#") + 1));
+        p.classList.add("participanteEncontrado");
+        if(p){$(window).scrollTop($(window).scrollTop()-500)}
     });
 </script>
 
 <body class="cubosbg">
-<div class="backContainer">
-    <a href="/" class="backContainer">
-        <img class="backButton" src="/img/backbutton.png"/>
-    </a>
-</div>
+<div th:replace="fragments/backButton :: backButton"/>
 <div class="vertical-flex-wrapper">
-<div class="whitePanel" style="margin-top: 15px;">
-    <h1><span th:text="${nombreCategoria}">ATRIBUTO_CATEGORIA_NO_ENCONTRADO</span></h1>
-</div>
-<div class="whitePanel"
-     style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; background-color: rgba(255,255,255,0.91)">
-    <table id="dataTableRanking" class="table centerCols">
-        <thead>
-        <tr>
-            <th>Posición</th>
-            <th>Nombre</th>
-            <th th:each="jornada, iStat : ${columnasJornada}" th:text="'Jornada '+(${iStat.index}+1)"></th>
-            <th>Puntos Totales</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="posicion: ${posiciones}">
-            <td th:text="${posicion.posicion}"></td>
-            <td> <a th:text="${posicion.nombre}" th:href="'/participante/'+${posicion.nombre}+'#'+${nombreCategoria}"></a></td>
-            <td th:each="jornada, iStat : ${columnasJornada}" th:text="${posicion.getPuntuacionIndividual(iStat.index)}" th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''" ></td>
-            <td style="font-weight: bold" th:text="${posicion.puntuacion_total}" class="borderLeftColumn"></td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="whitePanel" style="margin-top: 15px;">
+        <h1><span th:text="${nombreCategoria}">ATRIBUTO_CATEGORIA_NO_ENCONTRADO</span></h1>
+    </div>
+    <div class="whitePanel"
+         style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; background-color: rgba(255,255,255,0.91)">
+        <table id="dataTableRanking" class="table centerCols">
+            <thead>
+            <tr>
+                <th>Posición</th>
+                <th>Nombre</th>
+                <th th:each="jornada, iStat : ${columnasJornada}" th:text="'Jornada '+(${iStat.index}+1)"></th>
+                <th>Puntos Totales</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="posicion: ${posiciones}" th:id="${posicion.nombre}" style="position: relative">
+                <td th:text="${posicion.posicion}"></td>
+                <td><a th:text="${posicion.nombre}"
+                       th:href="'/participante/'+${posicion.nombre}+'#'+${nombreCategoria}"></a></td>
+                <td th:each="jornada, iStat : ${columnasJornada}"
+                    th:text="${posicion.getPuntuacionIndividual(iStat.index)}"
+                    th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''"></td>
+                <td style="font-weight: bold" th:text="${posicion.puntuacion_total}" class="borderLeftColumn"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>

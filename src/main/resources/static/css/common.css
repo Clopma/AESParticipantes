@@ -1,28 +1,42 @@
 .cubosbg {
     background-image: url("../img/rubikColours.png");
-    background-size: cover;
+    background-size: contain;
 }
 
 table.centerCols th, table.centerCols td {
     text-align: center;
 }
 
-.borderLeftColumn{
-    border-left: solid 1px rgba(0,0,0,0.5);
+.borderLeftColumn {
+    border-left: solid 1px rgba(0, 0, 0, 0.5);
 }
 
 .login-content {
     height: 100%;
+    width: 100%;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     text-align: center;
 }
 
 .whitePanel {
-    background-color: rgba(255, 255, 255, 0.65);
+    background-color: rgba(255, 255, 255, 0.75);
     padding: 20px;
     margin: 5px;
     border-radius: 20px;
+}
+
+.whitePanel.left {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    margin-left: 0;
+}
+
+.whitePanel.right {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    margin-right: 0;
 }
 
 footer.credit {
@@ -52,16 +66,14 @@ footer.credit {
 }
 
 
-div.backContainer {
+div.bouncyContainer {
 
-    position: absolute;
-    top: -30px;
     transition: 0.3s;
     height: 300px;
     width: 300px;
 }
 
-a.backContainer {
+a.bouncyContainer {
 
     z-index: 1;
     height: 100%;
@@ -71,8 +83,7 @@ a.backContainer {
 
 }
 
-.backButton {
-
+img.bouncyButton {
     transition: 0.3s;
     height: 65%;
     width: 65%;
@@ -81,12 +92,10 @@ a.backContainer {
 
 }
 
-.backButton:hover {
-
+.bouncyButton:hover {
     animation: bounce 0.3s;
     height: 80%;
     width: 80%;
-
 }
 
 @keyframes bounce {
@@ -102,6 +111,27 @@ a.backContainer {
 
 }
 
+.back {
+    position: absolute;
+    top: -30px;
+}
+
+img.bouncyButton.podio {
+    filter: drop-shadow(3px 3px 3px #222);
+    -webkit-filter: drop-shadow(3px 3px 3px #222);
+}
+
+div.forward {
+    width: 90px;
+    height: 90px;
+}
+
+    img.bouncyButton.forward {
+        filter: drop-shadow(3px 3px 3px #222);
+        -webkit-filter: drop-shadow(3px 3px 3px #222);
+    }
+
+
 
 .puntuacion {
 
@@ -115,5 +145,20 @@ a.backContainer {
     /*-webkit-text-stroke: 1px #000000;*/
     color: rgba(0, 0, 0, 0.76);
 
+}
 
+.categoriaEncontrada {
+
+    background-color: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 0 40px 15px rgba(255, 255, 255, 0.96);
+}
+
+.participanteEncontrado {
+    background-color: #e9f4ff !important;
+}
+
+.miSelect {
+    width: auto!important;
+    font-size: 20px!important;
+    height: auto!important;
 }

@@ -1,6 +1,6 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Mis tiempos</title>
+    <title th:text="${participante}"></title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
 
@@ -13,29 +13,42 @@
 
         do {
             var tabla = $('#dataTable' + numberOfTables);
-            if (tabla) {initializeForParticipante(tabla, tabla.attr("data-numTiempos"), tabla.attr("data-nombreCat"));}
+            if (tabla) {
+                initializeForParticipante(tabla, tabla.attr("data-numTiempos"), tabla.attr("data-nombreCat"));
+            }
             numberOfTables++;
         } while (tabla.length && numberOfTables < 100)
+
+
+        var url = decodeURIComponent(window.location.toString());
+        var cat = document.getElementById("panel"+url.substring(url.indexOf("#") + 1))
+        if(cat) {cat.classList.add("categoriaEncontrada");}
 
     });
 </script>
 <body class="cubosbg">
-    <div class="backContainer">
-        <a href="/" class="backContainer">
-            <img class="backButton" src="/img/backbutton.png"/>
-        </a>
-    </div>
+<div th:replace="fragments/backButton :: backButton"/>
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 15px;">
         <h1><span th:text="${participante}">ATRIBUTO_USUARIO_NO_ENCONTRADO</span></h1>
     </div>
-    <div th:each="categoria, iStat : ${resultado.getCategoriasParticipadas()}" class="whitePanel"
+    <div th:id="'panel'+${categoria.nombre}" th:each="categoria, iStat : ${resultado.getCategoriasParticipadas()}" class="whitePanel"
          style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; position: relative;"> <!-- Relative para la posición y el anchor-->
-        <a th:name="${categoria.nombre}" style="position: absolute; top: -100px"></a>
-        <h1 class="puntuacion whitePanel" th:text="${categoria.posicion} + 'ª POSICIÓN'" th:style="'font: '+${categoria.tamano}+'px Helvetica, Sans-Serif'"></h1>
+        <a th:id="${categoria.nombre}" style="position: absolute; top: -300px"></a>
+        <h1 class="puntuacion whitePanel" th:text="${categoria.posicion} + 'ª POSICIÓN'"
+            th:style="'font: '+${categoria.tamano}+'px Helvetica, Sans-Serif'"></h1>
 
-        <h1 th:text="${categoria.nombre}"></h1>
-        <table th:data-numTiempos="${categoria.numTiempos}" th:data-nombreCat="${categoria.nombre}" th:id="'dataTable'+ ${iStat.index}" class="table centerCols"
+        <div style="display: flex; align-items: center">
+            <h1 th:text="${categoria.nombre}"></h1>
+
+            <div class="bouncyContainer podio" style="width: 50px; height: 50px">
+                <a th:href="'/categoria/'+${categoria.nombre}+'#'+${nombreParticipante}" class="bouncyContainer">
+                    <img class="bouncyButton podio" src="/img/podiologo.png"/>
+                </a>
+            </div>
+        </div>
+        <table th:data-numTiempos="${categoria.numTiempos}" th:data-nombreCat="${categoria.nombre}"
+               th:id="'dataTable'+ ${iStat.index}" class="table centerCols"
                th:name="${categoria.nombre}">
             <thead>
             <tr>
@@ -71,5 +84,6 @@
             </tbody>
         </table>
     </div>
+</div>
 </body>
 </html>
