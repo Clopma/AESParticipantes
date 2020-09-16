@@ -11,6 +11,9 @@ public class PuntuacionIndividual implements Cloneable {
     String nombre;
     int jornada;
     int puntuacion_jornada;
+    boolean participado;
+
+
 
 
 

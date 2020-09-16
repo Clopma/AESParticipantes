@@ -26,18 +26,18 @@ public interface TiempoRepository extends CrudRepository<Tiempo, Long> {
 
 
     @Query("select new com.example.miwebbase.Models.PuntuacionIndividual(" +
-            "participante.nombre, jornada, puntosBonus + puntosTiempo) from Tiempo " +
+            "participante.nombre, jornada, puntosBonus + puntosTiempo, true) from Tiempo " +
             "where categoria = ?1 " +
-            "group by participante.nombre, jornada " +
             "order by jornada")
     List<PuntuacionIndividual> getParticipantesPuntosIndividualesCategoria(Categoria categoria);
 
 
-    @Query("select new com.example.miwebbase.Models.PuntuacionIndividual(participante.nombre, jornada, puntosTiempo + puntosBonus) from Tiempo " +
+    @Query("select new com.example.miwebbase.Models.PuntuacionIndividual(" +
+            "participante.nombre, jornada, puntosTiempo + puntosBonus, true) from Tiempo " +
             "where categoria = ?1 " +
             "AND participante.nombre = ?2 " +
-            "order by puntosBonus + puntosTiempo desc")
-    List<PuntuacionIndividual> getPosicionesParticipanteEnCategoria(Categoria categoria, String nombreParticipante);
+            "order by jornada")
+    List<PuntuacionIndividual> getParticipantePuntosIndividualesCategoria(Categoria categoria, String nombreParticipante);
 
 
     @Query( "from Tiempo " +

@@ -1,12 +1,12 @@
 .cubosbg {
     background-image: url("../img/rubikColours.png");
-    background-size: contain;
+    background-size: cover;
 }
 
 table.centerCols th, table.centerCols td {
     text-align: center;
+    vertical-align: middle !important;
 }
-
 .borderLeftColumn {
     border-left: solid 1px rgba(0, 0, 0, 0.5);
 }
@@ -126,11 +126,10 @@ div.forward {
     height: 90px;
 }
 
-    img.bouncyButton.forward {
-        filter: drop-shadow(3px 3px 3px #222);
-        -webkit-filter: drop-shadow(3px 3px 3px #222);
-    }
-
+img.bouncyButton.forward {
+    filter: drop-shadow(3px 3px 3px #222);
+    -webkit-filter: drop-shadow(3px 3px 3px #222);
+}
 
 
 .puntuacion {
@@ -153,12 +152,49 @@ div.forward {
     box-shadow: 0 0 40px 15px rgba(255, 255, 255, 0.96);
 }
 
-.participanteEncontrado {
+
+.miSelect {
+    width: auto !important;
+    font-size: 20px !important;
+    height: auto !important;
+}
+
+.playoffsText {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-weight: bold;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2em;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+tr.ultimoClasificado td, td.ultimoClasificado{
+
+    border-bottom: solid 1px rgba(0, 0, 0, 0.6);
+}
+
+.clasificado {
+    background-color: #f8fdff  !important;
+    font-weight: bold;
+}
+
+
+.clasificado td{
+    font-weight: bold;
+    border-top: 0 !important;
+}
+
+
+.clasificado.participanteEncontrado, .participanteEncontrado{
     background-color: #e9f4ff !important;
 }
 
-.miSelect {
-    width: auto!important;
-    font-size: 20px!important;
-    height: auto!important;
+h1, h2, h3 {
+    font-family: 'Rajdhani', sans-serif !important;
+}
+
+h2 {
+    font-size: 40px !important;
+
 }

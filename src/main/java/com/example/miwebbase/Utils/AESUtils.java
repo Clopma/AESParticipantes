@@ -55,7 +55,7 @@ public class AESUtils {
             return puntuaciones.indexOf(puntuaciones.stream().filter(p -> p.getNombre().equals(nombreParticipante)).findFirst().get()) + 1;
         }
 
-        puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.forEach(p -> p.setPuntuaciones_indivduales(tiempoRepository.getPosicionesParticipanteEnCategoria(categoria, p.getNombre())));
+        puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.forEach(p -> p.setPuntuacionesIndividuales(tiempoRepository.getParticipantePuntosIndividualesCategoria(categoria, p.getNombre())));
 
         List<PuntuacionTotal> puntuacionesEmpatadasActualmentePorPuntuacionTotal = puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.stream().map(PuntuacionTotal::clone).collect(Collectors.toList());
 
@@ -64,12 +64,13 @@ public class AESUtils {
         //Mientras el nombre que buscamos no esté ordenado
         while (!personasDesempatadasEnOrden.stream().anyMatch(p -> p.equals(nombreParticipante))) {
 
-            int mejorPuntuacionJornada = puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream().mapToInt(ps -> ps.getPuntuaciones_indivduales().get(0).getPuntuacion_jornada()).max().getAsInt();
+            int mejorPuntuacionJornada = puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream().mapToInt(ps -> ps.getPuntuacionesIndividuales().
+                    stream().reduce((acc, val) -> acc.getPuntuacion_jornada() > val.getPuntuacion_jornada() ? acc : val).get().getPuntuacion_jornada()).max().getAsInt();
 
             // Desempatar por jornadas individuales
             // Copia de la lista siempre para jugar con los arrays y no afectar a los de la original
             List<PuntuacionTotal> puntuacionesEmpatadasPorPuntuacionesIndividuales = puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream().map(PuntuacionTotal::clone)
-                    .filter(p -> p.getPuntuaciones_indivduales().stream()
+                    .filter(p -> p.getPuntuacionesIndividuales().stream()
                             .reduce((acc, val) -> acc.getPuntuacion_jornada() > val.getPuntuacion_jornada() ? acc : val)
                             .get().getPuntuacion_jornada() == mejorPuntuacionJornada)
                     .collect(Collectors.toList());

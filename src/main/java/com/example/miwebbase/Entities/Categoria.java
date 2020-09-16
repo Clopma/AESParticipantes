@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Table(name = Categoria.T_CATEGORIAS)
 @Entity
@@ -23,9 +24,13 @@ public class Categoria {
     @Id
     private String nombre;
 
+    @NotNull
     private int numTiempos;
 
+    @NotNull
     private int orden;
+
+    private Integer cortePlayOffs;
 
 
 }

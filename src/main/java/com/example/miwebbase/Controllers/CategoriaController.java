@@ -1,9 +1,9 @@
 package com.example.miwebbase.Controllers;
 
 import com.example.miwebbase.Entities.Categoria;
-import com.example.miwebbase.Models.PuntuacionIndividual;
 import com.example.miwebbase.Models.PuntuacionTotal;
 import com.example.miwebbase.Utils.AESUtils;
+import com.example.miwebbase.repositories.CategoriaRepository;
 import com.example.miwebbase.repositories.TiempoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,13 +26,18 @@ public class CategoriaController {
     @Autowired
     TiempoRepository tiempoRepository;
 
+    @Autowired
+    CategoriaRepository categoriaRepository;
+
+
 
     @RequestMapping("/categoria/{nombreCategoria}")
     public String inicio(Model model, @PathVariable("nombreCategoria") String nombreCategoria){
 
-        model.addAttribute("posiciones", getRankingCategoria(Categoria.builder().nombre(nombreCategoria).build()));
-        model.addAttribute("nombreCategoria", nombreCategoria);
-        model.addAttribute("columnasJornada", new int[AESUtils.JORNADAS_CAMPEONATO]);
+        Categoria categoria = categoriaRepository.findByNombre(nombreCategoria);
+        model.addAttribute("categoria", categoria);
+        model.addAttribute("posiciones", getRankingCategoria(categoria));
+        model.addAttribute("columnasJornadas", new int[AESUtils.JORNADAS_CAMPEONATO]);
 
         return "categoria";
     }
@@ -57,9 +62,9 @@ public class CategoriaController {
         AtomicInteger posicion = new AtomicInteger(1);
         puntuacionesTotales.forEach(p -> p.setPosicion(posicion.getAndIncrement()));
 
-        List<PuntuacionIndividual> puntuacionesIndividuales = tiempoRepository.getParticipantesPuntosIndividualesCategoria(categoria);
 
-        puntuacionesTotales.forEach(pt -> pt.setPuntuaciones_indivduales(puntuacionesIndividuales.stream().filter(pi -> pi.getNombre().equals(pt.getNombre())).collect(Collectors.toList())));
+        puntuacionesTotales.forEach(pt -> pt.setPuntuacionesIndividuales(tiempoRepository.getParticipantesPuntosIndividualesCategoria(categoria).stream()
+                .filter(pi -> pi.getNombre().equals(pt.getNombre())).collect(Collectors.toList())));
 
         return puntuacionesTotales;
 

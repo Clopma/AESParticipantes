@@ -11,7 +11,7 @@ import java.util.List;
 public interface ParticipanteRepository extends CrudRepository<Participante, Long> {
 
     @Query("select nombre from Participante")
-    public List<String> getAllNames();
+    List<String> getAllNames();
 
 
 }

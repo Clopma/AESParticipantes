@@ -9,10 +9,6 @@ public class MiWebBaseApplication {
 
     public static void main(String[] args) {
 
-
-      //
-
-
         SpringApplication.run(MiWebBaseApplication.class, args);
 
     }

@@ -1,18 +1,18 @@
 
-INSERT INTO categorias (nombre, orden, num_Tiempos) values
-('3x3x3', 1, 5),
-('2x2x2', 2, 5),
-('4x4x4', 3, 5),
-('5x5x5', 4, 5),
-('6x6x6', 5, 3),
-('7x7x7', 6, 3),
-('OH', 7, 5),
-('BLD', 8, 3),
-('FMC', 9, 1),
-('Skewb', 10, 5),
-('Pyraminx', 11, 5),
-('Square-1', 12, 5),
-('Megaminx', 13, 5);
+INSERT INTO categorias (nombre, orden, num_tiempos, corte_play_offs) values
+('3x3x3', 1, 5, 8),
+('2x2x2', 2, 5, 8),
+('4x4x4', 3, 5, 4),
+('5x5x5', 4, 5, 4),
+('6x6x6', 5, 3, null),
+('7x7x7', 6, 3, null),
+('OH', 7, 5, 8),
+('BLD', 8, 3, 4),
+('FMC', 9, 1, 8),
+('Skewb', 10, 5, 8),
+('Pyraminx', 11, 5, 8),
+('Square-1', 12, 5, 4),
+('Megaminx', 13, 5, null);
 
 
 INSERT INTO participantes(Nombre) VALUES

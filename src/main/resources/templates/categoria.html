@@ -3,19 +3,22 @@
     <title>Ranking</title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet" />
 
 </head>
 
 <script>
     $(document).ready(function () {
-        initializeForCategoria($("#dataTableRanking"));
-
-
 
         var url = decodeURIComponent(window.location.toString());
         var p = document.getElementById(url.substring(url.indexOf("#") + 1));
-        p.classList.add("participanteEncontrado");
-        if(p){$(window).scrollTop($(window).scrollTop()-500)}
+
+        if(p){
+            p.classList.add("participanteEncontrado");
+            $(window).scrollTop($(window).scrollTop()-500)
+        }
+
+
     });
 </script>
 
@@ -27,21 +30,25 @@
     </div>
     <div class="whitePanel"
          style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; background-color: rgba(255,255,255,0.91)">
-        <table id="dataTableRanking" class="table centerCols">
+        <table id="dataTableRanking" class="datatable table centerCols">
             <thead>
             <tr>
+                <th th:if="${categoria.cortePlayOffs > 0}"></th>
                 <th>Posición</th>
                 <th>Nombre</th>
-                <th th:each="jornada, iStat : ${columnasJornada}" th:text="'Jornada '+(${iStat.index}+1)"></th>
+                <th th:each="jornada, iStat : ${columnasJornadas}" th:text="'Jornada '+(${iStat.index}+1)"></th>
                 <th>Puntos Totales</th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="posicion: ${posiciones}" th:id="${posicion.nombre}" style="position: relative">
+            <tbody style="background-color: white;">
+            <tr th:each="posicion, iStat: ${posiciones}" th:id="${posicion.nombre}"  th:data-posicion="${posicion.posicion}" style="position: relative;"
+                th:classappend="${(iStat.index+1 == categoria.cortePlayOffs ? 'ultimoClasificado': '') + ' ' + (iStat.index + 1 <= categoria.cortePlayOffs ? 'clasificado': '')}">
+                <td th:if="${iStat.index == 0 && categoria.cortePlayOffs > 0}" th:rowspan="${categoria.cortePlayOffs}" style="vertical-align: middle; background-color: white;" class="ultimoClasificado clasificado"><span class="playoffsText">CLASIFICACIÓN A PLAYOFFS</span></td>
+                <td th:if="${iStat.index == categoria.cortePlayOffs}" th:rowspan="${posiciones.size() - categoria.cortePlayOffs}"></td>
                 <td th:text="${posicion.posicion}"></td>
                 <td><a th:text="${posicion.nombre}"
                        th:href="'/participante/'+${posicion.nombre}+'#'+${nombreCategoria}"></a></td>
-                <td th:each="jornada, iStat : ${columnasJornada}"
+                <td th:each="jornada, iStat : ${columnasJornadas}"
                     th:text="${posicion.getPuntuacionIndividual(iStat.index)}"
                     th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''"></td>
                 <td style="font-weight: bold" th:text="${posicion.puntuacion_total}" class="borderLeftColumn"></td>
