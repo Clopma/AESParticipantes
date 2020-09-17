@@ -50,7 +50,7 @@
 
     function irACategoria() {
         var s = document.getElementById("selectorCategoria");
-       window.location = window.location + 'categoria/' + s.options[s.selectedIndex].value;
+        window.location = window.location + 'categoria/' + s.options[s.selectedIndex].value;
     }
 
 
@@ -60,31 +60,31 @@
     <div class="login-content">
 
         <div class="whitePanel left" style="margin-left: 0px;">
-            <img src="/img/podiologo.png" width="200px" />
+            <img src="/img/podiologo.png" width="200px"/>
             <h2>Buscar ranking:</h2>
             <p style="font-size: large">Puedes ver los resultados generales y de cada jornada de una categoría:</p>
 
             <div style="width: 100%">
 
                 <div style="display: flex; justify-content: center">
-                    <h3 style="padding-right: 5px"> Categoría:</h3>
+                    <h3 style="padding-right: 10px"> Categoría:</h3>
 
                     <select class="form-control form-control-lg miSelect" id="selectorCategoria">
                         <option th:each="categoria: ${categorias}" th:text="${categoria.nombre}"/>
                     </select>
                 </div>
-                <br/>
-                <div style="display: flex; justify-content: center">
-                    <h3 style="padding-right: 5px">Ranking:</h3>
-                <select class="form-control form-control-lg miSelect" id="selectorRanking">
-                    <option>Ranking general</option>
-                    <option disabled="disabled">Jornada 1 (próximamente)</option>
-                    <option disabled="disabled">Jornada 2 (próximamente)</option>
-                </select>
-                <script> document.getElementById("selectorCategoria").selectedIndex = -1;
-                         // document.getElementById("selectorRanking").selectedIndex = -1; //TODO: descomentar y controlar
+                <!--                <div style="display: flex; justify-content: center">-->
+                <!--                    <h3 style="padding-right: 10px">Ranking:</h3>-->
+                <!--                <select class="form-control form-control-lg miSelect" id="selectorRanking">-->
+                <!--                    <option>Ranking general</option>-->
+                <!--                    <option disabled="disabled">Jornada 1 (próximamente)</option>-->
+                <!--                    <option disabled="disabled">Jornada 2 (próximamente)</option>-->
+                <!--                </select>-->
+                <!--                </div>-->
+                <script>
+                    document.getElementById("selectorCategoria").selectedIndex = -1;
+                    // document.getElementById("selectorRanking").selectedIndex = -1; //TODO: descomentar y controlar-->
                 </script>
-                </div>
                 <div class="bouncyContainer forward" style="margin: auto">
                     <a onclick="irACategoria()" class="bouncyContainer" style="cursor: pointer">
                         <img class="bouncyButton forward" src="/img/forwardbutton.png"/>
@@ -93,15 +93,16 @@
             </div>
         </div>
         <div class="whitePanel">
-            <img src="/img/aes_logo.png" width = "300px" />
+            <img src="/img/aes_logo.png" width="300px"/>
             <h1>Campeonato Nacional Online 2020</h1>
         </div>
 
         <div class="whitePanel right" style="margin-right: 0px">
-            <img src="/img/userIcon.png" width="200px;" />
+            <img src="/img/userIcon.png" width="200px;"/>
             <h2>Buscar participante:</h2>
 
-            <p style="font-size: large">A continuación puedes buscar el nombre de un participante para ver sus resultados:</p>
+            <p style="font-size: large">A continuación puedes buscar el nombre de un participante para ver sus
+                resultados:</p>
 
             <div class="container" style="width: min-content">
                 <div id="dropdown" class="dropdown">

@@ -1,7 +1,9 @@
 package com.example.miwebbase.Controllers;
 
 import com.example.miwebbase.Entities.Categoria;
+import com.example.miwebbase.Entities.Tiempo;
 import com.example.miwebbase.Models.PuntuacionTotal;
+import com.example.miwebbase.Models.Resultado;
 import com.example.miwebbase.Utils.AESUtils;
 import com.example.miwebbase.repositories.CategoriaRepository;
 import com.example.miwebbase.repositories.TiempoRepository;
@@ -30,9 +32,18 @@ public class CategoriaController {
     CategoriaRepository categoriaRepository;
 
 
+    @RequestMapping("/categoria/{nombreCategoria}/jornada/{numeroJornada}")
+    public String getVistaCategoriaJornada(Model model, @PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("numeroJornada") int numeroJornada){
+
+        Categoria categoria = categoriaRepository.findByNombre(nombreCategoria);
+        model.addAttribute("categoria", categoria);
+        model.addAttribute("resultado", getRankingJornada(categoria, numeroJornada));
+
+        return "jornada";
+    }
 
     @RequestMapping("/categoria/{nombreCategoria}")
-    public String inicio(Model model, @PathVariable("nombreCategoria") String nombreCategoria){
+    public String getVistaCategoria(Model model, @PathVariable("nombreCategoria") String nombreCategoria){
 
         Categoria categoria = categoriaRepository.findByNombre(nombreCategoria);
         model.addAttribute("categoria", categoria);
@@ -50,8 +61,7 @@ public class CategoriaController {
         List<PuntuacionTotal> puntuacionesTotalesAux = new ArrayList<>(puntuacionesTotales);
 
         // Ordenamos por puntuación y si no, sacamos la posición desempatada
-        Comparator<PuntuacionTotal> comparaPuntosDescendentemente = (p1, p2) -> p2.getPuntuacion_total().compareTo(p1.getPuntuacion_total());
-        Comparator<PuntuacionTotal> comparadorPuntosYPosiciones = comparaPuntosDescendentemente
+        Comparator<PuntuacionTotal> comparadorPuntosYPosiciones =  ((Comparator<PuntuacionTotal>)(p1, p2) -> p2.getPuntuacion_total().compareTo(p1.getPuntuacion_total()))
                 .thenComparing(p -> {
                     p.setPosicion(getPosicionDeParticipante(p.getNombre(), categoria, puntuacionesTotalesAux, tiempoRepository));
                     return p.getPosicion();
@@ -67,6 +77,17 @@ public class CategoriaController {
                 .filter(pi -> pi.getNombre().equals(pt.getNombre())).collect(Collectors.toList())));
 
         return puntuacionesTotales;
+
+    }
+
+    public List<Resultado.Categoria.Jornada> getRankingJornada(Categoria categoria, int numeroJornada){
+
+        List<Tiempo> tiemposJornada = tiempoRepository.findAllByCategoriaAndJornadaOrderByPosicion(categoria, numeroJornada);
+
+        Resultado.Categoria categoriaModel = new Resultado.Categoria(categoria);
+        tiemposJornada.forEach(p -> categoriaModel.generarYAnadirJornada(p, categoria));
+
+        return categoriaModel.getJornadas();
 
     }
 

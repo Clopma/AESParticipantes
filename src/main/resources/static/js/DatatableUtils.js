@@ -2,7 +2,7 @@ function initializeForParticipante(tabla, numTiempos, categoria) {
 
     var t = tabla.DataTable({
         "paging": false,
-        "ordering": true,
+        "ordering": false,
         "info": false,
         "searching": false,
         "autoWidth": false,
@@ -11,10 +11,15 @@ function initializeForParticipante(tabla, numTiempos, categoria) {
             className: 'select-checkbox select-checkbox-all',
             targets: 0
         }],
+        order : [],
         select: {
             style: 'multi',
             selector: 'td:first-child'
+        },
+        language: {
+            "emptyTable": "Los tiempos de esta jornada se mostrarán cuando finalice."
         }
+
     });
 
     t.columns(9).visible(false);

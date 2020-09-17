@@ -31,6 +31,8 @@ public interface TiempoRepository extends CrudRepository<Tiempo, Long> {
             "order by jornada")
     List<PuntuacionIndividual> getParticipantesPuntosIndividualesCategoria(Categoria categoria);
 
+    List<Tiempo> findAllByCategoriaAndJornadaOrderByPosicion(Categoria categoria, int numeroJornada);
+
 
     @Query("select new com.example.miwebbase.Models.PuntuacionIndividual(" +
             "participante.nombre, jornada, puntosTiempo + puntosBonus, true) from Tiempo " +

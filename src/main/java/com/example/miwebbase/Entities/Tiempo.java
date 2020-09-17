@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Tiempo implements Comparable<Tiempo> {
+public class Tiempo {
 
     public static final String T_USUARIOS = "Tiempos";
 
@@ -67,14 +67,5 @@ public class Tiempo implements Comparable<Tiempo> {
 
     @Column(length = 2000)
     private String explicacion;
-
-    @Override
-    public int compareTo(Tiempo t){
-
-        if (categoria.getOrden() < t.getCategoria().getOrden()) return -1;
-        if (categoria.getOrden() == t.getCategoria().getOrden()) return 0;
-        return 1;
-
-    }
 
 }

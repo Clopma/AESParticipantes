@@ -3,6 +3,7 @@
     <title th:text="${participante}"></title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
+    <script type="text/javascript" src="/js/ScrollUtils.js"></script>
 
 </head>
 
@@ -20,9 +21,7 @@
         } while (tabla.length && numberOfTables < 100)
 
 
-        var url = decodeURIComponent(window.location.toString());
-        var cat = document.getElementById("panel"+url.substring(url.indexOf("#") + 1))
-        if(cat) {cat.classList.add("categoriaEncontrada");}
+        scrollAFila();
 
     });
 </script>
@@ -32,24 +31,25 @@
     <div class="whitePanel" style="margin-top: 15px;">
         <h1><span th:text="${participante}">ATRIBUTO_USUARIO_NO_ENCONTRADO</span></h1>
     </div>
-    <div th:id="'panel'+${categoria.nombre}" th:each="categoria, iStat : ${resultado.getCategoriasParticipadas()}" class="whitePanel"
+    <div th:id="${categoria.nombreCategoria}" th:each="categoria, iStat : ${resultado.getCategoriasParticipadas()}"
+         class="whitePanel"
          style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; position: relative;"> <!-- Relative para la posición y el anchor-->
-        <a th:id="${categoria.nombre}" style="position: absolute; top: -300px"></a>
         <h1 class="puntuacion whitePanel" th:text="${categoria.posicion} + 'ª POSICIÓN'"
-            th:style="'font: '+${categoria.tamano}+'px Helvetica, Sans-Serif'"></h1>
+            th:style="'font-size: '+${categoria.tamano}+'px'"></h1>
 
         <div style="display: flex; align-items: center">
-            <h1 th:text="${categoria.nombre}"></h1>
+            <h1 th:text="${categoria.nombreCategoria}"></h1>
 
-            <div class="bouncyContainer podio" style="width: 50px; height: 50px">
-                <a th:href="'/categoria/'+${categoria.nombre}+'#'+${nombreParticipante}" class="bouncyContainer">
+            <div class="bouncyContainer podio" style="width: 75px; height: 75px">
+                <a th:href="'/categoria/'+${categoria.nombreCategoria}+'#'+${nombreParticipante}"
+                   class="bouncyContainer">
                     <img class="bouncyButton podio" src="/img/podiologo.png"/>
                 </a>
             </div>
         </div>
-        <table th:data-numTiempos="${categoria.numTiempos}" th:data-nombreCat="${categoria.nombre}"
+        <table th:data-numTiempos="${categoria.numTiempos}" th:data-nombreCat="${categoria.nombreCategoria}"
                th:id="'dataTable'+ ${iStat.index}" class="table centerCols"
-               th:name="${categoria.nombre}">
+               th:name="${categoria.nombreCategoria}"> <!-- TODO: name necesario? -->
             <thead>
             <tr>
                 <th>Jornada</th>
@@ -67,8 +67,16 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="jornada: ${categoria.getJornadasParticipadas()}">
-                <td th:text="'Jornada ' + ${jornada.numJornada}"></td>
+            <tr th:each="jornada: ${categoria.getJornadas()}">
+                <td style="display: flex">
+                    <div class="bouncyContainer podio" style="width: 50px; height: 50px; min-width: 50px;">
+                        <a th:href="'/categoria/'+${categoria.nombreCategoria}+'/jornada/'+ ${jornada.numJornada}+'#'+${nombreParticipante}"
+                           class="bouncyContainer">
+                            <img class="bouncyButton podio" src="/img/podiologo.png"/>
+                        </a>
+                    </div>
+                    <span th:text="'Jornada ' + ${jornada.numJornada}" style="display: flex; align-items: center; width: max-content"></span>
+                </td>
                 <td style="font-weight: bold" th:text="${jornada.posicion}"></td>
                 <td class="borderLeftColumn" th:text="${jornada.tiempo1}"></td>
                 <td th:text="${jornada.tiempo2}"></td>
