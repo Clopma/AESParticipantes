@@ -1,6 +1,7 @@
 .cubosbg {
     background-image: url("../img/rubikColours.png");
     background-size: cover;
+    backdrop-filter: blur(5px);
 }
 
 table.centerCols th, table.centerCols td {
