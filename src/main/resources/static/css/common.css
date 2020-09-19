@@ -80,6 +80,7 @@ a.bouncyContainer {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 
 }
 
@@ -121,7 +122,7 @@ img.bouncyButton.podio {
     -webkit-filter: drop-shadow(3px 3px 3px #222);
 }
 
-div.forward {
+div.forward, div.backward {
     width: 90px;
     height: 90px;
 }
@@ -129,6 +130,11 @@ div.forward {
 img.bouncyButton.forward {
     filter: drop-shadow(3px 3px 3px #222);
     -webkit-filter: drop-shadow(3px 3px 3px #222);
+}
+
+img.bouncyButton.backward {
+    filter: drop-shadow(-3px 3px 3px #222);
+    -webkit-filter: drop-shadow(-3px 3px 3px #222);
 }
 
 
@@ -196,6 +202,8 @@ h1 {
     font-size: 50px !important;
 }
 h2 {
+    margin-top: 10px  !important;
+    margin-bottom: 10px  !important;
     font-size: 40px !important;
 }
 h3 {

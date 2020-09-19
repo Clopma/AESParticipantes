@@ -35,7 +35,7 @@
          class="whitePanel"
          style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; position: relative;"> <!-- Relative para la posición y el anchor-->
         <h1 class="puntuacion whitePanel" th:text="${categoria.posicion} + 'ª POSICIÓN'"
-            th:style="'font-size: '+${categoria.tamano}+'px'"></h1>
+            th:style="'font-size: '+${categoria.tamano}+'px !important;'"></h1>
 
         <div style="display: flex; align-items: center">
             <h1 th:text="${categoria.nombreCategoria}"></h1>
@@ -48,8 +48,7 @@
             </div>
         </div>
         <table th:data-numTiempos="${categoria.numTiempos}" th:data-nombreCat="${categoria.nombreCategoria}"
-               th:id="'dataTable'+ ${iStat.index}" class="table centerCols"
-               th:name="${categoria.nombreCategoria}"> <!-- TODO: name necesario? -->
+               th:id="'dataTable'+ ${iStat.index}" class="table centerCols">
             <thead>
             <tr>
                 <th>Jornada</th>

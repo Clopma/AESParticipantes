@@ -17,9 +17,22 @@
             initializeForParticipante(tabla, [[${categoria.numTiempos}]], [[${categoria.nombre}]]);
         }
         scrollAFila();
-
-
     });
+
+
+    /* CAMBIAR URL MANTENIENDO ANCHORS */
+
+    function navigateCategoryWithAnchor(a) {
+        window.location.href = window.location.href.replace('categoria/' + [[${categoria.nombre}]], 'categoria/' + $(a).attr("data-desiredCategory"));
+    }
+
+    function changeJornada(n) {
+        window.location.href = window.location.href.replace('jornada/' + [[${numeroJornada}]], 'jornada/' + ([[${numeroJornada}]] + n));
+    }
+
+    function navigateToGeneral(n) {
+        window.location.href = window.location.href.replace('jornada/' + [[${numeroJornada}]], '');
+    }
 
 
 </script>
@@ -28,11 +41,44 @@
 <div th:replace="fragments/backButton :: backButton"/>
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 15px;">
-        <h1><span th:text="${nombreCategoria}">ATRIBUTO_CATEGORIA_NO_ENCONTRADO</span></h1>
+        <div style="display: flex; align-items: center; justify-content: center;">
+            <div th:if="${categoria.orden > 1}" class="bouncyContainer backward" style="margin: auto">
+                <a th:data-desiredCategory="${categorias.get(categoria.orden -1 - 1).nombre}"
+                   th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
+                    <img class="bouncyButton backward" src="/img/backbutton.png"/>
+                </a>
+            </div>
+            <h1><span th:text="${nombreCategoria}">ATRIBUTO_CATEGORIA_NO_ENCONTRADO</span></h1>
+            <div th:if="${categoria.orden < categorias.size()}" class="bouncyContainer forward" style="margin: auto">
+                <a th:data-desiredCategory="${categorias.get(categoria.orden -1 +1).nombre}"
+                   th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
+                    <img class="bouncyButton forward" src="/img/forwardbutton.png"/>
+                </a>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center">
+            <div class="bouncyContainer podio" style="width: 50px; height: 50px; min-width: 50px;">
+                <a th:onclick="'navigateToGeneral()'" class="bouncyContainer">
+                    <img class="bouncyButton podio" src="/img/podiologo.png"/>
+                </a>
+            </div>
+            <h4>Ir al ránking general</h4>
+        </div>
     </div>
-    <div class="whitePanel" style="margin-top: 15px;">
+    <div class="whitePanel" style="margin-top: 15px; display: flex; align-items: center;">
+        <div th:if="${numeroJornada > 1}" class="bouncyContainer backward" style="margin: auto">
+            <a th:onclick="'changeJornada(-1)'" class="bouncyContainer" style="cursor: pointer">
+                <img class="bouncyButton backward" src="/img/backbutton.png"/>
+            </a>
+        </div>
         <h2><span th:text="'Jornada '+ ${numeroJornada}">ATRIBUTO_CATEGORIA_NO_ENCONTRADO</span></h2>
+        <div th:if="${numeroJornada < numJornadas}" class="bouncyContainer forward">
+            <a th:onclick="'changeJornada(1)'" class="bouncyContainer">
+                <img class="bouncyButton forward" src="/img/forwardbutton.png"/>
+            </a>
+        </div>
     </div>
+
     <div class="whitePanel"
          style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; background-color: rgba(255,255,255,0.91)">
         <table id="rankingJornada" class="table centerCols">

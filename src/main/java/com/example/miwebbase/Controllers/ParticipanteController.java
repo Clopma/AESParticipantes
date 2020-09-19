@@ -4,6 +4,7 @@ import com.example.miwebbase.Entities.Tiempo;
 import com.example.miwebbase.Models.Resultado;
 import com.example.miwebbase.repositories.TiempoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,11 +21,21 @@ public class ParticipanteController {
     @Autowired
     private TiempoRepository tiempoRepository;
 
+    @Autowired ParticipanteController self;
 
     @RequestMapping("/participante/{nombreParticipante}")
     public String inicio(Model model, @PathVariable("nombreParticipante") String nombreParticipante) throws Exception {
 
         model.addAttribute("participante", nombreParticipante);
+
+        model.addAttribute("resultado", self.getResultadoParticipante(nombreParticipante));
+
+        return "participante";
+    }
+
+    @Cacheable(value = "participantes")
+    public Resultado getResultadoParticipante(String nombreParticipante) {
+
         List<Tiempo> tiemposParticipante = tiempoRepository.getTiemposOfParticipante(nombreParticipante);
 
         Map<Integer, List<Tiempo>> categoriasInformadas = tiemposParticipante.stream().collect(Collectors.groupingBy(t -> t.getCategoria().getOrden()));
@@ -35,9 +46,7 @@ public class ParticipanteController {
             resultado.generarYAnadirCategoria(categoriaEntry.getValue(), nombreParticipante, tiempoRepository);
         }
 
-        model.addAttribute("resultado", resultado);
-
-        return "participante";
+        return resultado;
     }
 
 

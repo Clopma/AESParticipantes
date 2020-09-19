@@ -73,6 +73,8 @@ public class Resultado {
             tiempos.add(tiempo.getTiempo4());
             tiempos.add(tiempo.getTiempo5());
 
+            double[] singleMediaYpeor = AESUtils.getTiemposCalculados(tiempos, categoria);
+
             jornadaObj.setTiempo1(tiempo.getTiempo1() == 0 ? AESUtils.DNF : formatTime(tiempo.getTiempo1()));
 
             if (this.getNumTiempos() > 1) {
@@ -87,10 +89,28 @@ public class Resultado {
                 jornadaObj.setTiempo5(tiempo.getTiempo5() == 0 ? AESUtils.DNF : formatTime(tiempo.getTiempo5()));
             }
 
+            jornadaObj.setSingle(singleMediaYpeor[0] == 0 ? AESUtils.DNF : formatTime(singleMediaYpeor[0]));
+            jornadaObj.setMedia(singleMediaYpeor[1] == 0 ? AESUtils.DNF : formatTime(singleMediaYpeor[1]));
 
-            double[] singleYMedia = AESUtils.getTiemposCalculados(tiempos, categoria);
-            jornadaObj.setSingle(singleYMedia[0] == 0 ? AESUtils.DNF : formatTime(singleYMedia[0]));
-            jornadaObj.setMedia(singleYMedia[1] == 0 ? AESUtils.DNF : formatTime(singleYMedia[1]));
+            //Si la media no es un DNF
+            if(singleMediaYpeor[1] > 0 && categoria.getNumTiempos() == 5){
+
+                if(tiempo.getTiempo1() == singleMediaYpeor[0]){ jornadaObj.setTiempo1("(" + jornadaObj.getTiempo1() + ")");}
+                else if(tiempo.getTiempo2() == singleMediaYpeor[0]){ jornadaObj.setTiempo2("(" + jornadaObj.getTiempo2() + ")"); }
+                else if(tiempo.getTiempo3() == singleMediaYpeor[0]){ jornadaObj.setTiempo3("(" + jornadaObj.getTiempo3() + ")"); }
+                else if(tiempo.getTiempo4() == singleMediaYpeor[0]){ jornadaObj.setTiempo4("(" + jornadaObj.getTiempo4() + ")"); }
+                else if(tiempo.getTiempo5() == singleMediaYpeor[0]){ jornadaObj.setTiempo5("(" + jornadaObj.getTiempo5() + ")"); }
+
+                if(tiempo.getTiempo1() == singleMediaYpeor[2]){ jornadaObj.setTiempo1("(" + jornadaObj.getTiempo1() + ")");}
+                else if(tiempo.getTiempo2() == singleMediaYpeor[2]){ jornadaObj.setTiempo2("(" + jornadaObj.getTiempo2() + ")"); }
+                else if(tiempo.getTiempo3() == singleMediaYpeor[2]){ jornadaObj.setTiempo3("(" + jornadaObj.getTiempo3() + ")"); }
+                else if(tiempo.getTiempo4() == singleMediaYpeor[2]){ jornadaObj.setTiempo4("(" + jornadaObj.getTiempo4() + ")"); }
+                else if(tiempo.getTiempo5() == singleMediaYpeor[2]){ jornadaObj.setTiempo5("(" + jornadaObj.getTiempo5() + ")"); }
+
+
+
+            }
+
 
             jornadaObj.setPuntos(tiempo.getPuntosTotales());
             this.getJornadas().add(jornadaObj);

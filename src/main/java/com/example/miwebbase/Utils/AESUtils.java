@@ -18,7 +18,7 @@ public class AESUtils {
     public static String DNF = "DNF";
     public static final int JORNADAS_CAMPEONATO = 5;
 
-    //devuelve un double[]{single, media}
+    //devuelve un double[]{single, media, peor}
     public static double[] getTiemposCalculados(List<Double> tiempos, Categoria categoria) {
 
         tiempos = tiempos.stream().filter(t -> t > 0).collect(Collectors.toList());
@@ -26,7 +26,7 @@ public class AESUtils {
         double mejorTiempo = tiempos.stream().mapToDouble(d -> d).min().orElse(0);
 
         Collections.sort(tiempos);
-
+        double peorTiempo = 0;
         double media = 0;
         if (categoria.getNumTiempos() == 5) {
 
@@ -35,16 +35,18 @@ public class AESUtils {
                 media = tiempos.stream().mapToDouble(d -> d).average().getAsDouble();
             } else if (tiempos.size() == 5) {
                 tiempos.remove(0);
+                peorTiempo = tiempos.get(4-1);
                 tiempos.remove(4 - 1);
                 media = tiempos.stream().mapToDouble(d -> d).average().getAsDouble();
             }
         } else if (categoria.getNumTiempos() == 3){
             if (tiempos.size() == 3){
                 media = tiempos.stream().mapToDouble(d -> d).average().getAsDouble();
+                peorTiempo = tiempos.get(2);
             }
         }
 
-        return new double[]{mejorTiempo, media};
+        return new double[]{mejorTiempo, media, peorTiempo};
     }
 
 
