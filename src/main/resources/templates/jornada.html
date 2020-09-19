@@ -1,0 +1,122 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Ranking</title>
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+    <th:block th:include="fragments/head :: datatablesHead"></th:block>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet"/>
+    <script type="text/javascript" src="/js/ScrollUtils.js"></script>
+
+</head>
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+
+
+        var tabla = $('#rankingJornada');
+        if (tabla) {
+            initializeForParticipante(tabla, [[${categoria.numTiempos}]], [[${categoria.nombre}]]);
+        }
+        scrollAFila();
+    });
+
+
+    /* CAMBIAR URL MANTENIENDO ANCHORS */
+
+    function navigateCategoryWithAnchor(a) {
+        window.location.href = window.location.href.replace('categoria/' + [[${categoria.nombre}]], 'categoria/' + $(a).attr("data-desiredCategory"));
+    }
+
+    function changeJornada(n) {
+        window.location.href = window.location.href.replace('jornada/' + [[${numeroJornada}]], 'jornada/' + ([[${numeroJornada}]] + n));
+    }
+
+    function navigateToGeneral(n) {
+        window.location.href = window.location.href.replace('jornada/' + [[${numeroJornada}]], '');
+    }
+
+
+</script>
+
+<body class="cubosbg">
+<div th:replace="fragments/backButton :: backButton"/>
+<div class="vertical-flex-wrapper">
+    <div class="whitePanel" style="margin-top: 15px;">
+        <div style="display: flex; align-items: center; justify-content: center;">
+            <div th:if="${categoria.orden > 1}" class="bouncyContainer backward" style="margin: auto">
+                <a th:data-desiredCategory="${categorias.get(categoria.orden -1 - 1).nombre}"
+                   th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
+                    <img class="bouncyButton backward" src="/img/backbutton.png"/>
+                </a>
+            </div>
+            <h1><span th:text="${nombreCategoria}">ATRIBUTO_CATEGORIA_NO_ENCONTRADO</span></h1>
+            <div th:if="${categoria.orden < categorias.size()}" class="bouncyContainer forward" style="margin: auto">
+                <a th:data-desiredCategory="${categorias.get(categoria.orden -1 +1).nombre}"
+                   th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
+                    <img class="bouncyButton forward" src="/img/forwardbutton.png"/>
+                </a>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center">
+            <div class="bouncyContainer podio" style="width: 50px; height: 50px; min-width: 50px;">
+                <a th:onclick="'navigateToGeneral()'" class="bouncyContainer">
+                    <img class="bouncyButton podio" src="/img/podiologo.png"/>
+                </a>
+            </div>
+            <h4>Ir al ránking general</h4>
+        </div>
+    </div>
+    <div class="whitePanel" style="margin-top: 15px; display: flex; align-items: center;">
+        <div th:if="${numeroJornada > 1}" class="bouncyContainer backward" style="margin: auto">
+            <a th:onclick="'changeJornada(-1)'" class="bouncyContainer" style="cursor: pointer">
+                <img class="bouncyButton backward" src="/img/backbutton.png"/>
+            </a>
+        </div>
+        <h2><span th:text="'Jornada '+ ${numeroJornada}">ATRIBUTO_CATEGORIA_NO_ENCONTRADO</span></h2>
+        <div th:if="${numeroJornada < numJornadas}" class="bouncyContainer forward">
+            <a th:onclick="'changeJornada(1)'" class="bouncyContainer">
+                <img class="bouncyButton forward" src="/img/forwardbutton.png"/>
+            </a>
+        </div>
+    </div>
+
+    <div class="whitePanel"
+         style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; background-color: rgba(255,255,255,0.91)">
+        <table id="rankingJornada" class="table centerCols">
+            <thead>
+            <tr>
+                <th>Posición</th>
+                <th>Participante</th>
+                <th>Tiempo 1</th>
+                <th>Tiempo 2</th>
+                <th>Tiempo 3</th>
+                <th>Tiempo 4</th>
+                <th>Tiempo 5</th>
+                <th>Single</th>
+                <th>Media</th>
+                <th>Solución</th>
+                <th>Explicación</th>
+                <th>Puntos Jornada</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="tiempo: ${resultado}" th:id="${tiempo.nombreParticipante}">
+                <td style="font-weight: bold" th:text="${tiempo.posicion}"></td>
+                <td><a th:text="${tiempo.nombreParticipante}"
+                       th:href="'/participante/'+${tiempo.nombreParticipante}+'#'+${nombreCategoria}"></a></td>
+                <td class="borderLeftColumn" th:text="${tiempo.tiempo1}"></td>
+                <td th:text="${tiempo.tiempo2}"></td>
+                <td th:text="${tiempo.tiempo3}"></td>
+                <td th:text="${tiempo.tiempo4}"></td>
+                <td th:text="${tiempo.tiempo5}"></td>
+                <td style="font-weight: bold;" class="borderLeftColumn" th:text="${tiempo.single}"></td>
+                <td style="font-weight: bold" th:text="${tiempo.media}"></td>
+                <td th:text="${tiempo.solucion}"></td>
+                <td th:text="${tiempo.explicacion}"></td>
+                <td style="font-weight: bold" th:text="${tiempo.puntos}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

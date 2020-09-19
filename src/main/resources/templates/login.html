@@ -1,8 +1,7 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Ficha Participante</title>
+    <title>Nacional Online 2020</title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
-    <link rel="stylesheet" href="/css/common.css"/>
     <script type="text/javascript" src="js/TiempoUtils.js"></script>
 
 </head>
@@ -17,53 +16,116 @@
         });
 
         document.getElementById("botonSeleccionar").onclick = function () {
-            if($("#dropdown").hasClass("open")){
+            if ($("#dropdown").hasClass("open")) {
                 $("#dropdown").removeClass("open");
             } else {
                 $("#dropdown").addClass("open");
             }
 
         }
+
+
+        var ignore1 = document.getElementById('listaParticipantes');
+        var ignore2 = document.getElementById('botonSeleccionar');
+        document.addEventListener('click', function (event) {
+            var isClickInsideElement = ignore1.contains(event.target) || ignore2.contains(event.target);
+            if (!isClickInsideElement) {
+                if ($("#dropdown").hasClass("open")) {
+                    $("#dropdown").removeClass("open");
+                }
+            }
+        });
     });
 
     $(document).keypress(function (e) {
-        if(e.which == 13) {
-            Array.from(document.getElementById("listaParticipantes").querySelectorAll("li")).filter(li => li.style.display != "none")[0].firstChild.click();
+        if (e.key === "Enter") {
+            Array.from(document.getElementById("listaParticipantes").querySelectorAll("li")).filter(li => li.style.display != "none")[0].children[0].click();
         }
 
-        if(!$("#dropdown").hasClass("open")){
+        if (!$("#dropdown").hasClass("open")) {
             $("#dropdown").addClass("open");
         }
         document.getElementById("selectorParticipantes").focus();
     });
 
+    function irACategoria() {
+
+        var s = document.getElementById("selectorCategoria");
+
+        if(s && s.selectedIndex !== -1) {
+            var destino = window.location + 'categoria/' + s.options[s.selectedIndex].value;
+
+
+            var r = document.getElementById("selectorRanking");
+            if (r.value > 0) {
+                destino += "/jornada/" + r.options[r.selectedIndex].value
+            }
+
+            window.location = destino;
+        }
+    }
 
 
 </script>
 <body class="cubosbg">
 <div class="vertical-flex-wrapper">
     <div class="login-content">
-        <div class="whitePanel" style="min-width: 500px">
-            <img src="/img/aes_logo.png" style="width: 250px"></img>
+
+        <div class="whitePanel left" style="margin-left: 0px;">
+            <img src="/img/podiologo.png" width="200px"/>
+            <h2>Buscar ranking:</h2>
+            <p style="font-size: large">Puedes ver los resultados generales y de cada jornada de una categoría:</p>
+
+            <div style="width: 100%">
+
+                <div style="display: flex; justify-content: center; padding-bottom: 10px">
+                    <h3 style="padding-right: 10px"> Categoría:</h3>
+
+                    <select class="form-control form-control-lg miSelect" id="selectorCategoria">
+                        <option th:each="categoria: ${categorias}" th:text="${categoria.nombre}"/>
+                    </select>
+                </div>
+                <div style="display: flex; justify-content: center">
+                    <h3 style="padding-right: 10px">Ranking:</h3>
+                    <select class="form-control form-control-lg miSelect" id="selectorRanking">
+                        <option value="0">Ranking general</option>
+                        <option th:each="jornada, iStat : ${jornadas}" th:text="'Jornada ' + ${iStat.index + 1}" th:value="${iStat.index+1}"></option>
+                    </select>
+                </div>
+                <script>
+                    document.getElementById("selectorCategoria").selectedIndex = -1;
+                    document.getElementById("selectorRanking").selectedIndex = -1;
+                </script>
+                <div class="bouncyContainer forward" style="margin: auto">
+                    <a onclick="irACategoria()" class="bouncyContainer" style="cursor: pointer">
+                        <img class="bouncyButton forward" src="/img/forwardbutton.png"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="whitePanel">
+            <img src="/img/aes_logo.png" width="300px"/>
             <h1>Campeonato Nacional Online 2020</h1>
-            <p>A continuación puedes buscar el nombre de un participante para ver sus resultados:</p>
-            <div th:if="${param.error}" class="alert alert-error">
-                Usuario y/o contraseña inválidos.
-            </div>
-            <div th:if="${param.logout}" class="alert alert-success">
-                Has cerrado sesión.
-            </div>
+        </div>
+
+        <div class="whitePanel right" style="margin-right: 0px">
+            <img src="/img/userIcon.png" width="200px;"/>
+            <h2>Buscar participante:</h2>
+
+            <p style="font-size: large">A continuación puedes buscar el nombre de un participante para ver sus
+                resultados:</p>
 
             <div class="container" style="width: min-content">
                 <div id="dropdown" class="dropdown">
-                    <button id="botonSeleccionar" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    <button id="botonSeleccionar" class="btn btn-primary dropdown-toggle" type="button"
+                            data-toggle="dropdown">
                         Seleccionar participante
                         <span class="caret"></span></button>
                     <ul id="listaParticipantes" class="dropdown-menu">
-                        <input autocomplete="off" class="form-control" id="selectorParticipantes" type="text"
+                        <input id="selectorParticipantes" autocomplete="off" class="form-control" type="text"
                                placeholder="Busca..."/>
-                        <li id="participante" th:each="participante : ${participantes}"><a th:href="@{|/participante/${participante}|}"
-                                                                         th:text="${participante}"></a></li>
+                        <li id="participante" th:each="participante : ${participantes}">
+                            <a th:href="@{|/participante/${participante}|}" th:text="${participante}"></a></li>
                     </ul>
                 </div>
             </div>

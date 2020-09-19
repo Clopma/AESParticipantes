@@ -1,24 +1,43 @@
 .cubosbg {
     background-image: url("../img/rubikColours.png");
     background-size: cover;
+    backdrop-filter: blur(5px);
 }
 
-table.centerTds td {
+table.centerCols th, table.centerCols td {
     text-align: center;
+    vertical-align: middle !important;
+}
+.borderLeftColumn {
+    border-left: solid 1px rgba(0, 0, 0, 0.5);
 }
 
 .login-content {
     height: 100%;
+    width: 100%;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     text-align: center;
 }
 
 .whitePanel {
-    background-color: rgba(255, 255, 255, 0.65);
+    background-color: rgba(255, 255, 255, 0.75);
     padding: 20px;
     margin: 5px;
     border-radius: 20px;
+}
+
+.whitePanel.left {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    margin-left: 0;
+}
+
+.whitePanel.right {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    margin-right: 0;
 }
 
 footer.credit {
@@ -48,27 +67,25 @@ footer.credit {
 }
 
 
-div.backContainer {
+div.bouncyContainer {
 
-    position: absolute;
-    top: -30px;
     transition: 0.3s;
     height: 300px;
     width: 300px;
 }
 
-a.backContainer {
+a.bouncyContainer {
 
     z-index: 1;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 
 }
 
-.backButton {
-
+img.bouncyButton {
     transition: 0.3s;
     height: 65%;
     width: 65%;
@@ -77,12 +94,10 @@ a.backContainer {
 
 }
 
-.backButton:hover {
-
+.bouncyButton:hover {
     animation: bounce 0.3s;
     height: 80%;
     width: 80%;
-
 }
 
 @keyframes bounce {
@@ -98,6 +113,31 @@ a.backContainer {
 
 }
 
+.back {
+    position: absolute;
+    top: -30px;
+}
+
+img.bouncyButton.podio {
+    filter: drop-shadow(3px 3px 3px #222);
+    -webkit-filter: drop-shadow(3px 3px 3px #222);
+}
+
+div.forward, div.backward {
+    width: 90px;
+    height: 90px;
+}
+
+img.bouncyButton.forward {
+    filter: drop-shadow(3px 3px 3px #222);
+    -webkit-filter: drop-shadow(3px 3px 3px #222);
+}
+
+img.bouncyButton.backward {
+    filter: drop-shadow(-3px 3px 3px #222);
+    -webkit-filter: drop-shadow(-3px 3px 3px #222);
+}
+
 
 .puntuacion {
 
@@ -107,8 +147,66 @@ a.backContainer {
     right: -30px;
     transform: rotate(15deg);
     display: inline;
-    font: 40px Helvetica, Sans-Serif;
-    /*-webkit-text-stroke: 1px #000000;*/
+    font-weight: 500;
     color: rgba(0, 0, 0, 0.76);
 
+}
 
+.categoriaEncontrada {
+    background-color: rgba(233, 244, 255, 0.96);
+}
+
+
+.miSelect {
+    width: auto !important;
+    font-size: 20px !important;
+    height: auto !important;
+}
+
+.playoffsText {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-weight: bold;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2em;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+tr.ultimoClasificado td, td.ultimoClasificado{
+
+    border-bottom: solid 1px rgba(0, 0, 0, 0.6);
+}
+
+.clasificado {
+    background-color: #f8fdff  !important;
+    font-weight: bold;
+}
+
+
+.clasificado td{
+    font-weight: bold;
+    border-top: 0 !important;
+}
+
+
+.clasificado.participanteEncontrado, .participanteEncontrado{
+    background-color: #e9f4ff !important;
+}
+
+h1, h2, h3 {
+
+    font-family: 'Rajdhani', sans-serif !important;
+}
+
+h1 {
+    font-size: 50px !important;
+}
+h2 {
+    margin-top: 10px  !important;
+    margin-bottom: 10px  !important;
+    font-size: 40px !important;
+}
+h3 {
+    font-size: 25px !important;
+}

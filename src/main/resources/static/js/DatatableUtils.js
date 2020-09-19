@@ -1,8 +1,8 @@
-function initialize(id, numTiempos, categoria) {
+function initializeForParticipante(tabla, numTiempos, categoria) {
 
-    var t = $('#' + id).DataTable({
+    var t = tabla.DataTable({
         "paging": false,
-        "ordering": true,
+        "ordering": false,
         "info": false,
         "searching": false,
         "autoWidth": false,
@@ -11,10 +11,15 @@ function initialize(id, numTiempos, categoria) {
             className: 'select-checkbox select-checkbox-all',
             targets: 0
         }],
+        order : [],
         select: {
             style: 'multi',
             selector: 'td:first-child'
+        },
+        language: {
+            "emptyTable": "Los tiempos de esta jornada se mostrarán cuando finalice."
         }
+
     });
 
     t.columns(9).visible(false);
@@ -35,5 +40,28 @@ function initialize(id, numTiempos, categoria) {
         t.columns(9).visible(true);
         t.columns(10).visible(true);
     }
+
+}
+
+function initializeForCategoria(tabla) {
+
+
+    tabla.DataTable({
+        "paging": false,
+        "ordering": true,
+        "info": false,
+        "searching": false,
+        "autoWidth": false,
+        columnDefs: [{
+            orderable: true,
+            className: 'select-checkbox select-checkbox-all',
+            targets: 0
+        }],
+        select: {
+            style: 'multi',
+            selector: 'td:first-child'
+        }
+    });
+
 
 }

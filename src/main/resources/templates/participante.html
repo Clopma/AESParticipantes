@@ -1,0 +1,96 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title th:text="${participante}"></title>
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+    <th:block th:include="fragments/head :: datatablesHead"></th:block>
+    <script type="text/javascript" src="/js/ScrollUtils.js"></script>
+
+</head>
+
+<script>
+    $(document).ready(function () {
+
+        var numberOfTables = 0;
+
+        do {
+            var tabla = $('#dataTable' + numberOfTables);
+            if (tabla) {
+                initializeForParticipante(tabla, tabla.attr("data-numTiempos"), tabla.attr("data-nombreCat"));
+            }
+            numberOfTables++;
+        } while (tabla.length && numberOfTables < 100)
+
+
+        scrollAFila();
+
+    });
+</script>
+<body class="cubosbg">
+<div th:replace="fragments/backButton :: backButton"/>
+<div class="vertical-flex-wrapper">
+    <div class="whitePanel" style="margin-top: 15px;">
+        <h1><span th:text="${participante}">ATRIBUTO_USUARIO_NO_ENCONTRADO</span></h1>
+    </div>
+    <div th:id="${categoria.nombreCategoria}" th:each="categoria, iStat : ${resultado.getCategoriasParticipadas()}"
+         class="whitePanel"
+         style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; position: relative;"> <!-- Relative para la posición y el anchor-->
+        <h1 class="puntuacion whitePanel" th:text="${categoria.posicion} + 'ª POSICIÓN'"
+            th:style="'font-size: '+${categoria.tamano}+'px !important;'"></h1>
+
+        <div style="display: flex; align-items: center">
+            <h1 th:text="${categoria.nombreCategoria}"></h1>
+
+            <div class="bouncyContainer podio" style="width: 75px; height: 75px">
+                <a th:href="'/categoria/'+${categoria.nombreCategoria}+'#'+${nombreParticipante}"
+                   class="bouncyContainer">
+                    <img class="bouncyButton podio" src="/img/podiologo.png"/>
+                </a>
+            </div>
+        </div>
+        <table th:data-numTiempos="${categoria.numTiempos}" th:data-nombreCat="${categoria.nombreCategoria}"
+               th:id="'dataTable'+ ${iStat.index}" class="table centerCols">
+            <thead>
+            <tr>
+                <th>Jornada</th>
+                <th>Posición</th>
+                <th>Tiempo 1</th>
+                <th>Tiempo 2</th>
+                <th>Tiempo 3</th>
+                <th>Tiempo 4</th>
+                <th>Tiempo 5</th>
+                <th>Single</th>
+                <th>Media</th>
+                <th>Solución</th>
+                <th>Explicación</th>
+                <th>Puntos Jornada</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="jornada: ${categoria.getJornadas()}">
+                <td style="display: flex">
+                    <div class="bouncyContainer podio" style="width: 50px; height: 50px; min-width: 50px;">
+                        <a th:href="'/categoria/'+${categoria.nombreCategoria}+'/jornada/'+ ${jornada.numJornada}+'#'+${nombreParticipante}"
+                           class="bouncyContainer">
+                            <img class="bouncyButton podio" src="/img/podiologo.png"/>
+                        </a>
+                    </div>
+                    <span th:text="'Jornada ' + ${jornada.numJornada}" style="display: flex; align-items: center; width: max-content"></span>
+                </td>
+                <td style="font-weight: bold" th:text="${jornada.posicion}"></td>
+                <td class="borderLeftColumn" th:text="${jornada.tiempo1}"></td>
+                <td th:text="${jornada.tiempo2}"></td>
+                <td th:text="${jornada.tiempo3}"></td>
+                <td th:text="${jornada.tiempo4}"></td>
+                <td th:text="${jornada.tiempo5}"></td>
+                <td style="font-weight: bold;" class="borderLeftColumn" th:text="${jornada.single}"></td>
+                <td style="font-weight: bold" th:text="${jornada.media}"></td>
+                <td th:text="${jornada.solucion}"></td>
+                <td th:text="${jornada.explicacion}"></td>
+                <td style="font-weight: bold" th:text="${jornada.puntos}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
