@@ -33,6 +33,17 @@ public class CategoriaController {
 
     @Autowired CategoriaController self;
 
+    @RequestMapping("/categoria/{nombreCategoria}")
+    public String getVistaCategoria(Model model, @PathVariable("nombreCategoria") String nombreCategoria){
+
+        Categoria categoria = self.getCategoria(nombreCategoria);
+        model.addAttribute("categoria", categoria);
+        model.addAttribute("posiciones", self.getRankingCategoria(categoria));
+        model.addAttribute("categorias", self.getCategoriasEnOrden());
+        model.addAttribute("columnasJornadas", new int[AESUtils.JORNADAS_CAMPEONATO]);
+
+        return "categoria";
+    }
 
     @RequestMapping("/categoria/{nombreCategoria}/jornada/{numeroJornada}")
     public String getVistaCategoriaJornada(Model model, @PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("numeroJornada") int numeroJornada){
@@ -44,19 +55,6 @@ public class CategoriaController {
         model.addAttribute("numJornadas", AESUtils.JORNADAS_CAMPEONATO);
 
         return "jornada";
-    }
-
-
-    @RequestMapping("/categoria/{nombreCategoria}")
-    public String getVistaCategoria(Model model, @PathVariable("nombreCategoria") String nombreCategoria){
-
-        Categoria categoria = self.getCategoria(nombreCategoria);
-        model.addAttribute("categoria", categoria);
-        model.addAttribute("posiciones", self.getRankingCategoria(categoria));
-        model.addAttribute("categorias", self.getCategoriasEnOrden());
-        model.addAttribute("columnasJornadas", new int[AESUtils.JORNADAS_CAMPEONATO]);
-
-        return "categoria";
     }
 
 

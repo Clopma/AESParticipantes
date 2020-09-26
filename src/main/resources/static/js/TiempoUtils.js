@@ -1,6 +1,6 @@
 function formatTiempos(text, categoria, numTiempos, jornada) {
 
-    var re = /(\d):(\d{1,2})(,(\d{1,2}))?/g;
+    var re = /(\d{1,2}):(\d{1,2})(,(\d{1,2}))?/g;
     var match;
     var CONTROL_EXP = "#####!!!!!";
 
@@ -64,15 +64,15 @@ function formatTiempos(text, categoria, numTiempos, jornada) {
 
 
             newText += "(" + jornada + ",\t\"" + categoria + "\",\t" + campos[0] + ",\t\"" + campos[1] + "\",\t"
-            + campos[2] + ",\t";
+            + checkDNF(campos[2]) + ",\t";
             if(categoria !== 'FMC') {
-                newText += campos[3] + ",\t" + campos[4] + ",\t"
-                + (numTiempos > 3 ? campos[5] + ",\t" + campos[6] + ",\t" : 0 + ",\t" + 0 + ",\t")
+                newText += checkDNF(campos[3]) + ",\t" + checkDNF(campos[4]) + ",\t"
+                + (numTiempos > 3 ? checkDNF(campos[5]) + ",\t" + checkDNF(campos[6]) + ",\t" : 0 + ",\t" + 0 + ",\t")
                 + campos[(9 - (5 - numTiempos)) - (categoria === 'BLD' ? 1 : 0)] + ",\t" + campos[(10 - (5 - numTiempos)) - (categoria === 'BLD' ? 1 : 0)] + "),\n"; //Ignorar columnas que no estarán
-                newText = newText.replaceAll("DNF", "0")
             } else {
-                newText = newText.replaceAll("DNF", "0")
-                newText += 0 + ",\t" + 0 + ",\t"+ 0 + ",\t"+ 0 + ",\t" + campos[4] + ",\t" + campos[5] + ",\t\"" + campos[3] + "\",\t\""  + explicaciones[i] + "\"),\n";
+                var dnf = false;
+                if(campos[2] === 'DNF') {dnf = true;}
+                newText += 0 + ",\t" + 0 + ",\t"+ 0 + ",\t"+ 0 + ",\t" + campos[4] + ",\t" + campos[5] + ",\t\"" + (dnf ? "-" : campos[3]) + "\",\t\""  + (explicaciones[i].trim() === "DNF" ? "-" : explicaciones[i]) + "\"),\n";
             }
         }
         i++
@@ -81,5 +81,12 @@ function formatTiempos(text, categoria, numTiempos, jornada) {
 
 
     return newText.substr(0, newText.length - 2) + ";";
+
+}
+
+
+function checkDNF(tiempo) {
+    return tiempo === 'DNF' ? 0 : tiempo;
+
 
 }

@@ -3,10 +3,6 @@
     background-size: cover;
 }
 
-html .cubosbg{
-    backdrop-filter: blur(5px);
-}
-
 table.centerCols th, table.centerCols td {
     text-align: center;
     vertical-align: middle !important;

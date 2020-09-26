@@ -2,15 +2,13 @@ package com.example.miwebbase.Utils;
 
 import com.example.miwebbase.Entities.Categoria;
 import com.example.miwebbase.Entities.Tiempo;
+import com.example.miwebbase.Models.PuntuacionIndividual;
 import com.example.miwebbase.Models.PuntuacionTotal;
 import com.example.miwebbase.repositories.TiempoRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AESUtils {
@@ -35,12 +33,12 @@ public class AESUtils {
                 media = tiempos.stream().mapToDouble(d -> d).average().getAsDouble();
             } else if (tiempos.size() == 5) {
                 tiempos.remove(0);
-                peorTiempo = tiempos.get(4-1);
+                peorTiempo = tiempos.get(4 - 1);
                 tiempos.remove(4 - 1);
                 media = tiempos.stream().mapToDouble(d -> d).average().getAsDouble();
             }
-        } else if (categoria.getNumTiempos() == 3){
-            if (tiempos.size() == 3){
+        } else if (categoria.getNumTiempos() == 3) {
+            if (tiempos.size() == 3) {
                 media = tiempos.stream().mapToDouble(d -> d).average().getAsDouble();
                 peorTiempo = tiempos.get(2);
             }
@@ -58,7 +56,7 @@ public class AESUtils {
                 .get().clone();
 
         List<PuntuacionTotal> puntuacionesEmpatadasOriginalmentePorPuntuacionTotal = puntuaciones.stream().map(PuntuacionTotal::clone)
-                .filter(p -> p.getPuntuacion_total() == puntuacionTotalParticipantes.getPuntuacion_total()).collect(Collectors.toList());
+                .filter(p -> p.getPuntuacion_total().intValue() == puntuacionTotalParticipantes.getPuntuacion_total().intValue()).collect(Collectors.toList());
 
         if (puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.size() == 1) {
             return puntuaciones.indexOf(puntuaciones.stream().filter(p -> p.getNombre().equals(nombreParticipante)).findFirst().get()) + 1;
@@ -73,16 +71,39 @@ public class AESUtils {
         //Mientras el nombre que buscamos no esté ordenado
         while (!personasDesempatadasEnOrden.stream().anyMatch(p -> p.equals(nombreParticipante))) {
 
-            int mejorPuntuacionJornada = puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream().mapToInt(ps -> ps.getPuntuacionesIndividuales().
-                    stream().reduce((acc, val) -> acc.getPuntuacion_jornada() > val.getPuntuacion_jornada() ? acc : val).get().getPuntuacion_jornada()).max().getAsInt();
+            List<PuntuacionTotal> puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas =
+                    puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream().map(PuntuacionTotal::clone).collect(Collectors.toList());
 
-            // Desempatar por jornadas individuales
-            // Copia de la lista siempre para jugar con los arrays y no afectar a los de la original
-            List<PuntuacionTotal> puntuacionesEmpatadasPorPuntuacionesIndividuales = puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream().map(PuntuacionTotal::clone)
-                    .filter(p -> p.getPuntuacionesIndividuales().stream()
-                            .reduce((acc, val) -> acc.getPuntuacion_jornada() > val.getPuntuacion_jornada() ? acc : val)
-                            .get().getPuntuacion_jornada() == mejorPuntuacionJornada)
-                    .collect(Collectors.toList());
+            puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.forEach(p -> p.getPuntuacionesIndividuales().sort(Comparator.comparingInt(PuntuacionIndividual::getPuntuacion_jornada).reversed()));
+
+            List<PuntuacionTotal> puntuacionesEmpatadasPorPuntuacionesIndividuales;
+            while (true) {
+
+                int mejorPuntuacionJornadaN = puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.stream()
+                        .mapToInt(ps -> ps.getPuntuacionesIndividuales().size() > 0 ? ps.getPuntuacionesIndividuales().get(0).getPuntuacion_jornada() : 0)
+                        .max().getAsInt();
+
+                List<PuntuacionTotal> aux = puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.stream().map(PuntuacionTotal::clone)
+                        .filter(p-> p.getPuntuacionesIndividuales().size() > 0 && p.getPuntuacionesIndividuales().get(0).getPuntuacion_jornada() == mejorPuntuacionJornadaN)
+                        .collect(Collectors.toList());
+
+                if(aux.size() > 1){
+
+                    puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.forEach(p -> p.getPuntuacionesIndividuales().remove(0));
+
+                } else if (aux.size() == 1){
+
+                    puntuacionesEmpatadasPorPuntuacionesIndividuales = aux;
+                    break;
+
+                } else if (aux.size() == 0){
+
+                    puntuacionesEmpatadasPorPuntuacionesIndividuales = puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas;
+                    break;
+
+                }
+
+            }
 
             if (puntuacionesEmpatadasPorPuntuacionesIndividuales.size() == 1) {
 
@@ -95,7 +116,7 @@ public class AESUtils {
             } else {
 
                 //Desempatar por media
-                List<Tiempo> tiemposEmpatados = tiempoRepository.getTiemposDeVariosParticipantes(categoria, puntuacionesEmpatadasPorPuntuacionesIndividuales.stream().map(p -> p.getNombre()).collect(Collectors.toSet()));
+                List<Tiempo> tiemposEmpatados = tiempoRepository.getTiemposDeVariosParticipantes(categoria, puntuacionesEmpatadasPorPuntuacionesIndividuales.stream().map(PuntuacionTotal::getNombre).collect(Collectors.toSet()));
                 tiemposEmpatados.stream().forEach(t -> t.setMedia(getTiemposCalculados(Arrays.asList(t.getTiempo1(), t.getTiempo2(), t.getTiempo3(), t.getTiempo4(), t.getTiempo5()), categoria)[1]));
 
                 Tiempo mejorMedia = tiemposEmpatados.stream().reduce((acc, val) -> (acc.getMedia() > 0) && (acc.getMedia() < val.getMedia()) ? acc : val).get();
