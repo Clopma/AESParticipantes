@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-@Table(name = Categoria.T_CATEGORIAS)
+@Table(name = "Categorias")
 @Entity
 @Getter
 @Builder
@@ -19,7 +19,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class Categoria {
 
-    public static final String T_CATEGORIAS = "Categorias";
 
     @Id
     private String nombre;
@@ -30,6 +29,7 @@ public class Categoria {
     @NotNull
     private int orden;
 
+    @NotNull
     private Integer cortePlayOffs;
 
 

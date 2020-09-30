@@ -1,11 +1,13 @@
 package com.example.miwebbase.Controllers;
 
 import com.example.miwebbase.Entities.Categoria;
+import com.example.miwebbase.Entities.Descalificacion;
 import com.example.miwebbase.Entities.Tiempo;
 import com.example.miwebbase.Models.PuntuacionTotal;
 import com.example.miwebbase.Models.Resultado;
 import com.example.miwebbase.Utils.AESUtils;
 import com.example.miwebbase.repositories.CategoriaRepository;
+import com.example.miwebbase.repositories.DescalificacionRepository;
 import com.example.miwebbase.repositories.TiempoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -31,18 +33,46 @@ public class CategoriaController {
     @Autowired
     CategoriaRepository categoriaRepository;
 
+    @Autowired
+    DescalificacionRepository descalificacionRepository;
+
     @Autowired CategoriaController self;
 
     @RequestMapping("/categoria/{nombreCategoria}")
     public String getVistaCategoria(Model model, @PathVariable("nombreCategoria") String nombreCategoria){
 
         Categoria categoria = self.getCategoria(nombreCategoria);
+
+        List<PuntuacionTotal> puntuaciones = self.getRankingCategoria(categoria);
+
+
         model.addAttribute("categoria", categoria);
-        model.addAttribute("posiciones", self.getRankingCategoria(categoria));
+        model.addAttribute("posiciones", puntuaciones);
+        model.addAttribute("largoClasificacion", getLargoClasificacion(puntuaciones, categoria.getCortePlayOffs()));
         model.addAttribute("categorias", self.getCategoriasEnOrden());
         model.addAttribute("columnasJornadas", new int[AESUtils.JORNADAS_CAMPEONATO]);
 
         return "categoria";
+    }
+
+    private int getLargoClasificacion(List<PuntuacionTotal> puntuaciones, int largoPredeterminado) {
+
+        int largoClasificacion = 0;
+        int numClasificados = 0;
+        for (PuntuacionTotal puntuacion : puntuaciones){
+
+            if(numClasificados == largoPredeterminado){
+                break;
+            }
+
+            if(puntuacion.isClasificado()){
+                numClasificados++;
+            }
+
+            largoClasificacion++;
+        }
+
+        return largoClasificacion;
     }
 
     @RequestMapping("/categoria/{nombreCategoria}/jornada/{numeroJornada}")
@@ -77,9 +107,16 @@ public class CategoriaController {
         AtomicInteger posicion = new AtomicInteger(1);
         puntuacionesTotales.forEach(p -> p.setPosicion(posicion.getAndIncrement()));
 
-
         puntuacionesTotales.forEach(pt -> pt.setPuntuacionesIndividuales(tiempoRepository.getParticipantesPuntosIndividualesCategoria(categoria).stream()
                 .filter(pi -> pi.getNombre().equals(pt.getNombre())).collect(Collectors.toList())));
+
+
+        List<Descalificacion> descalificados = descalificacionRepository.findAllByCategoria(categoria);
+        puntuacionesTotales.stream().filter(p -> descalificados.stream()
+                .noneMatch(d -> p.getNombre().equals(d.getParticipante().getNombre())))
+                .collect(Collectors.toList())
+                .subList(0, categoria.getCortePlayOffs())
+                .forEach(p -> p.setClasificado(true));
 
         return puntuacionesTotales;
 

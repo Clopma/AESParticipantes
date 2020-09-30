@@ -1,4 +1,4 @@
-package com.example.miwebbase.Entities;
+package com.example.miwebbase.Entities.Keys;
 
 
 import java.io.Serializable;

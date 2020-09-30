@@ -16,6 +16,7 @@ public class PuntuacionTotal implements Cloneable {
     Integer puntuacion_total;
     int posicion;
     List<PuntuacionIndividual> puntuacionesIndividuales;
+    boolean clasificado;
 
 
 
@@ -26,7 +27,7 @@ public class PuntuacionTotal implements Cloneable {
 
     public PuntuacionTotal clone(){
 
-        return new PuntuacionTotal(this.nombre, this.puntuacion_total, this.posicion, puntuacionesIndividuales == null ? null : new ArrayList<>(puntuacionesIndividuales));
+        return new PuntuacionTotal(this.nombre, this.puntuacion_total, this.posicion, puntuacionesIndividuales == null ? null : new ArrayList<>(puntuacionesIndividuales), this.clasificado);
 
     }
 

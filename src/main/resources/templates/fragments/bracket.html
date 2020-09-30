@@ -1,0 +1,115 @@
+
+<html xmlns:th="https://www.thymeleaf.org">
+<head>    <link rel="stylesheet" href="/css/evento.css"></link>
+</head>
+<div style="height: 100%; display: flex; align-items: center; justify-content: center">
+<div class="bracket">
+    <section class="round quarterfinals" th:if="${categoria.getCortePlayOffs() >= 8}">
+        <div class="winners">
+            <div class="matchups">
+                <div class="matchup">
+                    <div class="participants">
+                        <div th:with="c=${listaCuartos[0]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 1</span>
+                        </div>
+                        <div th:with="c=${listaCuartos[1]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 2</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="matchup">
+                    <div class="participants">
+                        <div th:with="c=${listaCuartos[2]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 3</span>
+                        </div>
+                        <div th:with="c=${listaCuartos[3]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 4</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="connector">
+                <div class="merger"></div>
+                <div class="line"></div>
+            </div>
+        </div>
+        <div class="winners">
+            <div class="matchups">
+                <div class="matchup">
+                    <div class="participants">
+                        <div th:with="c=${listaCuartos[4]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 5</span>
+                        </div>
+                        <div th:with="c=${listaCuartos[5]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 6</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="matchup">
+                    <div class="participants">
+                        <div th:with="c=${listaCuartos[6]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 7</span>
+                        </div>
+                        <div th:with="c=${listaCuartos[7]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 8</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="connector">
+                <div class="merger"></div>
+                <div class="line"></div>
+            </div>
+        </div>
+    </section>
+    <section class="round semifinals" th:if="${categoria.getCortePlayOffs() >= 4}">
+        <div class="winners">
+            <div class="matchups">
+                <div class="matchup">
+                    <div class="participants">
+                        <div class="participants">
+                            <div th:with="c=${listaSemis[0]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                                <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Semifinalista 1</span>
+                            </div>
+                            <div th:with="c=${listaSemis[1]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                                <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Semifinalista 2</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="matchup">
+                    <div class="participants">
+                        <div th:with="c=${listaSemis[2]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Semifinalista 3</span>
+                        </div>
+                        <div th:with="c=${listaSemis[3]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Semifinalista 4</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="connector">
+                <div class="merger"></div>
+                <div class="line"></div>
+            </div>
+        </div>
+    </section>
+    <section class="round finals" th:if="${categoria.getCortePlayOffs() >= 2}">
+        <div class="winners">
+            <div class="matchups">
+                <div class="matchup">
+                    <div class="participants">
+                        <div th:with="c=${listaFinal[0]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Finalista 1</span>
+                        </div>
+                        <div th:with="c=${listaFinal[1]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Finalista 2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</div>
+</html>

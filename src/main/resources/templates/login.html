@@ -2,6 +2,9 @@
 <head>
     <title>Nacional Online 2020</title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
+    <link rel="stylesheet" href="css/dropdown.css"/>
+
+
     <script type="text/javascript" src="js/TiempoUtils.js"></script>
 
 </head>
@@ -52,7 +55,7 @@
 
         var s = document.getElementById("selectorCategoria");
 
-        if(s && s.selectedIndex !== -1) {
+        if (s && s.selectedIndex !== -1) {
             var destino = window.location + 'categoria/' + s.options[s.selectedIndex].value;
 
 
@@ -69,6 +72,20 @@
 </script>
 <body class="cubosbg">
 <div class="vertical-flex-wrapper">
+    <div class="whitePanel top" style="display: flex; align-items: center">
+
+        <div class="bouncyContainer backward" style="margin: auto">
+        <a href="/calendario" class="bouncyContainer">
+            <img class="bouncyButton backward" src="/img/bracket.png"/>
+        </a>
+    </div>
+        <h1>
+            <a href="/calendario" style="text-decoration: none">
+                Calendario y playoffs
+            </a>
+        </h1>
+
+    </div>
     <div class="login-content">
 
         <div class="whitePanel left" style="margin-left: 0px;">
@@ -89,7 +106,8 @@
                     <h3 style="padding-right: 10px">Ranking:</h3>
                     <select class="form-control form-control-lg miSelect" id="selectorRanking">
                         <option value="0">Ranking general</option>
-                        <option th:each="jornada, iStat : ${jornadas}" th:text="'Jornada ' + ${iStat.index + 1}" th:value="${iStat.index+1}"></option>
+                        <option th:each="jornada, iStat : ${jornadas}" th:text="'Jornada ' + ${iStat.index + 1}"
+                                th:value="${iStat.index+1}"></option>
                     </select>
                 </div>
                 <script>
@@ -120,7 +138,8 @@
                     <button id="botonSeleccionar" class="btn btn-primary dropdown-toggle" type="button"
                             data-toggle="dropdown">
                         Seleccionar participante
-                        <span class="caret"></span></button>
+                        <!--                        <span class="caret"></span>-->
+                    </button>
                     <ul id="listaParticipantes" class="dropdown-menu">
                         <input id="selectorParticipantes" autocomplete="off" class="form-control" type="text"
                                placeholder="Busca..."/>
@@ -133,7 +152,6 @@
     </div>
     <footer th:replace="fragments/footer :: creditFooter"/>
 </div>
-
 
 </body>
 </html>

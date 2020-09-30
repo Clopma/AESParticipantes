@@ -1,11 +1,12 @@
 package com.example.miwebbase.Entities;
 
+import com.example.miwebbase.Entities.Keys.KeyTiempo;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-@Table(name = Tiempo.T_USUARIOS)
+@Table(name = "Tiempos")
 @Entity
 @IdClass(KeyTiempo.class)
 @Builder
@@ -15,9 +16,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class Tiempo {
 
-    public static final String T_USUARIOS = "Tiempos";
-
-    public static final String CATEGORIA = "categoria";
     @Id
     @ManyToOne
     private Categoria categoria;
@@ -26,7 +24,7 @@ public class Tiempo {
     private int jornada;
 
     @Id
-    @ManyToOne()
+    @ManyToOne
     private Participante participante;
 
     @NotNull

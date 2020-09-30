@@ -4,15 +4,15 @@ INSERT INTO categorias (nombre, orden, num_tiempos, corte_play_offs) values
 ('2x2x2', 2, 5, 8),
 ('4x4x4', 3, 5, 4),
 ('5x5x5', 4, 5, 4),
-('6x6x6', 5, 3, null),
-('7x7x7', 6, 3, null),
+('6x6x6', 5, 3, 0),
+('7x7x7', 6, 3, 0),
 ('OH', 7, 5, 8),
 ('BLD', 8, 3, 4),
 ('FMC', 9, 1, 8),
 ('Skewb', 10, 5, 8),
 ('Pyraminx', 11, 5, 8),
 ('Square-1', 12, 5, 4),
-('Megaminx', 13, 5, null);
+('Megaminx', 13, 5, 0);
 
 
 INSERT INTO participantes(Nombre) VALUES
@@ -168,6 +168,30 @@ INSERT INTO participantes(Nombre) VALUES
 ,('Sergio Torrijos Santano')
 ,('Vittorio Maria Perucatti');
 
+-- INSERT INTO clasificados (ronda, posicion, categoria_nombre, participante_nombre, victoria) VALUES
+-- ("CUARTO_DE_FINAL", 0, "3x3x3", "Posición 1", false),
+-- ("CUARTO_DE_FINAL", 1, "3x3x3", "Posición 8", false),
+-- ("CUARTO_DE_FINAL", 2, "3x3x3", "Posición 5", false),
+-- ("CUARTO_DE_FINAL", 3, "3x3x3", "Posición 4", false),
+-- ("CUARTO_DE_FINAL", 4, "3x3x3", "Posición 3", false),
+-- ("CUARTO_DE_FINAL", 5, "3x3x3", "Posición 6", false),
+-- ("CUARTO_DE_FINAL", 6, "3x3x3", "Posición 7", false),
+-- ("CUARTO_DE_FINAL", 7, "3x3x3", "Posición 2", false),
+--
+-- ("CUARTO_DE_FINAL", 0, "2x2x2", "Posición 1", false),
+-- ("CUARTO_DE_FINAL", 1, "2x2x2", "Posición 8", false),
+-- ("CUARTO_DE_FINAL", 2, "2x2x2", "Posición 5", false),
+-- ("CUARTO_DE_FINAL", 3, "2x2x2", "Posición 4", false),
+-- ("CUARTO_DE_FINAL", 4, "2x2x2", "Posición 3", false),
+-- ("CUARTO_DE_FINAL", 5, "2x2x2", "Posición 6", false),
+-- ("CUARTO_DE_FINAL", 6, "2x2x2", "Posición 7", false),
+-- ("CUARTO_DE_FINAL", 7, "2x2x2", "Posición 2", false),
+--  INSERT INTO descalificaciones (categoria_nombre, participante_nombre) VALUES
+--
+--  ("BLD", "Jose Antonio Navarro Sánchez");
+
+
+
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"3x3x3",	1,	"Biel Salmons Gonzalez",	8.69,	8.4,	7.21,	6.52,	8.83,	100.00,	25),
 (1,	"3x3x3",	2,	"Eder Olivencia González",	8.17,	7.86,	9.3,	10.03,	7.32,	96.00,	19),
@@ -293,7 +317,7 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (2,	"3x3x3",	9,	"Juan David Carmona Vásquez",	9.55,	11.28,	9.02,	10.2,	10.35,	86.00,	4),
 (2,	"3x3x3",	10,	"Miguel Ángel González-Herrero García",	9.66,	9.9,	9.92,	13.67,	10.44,	85.00,	3),
 (2,	"3x3x3",	11,	"Mauro Moisés Ortega López",	8.37,	9.44,	10.81,	10.28,	11.31,	85.00,	2),
-(2,	"3x3x3",	12,	"Dani Cófreces Jaureguizar",	8.03,	11.03,	9.53,	10.65,	0,	83.00,	1),
+(2,	"3x3x3",	12,	"Dani Cófreces Jaureguizar",	8.03,	11.13,	9.53,	10.65,	0,	83.00,	1),
 (2,	"3x3x3",	13,	"Arnau Tous Mateu",	7.53,	11.96,	10.51,	11.11,	9.62,	83.00,	0),
 (2,	"3x3x3",	14,	"Izan Cantero Herrera",	14.95,	9.12,	10.75,	10.12,	10.81,	82.00,	0),
 (2,	"3x3x3",	15,	"Álvaro Aguilar Salobreña",	8.19,	12.63,	9.93,	10.6,	11.37,	81.00,	0),
@@ -751,7 +775,7 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (2,	"2x2x2",	79,	"Rubén Pérez Pérez",	30.51,	62.32,	18.32,	20.41,	22.13,	9.00,	0);
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (3,	"2x2x2",	1,	"Manuel Prieto de Antón",	3.64,	2.77,	1.59,	2.15,	1.82,	100.00,	25),
-(3,	"2x2x2",	2,	"Miguel Ángel González-Herrero García",	1.91,	2.73,	2.39,	5.70,	1.65,	96.00,	19),
+(3,	"2x2x2",	2,	"Miguel Ángel González-Herrero García",	1.91,	0,	2.39,	5.70,	1.65,	96.00,	19),
 (3,	"2x2x2",	3,	"Izan Cantero Herrera",	2.51,	2.46,	2.13,	2.28,	4.13,	93.00,	15),
 (3,	"2x2x2",	4,	"Rafael Rodriguez Santana",	2.80,	2.51,	2.27,	2.47,	5.50,	87.00,	12),
 (3,	"2x2x2",	5,	"Mauro Moisés Ortega López",	2.10,	4.21,	2.49,	3.88,	1.79,	80.00,	10),
@@ -777,7 +801,7 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (3,	"2x2x2",	25,	"Héctor Haro Guerrero",	4.20,	4.54,	4.07,	3.93,	4.71,	53.00,	0),
 (3,	"2x2x2",	26,	"Jorge Marín Segovia",	3.68,	4.60,	3.08,	5.05,	4.64,	52.00,	0),
 (3,	"2x2x2",	27,	"Marc Garcia Diaz",	4.39,	5.40,	3.24,	3.01,	5.33,	52.00,	0),
-(3,	"2x2x2",	28,	"Jorge Martín Espinosa",	3.31,	5.18,	3.37,	5.08,	4.70,	51.00,	0),
+(3,	"2x2x2",	28,	"Jorge Martín Espinosa",	3.31,	0,	3.37,	5.08,	4.70,	51.00,	0),
 (3,	"2x2x2",	29,	"Sebastián Pulgarín Manrique",	4.26,	6.52,	2.95,	5.08,	3.82,	51.00,	0),
 (3,	"2x2x2",	30,	"Marcos Castelló Pastor",	5.48,	5.18,	3.70,	4.14,	4.12,	50.00,	0),
 (3,	"2x2x2",	31,	"Lorenzo Escobar Kraskouskaya",	4.10,	5.66,	2.81,	5.28,	4.20,	50.00,	0),
@@ -1102,7 +1126,7 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (3,	"4x4x4",	65,	"Miguel Alonso Gil",	47.77,	38.45,	0,	0,	55.03,	0,	0.00);
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (4,	"4x4x4",	1,	"Biel Salmons Gonzalez",	27.82,	34.13,	30.63,	34.07,	32.14,	100.00,	25.00),
-(4,	"4x4x4",	2,	"Eder Olivencia González",	32.23,	36.11,	31.28,	30.03,	33.40,	100.00,	19.00),
+(4,	"4x4x4",	2,	"Eder Olivencia González",	32.23,	36.11,	31.38,	30.03,	33.40,	100.00,	19.00),
 (4,	"4x4x4",	3,	"Rafael Rodriguez Santana",	33.94,	37.24,	36.96,	39.10,	33.83,	90.00,	15.00),
 (4,	"4x4x4",	4,	"Mauro Moisés Ortega López",	37.01,	37.55,	36.26,	39.86,	33.92,	87.00,	12.00),
 (4,	"4x4x4",	5,	"Jorge Marín Segovia",	41.55,	38.52,	34.54,	31.24,	37.97,	87.00,	10.00),
@@ -1211,7 +1235,7 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (2,	"5x5x5",	1,	"Eder Olivencia González",	59.01,	53.88,	57.27,	52.40,	59.53,	100.00,	25),
 (2,	"5x5x5",	2,	"Mauro Moisés Ortega López",	83.47,	65.87,	64.6,	68.94,	67.55,	84.00,	19),
 (2,	"5x5x5",	3,	"Manuel Prieto de Antón",	71.37,	75.81,	67.34,	74.49,	66.59,	80.00,	15),
-(2,	"5x5x5",	4,	"Dani Cófreces Jaureguizar",	75.64,	66.87,	78.55,	74.97,	66.86,	78.00,	12),
+(2,	"5x5x5",	4,	"Dani Cófreces Jaureguizar",	75.64,	66.83,	78.55,	74.97,	66.86,	78.00,	12),
 (2,	"5x5x5",	5,	"Adrián Martínez Macías",	85.14,	77.65,	82.77,	73.42,	77.82,	71.00,	10),
 (2,	"5x5x5",	6,	"Raúl Martínez Redondo",	77.08,	94.83,	84.55,	83.29,	78.54,	69.00,	8),
 (2,	"5x5x5",	7,	"Javier Tovar Castro",	87.19,	77.17,	83.66,	85.98,	85.97,	67.00,	6),
@@ -1587,7 +1611,7 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (3,	"OH",	10,	"Luis Flores",	20.21,	19.19,	20.52,	21.28,	21.32,	64.00,	3),
 (3,	"OH",	11,	"Erik Subirats Cruz",	19.82,	22.91,	19.38,	22.12,	20.07,	64.00,	2),
 (3,	"OH",	12,	"Sergio Torrijos Santano",	21.52,	19.18,	19.54,	21.04,	25.67,	63.00,	1),
-(3,	"OH",	13,	"Jorge Martín Espinosa",	16.58,	20.11,	19.82,	22.24,	22.63,	63.00,	0),
+(3,	"OH",	13,	"Jorge Martín Espinosa",	16.58,	20.11,	19.82,	0,	22.63,	63.00,	0),
 (3,	"OH",	14,	"Raúl Martínez Redondo",	24.55,	19.01,	21.24,	28.50,	18.79,	61.00,	0),
 (3,	"OH",	15,	"Dani Cófreces Jaureguizar",	21.58,	24.54,	19.95,	26.66,	18.48,	60.00,	0),
 (3,	"OH",	16,	"Pol Juny Sánchez",	17.68,	25.01,	20.28,	27.97,	22.04,	59.00,	0),
@@ -2045,7 +2069,7 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (2,	"Skewb",	50,	"Jose Luis Molina López",	24.37,	21.12,	0,	16.47,	0,	0,	0);
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (3,	"Skewb",	1,	"Manuel Prieto de Antón",	1.93,	2.43,	2.36,	3.35,	2.64,	100.00,	25),
-(3,	"Skewb",	2,	"Miguel Ángel González-Herrero García",	3.32,	2.51,	5.04,	3.77,	3.40,	71.00,	19),
+(3,	"Skewb",	2,	"Miguel Ángel González-Herrero García",	3.32,	0,	5.04,	3.77,	3.40,	71.00,	19),
 (3,	"Skewb",	3,	"Fernando Sáez Lázaro",	3.58,	2.79,	4.17,	3.20,	4.78,	68.00,	15),
 (3,	"Skewb",	4,	"María del Mar Gallego Vicente",	5.63,	3.27,	4.50,	4.01,	3.21,	63.00,	12),
 (3,	"Skewb",	5,	"Pol Juny Sánchez",	2.98,	4.01,	4.80,	8.73,	4.12,	58.00,	10),

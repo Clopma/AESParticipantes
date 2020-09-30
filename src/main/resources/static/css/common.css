@@ -3,6 +3,18 @@
     background-size: cover;
 }
 
+.modal-content {
+    width: fit-content !important;
+    width: -moz-fit-content !important;
+    margin: auto !important;
+}
+
+.modal-dialog {
+
+max-width: 95% !important;
+
+}
+
 table.centerCols th, table.centerCols td {
     text-align: center;
     vertical-align: middle !important;
@@ -39,6 +51,12 @@ table.centerCols th, table.centerCols td {
     margin-right: 0;
 }
 
+.whitePanel.top  {
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    margin-top: 0;
+}
+
 footer.credit {
     width: 100%;
     text-align: center;
@@ -56,15 +74,6 @@ footer.credit {
     display: flex;
     justify-content: center;
 }
-
-#selectorParticipantes {
-    padding: 20px;
-    margin-top: -6px;
-    border: 0;
-    border-radius: 0;
-    background: #f1f1f1;
-}
-
 
 div.bouncyContainer {
 
@@ -182,8 +191,12 @@ tr.ultimoClasificado td, td.ultimoClasificado{
     font-weight: bold;
 }
 
+.descalificado {
+    background-color: #fde7e7  !important;
+}
 
-.clasificado td{
+
+.clasificado td, .descalificado td{
     font-weight: bold;
     border-top: 0 !important;
 }
@@ -200,6 +213,7 @@ h1, h2, h3 {
 
 h1 {
     font-size: 50px !important;
+    margin-bottom: 0 !important;
 }
 h2 {
     margin-top: 10px  !important;

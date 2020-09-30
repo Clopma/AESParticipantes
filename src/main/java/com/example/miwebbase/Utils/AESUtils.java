@@ -84,19 +84,19 @@ public class AESUtils {
                         .max().getAsInt();
 
                 List<PuntuacionTotal> aux = puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.stream().map(PuntuacionTotal::clone)
-                        .filter(p-> p.getPuntuacionesIndividuales().size() > 0 && p.getPuntuacionesIndividuales().get(0).getPuntuacion_jornada() == mejorPuntuacionJornadaN)
+                        .filter(p -> p.getPuntuacionesIndividuales().size() > 0 && p.getPuntuacionesIndividuales().get(0).getPuntuacion_jornada() == mejorPuntuacionJornadaN)
                         .collect(Collectors.toList());
 
-                if(aux.size() > 1){
+                if (aux.size() > 1) {
 
                     puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.forEach(p -> p.getPuntuacionesIndividuales().remove(0));
 
-                } else if (aux.size() == 1){
+                } else if (aux.size() == 1) {
 
                     puntuacionesEmpatadasPorPuntuacionesIndividuales = aux;
                     break;
 
-                } else if (aux.size() == 0){
+                } else if (aux.size() == 0) {
 
                     puntuacionesEmpatadasPorPuntuacionesIndividuales = puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas;
                     break;
