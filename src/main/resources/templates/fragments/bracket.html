@@ -10,20 +10,20 @@
                 <div class="matchup">
                     <div class="participants">
                         <div th:with="c=${listaCuartos[0]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 1</span>
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Clasificado 1</span>
                         </div>
                         <div th:with="c=${listaCuartos[1]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 2</span>
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Clasificado 2</span>
                         </div>
                     </div>
                 </div>
                 <div class="matchup">
                     <div class="participants">
                         <div th:with="c=${listaCuartos[2]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 3</span>
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Clasificado 3</span>
                         </div>
                         <div th:with="c=${listaCuartos[3]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 4</span>
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Clasificado 4</span>
                         </div>
                     </div>
                 </div>
@@ -38,20 +38,20 @@
                 <div class="matchup">
                     <div class="participants">
                         <div th:with="c=${listaCuartos[4]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 5</span>
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Clasificado 5</span>
                         </div>
                         <div th:with="c=${listaCuartos[5]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 6</span>
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Clasificado 6</span>
                         </div>
                     </div>
                 </div>
                 <div class="matchup">
                     <div class="participants">
                         <div th:with="c=${listaCuartos[6]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 7</span>
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Clasificado 7</span>
                         </div>
                         <div th:with="c=${listaCuartos[7]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Clasificado 8</span>
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Clasificado 8</span>
                         </div>
                     </div>
                 </div>
@@ -69,10 +69,10 @@
                     <div class="participants">
                         <div class="participants">
                             <div th:with="c=${listaSemis[0]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                                <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Semifinalista 1</span>
+                                <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Semifinalista 1</span>
                             </div>
                             <div th:with="c=${listaSemis[1]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                                <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Semifinalista 2</span>
+                                <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Semifinalista 2</span>
                             </div>
                         </div>
                     </div>
@@ -80,10 +80,10 @@
                 <div class="matchup">
                     <div class="participants">
                         <div th:with="c=${listaSemis[2]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Semifinalista 3</span>
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Semifinalista 3</span>
                         </div>
                         <div th:with="c=${listaSemis[3]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Semifinalista 4</span>
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Semifinalista 4</span>
                         </div>
                     </div>
                 </div>
@@ -100,10 +100,10 @@
                 <div class="matchup">
                     <div class="participants">
                         <div th:with="c=${listaFinal[0]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Finalista 1</span>
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Finalista 1</span>
                         </div>
                         <div th:with="c=${listaFinal[1]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre()}">Finalista 2</span>
+                            <span th:if="${c != null}" th:text="${c.getParticipante().getNombre() + (c.getTiempo() != null ? ' (' + c.getTiempo() +')' : '')}">Finalista 2</span>
                         </div>
                     </div>
                 </div>

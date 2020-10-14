@@ -1,5 +1,15 @@
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600");
 
+
+
+#twitchmodal{
+    padding: 0 !important;
+    padding-top: 10px!important;
+}
+
+#twitchmodal .modal-dialog {
+    max-width: none !important;
+}
 .cd-schedule__top-info span{
 
     font-size: x-large !important;
@@ -18,6 +28,13 @@ em, li.cd-schedule__event a, li span, li.cd-schedule__event a, .cd-schedule__nam
     font-size: 15px !important;
 }
 
+.cd-schedule__event.horizontal a::before, .cd-schedule__event.horizontal em{
+
+    font-family: 'Rajdhani', sans-serif !important;
+    font-size: 60% !important;
+    display: flex;
+    align-items: center;
+}
 .cd-schedule__event, .cd-schedule-modal__content {
     /*line-height: 2em !important;*/
 }
@@ -28,6 +45,19 @@ em, li.cd-schedule__event a, li span, li.cd-schedule__event a, .cd-schedule__nam
 .cd-schedule-modal__content, li.cd-schedule__event a{
     padding: 15px !important;
 }
+
+.horizontal a {
+display: flex !important;
+}
+
+.cd-schedule-modal__content, li.cd-schedule__event a{
+    padding: 15px !important;
+}
+.cd-schedule-modal__content.horizontal{
+    padding: 5px !important;
+}
+
+
 
 .cd-schedule__event--selected{
     transition: 0s !important;
@@ -45,13 +75,9 @@ li.cd-schedule__event:hover {
     transform: scale(1.2);
 }
 
-.horizontal a{
-    display: flex !important;
-}
-
 .horizontal em {
     line-height: 1.1em !important;
-    padding-left: 25px !important;
+    padding-left: 5px !important;
 }
 
 
@@ -63,7 +89,6 @@ li.cd-schedule__event:hover {
 
     max-width: 100% !important;
 }
-
 
 
 
@@ -3606,7 +3631,7 @@ mark {
     --cd-color-border-s: 0%;
     --cd-color-border-l: 92%;
     --font-primary: 'Source Sans Pro', sans-serif;
-    --schedule-rows-number: 17;
+    --schedule-rows-number: 19;
     --schedule-rows-height: 70px;
 }
 
@@ -3832,12 +3857,6 @@ body {
     transform: scale(1); /*Carlos*/
     transition: transform .2s, z-index .2s, opacity .2s, background .2s; /*Carlos*/
 }
-
-/*Carlos*/
-.cd-schedule__event em {
-    opacity: 1;
-    transition: 0.5s
- }
 
 /*Carlos*/
 .cd-schedule__event a {

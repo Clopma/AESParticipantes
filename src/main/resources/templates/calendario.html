@@ -3,117 +3,125 @@
     <title>Nacional Online 2020</title>
     <script>document.getElementsByTagName("html")[0].className += " js";</script>
     <th:block th:include="fragments/head :: genericHead"></th:block>
-    <link rel="stylesheet" href="css/calendario.css" />
+    <link rel="stylesheet" href="css/calendario.css"/>
 </head>
 <body class="cubosbg">
-    <div class="vertical-flex-wrapper" style="width: 100%">
-        <div class="whitePanel" style="width: 95%; margin: 20px">
-            <div class="cd-schedule cd-schedule--loading margin-top-lg margin-bottom-lg js-cd-schedule">
-                <div class="cd-schedule__timeline">
-                    <ul>
-                        <li><span>11:00</span></li>
-                        <li><span>11:30</span></li>
-                        <li><span>12:00</span></li>
-                        <li><span>12:30</span></li>
-                        <li><span>13:00</span></li>
-                        <li><span>13:30</span></li>
-                        <li><span>14:00</span></li>
-                        <li><span>14:30</span></li>
-                        <li><span>15:00</span></li>
-                        <li><span>15:30</span></li>
-                        <li><span>16:00</span></li>
-                        <li><span>16:30</span></li>
-                        <li><span>17:00</span></li>
-                        <li><span>17:30</span></li>
-                        <li><span>18:00</span></li>
-                        <li><span>18:30</span></li>
-                        <li><span>19:00</span></li>
-                        <li><span>19:30</span></li>
-                    </ul>
-                </div>
+<div th:replace="fragments/backButton :: backButton"/>
+<div class="vertical-flex-wrapper" style="width: 100%">
+    <div class="whitePanel" style="margin: 20px; text-align: center">
+        <h1><a href="#" data-toggle="modal" data-target="#twitchmodal" class="bouncyContainer">
+            <img src="/img/twitch-logo.png" style="width: 70px; height: 70px; margin-right: 20px"/> ¡Estamos en streaming!
+        </a></h1>
+    </div>
+    <div class="whitePanel" style="width: 95%; margin: 20px">
+        <div class="cd-schedule cd-schedule--loading margin-top-lg margin-bottom-lg js-cd-schedule">
+            <div class="cd-schedule__timeline">
+                <ul>
+                    <li><span>11:00</span></li>
+                    <li><span>11:30</span></li>
+                    <li><span>12:00</span></li>
+                    <li><span>12:30</span></li>
+                    <li><span>13:00</span></li>
+                    <li><span>13:30</span></li>
+                    <li><span>14:00</span></li>
+                    <li><span>14:30</span></li>
+                    <li><span>15:00</span></li>
+                    <li><span>15:30</span></li>
+                    <li><span>16:00</span></li>
+                    <li><span>16:30</span></li>
+                    <li><span>17:00</span></li>
+                    <li><span>17:30</span></li>
+                    <li><span>18:00</span></li>
+                    <li><span>18:30</span></li>
+                    <li><span>19:00</span></li>
+                    <li><span>19:30</span></li>
+                    <li><span>20:00</span></li>
+                    <li><span>20:30</span></li>
+                </ul>
+            </div>
 
-                <div class="cd-schedule__events">
-                    <ul>
-                        <li class="cd-schedule__group">
-                            <div class="cd-schedule__top-info"><span>SÁBADO 3</span></div>
+            <div class="cd-schedule__events">
+                <ul>
+                    <li class="cd-schedule__group">
+                        <div class="cd-schedule__top-info"><span>SÁBADO 3</span></div>
 
-                            <ul>
-                                <li class="cd-schedule__event">
+                        <ul>
+                            <li class="cd-schedule__event">
 
-                                    <a data-start="11:00" data-end="11:30" data-content="/playoffs/OH"
-                                       data-event="event-1" href="#0">
-                                        <em class="cd-schedule__name">OH - Cuartos</em>
-                                    </a>
-                                </li>
+                                <a data-start="11:00" data-end="11:30" data-content="/playoffs/OH"
+                                   data-event="event-1" href="#0">
+                                    <em class="cd-schedule__name">OH - Cuartos</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="11:30" data-end="12:00" data-content="/playoffs/Skewb"
-                                       data-event="event-1" href="#0">
-                                        <em class="cd-schedule__name">Skewb - Cuartos</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="11:30" data-end="12:00" data-content="/playoffs/Skewb"
+                                   data-event="event-1" href="#0">
+                                    <em class="cd-schedule__name">Skewb - Cuartos</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="12:00" data-end="12:30" data-content="/playoffs/Pyraminx"
-                                       data-event="event-1" href="#0">
-                                        <em class="cd-schedule__name">Pyraminx - Cuartos</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="12:00" data-end="12:30" data-content="/playoffs/Pyraminx"
+                                   data-event="event-1" href="#0">
+                                    <em class="cd-schedule__name">Pyraminx - Cuartos</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="12:30" data-end="13:00" data-content="/playoffs/2x2"
-                                       data-event="event-1" href="#0">
-                                        <em class="cd-schedule__name">2x2x2 - Cuartos</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="12:30" data-end="13:00" data-content="/playoffs/2x2x2"
+                                   data-event="event-1" href="#0">
+                                    <em class="cd-schedule__name">2x2x2 - Cuartos</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="13:00" data-end="14:00" data-content="/playoffs/BLD"
-                                       data-event="event-2" href="#0">
-                                        <em class="cd-schedule__name">3x3x3 BLD - Semifinales</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="13:00" data-end="14:00" data-content="/playoffs/BLD"
+                                   data-event="event-2" href="#0">
+                                    <em class="cd-schedule__name">3x3x3 BLD - Semifinales</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="14:00" data-end="16:00" data-content="/evento/comida"
-                                       data-event="event-3" href="#0">
-                                        <em class="cd-schedule__name">Comida</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="14:00" data-end="16:00" data-content="/evento/comida"
+                                   data-event="event-3" href="#0">
+                                    <em class="cd-schedule__name">Comida</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="16:00" data-end="17:00" data-content="/playoffs/Square-1"
-                                       data-event="event-2" href="#0">
-                                        <em class="cd-schedule__name">Square-1 - Semifinales</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="16:00" data-end="17:00" data-content="/playoffs/Square-1"
+                                   data-event="event-2" href="#0">
+                                    <em class="cd-schedule__name">Square-1 - Semifinales</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="17:00" data-end="18:00" data-content="/playoffs/5x5x5"
-                                       data-event="event-2" href="#0">
-                                        <em class="cd-schedule__name">5x5x5 - Semifinales</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="17:00" data-end="18:00" data-content="/playoffs/5x5x5"
+                                   data-event="event-2" href="#0">
+                                    <em class="cd-schedule__name">5x5x5 - Semifinales</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="18:00" data-end="18:30" data-content="/evento/pasapalabraCubero"
-                                       data-event="event-4" href="#0">
-                                        <em class="cd-schedule__name">Pasapalabra Cubero</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="18:00" data-end="18:30" data-content="/evento/pasapalabraCubero"
+                                   data-event="event-4" href="#0">
+                                    <em class="cd-schedule__name">Pasapalabra Cubero</em>
+                                </a>
+                            </li>
 
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="18:30" data-end="19:30" data-content="/playoffs/3x3x3"
-                                       data-event="event-1" href="#0">
-                                        <em class="cd-schedule__name">3x3x3 - Cuartos</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="18:30" data-end="20:00" data-content="/playoffs/3x3x3"
+                                   data-event="event-1" href="#0">
+                                    <em class="cd-schedule__name">3x3x3 - Cuartos</em>
+                                </a>
+                            </li>
 
-                            </ul>
-                        </li>
+                        </ul>
+                    </li>
 
-                        <li class="cd-schedule__group">
+                    <li class="cd-schedule__group">
                         <div class="cd-schedule__top-info"><span>DOMINGO 4</span></div>
 
                         <ul>
@@ -161,7 +169,7 @@
                             </li>
 
                             <li class="cd-schedule__event">
-                                <a data-start="18:00" data-end="19:15" data-content="/playoffs/3x3x3"
+                                <a data-start="18:00" data-end="20:00" data-content="/playoffs/3x3x3"
                                    data-event="event-2" href="#0">
                                     <em class="cd-schedule__name">3x3 - Semifinales</em>
                                 </a>
@@ -170,172 +178,172 @@
                         </ul>
                     </li>
 
-                        <li class="cd-schedule__group" style="padding-left: 10px">
-                            <div class="cd-schedule__top-info"><span>SÁBADO 10</span></div>
+                    <li class="cd-schedule__group" style="padding-left: 10px">
+                        <div class="cd-schedule__top-info"><span>SÁBADO 10</span></div>
 
-                            <ul>
-                                <li class="cd-schedule__event">
-                                    <a data-start="11:00" data-end="12:00" data-content="/playoffs/Square-1"
-                                       data-event="event-5" href="#0">
-                                        <em class="cd-schedule__name">Sq-1 - Final</em>
-                                    </a>
-                                </li>
+                        <ul>
+                            <li class="cd-schedule__event">
+                                <a data-start="11:00" data-end="12:15" data-content="/playoffs/Square-1"
+                                   data-event="event-5" href="#0">
+                                    <em class="cd-schedule__name">Sq-1 - Final</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="12:00" data-end="13:15" data-content="/playoffs/BLD"
-                                       data-event="event-5" href="#0">
-                                        <em class="cd-schedule__name">BLD - Final</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="12:15" data-end="13:30" data-content="/playoffs/BLD"
+                                   data-event="event-5" href="#0">
+                                    <em class="cd-schedule__name">BLD - Final</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="13:15" data-end="13:45" data-content="/evento/sorteoKubekings"
-                                       data-event="event-6" href="#0">
-                                        <em class="cd-schedule__name">Sorteo Kubekings</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="13:30" data-end="14:00" data-content="/evento/sorteoKubekings1"
+                                   data-event="event-6" href="#0">
+                                    <em class="cd-schedule__name">Sorteo Kubekings</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="13:45" data-end="16:00" data-content="/evento/comida"
-                                       data-event="event-3" href="#0">
-                                        <em class="cd-schedule__name">Comida</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="14:00" data-end="16:00" data-content="/evento/comida"
+                                   data-event="event-3" href="#0">
+                                    <em class="cd-schedule__name">Comida</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="16:00" data-end="17:00" data-content="/playoffs/Skewb"
-                                       data-event="event-5" href="#0">
-                                        <em class="cd-schedule__name">Skewb - Final</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="16:00" data-end="17:15" data-content="/playoffs/Skewb"
+                                   data-event="event-5" href="#0">
+                                    <em class="cd-schedule__name">Skewb - Final</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="17:00" data-end="18:00" data-content="/playoffs/Pyraminx"
-                                       data-event="event-5" href="#0">
-                                        <em class="cd-schedule__name">Pyraminx - Final</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="17:15" data-end="18:30" data-content="/playoffs/Pyraminx"
+                                   data-event="event-5" href="#0">
+                                    <em class="cd-schedule__name">Pyraminx - Final</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="18:00" data-end="18:30" data-content="/evento/sorteoKubekings"
-                                       data-event="event-6" href="#0">
-                                        <em class="cd-schedule__name">Sorteo Kubekings</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="18:30" data-end="19:15" data-content="/evento/sorteoKubekings2"
+                                   data-event="event-6" href="#0">
+                                    <em class="cd-schedule__name">Sorteo Kubekings</em>
+                                </a>
+                            </li>
 
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="18:30" data-end="19:30" data-content="/playoffs/OH"
-                                       data-event="event-5" href="#0">
-                                        <em class="cd-schedule__name">OH - Final</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="19:15" data-end="20:30" data-content="/playoffs/OH"
+                                   data-event="event-5" href="#0">
+                                    <em class="cd-schedule__name">OH - Final</em>
+                                </a>
+                            </li>
 
-                            </ul>
-                        </li>
+                        </ul>
+                    </li>
 
-                        <li class="cd-schedule__group">
-                            <div class="cd-schedule__top-info"><span>DOMINGO 11</span></div>
+                    <li class="cd-schedule__group">
+                        <div class="cd-schedule__top-info"><span>DOMINGO 11</span></div>
 
-                            <ul>
-                                <li class="cd-schedule__event">
-                                    <a data-start="11:00" data-end="12:00" data-content="/playoffs/5x5x5"
-                                       data-event="event-5" href="#0">
-                                        <em class="cd-schedule__name">5x5x5 - Final</em>
-                                    </a>
-                                </li>
+                        <ul>
+                            <li class="cd-schedule__event">
+                                <a data-start="11:00" data-end="12:15" data-content="/playoffs/5x5x5"
+                                   data-event="event-5" href="#0">
+                                    <em class="cd-schedule__name">5x5x5 - Final</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="12:00" data-end="13:15" data-content="/playoffs/4x4x4"
-                                       data-event="event-5" href="#0">
-                                        <em class="cd-schedule__name">4x4x4 - Final</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="12:15" data-end="13:30" data-content="/playoffs/4x4x4"
+                                   data-event="event-5" href="#0">
+                                    <em class="cd-schedule__name">4x4x4 - Final</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="13:15" data-end="13:45" data-content="/evento/sorteoJuki"
-                                       data-event="event-6" href="#0">
-                                        <em class="cd-schedule__name">Sorteo 2x2 Juki Mods</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="13:30" data-end="14:00" data-content="/evento/sorteoJuki1"
+                                   data-event="event-6" href="#0">
+                                    <em class="cd-schedule__name">Sorteo 2x2 Juki Mods</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="13:45" data-end="16:00" data-content="/evento/comida"
-                                       data-event="event-3" href="#0">
-                                        <em class="cd-schedule__name">Comida</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="14:00" data-end="16:00" data-content="/evento/comida"
+                                   data-event="event-3" href="#0">
+                                    <em class="cd-schedule__name">Comida</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="16:00" data-end="17:00" data-content="/playoffs/2x2x2"
-                                       data-event="event-5" href="#0">
-                                        <em class="cd-schedule__name">2x2x2 - Final</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="16:00" data-end="17:15" data-content="/playoffs/2x2x2"
+                                   data-event="event-5" href="#0">
+                                    <em class="cd-schedule__name">2x2x2 - Final</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="17:00" data-end="17:30" data-content="/evento/sorteoKubekings"
-                                       data-event="event-6" href="#0">
-                                        <em class="cd-schedule__name">Sorteo 3x3 Juki Mods</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="17:15" data-end="17:45" data-content="/evento/sorteoJuki2"
+                                   data-event="event-6" href="#0">
+                                    <em class="cd-schedule__name">Sorteo 3x3 Juki Mods</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="17:30" data-end="18:00" data-content="/evento/entrevistaWCA"
-                                       data-event="event-4" href="#0">
-                                        <em class="cd-schedule__name">Entrevista Miembo WCA</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event horizontal">
+                                <a data-start="17:45" data-end="18:00" data-content="/evento/entrevistaWCA"
+                                   data-event="event-4" href="#0">
+                                    <em class="cd-schedule__name">Entrevista Miembo WCA</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="18:00" data-end="18:30" data-content="/playoffs/3x3x3"
-                                       data-event="event-5" href="#0">
-                                        <em class="cd-schedule__name">3x3x3 - Final</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="18:00" data-end="19:15" data-content="/playoffs/3x3x3"
+                                   data-event="event-5" href="#0">
+                                    <em class="cd-schedule__name">3x3x3 - Final</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event horizontal">
-                                    <a data-start="18:30" data-end="18:50" data-content="/evento/porra"
-                                       data-event="event-4" href="#0">
-                                        <em class="cd-schedule__name">Porra</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event horizontal">
+                                <a data-start="19:15" data-end="19:30" data-content="/evento/porra"
+                                   data-event="event-4" href="#0">
+                                    <em class="cd-schedule__name">Porra</em>
+                                </a>
+                            </li>
 
-                                <li class="cd-schedule__event">
-                                    <a data-start="18:50" data-end="19:30" data-content="/evento/clausura"
-                                       data-event="event-4" href="#0">
-                                        <em class="cd-schedule__name">Clausura</em>
-                                    </a>
-                                </li>
+                            <li class="cd-schedule__event">
+                                <a data-start="19:30" data-end="20:30" data-content="/evento/clausura"
+                                   data-event="event-4" href="#0">
+                                    <em class="cd-schedule__name">Clausura</em>
+                                </a>
+                            </li>
 
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
 
-                <div class="cd-schedule-modal" style="width: 80%; left: 10%;">
-                    <header class="cd-schedule-modal__header">
-                        <div class="cd-schedule-modal__content">
-                            <span class="cd-schedule-modal__date"></span>
-                            <h3 class="cd-schedule-modal__name"></h3>
-                        </div>
-
-                        <div class="cd-schedule-modal__header-bg"></div>
-                    </header>
-
-                    <div class="cd-schedule-modal__body">
-                        <div class="cd-schedule-modal__event-info" id="evinf" style="background: #f0f2f2"></div>
-                        <div class="cd-schedule-modal__body-bg"></div>
+            <div class="cd-schedule-modal" style="width: 80%; left: 10%;">
+                <header class="cd-schedule-modal__header">
+                    <div class="cd-schedule-modal__content">
+                        <span class="cd-schedule-modal__date"></span>
+                        <h3 class="cd-schedule-modal__name"></h3>
                     </div>
 
-                    <a href="#0" class="cd-schedule-modal__close text-replace">Close</a>
+                    <div class="cd-schedule-modal__header-bg"></div>
+                </header>
+
+                <div class="cd-schedule-modal__body">
+                    <div class="cd-schedule-modal__event-info" id="evinf" style="background: #f0f2f2"></div>
+                    <div class="cd-schedule-modal__body-bg"></div>
                 </div>
 
-                <div class="cd-schedule__cover-layer"></div>
+                <a href="#0" class="cd-schedule-modal__close text-replace">Close</a>
             </div>
+
+            <div class="cd-schedule__cover-layer"></div>
         </div>
-        <script src="js/calendario/util.js"></script>
-        <script src="js/calendario/main.js"></script>
+    </div>
+    <script src="js/calendario/util.js"></script>
+    <script src="js/calendario/main.js"></script>
 
 </div>
 

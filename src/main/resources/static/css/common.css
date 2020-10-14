@@ -11,7 +11,7 @@
 
 .modal-dialog {
 
-max-width: 95% !important;
+    max-width: 95% !important;
 
 }
 
@@ -19,6 +19,7 @@ table.centerCols th, table.centerCols td {
     text-align: center;
     vertical-align: middle !important;
 }
+
 .borderLeftColumn {
     border-left: solid 1px rgba(0, 0, 0, 0.5);
 }
@@ -51,7 +52,7 @@ table.centerCols th, table.centerCols td {
     margin-right: 0;
 }
 
-.whitePanel.top  {
+.whitePanel.top {
     border-top-right-radius: 0px;
     border-top-left-radius: 0px;
     margin-top: 0;
@@ -127,8 +128,8 @@ img.bouncyButton {
 }
 
 img.bouncyButton.podio {
-    filter: drop-shadow(3px 3px 3px #222);
-    -webkit-filter: drop-shadow(3px 3px 3px #222);
+    filter: drop-shadow(2px 2px 2px #222);
+    -webkit-filter: drop-shadow(2px 2px 2px #222);
 }
 
 div.forward, div.backward {
@@ -181,45 +182,52 @@ img.bouncyButton.backward {
     padding-bottom: 10px;
 }
 
-tr.ultimoClasificado td, td.ultimoClasificado{
+tr.ultimoClasificado td, td.ultimoClasificado {
 
     border-bottom: solid 1px rgba(0, 0, 0, 0.6);
 }
 
 .clasificado {
-    background-color: #f8fdff  !important;
+    background-color: #f8fdff !important;
     font-weight: bold;
 }
 
 .descalificado {
-    background-color: #fde7e7  !important;
+    background-color: #fde7e7 !important;
 }
 
 
-.clasificado td, .descalificado td{
+.clasificado td, .descalificado td {
     font-weight: bold;
     border-top: 0 !important;
 }
 
 
-.clasificado.participanteEncontrado, .participanteEncontrado{
+.clasificado.participanteEncontrado, .participanteEncontrado {
     background-color: #e9f4ff !important;
 }
 
 h1, h2, h3 {
 
     font-family: 'Rajdhani', sans-serif !important;
+    margin-bottom: 0px !important;
+
 }
 
 h1 {
     font-size: 50px !important;
-    margin-bottom: 0 !important;
 }
+
 h2 {
-    margin-top: 10px  !important;
-    margin-bottom: 10px  !important;
+    margin-top: 10px !important; /* TODO: poner inline solo donde se use*/
+    margin-bottom: 10px !important;
     font-size: 40px !important;
 }
+
 h3 {
     font-size: 25px !important;
+}
+
+.invisible {
+    visibility: hidden;
 }

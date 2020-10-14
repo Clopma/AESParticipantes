@@ -47,16 +47,29 @@ public class CalendarioController {
 
         Categoria categoria = categoriaRepository.findByNombre(nombreCategoria);
 
+        List<Clasificado> cuartos = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.CUARTO.name());
+        List<Clasificado> semis = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.SEMIFINAL.name());
+        List<Clasificado> finales = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.FINAL.name());
+        List<Clasificado> ganador = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.GANADOR.name());
+
+        Clasificado[] cuartosClasi;
+        Clasificado[] semisClasi;
+
         model.addAttribute("categoria", categoria);
 
         if(categoria.getCortePlayOffs() == 8){
-            model.addAttribute("listaCuartos", iniciarBracket(categoriaController.getRankingCategoria(categoria), descalificacionRepository.findAllByCategoria(categoria), 8));
-            model.addAttribute("listaSemis", rellenarBracket(clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.SEMIFINAL.name()), 4, categoria));
+            cuartosClasi = iniciarBracket(categoriaController.getRankingCategoria(categoria), descalificacionRepository.findAllByCategoria(categoria), 8, semis, cuartos);
+            semisClasi = rellenarBracket(semis, 4, categoria, finales, Arrays.asList(cuartosClasi));
+            model.addAttribute("listaCuartos", cuartosClasi);
+            model.addAttribute("listaSemis", semisClasi);
+            model.addAttribute("listaFinal", rellenarBracket(finales, 2, categoria, ganador, Arrays.asList(semisClasi)));
         } else if (categoria.getCortePlayOffs() == 4) {
-            model.addAttribute("listaSemis", iniciarBracket(categoriaController.getRankingCategoria(categoria), descalificacionRepository.findAllByCategoria(categoria), 4));
+            semisClasi = iniciarBracket(categoriaController.getRankingCategoria(categoria), descalificacionRepository.findAllByCategoria(categoria), 4, finales, semis);
+            model.addAttribute("listaSemis", semisClasi);
+            model.addAttribute("listaFinal", rellenarBracket(finales, 2, categoria, ganador, Arrays.asList(semisClasi)));
         }
 
-        model.addAttribute("listaFinal", rellenarBracket(clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.FINAL.name()), 2, categoria));
+
 
         return "fragments/bracket";
     }
@@ -67,12 +80,16 @@ public class CalendarioController {
         return "fragments/eventos/"+evento;
     }
 
-    private Clasificado[] rellenarBracket(List<Clasificado> clasificados, int numClasificados, Categoria categoria) {
+    private Clasificado[] rellenarBracket(List<Clasificado> clasificados, int numClasificados, Categoria categoria, List<Clasificado> siguienteRonda, List<Clasificado> rondaAnterior) {
         Clasificado[] rondas = new Clasificado[numClasificados];
         for (int i = 0; i < numClasificados; i++) {
             int finalI = i;
+
+            clasificados.forEach(c -> c.setPosicion((rondaAnterior.indexOf(rondaAnterior.stream().filter(a -> a.getParticipante().getNombre().equals(c.getParticipante().getNombre())).findFirst().get())/2)));
             rondas[i] = clasificados.stream().filter(c -> c.getPosicion() == finalI).findFirst().orElse(
                     Clasificado.builder().participante(Participante.builder().nombre(categoria.getCortePlayOffs() == numClasificados ? puestoEnLugar(finalI, numClasificados) : "-").build()).posicion(i).build());
+            int finalI1 = i;
+            rondas[i].setVictoria(siguienteRonda.stream().anyMatch(s -> rondas[finalI1].getParticipante().getNombre().equals(s.getParticipante().getNombre())));
         }
         return rondas;
     }
@@ -93,11 +110,15 @@ public class CalendarioController {
     }
 
 
-    private Clasificado[] iniciarBracket(List<PuntuacionTotal> rankingCategoria, List<Descalificacion> descalificados, int numClasificados) {
+    private Clasificado[] iniciarBracket(List<PuntuacionTotal> rankingCategoria, List<Descalificacion> descalificados, int numClasificados, List<Clasificado> siguienteRonda, List<Clasificado> rondaActual)  {
 
         List<Clasificado>  clasificados = rankingCategoria.stream().filter(p -> descalificados.stream()
                 .noneMatch(d -> p.getNombre().equals(d.getParticipante().getNombre())))
-                .map(p -> Clasificado.builder().participante(Participante.builder().nombre(p.getNombre()).build()).build())
+                .map(p -> Clasificado.builder()
+                        .participante(Participante.builder().nombre(p.getNombre()).build())
+                        .victoria(siguienteRonda.stream().anyMatch(s -> s.getParticipante().getNombre().equals(p.getNombre())))
+                        .tiempo(rondaActual.stream().filter(a -> a.getParticipante().getNombre().equals(p.getNombre())).findFirst().orElse(Clasificado.builder().build()).getTiempo())
+                .build())
                 .collect(Collectors.toList())
                 .subList(0, numClasificados);
 
@@ -105,6 +126,7 @@ public class CalendarioController {
 
        for(int i = 0; i < numClasificados; i++){
            clasificadosEnOrden[numClasificados == 8 ? ordenCuartos.get(i) : ordenSemifinales.get(i)] = clasificados.get(i);
+
        }
 
        return clasificadosEnOrden;

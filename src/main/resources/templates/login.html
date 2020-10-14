@@ -74,14 +74,33 @@
 <div class="vertical-flex-wrapper">
     <div class="whitePanel top" style="display: flex; align-items: center">
 
-        <div class="bouncyContainer backward" style="margin: auto">
-        <a href="/calendario" class="bouncyContainer">
-            <img class="bouncyButton backward" src="/img/bracket.png"/>
-        </a>
-    </div>
+        <div class="bouncyContainer forward" style="margin: auto">
+            <a href="/calendario" class="bouncyContainer">
+                <img class="bouncyButton forward" src="/img/bracket.png"/>
+            </a>
+        </div>
+
+
         <h1>
             <a href="/calendario" style="text-decoration: none">
                 Calendario y playoffs
+            </a>
+        </h1>
+
+    </div>
+
+    <div class="whitePanel" style="display: flex; align-items: center">
+
+        <div class="bouncyContainer forward" style="margin: auto">
+            <a href="/calendario" class="bouncyContainer">
+                <img class="bouncyButton forward" src="/img/podiologo.png"/>
+            </a>
+        </div>
+
+
+        <h1>
+            <a href="/podios" style="text-decoration: none">
+               ¡Echa un ojo a los podios!
             </a>
         </h1>
 
@@ -95,14 +114,14 @@
 
             <div style="width: 100%">
 
-                <div style="display: flex; justify-content: center; padding-bottom: 10px">
+                <div style="display: flex; justify-content: center; align-items: center; padding-bottom: 10px">
                     <h3 style="padding-right: 10px"> Categoría:</h3>
 
                     <select class="form-control form-control-lg miSelect" id="selectorCategoria">
                         <option th:each="categoria: ${categorias}" th:text="${categoria.nombre}"/>
                     </select>
                 </div>
-                <div style="display: flex; justify-content: center">
+                <div style="display: flex; justify-content: center; align-items: center">
                     <h3 style="padding-right: 10px">Ranking:</h3>
                     <select class="form-control form-control-lg miSelect" id="selectorRanking">
                         <option value="0">Ranking general</option>
@@ -152,6 +171,35 @@
     </div>
     <footer th:replace="fragments/footer :: creditFooter"/>
 </div>
+
+
+<!--<div class="modal fade" id="twitchmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--    <div>-->
+<!--        <div class="modal-dialog" style="margin: 0;">-->
+<!--            <div class="modal-content"-->
+<!--                 style="background-color: #eaeaea; width: 90% !important; height: 95% !important;">-->
+<!--                <div class="modal-header">-->
+<!--                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                        <span aria-hidden="true">&times;</span>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--                <div class="modal-body">-->
+
+
+<!--                    <iframe-->
+<!--                            src="https://player.twitch.tv/?channel=aespeedcubing&parent=nacional2020.carloslopezmari.com"-->
+<!--                            height="100%"-->
+<!--                            width="100%"-->
+<!--                            frameborder="0"-->
+<!--                            scrolling="no"-->
+<!--                            allowfullscreen="true">-->
+<!--                    </iframe>-->
+<!--                </div>-->
+
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 
 </body>
 </html>

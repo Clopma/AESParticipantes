@@ -8,7 +8,7 @@ INSERT INTO categorias (nombre, orden, num_tiempos, corte_play_offs) values
 ('7x7x7', 6, 3, 0),
 ('OH', 7, 5, 8),
 ('BLD', 8, 3, 4),
-('FMC', 9, 1, 8),
+('FMC', 9, 1, 0),
 ('Skewb', 10, 5, 8),
 ('Pyraminx', 11, 5, 8),
 ('Square-1', 12, 5, 4),
@@ -168,29 +168,53 @@ INSERT INTO participantes(Nombre) VALUES
 ,('Sergio Torrijos Santano')
 ,('Vittorio Maria Perucatti');
 
--- INSERT INTO clasificados (ronda, posicion, categoria_nombre, participante_nombre, victoria) VALUES
--- ("CUARTO_DE_FINAL", 0, "3x3x3", "Posición 1", false),
--- ("CUARTO_DE_FINAL", 1, "3x3x3", "Posición 8", false),
--- ("CUARTO_DE_FINAL", 2, "3x3x3", "Posición 5", false),
--- ("CUARTO_DE_FINAL", 3, "3x3x3", "Posición 4", false),
--- ("CUARTO_DE_FINAL", 4, "3x3x3", "Posición 3", false),
--- ("CUARTO_DE_FINAL", 5, "3x3x3", "Posición 6", false),
--- ("CUARTO_DE_FINAL", 6, "3x3x3", "Posición 7", false),
--- ("CUARTO_DE_FINAL", 7, "3x3x3", "Posición 2", false),
---
--- ("CUARTO_DE_FINAL", 0, "2x2x2", "Posición 1", false),
--- ("CUARTO_DE_FINAL", 1, "2x2x2", "Posición 8", false),
--- ("CUARTO_DE_FINAL", 2, "2x2x2", "Posición 5", false),
--- ("CUARTO_DE_FINAL", 3, "2x2x2", "Posición 4", false),
--- ("CUARTO_DE_FINAL", 4, "2x2x2", "Posición 3", false),
--- ("CUARTO_DE_FINAL", 5, "2x2x2", "Posición 6", false),
--- ("CUARTO_DE_FINAL", 6, "2x2x2", "Posición 7", false),
--- ("CUARTO_DE_FINAL", 7, "2x2x2", "Posición 2", false),
+INSERT INTO clasificados (ronda, categoria_nombre, participante_nombre, tiempo) VALUES
+
+("MEDALLA_ORO", "3x3x3", "Biel Salmons Gonzalez", '1111'),
+("MEDALLA_PLATA", "3x3x3", "Eder Olivencia González", '222'),
+("MEDALLA_BRONCE", "3x3x3", "Rafael Rodriguez Santana", '33'),
+("MEDALLA_ORO", "2x2x2", "Biel Salmons Gonzalez", '1111'),
+("MEDALLA_PLATA", "2x2x2", "Eder Olivencia González", '222'),
+("MEDALLA_BRONCE", "4x4x4", "Rafael Rodriguez Santana", '33'),
+("MEDALLA_PLATA", "5x5x5", "Eder Olivencia González", '222'),
+("MEDALLA_BRONCE", "6x6x6", "Rafael Rodriguez Santana", '33'),
+
+("MEDALLA_PLATA", "4x4x4", "Biel Salmons Gonzalez", '33');
+
+
+
 --  INSERT INTO descalificaciones (categoria_nombre, participante_nombre) VALUES
 --
 --  ("BLD", "Jose Antonio Navarro Sánchez");
 
-
+INSERT INTO descalificaciones (categoria_nombre, participante_nombre) VALUES
+("3x3x3","Rafael Rodriguez Santana"),
+("3x3x3","Santiago Osorio Cristóbal"),
+("3x3x3","Mauro Moisés Ortega López"),
+("3x3x3","Antonio López"),
+("3x3x3","Lorenzo Escobar Kraskouskaya"),
+("2x2x2","Mauro Moisés Ortega López"),
+("2x2x2","Rafael Rodriguez Santana"),
+("2x2x2","Lorenzo Escobar Kraskouskaya"),
+("4x4x4","Rafael Rodriguez Santana"),
+("4x4x4","Mauro Moisés Ortega López"),
+("5x5x5","Mauro Moisés Ortega López"),
+("OH","Sergio Torrijos Santano"),
+("OH","Mauro Moisés Ortega López"),
+("OH","Adrián Martínez Macías"),
+("OH","Lorenzo Escobar Kraskouskaya"),
+("Pyraminx","Laura Tarrés Gimeno"),
+("Pyraminx","Arnau Tous Mateu"),
+("2x2x2","Luis Flores"),
+("2x2x2","Jefferson Andrés Durango Argaez"),
+("OH","Juan David Carmona Vásquez"),
+("OH","Luis Flores"),
+("OH","Jhon sebastian mejia"),
+("OH","Marcos Plaza Nocito"),
+("BLD","Jefferson Andrés Durango Argaez"),
+("Pyraminx","Juan David Carmona Vásquez"),
+("Pyraminx","Jhon sebastian mejia"),
+("Skewb","Jhon sebastian mejia");
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"3x3x3",	1,	"Biel Salmons Gonzalez",	8.69,	8.4,	7.21,	6.52,	8.83,	100.00,	25),
@@ -317,8 +341,8 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (2,	"3x3x3",	9,	"Juan David Carmona Vásquez",	9.55,	11.28,	9.02,	10.2,	10.35,	86.00,	4),
 (2,	"3x3x3",	10,	"Miguel Ángel González-Herrero García",	9.66,	9.9,	9.92,	13.67,	10.44,	85.00,	3),
 (2,	"3x3x3",	11,	"Mauro Moisés Ortega López",	8.37,	9.44,	10.81,	10.28,	11.31,	85.00,	2),
-(2,	"3x3x3",	12,	"Dani Cófreces Jaureguizar",	8.03,	11.13,	9.53,	10.65,	0,	83.00,	1),
-(2,	"3x3x3",	13,	"Arnau Tous Mateu",	7.53,	11.96,	10.51,	11.11,	9.62,	83.00,	0),
+(2,	"3x3x3",	12,	"Arnau Tous Mateu",	7.53,	11.96,	10.51,	11.11,	9.62,	83.00,	1),
+(2,	"3x3x3",	13,	"Dani Cófreces Jaureguizar",	8.03,	11.13,	9.53,	10.65,	0,	82.00,	0),
 (2,	"3x3x3",	14,	"Izan Cantero Herrera",	14.95,	9.12,	10.75,	10.12,	10.81,	82.00,	0),
 (2,	"3x3x3",	15,	"Álvaro Aguilar Salobreña",	8.19,	12.63,	9.93,	10.6,	11.37,	81.00,	0),
 (2,	"3x3x3",	16,	"Adrián Martínez Macías",	9.39,	11.28,	13.6,	10.22,	10.44,	81.00,	0),
@@ -602,6 +626,80 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (4,	"3x3x3",	90,	"Rubén Pérez Pérez",	51.7,	65.94,	67.61,	52.04,	55.57,	13.00,	0),
 (4,	"3x3x3",	91,	"Rosalía Martinez",	60.49,	68.98,	62.72,	64.48,	57.73,	12.00,	0),
 (4,	"3x3x3",	92,	"Alejandro Suárez",	79.15,	80.21,	81.7,	77.74,	77.83,	9.00,	0);
+INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
+(5,	"3x3x3",	1,	"Biel Salmons Gonzalez",	6.98,	7.82,	6.34,	8.41,	7.04,	100.00,	25),
+(5,	"3x3x3",	2,	"Manuel Prieto de Antón",	9,	9.59,	7.99,	8.81,	7.95,	85.00,	19),
+(5,	"3x3x3",	3,	"Jaime Botello García",	7.49,	9.45,	9.33,	10.71,	7.35,	83.00,	15),
+(5,	"3x3x3",	4,	"Santiago Osorio Cristóbal",	9.34,	8.12,	9.21,	8.76,	9.38,	80.00,	12),
+(5,	"3x3x3",	5,	"Eder Olivencia González",	9.05,	7.14,	9.41,	9.5,	8.98,	80.00,	10),
+(5,	"3x3x3",	6,	"Álvaro Aguilar Salobreña",	9.92,	9.86,	9.31,	8.83,	8.91,	78.00,	8),
+(5,	"3x3x3",	7,	"Antonio López",	9.69,	7.93,	9.13,	11.06,	9.53,	77.00,	6),
+(5,	"3x3x3",	8,	"Julen Simón Iriarte",	9.83,	8.72,	9.96,	10.35,	7.68,	77.00,	5),
+(5,	"3x3x3",	9,	"Rafael Rodriguez Santana",	10.85,	10.75,	6.7,	8.28,	10.5,	74.00,	4),
+(5,	"3x3x3",	10,	"Juan David Carmona Vásquez",	9.87,	9.81,	8.31,	10.69,	11.55,	72.00,	3),
+(5,	"3x3x3",	11,	"Dani Cófreces Jaureguizar",	12.4,	9.19,	8.37,	10.28,	10.93,	72.00,	2),
+(5,	"3x3x3",	12,	"Jorge Marín Segovia",	11.25,	10.7,	8.13,	10.81,	9.09,	71.00,	1),
+(5,	"3x3x3",	13,	"Mauro Moisés Ortega López",	0,	9.39,	12.44,	9.08,	9.4,	70.00,	0),
+(5,	"3x3x3",	14,	"Miguel Ángel González-Herrero García",	11.47,	9.96,	9.82,	14.85,	9.89,	70.00,	0),
+(5,	"3x3x3",	15,	"Luis Flores",	10.37,	10.78,	12.55,	10.59,	10.64,	68.00,	0),
+(5,	"3x3x3",	16,	"Erik Subirats Cruz",	9.92,	11.01,	9.79,	12.1,	12.21,	66.00,	0),
+(5,	"3x3x3",	17,	"Jhon sebastian mejia",	11.49,	15.5,	9.39,	11.83,	10.22,	65.00,	0),
+(5,	"3x3x3",	18,	"Jorge Martín Espinosa",	13.62,	11.61,	11.44,	10.62,	9.94,	65.00,	0),
+(5,	"3x3x3",	19,	"Raúl Martínez Redondo",	10.49,	11.65,	8.45,	12.89,	11.55,	65.00,	0),
+(5,	"3x3x3",	20,	"Artur Miralles Hernàndez",	14,	11.18,	11.38,	9.09,	11.17,	65.00,	0),
+(5,	"3x3x3",	21,	"Rafael Alférez Robisco",	12.08,	9.63,	12.29,	11.33,	10.36,	65.00,	0),
+(5,	"3x3x3",	22,	"Lorenzo Escobar Kraskouskaya",	8.81,	9.99,	12.73,	12.07,	11.86,	64.00,	0),
+(5,	"3x3x3",	23,	"Miguel Alonso Gil",	12.07,	12.61,	9.8,	10.99,	10.87,	64.00,	0),
+(5,	"3x3x3",	24,	"Raúl Cuevas Castillo",	11.08,	12.75,	10.09,	11.99,	10.94,	64.00,	0),
+(5,	"3x3x3",	25,	"Jefferson Andrés Durango Argaez",	11.63,	10.66,	13.04,	12.34,	9.72,	63.00,	0),
+(5,	"3x3x3",	26,	"Sergio Torrijos Santano",	11.56,	10.29,	11.53,	12.66,	11.68,	63.00,	0),
+(5,	"3x3x3",	27,	"Juan Pablo Rodríguez",	11.71,	15.16,	10.96,	10.86,	12.84,	61.00,	0),
+(5,	"3x3x3",	28,	"María del Mar Gallego Vicente",	12.76,	12.78,	12.1,	9.54,	11.54,	60.00,	0),
+(5,	"3x3x3",	29,	"Alberto Romero",	16.07,	12.77,	9.99,	12.3,	11.36,	60.00,	0),
+(5,	"3x3x3",	30,	"Rubén López de Juan",	12.49,	10.56,	12.11,	14.22,	11.83,	60.00,	0),
+(5,	"3x3x3",	31,	"Javier Tovar Castro",	15.72,	10.75,	12.76,	11.4,	12.32,	60.00,	0),
+(5,	"3x3x3",	32,	"Marcos Plaza Nocito",	13.92,	11.58,	20.26,	11.05,	9.98,	60.00,	0),
+(5,	"3x3x3",	33,	"Marc Garcia Diaz",	12.81,	11.7,	13.67,	13.09,	12.04,	58.00,	0),
+(5,	"3x3x3",	34,	"Diego Alejandro Gil González",	15.45,	11.89,	14.02,	14.05,	13.03,	53.00,	0),
+(5,	"3x3x3",	35,	"David Bautista García",	15.8,	12.63,	18.96,	14.3,	11.05,	51.00,	0),
+(5,	"3x3x3",	36,	"Pol Juny Sánchez",	13.85,	14.21,	12.92,	15.48,	14.96,	51.00,	0),
+(5,	"3x3x3",	37,	"Laura Freitas Martín",	14.37,	17.68,	13.04,	13.03,	16.6,	50.00,	0),
+(5,	"3x3x3",	38,	"Alejandro Soriano Compta",	16.52,	14.2,	14.94,	15.4,	11.96,	49.00,	0),
+(5,	"3x3x3",	39,	"Julio Perugorria Lorente",	16.61,	14.66,	15.2,	15.02,	15.11,	48.00,	0),
+(5,	"3x3x3",	40,	"Leon Jakub Wyrobek",	14.52,	15.02,	16.38,	15.79,	14.93,	48.00,	0),
+(5,	"3x3x3",	41,	"Fernando Sáez Lázaro",	14.85,	15.23,	16.4,	15.34,	15.2,	48.00,	0),
+(5,	"3x3x3",	42,	"Agustín Wals",	15.29,	15.36,	19.84,	15.85,	15.49,	47.00,	0),
+(5,	"3x3x3",	43,	"Marcos Castelló Pastor",	14.72,	16.7,	16.42,	17.5,	15.71,	45.00,	0),
+(5,	"3x3x3",	44,	"Miguel Martín Rodríguez",	15.4,	16.93,	17.34,	17.32,	13.48,	44.00,	0),
+(5,	"3x3x3",	45,	"Carmen Centelles",	14.91,	17.22,	17.52,	16.47,	16.34,	44.00,	0),
+(5,	"3x3x3",	46,	"Maider Arce López De Ipiña",	16.4,	17.46,	14.37,	17.72,	18.38,	42.00,	0),
+(5,	"3x3x3",	47,	"Quirze Ricart Besalu",	22.07,	16.8,	17.74,	14.74,	18.02,	42.00,	0),
+(5,	"3x3x3",	48,	"Jesús Lindo García",	17.91,	16.49,	16.13,	24.92,	18.21,	42.00,	0),
+(5,	"3x3x3",	49,	"Raquel Mena Marcos",	17.33,	19.89,	16.91,	18.73,	18.09,	40.00,	0),
+(5,	"3x3x3",	50,	"Ayyob assaidi",	25.92,	18.74,	19.1,	16.61,	14.92,	40.00,	0),
+(5,	"3x3x3",	51,	"Christian Ocaña Ávila",	21.9,	17.6,	17.75,	17.85,	18.84,	40.00,	0),
+(5,	"3x3x3",	52,	"Raúl Morales Hidalgo",	18.59,	20.24,	19.65,	17.05,	16.22,	40.00,	0),
+(5,	"3x3x3",	53,	"Hugo Azcona Merino",	18.692,	19.321,	18.758,	21.495,	20.321,	37.00,	0),
+(5,	"3x3x3",	54,	"David Rodrigo Agudo",	19.58,	17.35,	20.17,	20.04,	19.14,	37.00,	0),
+(5,	"3x3x3",	55,	"Alejandro González Abejón",	18.71,	20.63,	13.98,	21.42,	30.42,	36.00,	0),
+(5,	"3x3x3",	56,	"Fernando Astasio Ávila",	22.76,	20.65,	25.67,	22.58,	20.73,	33.00,	0),
+(5,	"3x3x3",	57,	"Pere Garcia Miguel",	21.37,	20.48,	24.78,	22.65,	23.54,	32.00,	0),
+(5,	"3x3x3",	58,	"Mauro Andrés García",	26.89,	23.87,	28.46,	18.21,	17.87,	32.00,	0),
+(5,	"3x3x3",	59,	"Miguel Ángel Galdeano Medina",	23.67,	0,	25.88,	21.53,	22.45,	30.00,	0),
+(5,	"3x3x3",	60,	"Noé Rico Castro",	25.4,	24.32,	22.58,	23.9,	25.49,	30.00,	0),
+(5,	"3x3x3",	61,	"Fernando Curto Anoll",	30.71,	28.21,	29.38,	24.01,	19.02,	27.00,	0),
+(5,	"3x3x3",	62,	"Fernando Cascares",	33.86,	31.25,	28.56,	25.61,	23.43,	26.00,	0),
+(5,	"3x3x3",	63,	"Santiago Borrego Verde",	30.67,	22.04,	38.72,	26.11,	28.77,	26.00,	0),
+(5,	"3x3x3",	64,	"Héctor Álvarez Bartolomé",	29.38,	27.43,	30.89,	28.69,	30.42,	25.00,	0),
+(5,	"3x3x3",	65,	"Ángel Pérez Pérez",	31.24,	31.32,	40.11,	36.29,	38.33,	21.00,	0),
+(5,	"3x3x3",	66,	"Alba Camacho Valenciano",	31.94,	35.36,	41.92,	39.19,	27.1,	21.00,	0),
+(5,	"3x3x3",	67,	"Mari Gracia Abella",	41.6,	33.42,	24.12,	44.32,	33.64,	20.00,	0),
+(5,	"3x3x3",	68,	"Alberto Arias Guerrero",	38.24,	37.7,	37.67,	30.94,	36.63,	20.00,	0),
+(5,	"3x3x3",	69,	"Carlos López Marí",	38.54,	44.7,	25.08,	39.26,	36.5,	19.00,	0),
+(5,	"3x3x3",	70,	"Manuel Ortega",	45.25,	48.94,	53.68,	46.57,	48.84,	15.00,	0),
+(5,	"3x3x3",	71,	"Rubén Pérez Pérez",	45.99,	73.21,	53.76,	65.6,	54.9,	13.00,	0),
+(5,	"3x3x3",	72,	"Rosalía Martinez",	64.78,	60.69,	65.19,	48.59,	58.09,	12.00,	0),
+(5,	"3x3x3",	73,	"Alejandro Suárez",	85.2,	110.24,	75.12,	67.97,	80.1,	9.00,	0);
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"2x2x2",	1,	"Mauro Moisés Ortega López",	2.09,	1.42,	1.47,	1.58,	1.93,	100.00,	25),
@@ -775,14 +873,14 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (2,	"2x2x2",	79,	"Rubén Pérez Pérez",	30.51,	62.32,	18.32,	20.41,	22.13,	9.00,	0);
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (3,	"2x2x2",	1,	"Manuel Prieto de Antón",	3.64,	2.77,	1.59,	2.15,	1.82,	100.00,	25),
-(3,	"2x2x2",	2,	"Miguel Ángel González-Herrero García",	1.91,	0,	2.39,	5.70,	1.65,	96.00,	19),
-(3,	"2x2x2",	3,	"Izan Cantero Herrera",	2.51,	2.46,	2.13,	2.28,	4.13,	93.00,	15),
-(3,	"2x2x2",	4,	"Rafael Rodriguez Santana",	2.80,	2.51,	2.27,	2.47,	5.50,	87.00,	12),
-(3,	"2x2x2",	5,	"Mauro Moisés Ortega López",	2.10,	4.21,	2.49,	3.88,	1.79,	80.00,	10),
-(3,	"2x2x2",	6,	"Álvaro Aguilar Salobreña",	2.28,	3.65,	3.08,	3.41,	2.35,	76.00,	8),
-(3,	"2x2x2",	7,	"Raúl Martínez Redondo",	2.82,	4.33,	2.48,	3.42,	2.64,	76.00,	6),
-(3,	"2x2x2",	8,	"Oscar Sánchez Najarro",	3.07,	3.01,	3.05,	3.14,	4.51,	73.00,	5),
-(3,	"2x2x2",	9,	"Luis Flores",	3.90,	3.10,	2.37,	3.05,	3.18,	72.00,	4),
+(3,	"2x2x2",	2,	"Izan Cantero Herrera",	2.51,	2.46,	2.13,	2.28,	4.13,	93.00,	19),
+(3,	"2x2x2",	3,	"Rafael Rodriguez Santana",	2.80,	2.51,	2.27,	2.47,	5.50,	87.00,	15),
+(3,	"2x2x2",	4,	"Mauro Moisés Ortega López",	2.10,	4.21,	2.49,	3.88,	1.79,	80.00,	12),
+(3,	"2x2x2",	5,	"Álvaro Aguilar Salobreña",	2.28,	3.65,	3.08,	3.41,	2.35,	76.00,	10),
+(3,	"2x2x2",	6,	"Raúl Martínez Redondo",	2.82,	4.33,	2.48,	3.42,	2.64,	76.00,	8),
+(3,	"2x2x2",	7,	"Oscar Sánchez Najarro",	3.07,	3.01,	3.05,	3.14,	4.51,	73.00,	6),
+(3,	"2x2x2",	8,	"Luis Flores",	3.90,	3.10,	2.37,	3.05,	3.18,	72.00,	5),
+(3,	"2x2x2",	9,	"Miguel Ángel González-Herrero García",	1.91,	0,	2.39,	5.70,	1.65,	68.00,	4),
 (3,	"2x2x2",	10,	"Adrián Martínez Macías",	2.35,	4.32,	2.53,	3.32,	6.07,	66.00,	3),
 (3,	"2x2x2",	11,	"Laura Freitas Martín",	3.75,	4.48,	3.02,	3.24,	3.70,	63.00,	2),
 (3,	"2x2x2",	12,	"Jhon sebastian mejia",	9.77,	3.77,	3.44,	3.58,	2.69,	63.00,	1),
@@ -912,6 +1010,61 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (4,	"2x2x2",	64,	"Alberto Arias Guerrero",	10.56,	18.83,	16.15,	11.91,	17.30,	13.00,	0),
 (4,	"2x2x2",	65,	"Mari Gracia Abella",	29.96,	18.42,	18.40,	19.68,	14.89,	11.00,	0),
 (4,	"2x2x2",	66,	"Rubén Pérez Pérez",	24.16,	25.99,	23.09,	21.20,	18.15,	9.00,	0);
+INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
+(5,	"2x2x2",	1,	"Miguel Ángel González-Herrero García",	2.01,	2.52,	4.17,	2.08,	2.22,	100.00,	25),
+(5,	"2x2x2",	2,	"Manuel Prieto de Antón",	3.09,	2.28,	6.00,	2.30,	2.03,	89.00,	19),
+(5,	"2x2x2",	3,	"Álvaro Aguilar Salobreña",	5.80,	2.43,	4.20,	1.94,	2.78,	72.00,	15),
+(5,	"2x2x2",	4,	"Artur Miralles Hernàndez",	2.89,	4.07,	4.89,	2.71,	2.75,	70.00,	12),
+(5,	"2x2x2",	5,	"Izan Cantero Herrera",	3.53,	0,	3.46,	1.54,	2.80,	70.00,	10),
+(5,	"2x2x2",	6,	"Jefferson Andrés Durango Argaez",	2.72,	3.34,	3.72,	2.72,	3.88,	70.00,	8),
+(5,	"2x2x2",	7,	"Mauro Moisés Ortega López",	4.61,	1.47,	2.99,	2.53,	4.49,	68.00,	6),
+(5,	"2x2x2",	8,	"Oscar Sánchez Najarro",	2.93,	4.76,	3.89,	2.37,	3.26,	68.00,	5),
+(5,	"2x2x2",	9,	"Luis Flores",	3.36,	3.41,	4.21,	3.49,	2.90,	66.00,	4),
+(5,	"2x2x2",	10,	"Lorenzo Escobar Kraskouskaya",	2.67,	4.47,	2.63,	3.33,	5.99,	65.00,	3),
+(5,	"2x2x2",	11,	"Marc Garcia Diaz",	2.69,	4.29,	6.73,	3.41,	3.20,	63.00,	2),
+(5,	"2x2x2",	12,	"Jorge Marín Segovia",	2.48,	4.72,	3.20,	3.95,	7.58,	57.00,	1),
+(5,	"2x2x2",	13,	"Raúl Martínez Redondo",	5.05,	3.98,	3.90,	3.17,	4.17,	56.00,	0),
+(5,	"2x2x2",	14,	"Eder Olivencia González",	3.84,	4.94,	3.55,	3.98,	4.52,	55.00,	0),
+(5,	"2x2x2",	15,	"Jorge Martín Espinosa",	2.75,	4.28,	4.86,	4.19,	4.28,	53.00,	0),
+(5,	"2x2x2",	16,	"Fernando Sáez Lázaro",	5.08,	3.99,	4.39,	4.65,	3.06,	52.00,	0),
+(5,	"2x2x2",	17,	"Marcos Castelló Pastor",	5.53,	6.18,	4.34,	3.55,	3.27,	51.00,	0),
+(5,	"2x2x2",	18,	"Héctor Haro Guerrero",	5.01,	4.94,	4.22,	2.89,	4.45,	50.00,	0),
+(5,	"2x2x2",	19,	"Erik Subirats Cruz",	3.17,	5.88,	4.56,	4.01,	5.30,	49.00,	0),
+(5,	"2x2x2",	20,	"Pol Juny Sánchez",	6.04,	4.59,	5.47,	3.82,	3.75,	49.00,	0),
+(5,	"2x2x2",	21,	"Carmen Centelles",	5.10,	4.47,	4.92,	4.57,	3.34,	49.00,	0),
+(5,	"2x2x2",	22,	"Rafael Rodriguez Santana",	5.02,	3.77,	5.45,	2.54,	5.96,	48.00,	0),
+(5,	"2x2x2",	23,	"María del Mar Gallego Vicente",	5.27,	4.20,	5.69,	3.16,	4.92,	47.00,	0),
+(5,	"2x2x2",	24,	"Rafael Alférez Robisco",	5.06,	5.42,	4.74,	4.59,	3.30,	47.00,	0),
+(5,	"2x2x2",	25,	"Raúl Cuevas Castillo",	5.56,	3.80,	5.98,	1.88,	5.42,	46.00,	0),
+(5,	"2x2x2",	26,	"Alberto Romero",	4.92,	5.12,	6.89,	4.26,	5.53,	44.00,	0),
+(5,	"2x2x2",	27,	"Juan Pablo Rodríguez",	5.64,	4.43,	6.20,	2.68,	5.71,	43.00,	0),
+(5,	"2x2x2",	28,	"Leon Jakub Wyrobek",	4.31,	6.79,	3.40,	5.12,	6.73,	42.00,	0),
+(5,	"2x2x2",	29,	"Alejandro Soriano Compta",	3.96,	7.35,	5.61,	6.65,	3.26,	42.00,	0),
+(5,	"2x2x2",	30,	"Noé Rico Castro",	6.14,	5.55,	6.72,	4.55,	3.75,	42.00,	0),
+(5,	"2x2x2",	31,	"Marcos Plaza Nocito",	6.04,	5.16,	7.74,	5.40,	2.93,	41.00,	0),
+(5,	"2x2x2",	32,	"Laura Freitas Martín",	3.77,	7.01,	4.67,	0,	5.07,	41.00,	0),
+(5,	"2x2x2",	33,	"Maider Arce López De Ipiña",	4.46,	5.20,	6.37,	10.97,	5.51,	40.00,	0),
+(5,	"2x2x2",	34,	"Alejandro Martín López",	5.78,	6.73,	8.09,	5.99,	4.60,	37.00,	0),
+(5,	"2x2x2",	35,	"Jhon sebastian mejia",	9.34,	4.48,	2.49,	0,	5.07,	36.00,	0),
+(5,	"2x2x2",	36,	"Hugo Azcona Merino",	5.67,	3.51,	7.54,	6.23,	7.03,	36.00,	0),
+(5,	"2x2x2",	37,	"David Rodrigo Agudo",	7.92,	6.88,	9.36,	3.51,	5.17,	34.00,	0),
+(5,	"2x2x2",	38,	"Fernando Cascares",	7.97,	13.42,	7.02,	4.57,	5.45,	33.00,	0),
+(5,	"2x2x2",	39,	"Quirze Ricart Besalu",	8.01,	4.75,	9.51,	3.41,	16.46,	31.00,	0),
+(5,	"2x2x2",	40,	"Ayyob assaidi",	8.95,	6.51,	10.65,	7.29,	4.02,	30.00,	0),
+(5,	"2x2x2",	41,	"Miguel Ángel Galdeano Medina",	9.31,	8.62,	7.55,	7.55,	7.72,	29.00,	0),
+(5,	"2x2x2",	42,	"Jesús Lindo García",	10.16,	7.02,	9.82,	6.86,	8.42,	27.00,	0),
+(5,	"2x2x2",	43,	"Héctor Álvarez Bartolomé",	7.70,	8.66,	6.62,	9.15,	12.21,	27.00,	0),
+(5,	"2x2x2",	44,	"Miguel Martín Rodríguez",	14.38,	6.21,	0,	3.29,	5.29,	26.00,	0),
+(5,	"2x2x2",	45,	"Pere Garcia Miguel",	8.45,	9.64,	10.89,	6.67,	7.89,	26.00,	0),
+(5,	"2x2x2",	46,	"Manuel Ortega",	8.45,	10.06,	11.76,	7.64,	7.62,	26.00,	0),
+(5,	"2x2x2",	47,	"Santiago Borrego Verde",	14.90,	9.81,	6.68,	7.68,	9.89,	25.00,	0),
+(5,	"2x2x2",	48,	"Fernando Curto Anoll",	8.34,	8.31,	11.28,	9.08,	12.24,	24.00,	0),
+(5,	"2x2x2",	49,	"Fernando Astasio Ávila",	7.21,	11.75,	11.37,	4.49,	11.53,	23.00,	0),
+(5,	"2x2x2",	50,	"Raquel Mena Marcos",	13.56,	14.92,	10.46,	8.28,	14.50,	18.00,	0),
+(5,	"2x2x2",	51,	"Ángel Pérez Pérez",	17.17,	12.50,	16.22,	7.78,	13.29,	16.00,	0),
+(5,	"2x2x2",	52,	"Alberto Arias Guerrero",	13.81,	12.78,	16.44,	21.07,	19.28,	14.00,	0),
+(5,	"2x2x2",	53,	"Mari Gracia Abella",	40.54,	21.14,	19.52,	17.95,	19.88,	11.00,	0),
+(5,	"2x2x2",	54,	"Rubén Pérez Pérez",	24.63,	19.12,	20.09,	19.27,	23.99,	11.00,	0);
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"4x4x4",	1,	"Eder Olivencia González",	32.68,	30.70,	33.80,	26.80,	30.81,	100.00,	25.00),
@@ -1181,6 +1334,53 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (4,	"4x4x4",	54,	"Ayyob assaidi",	114.75,	194.03,	91.79,	127.7,	138.03,	25.00,	0.00),
 (4,	"4x4x4",	55,	"Jose Luis Molina López",	164.48,	129.97,	147.32,	140.5,	157.76,	22.00,	0.00),
 (4,	"4x4x4",	56,	"Alberto Arias Guerrero",	176.33,	171.95,	159.21,	144.62,	167.78,	19.00,	0.00);
+INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
+(5,	"4x4x4",	1,	"Eder Olivencia González",	30.70,	31.33,	27.87,	31.96,	27.11,	100.00,	25.00),
+(5,	"4x4x4",	2,	"Biel Salmons Gonzalez",	31.56,	31.66,	28.29,	33.38,	37.20,	93.00,	19.00),
+(5,	"4x4x4",	3,	"Manuel Prieto de Antón",	31.40,	32.64,	34.35,	34.98,	38.59,	88.00,	15.00),
+(5,	"4x4x4",	4,	"Rafael Rodriguez Santana",	34.78,	34.34,	35.11,	34.43,	40.43,	86.00,	12.00),
+(5,	"4x4x4",	5,	"Dani Cófreces Jaureguizar",	34.04,	40.56,	41.66,	34.19,	33.20,	83.00,	10.00),
+(5,	"4x4x4",	6,	"Jorge Marín Segovia",	37.15,	34.28,	39.22,	39.21,	37.32,	79.00,	8.00),
+(5,	"4x4x4",	7,	"Miguel Ángel González-Herrero García",	38.17,	40.05,	38.93,	45.54,	42.57,	74.00,	6.00),
+(5,	"4x4x4",	8,	"Andrés Rodríguez Galán",	40.17,	36.14,	0,	43.88,	41.91,	71.00,	5.00),
+(5,	"4x4x4",	9,	"Raúl Martínez Redondo",	43.19,	49.08,	46.84,	39.52,	40.58,	69.00,	4.00),
+(5,	"4x4x4",	10,	"Juan Pablo Rodríguez",	42.53,	45.04,	41.33,	53.32,	47.02,	67.00,	3.00),
+(5,	"4x4x4",	11,	"Raúl Cuevas Castillo",	45.83,	42.67,	46.02,	42.86,	48.14,	67.00,	2.00),
+(5,	"4x4x4",	12,	"Jorge Martín Espinosa",	46.96,	37.40,	45.62,	42.15,	47.95,	67.00,	1.00),
+(5,	"4x4x4",	13,	"Alberto Romero",	45.01,	41.89,	44.17,	45.71,	46.19,	67.00,	0.00),
+(5,	"4x4x4",	14,	"Luis Flores",	48.76,	46.64,	46.51,	44.18,	44.70,	65.00,	0.00),
+(5,	"4x4x4",	15,	"Jhon sebastian mejia",	49.52,	44.07,	45.65,	52.14,	42.56,	65.00,	0.00),
+(5,	"4x4x4",	16,	"Elies Qin Lloret Garcia",	49.51,	49.16,	47.73,	43.31,	41.48,	64.00,	0.00),
+(5,	"4x4x4",	17,	"Julio Perugorria Lorente",	42.73,	51.54,	51.46,	47.96,	47.82,	61.00,	0.00),
+(5,	"4x4x4",	18,	"Lorenzo Escobar Kraskouskaya",	52.35,	58.58,	49.85,	54.36,	46.85,	57.00,	0.00),
+(5,	"4x4x4",	19,	"Raquel Mena Marcos",	47.57,	54.84,	60.29,	47.99,	54.65,	57.00,	0.00),
+(5,	"4x4x4",	20,	"Marcos Plaza Nocito",	49.82,	52.09,	58.57,	50.03,	55.65,	57.00,	0.00),
+(5,	"4x4x4",	21,	"Rafael Alférez Robisco",	56.52,	43.97,	59.37,	54.15,	48.95,	56.00,	0.00),
+(5,	"4x4x4",	22,	"Erik Subirats Cruz",	52.48,	47.12,	59.48,	54.67,	59.32,	54.00,	0.00),
+(5,	"4x4x4",	23,	"Leon Jakub Wyrobek",	52.68,	0,	58.82,	52.00,	55.51,	54.00,	0.00),
+(5,	"4x4x4",	24,	"David Bautista García",	65.4,	49.18,	60.36,	48.81,	59.71,	53.00,	0.00),
+(5,	"4x4x4",	25,	"Sergio Torrijos Santano",	64.88,	55.05,	56.14,	60.84,	55.22,	52.00,	0.00),
+(5,	"4x4x4",	26,	"María del Mar Gallego Vicente",	59.62,	57.86,	56.62,	53.54,	61.54,	52.00,	0.00),
+(5,	"4x4x4",	27,	"Pol Juny Sánchez",	57.84,	61.83,	51.43,	55.93,	64.73,	51.00,	0.00),
+(5,	"4x4x4",	28,	"Marcos Castelló Pastor",	59.46,	59.45,	58.98,	59.43,	69.12,	50.00,	0.00),
+(5,	"4x4x4",	29,	"Artur Miralles Hernàndez",	54.87,	57.32,	63.03,	69.87,	59.88,	50.00,	0.00),
+(5,	"4x4x4",	30,	"Carmen Centelles",	66.69,	62.45,	65.2,	58.41,	62.54,	47.00,	0.00),
+(5,	"4x4x4",	31,	"Alejandro Soriano Compta",	69.29,	63.02,	66.56,	0,	56.58,	45.00,	0.00),
+(5,	"4x4x4",	32,	"Quirze Ricart Besalu",	58.14,	68.44,	67.59,	74.75,	66.05,	44.00,	0.00),
+(5,	"4x4x4",	33,	"Laura Freitas Martín",	0,	69.72,	63.97,	54.29,	68.46,	44.00,	0.00),
+(5,	"4x4x4",	34,	"David Rodrigo Agudo",	70.61,	72.58,	57.23,	68.78,	69.21,	43.00,	0.00),
+(5,	"4x4x4",	35,	"Miguel Martín Rodríguez",	69.07,	72.03,	77.49,	68.26,	60.83,	43.00,	0.00),
+(5,	"4x4x4",	36,	"Christian Ocaña Ávila",	76.58,	65.86,	67.56,	71.63,	70.32,	43.00,	0.00),
+(5,	"4x4x4",	37,	"Marc Garcia Diaz",	69.95,	68.54,	97.02,	77.61,	71.66,	41.00,	0.00),
+(5,	"4x4x4",	38,	"Raúl Morales Hidalgo",	74.4,	83.99,	74.39,	78.5,	65.47,	40.00,	0.00),
+(5,	"4x4x4",	39,	"Maider Arce López De Ipiña",	77.77,	69.1,	79.96,	80.48,	83.01,	38.00,	0.00),
+(5,	"4x4x4",	40,	"Agustín Wals",	88.11,	78.83,	81.2,	83.24,	68.27,	37.00,	0.00),
+(5,	"4x4x4",	41,	"Fernando Curto Anoll",	74.85,	89.34,	94.47,	98.29,	100.13,	32.00,	0.00),
+(5,	"4x4x4",	42,	"Miguel Ángel Galdeano Medina",	99.01,	90.22,	0,	105.62,	109.41,	29.00,	0.00),
+(5,	"4x4x4",	43,	"Fernando Astasio Ávila",	100.32,	102.02,	125.63,	101.93,	120.43,	28.00,	0.00),
+(5,	"4x4x4",	44,	"Jesús Lindo García",	107.05,	109.69,	126.69,	105.41,	115.15,	27.00,	0.00),
+(5,	"4x4x4",	45,	"Ayyob assaidi",	142.82,	143.39,	143.54,	118.63,	122.34,	22.00,	0.00),
+(5,	"4x4x4",	46,	"Alberto Arias Guerrero",	175.33,	189.75,	191.44,	223.06,	176.53,	16.00,	0.00);
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"5x5x5",	1,	"Eder Olivencia González",	61.09,	57.81,	57.33,	55.71,	54.93,	100.00,	25),
@@ -1357,6 +1557,35 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (4,	"5x5x5",	33,	"Ayyob assaidi",	149.39,	274.62,	0,	211.43,	297.09,	21.00,	0),
 (4,	"5x5x5",	34,	"Miguel Ángel Galdeano Medina",	270.81,	264.54,	260.18,	284.6,	275.07,	20.00,	0),
 (4,	"5x5x5",	35,	"Alberto Arias Guerrero",	470.52,	420.87,	385.32,	408.29,	0,	13.00,	0);
+INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
+(5,	"5x5x5",	1,	"Eder Olivencia González",	53.16,	51.60,	52.96,	51.55,	52.01,	100.00,	25),
+(5,	"5x5x5",	2,	"Dani Cófreces Jaureguizar",	72.24,	70.02,	83.04,	68.9,	61.39,	74.00,	19),
+(5,	"5x5x5",	3,	"Manuel Prieto de Antón",	71.21,	72.5,	73.94,	71.18,	68.59,	73.00,	15),
+(5,	"5x5x5",	4,	"Jorge Marín Segovia",	75.58,	63.16,	83.25,	71.95,	76.9,	70.00,	12),
+(5,	"5x5x5",	5,	"Raúl Martínez Redondo",	79.63,	87.67,	81.93,	86.07,	70.44,	63.00,	10),
+(5,	"5x5x5",	6,	"Javier Tovar Castro",	87.37,	87,	93.38,	73.56,	79.49,	62.00,	8),
+(5,	"5x5x5",	7,	"Julio Perugorria Lorente",	82.99,	89.67,	86.63,	0,	85.79,	60.00,	6),
+(5,	"5x5x5",	8,	"Elies Qin Lloret Garcia",	84.54,	88.24,	99.51,	97.38,	80.27,	58.00,	5),
+(5,	"5x5x5",	9,	"Juan Pablo Rodríguez",	99.75,	92.57,	85.66,	95.73,	85,	57.00,	4),
+(5,	"5x5x5",	10,	"Luis Flores",	92.56,	93.25,	88.16,	95.79,	97.26,	56.00,	3),
+(5,	"5x5x5",	11,	"Miguel Alonso Gil",	95.31,	98.46,	103.49,	91.11,	80.3,	55.00,	2),
+(5,	"5x5x5",	12,	"Raúl Cuevas Castillo",	88.61,	85.18,	100.83,	116.78,	105.86,	53.00,	1),
+(5,	"5x5x5",	13,	"Jorge Martín Espinosa",	98.92,	98.71,	102.97,	92.1,	100.6,	52.00,	0),
+(5,	"5x5x5",	14,	"Lorenzo Escobar Kraskouskaya",	94.79,	113.01,	103.51,	101.08,	106.51,	50.00,	0),
+(5,	"5x5x5",	15,	"David Bautista García",	123.36,	90.28,	105.97,	105.75,	105.09,	49.00,	0),
+(5,	"5x5x5",	16,	"Alberto Romero",	98.24,	112.21,	113.04,	106.51,	114.02,	47.00,	0),
+(5,	"5x5x5",	17,	"Leon Jakub Wyrobek",	128.98,	107.84,	113.79,	100.85,	118.7,	46.00,	0),
+(5,	"5x5x5",	18,	"Alejandro Soriano Compta",	122.93,	135.21,	111.05,	117.11,	122.56,	43.00,	0),
+(5,	"5x5x5",	19,	"Quirze Ricart Besalu",	53665,	125.12,	122.06,	106.07,	115.72,	43.00,	0),
+(5,	"5x5x5",	20,	"Pol Juny Sánchez",	126.2,	119.65,	136.68,	114.67,	118.99,	43.00,	0),
+(5,	"5x5x5",	21,	"Raquel Mena Marcos",	127.21,	145.68,	123.4,	117.91,	125.4,	42.00,	0),
+(5,	"5x5x5",	22,	"Laura Freitas Martín",	142.76,	138.06,	0,	122.1,	124.03,	39.00,	0),
+(5,	"5x5x5",	23,	"Carmen Centelles",	162.44,	154.24,	158.36,	127.6,	160.98,	33.00,	0),
+(5,	"5x5x5",	24,	"Christian Ocaña Ávila",	166.97,	165.09,	166.4,	143.48,	142.46,	33.00,	0),
+(5,	"5x5x5",	25,	"Raúl Morales Hidalgo",	159.19,	160.53,	146.6,	172.55,	165.36,	32.00,	0),
+(5,	"5x5x5",	26,	"David Rodrigo Agudo",	164.11,	164.26,	172.09,	144.25,	158.28,	32.00,	0),
+(5,	"5x5x5",	27,	"Miguel Ángel Galdeano Medina",	372.93,	274.06,	232.86,	228.13,	275.21,	20.00,	0),
+(5,	"5x5x5",	28,	"Alberto Arias Guerrero",	486.27,	410.36,	389.29,	372.55,	0,	12.00,	0);
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"6x6x6",	1,	"Eder Olivencia González",	114.82,	107.48,	111.94,	0,	0,	100.00,	25),
@@ -1433,6 +1662,19 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (4,	"6x6x6",	12,	"Alberto Romero",	283.81,	237.42,	282.39,	0,	0,	39.00,	1),
 (4,	"6x6x6",	13,	"Alejandro Soriano Compta",	0,	0,	0,	0,	0,	0,	0),
 (4,	"6x6x6",	14,	"Javier Tovar Castro",	0,	0,	0,	0,	0,	0,	0);
+INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
+(5,	"6x6x6",	1,	"Eder Olivencia González",	98.92,	115.51,	99.66,	0,	0,	100.00,	25),
+(5,	"6x6x6",	2,	"Antonio López",	108.86,	106.02,	112.38,	0,	0,	96.00,	19),
+(5,	"6x6x6",	3,	"Daniel Rodríguez Espinosa",	110.31,	117.02,	106.39,	0,	0,	94.00,	15),
+(5,	"6x6x6",	4,	"Manuel Prieto de Antón",	141.97,	156.61,	147.52,	0,	0,	70.00,	12),
+(5,	"6x6x6",	5,	"Jorge Marín Segovia",	139.69,	163.29,	165.4,	0,	0,	67.00,	10),
+(5,	"6x6x6",	6,	"Javier Tovar Castro",	174.76,	172.89,	164.19,	0,	0,	61.00,	8),
+(5,	"6x6x6",	7,	"Juan Pablo Rodríguez",	183.9,	185.79,	165.71,	0,	0,	59.00,	6),
+(5,	"6x6x6",	8,	"Raúl Cuevas Castillo",	195.56,	199.05,	195.01,	0,	0,	53.00,	5),
+(5,	"6x6x6",	9,	"Leon Jakub Wyrobek",	247.69,	222.93,	259.71,	0,	0,	43.00,	4),
+(5,	"6x6x6",	10,	"Quirze Ricart Besalu",	265.96,	253.69,	221.07,	0,	0,	42.00,	3),
+(5,	"6x6x6",	11,	"Alberto Romero",	231.52,	263.32,	313.6,	0,	0,	39.00,	2),
+(5,	"6x6x6",	12,	"Alejandro Soriano Compta",	0,	0,	0,	0,	0,	0,	1);
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"7x7x7",	1,	"Antonio López",	164.33,	146.4,	163.63,	0,	0,	100.00,	25),
@@ -1487,6 +1729,15 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (4,	"7x7x7",	8,	"Raúl Cuevas Castillo",	319.11,	369.08,	319.54,	0,	0,	44.00,	5),
 (4,	"7x7x7",	9,	"Quirze Ricart Besalu",	303.56,	338.75,	366.41,	0,	0,	44.00,	4),
 (4,	"7x7x7",	10,	"Alejandro Soriano Compta",	384.05,	348.57,	372.77,	0,	0,	40.00,	3);
+INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
+(5,	"7x7x7",	1,	"Antonio López",	153.04,	154.91,	144.38,	0,	0,	100.00,	25),
+(5,	"7x7x7",	2,	"Eder Olivencia González",	160.21,	151.97,	191.03,	0,	0,	90.00,	19),
+(5,	"7x7x7",	3,	"Manuel Prieto de Antón",	224.1,	217.43,	209.25,	0,	0,	70.00,	15),
+(5,	"7x7x7",	4,	"Javier Tovar Castro",	209.73,	242.66,	231.81,	0,	0,	66.00,	12),
+(5,	"7x7x7",	5,	"Jorge Marín Segovia",	210.87,	254.06,	222.79,	0,	0,	66.00,	10),
+(5,	"7x7x7",	6,	"Raúl Cuevas Castillo",	321.55,	315.77,	351.39,	0,	0,	46.00,	8),
+(5,	"7x7x7",	7,	"Quirze Ricart Besalu",	348.84,	358.58,	337.78,	0,	0,	43.00,	6),
+(5,	"7x7x7",	8,	"Alejandro Soriano Compta",	0,	0,	0,	0,	0,	0,	5);
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"OH",	1,	"Biel Salmons Gonzalez",	13.35,	13.86,	12.34,	14.64,	13.98,	100.00,	25),
@@ -1691,6 +1942,44 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (4,	"OH",	43,	"Darío Hammad Vayá",	61.22,	65.2,	104.88,	55.74,	73.34,	21.00,	0),
 (4,	"OH",	44,	"Ayyob assaidi",	53.35,	89.54,	0,	55.57,	55.88,	21.00,	0),
 (4,	"OH",	45,	"Fernando Astasio Ávila",	74.32,	89.94,	64.78,	101.77,	75.73,	18.00,	0);
+INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
+(5,	"OH",	1,	"Biel Salmons Gonzalez",	13.28,	14.50,	11.45,	12.15,	12.18,	100.00,	25),
+(5,	"OH",	2,	"Juan David Carmona Vásquez",	13.74,	15.05,	13.32,	14.69,	16.00,	87.00,	19),
+(5,	"OH",	3,	"Dani Cófreces Jaureguizar",	17.12,	23.67,	15.10,	19.05,	16.98,	71.00,	15),
+(5,	"OH",	4,	"Manuel Prieto de Antón",	16.54,	22.53,	20.87,	17.53,	15.14,	68.00,	12),
+(5,	"OH",	5,	"Álvaro Aguilar Salobreña",	20.84,	18.35,	17.87,	17.03,	20.11,	67.00,	10),
+(5,	"OH",	6,	"Sergio Torrijos Santano",	21.01,	22.02,	19.58,	18.74,	18.09,	63.00,	8),
+(5,	"OH",	7,	"Erik Subirats Cruz",	25.07,	16.64,	20.13,	21.28,	18.68,	63.00,	6),
+(5,	"OH",	8,	"Luis Flores",	19.35,	21.20,	20.04,	20.63,	20.10,	62.00,	5),
+(5,	"OH",	9,	"Javier Tovar Castro",	17.51,	20.87,	30.06,	23.14,	18.36,	60.00,	4),
+(5,	"OH",	10,	"Mauro Moisés Ortega López",	18.83,	33.03,	18.38,	15.84,	25.90,	60.00,	3),
+(5,	"OH",	11,	"Jhon sebastian mejia",	21.10,	22.43,	19.36,	25.36,	19.97,	59.00,	2),
+(5,	"OH",	12,	"Marcos Plaza Nocito",	19.81,	21.25,	23.95,	19.42,	24.48,	58.00,	1),
+(5,	"OH",	13,	"Jorge Marín Segovia",	23.96,	19.82,	18.95,	22.15,	25.22,	57.00,	0),
+(5,	"OH",	14,	"Jorge Martín Espinosa",	23.05,	24.03,	20.91,	22.04,	20.14,	57.00,	0),
+(5,	"OH",	15,	"Pol Juny Sánchez",	24.10,	22.24,	23.18,	27.57,	27.19,	51.00,	0),
+(5,	"OH",	16,	"Raúl Martínez Redondo",	24.56,	25.75,	28.78,	26.60,	28.67,	46.00,	0),
+(5,	"OH",	17,	"Marcos Castelló Pastor",	22.62,	28.81,	32.67,	25.70,	26.94,	46.00,	0),
+(5,	"OH",	18,	"Raúl Cuevas Castillo",	26.92,	26.63,	26.94,	28.02,	32.42,	46.00,	0),
+(5,	"OH",	19,	"Artur Miralles Hernàndez",	30.96,	27.32,	28.07,	25.48,	26.66,	46.00,	0),
+(5,	"OH",	20,	"Maider Arce López De Ipiña",	27.84,	29.00,	26.23,	27.22,	26.99,	46.00,	0),
+(5,	"OH",	21,	"Rafael Alférez Robisco",	26.16,	29.61,	30.68,	25.02,	38.05,	44.00,	0),
+(5,	"OH",	22,	"Fernando Sáez Lázaro",	31.77,	29.80,	27.94,	26.86,	29.03,	43.00,	0),
+(5,	"OH",	23,	"María del Mar Gallego Vicente",	27.51,	27.19,	32.08,	36.14,	24.15,	43.00,	0),
+(5,	"OH",	24,	"Alberto Romero",	28.31,	28.78,	23.80,	32.42,	32.70,	42.00,	0),
+(5,	"OH",	25,	"Marc Garcia Diaz",	0,	34.97,	28.80,	26.09,	26.14,	42.00,	0),
+(5,	"OH",	26,	"Agustín Wals",	34.44,	27.58,	0,	27.42,	34.50,	39.00,	0),
+(5,	"OH",	27,	"Christian Ocaña Ávila",	32.84,	33.78,	28.16,	42.05,	30.24,	39.00,	0),
+(5,	"OH",	28,	"Lorenzo Escobar Kraskouskaya",	26.59,	49.48,	50.48,	16.52,	21.09,	39.00,	0),
+(5,	"OH",	29,	"Leon Jakub Wyrobek",	34.67,	25.73,	40.02,	34.56,	31.00,	38.00,	0),
+(5,	"OH",	30,	"Laura Freitas Martín",	33.59,	38.53,	29.38,	33.94,	0,	35.00,	0),
+(5,	"OH",	31,	"Raúl Morales Hidalgo",	35.63,	37.61,	43.70,	36.21,	34.11,	34.00,	0),
+(5,	"OH",	32,	"Raquel Mena Marcos",	37.68,	42.75,	51.53,	34.13,	31.34,	33.00,	0),
+(5,	"OH",	33,	"Jesús Lindo García",	51.39,	46.22,	44.66,	56.50,	41.91,	26.00,	0),
+(5,	"OH",	34,	"Fernando Cascares",	88.45,	84.18,	53.83,	56.31,	43.65,	19.00,	0),
+(5,	"OH",	35,	"Ayyob assaidi",	71.66,	48.01,	73.83,	94.95,	51.66,	19.00,	0),
+(5,	"OH",	36,	"Fernando Astasio Ávila",	68.02,	84.85,	80.07,	79.27,	57.86,	17.00,	0),
+(5,	"OH",	37,	"Miguel Martín Rodríguez",	0,	0,	0,	0,	0,	0,	0);
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"BLD",	1,	"Jefferson Andrés Durango Argaez",	26.57,	0,	37.08,	0,	0,	100.00,	25),
@@ -1764,6 +2053,20 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (4,	"BLD",	14,	"Jose Luis Molina López",	0,	0,	0,	0,	0,	0,	0),
 (4,	"BLD",	15,	"Julio Perugorria Lorente",	0,	0,	0,	0,	0,	0,	0),
 (4,	"BLD",	16,	"Laura Freitas Martín",	0,	0,	0,	0,	0,	0,	0);
+INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
+(5,	"BLD",	1,	"Berta García Parra",	0,	19.77,	23.02,	0,	0,	100.00,	25),
+(5,	"BLD",	2,	"Jefferson Andrés Durango Argaez",	0,	22.94,	0,	0,	0,	86.00,	19),
+(5,	"BLD",	3,	"Jose Antonio Navarro Sánchez",	0,	32.20,	39.26,	0,	0,	61.00,	15),
+(5,	"BLD",	4,	"David Bautista García",	106.31,	58.97,	0,	0,	0,	34.00,	12),
+(5,	"BLD",	5,	"Raúl Cuevas Castillo",	97.65,	0,	90.21,	0,	0,	22.00,	10),
+(5,	"BLD",	6,	"Raúl Morales Hidalgo",	0,	98.91,	0,	0,	0,	20.00,	8),
+(5,	"BLD",	7,	"Manuel Prieto de Antón",	0,	110.97,	116.91,	0,	0,	18.00,	6),
+(5,	"BLD",	8,	"Jesús Lindo García",	125.94,	0,	0,	0,	0,	16.00,	5),
+(5,	"BLD",	9,	"Laura Freitas Martín",	131.33,	0,	0,	0,	0,	15.00,	4),
+(5,	"BLD",	10,	"Miguel Martín Rodríguez",	0,	172.57,	0,	0,	0,	11.00,	3),
+(5,	"BLD",	11,	"Alberto Romero",	0,	329.43,	0,	0,	0,	6.00,	2),
+(5,	"BLD",	12,	"Artur Miralles Hernàndez",	0,	0,	0,	0,	0,	0,	1),
+(5,	"BLD",	13,	"Leon Jakub Wyrobek",	0,	0,	0,	0,	0,	0,	0);
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"Pyraminx",	1,	"Andrés Rodríguez Galán",	2.23,	2.46,	2.59,	2.71,	4.58,	100.00,	25),
@@ -1933,11 +2236,11 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (4,	"Pyraminx",	7,	"Arnau Tous Mateu",	5.51,	4.21,	4.44,	6.54,	3.88,	58.00,	6),
 (4,	"Pyraminx",	8,	"Jhon sebastian mejia",	6.23,	4.62,	3.75,	3.12,	6.42,	56.00,	5),
 (4,	"Pyraminx",	9,	"Jorge Martín Espinosa",	5.26,	4.88,	5.06,	5.59,	3.51,	54.00,	4),
-(4,	"Pyraminx",	10,	"Izan Cantero Herrera",	8.38,	5.17,	4.57,	4.57,	5.81,	53.00,	3),
-(4,	"Pyraminx",	11,	"Marcos Castelló Pastor",	5.22,	5.27,	5.11,	19.45,	4.55,	53.00,	2),
-(4,	"Pyraminx",	12,	"Raúl Martínez Redondo",	7.01,	4.52,	4.15,	9.83,	4.37,	52.00,	1),
-(4,	"Pyraminx",	13,	"Juan David Carmona Vásquez",	6.65,	4.09,	6.36,	5.89,	2.18,	50.00,	0),
-(4,	"Pyraminx",	14,	"Rubén López de Juan",	6.42,	6.18,	4.14,	4.00,	7.77,	49.00,	0),
+(4,	"Pyraminx",	10,	"Marcos Castelló Pastor",	5.22,	5.27,	5.11,	19.45,	4.55,	53.00,	3),
+(4,	"Pyraminx",	11,	"Raúl Martínez Redondo",	7.01,	4.52,	4.15,	9.83,	4.37,	52.00,	2),
+(4,	"Pyraminx",	12,	"Juan David Carmona Vásquez",	6.65,	4.09,	6.36,	5.89,	2.18,	50.00,	1),
+(4,	"Pyraminx",	13,	"Rubén López de Juan",	6.42,	6.18,	4.14,	4.00,	7.77,	49.00,	0),
+(4,	"Pyraminx",	14,	"Izan Cantero Herrera",	8.38,	5.17,	4.57,	0,	5.81,	42.00,	0),
 (4,	"Pyraminx",	15,	"Laura Freitas Martín",	6.60,	6.22,	9.21,	7.95,	3.98,	40.00,	0),
 (4,	"Pyraminx",	16,	"Marc Garcia Diaz",	6.35,	8.42,	6.84,	5.99,	7.75,	39.00,	0),
 (4,	"Pyraminx",	17,	"Luis Flores",	7.29,	6.88,	7.52,	7.61,	6.49,	38.00,	0),
@@ -1965,6 +2268,45 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (4,	"Pyraminx",	39,	"Ayyob assaidi",	0,	15.44,	12.09,	13.82,	22.81,	16.00,	0),
 (4,	"Pyraminx",	40,	"Darío Hammad Vayá",	16.87,	18.89,	16.08,	36.70,	21.41,	14.00,	0),
 (4,	"Pyraminx",	41,	"Rubén Pérez Pérez",	23.77,	30.34,	26.98,	38.88,	34.42,	9.00,	0);
+INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
+(5,	"Pyraminx",	1,	"Andrés Rodríguez Galán",	3.18,	2.73,	3.45,	2.92,	6.32,	100.00,	25),
+(5,	"Pyraminx",	2,	"Manuel Prieto de Antón",	2.55,	3.95,	2.85,	0,	3.13,	96.00,	19),
+(5,	"Pyraminx",	3,	"Juan David Carmona Vásquez",	3.31,	2.97,	3.76,	2.96,	6.34,	95.00,	15),
+(5,	"Pyraminx",	4,	"Héctor Haro Guerrero",	4.87,	3.08,	3.48,	3.16,	3.42,	95.00,	12),
+(5,	"Pyraminx",	5,	"Raúl Cuevas Castillo",	3.85,	3.56,	4.05,	2.96,	2.59,	92.00,	10),
+(5,	"Pyraminx",	6,	"Laura Tarrés Gimeno",	2.65,	4.91,	5.67,	3.68,	3.17,	81.00,	8),
+(5,	"Pyraminx",	7,	"Raúl Martínez Redondo",	2.98,	5.95,	3.97,	5.29,	3.89,	73.00,	6),
+(5,	"Pyraminx",	8,	"Jorge Martín Espinosa",	3.56,	0,	5.24,	4.92,	3.92,	68.00,	5),
+(5,	"Pyraminx",	9,	"Izan Cantero Herrera",	2.43,	5.12,	0,	5.61,	3.91,	65.00,	4),
+(5,	"Pyraminx",	10,	"Jhon sebastian mejia",	2.73,	5.89,	7.45,	4.88,	4.10,	64.00,	3),
+(5,	"Pyraminx",	11,	"Iván Brigidano Pérez",	3.38,	6.39,	5.13,	6.45,	3.98,	62.00,	2),
+(5,	"Pyraminx",	12,	"Laura Freitas Martín",	5.95,	6.19,	4.18,	5.69,	5.82,	55.00,	1),
+(5,	"Pyraminx",	13,	"Luis Flores",	6.23,	8.44,	6.16,	5.81,	6.70,	50.00,	0),
+(5,	"Pyraminx",	14,	"Marcos Castelló Pastor",	3.61,	10.06,	9.91,	5.86,	3.63,	49.00,	0),
+(5,	"Pyraminx",	15,	"Fernando Sáez Lázaro",	7.34,	6.41,	7.49,	4.09,	7.08,	46.00,	0),
+(5,	"Pyraminx",	16,	"Marc Garcia Diaz",	8.65,	0,	7.00,	5.44,	4.82,	45.00,	0),
+(5,	"Pyraminx",	17,	"Rubén López de Juan",	3.55,	7.16,	7.73,	6.68,	0,	44.00,	0),
+(5,	"Pyraminx",	18,	"Erik Subirats Cruz",	8.16,	6.13,	12.03,	7.83,	6.78,	42.00,	0),
+(5,	"Pyraminx",	19,	"Javier Tovar Castro",	3.33,	9.76,	6.61,	0,	7.33,	40.00,	0),
+(5,	"Pyraminx",	20,	"Marcos Plaza Nocito",	6.78,	10.12,	5.22,	7.03,	10.77,	40.00,	0),
+(5,	"Pyraminx",	21,	"María del Mar Gallego Vicente",	12.66,	9.51,	7.64,	8.40,	6.19,	37.00,	0),
+(5,	"Pyraminx",	22,	"Leon Jakub Wyrobek",	10.81,	7.80,	5.69,	12.67,	7.09,	37.00,	0),
+(5,	"Pyraminx",	23,	"Jesús Lindo García",	8.25,	9.89,	9.00,	8.74,	5.55,	37.00,	0),
+(5,	"Pyraminx",	24,	"Pol Juny Sánchez",	9.84,	8.16,	10.27,	7.21,	8.65,	36.00,	0),
+(5,	"Pyraminx",	25,	"Alejandro Martín López",	8.44,	7.98,	12.23,	9.06,	9.74,	35.00,	0),
+(5,	"Pyraminx",	26,	"Maider Arce López De Ipiña",	10.77,	9.98,	15.47,	7.93,	9.35,	32.00,	0),
+(5,	"Pyraminx",	27,	"Carmen Centelles",	5.49,	12.75,	19.92,	10.41,	6.99,	32.00,	0),
+(5,	"Pyraminx",	28,	"Alberto Romero",	12.24,	16.41,	11.12,	11.67,	6.28,	27.00,	0),
+(5,	"Pyraminx",	29,	"Noé Rico Castro",	11.94,	10.89,	14.24,	11.44,	12.53,	27.00,	0),
+(5,	"Pyraminx",	30,	"Miguel Martín Rodríguez",	28.70,	13.61,	11.49,	7.39,	11.57,	26.00,	0),
+(5,	"Pyraminx",	31,	"Santiago Borrego Verde",	12.51,	14.20,	16.04,	10.99,	8.96,	25.00,	0),
+(5,	"Pyraminx",	32,	"Miguel Ángel Galdeano Medina",	12.29,	16.34,	13.24,	14.33,	12.34,	24.00,	0),
+(5,	"Pyraminx",	33,	"Quirze Ricart Besalu",	20.81,	0,	10.18,	14.82,	14.60,	19.00,	0),
+(5,	"Pyraminx",	34,	"Ayyob assaidi",	9.79,	17.07,	30.54,	19.66,	15.92,	18.00,	0),
+(5,	"Pyraminx",	35,	"Fernando Astasio Ávila",	26.45,	16.28,	22.98,	20.40,	17.70,	16.00,	0),
+(5,	"Pyraminx",	36,	"Manuel Ortega",	21.36,	22.24,	17.66,	26.83,	16.30,	16.00,	0),
+(5,	"Pyraminx",	37,	"Ángel Pérez Pérez",	14.29,	28.86,	18.36,	19.02,	46.83,	14.00,	0),
+(5,	"Pyraminx",	38,	"Rubén Pérez Pérez",	37.01,	32.54,	31.24,	25.18,	26.34,	11.00,	0);
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"Skewb",	1,	"Manuel Prieto de Antón",	4.99,	3.81,	3.62,	3.53,	2.70,	100.00,	25),
@@ -2069,9 +2411,9 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (2,	"Skewb",	50,	"Jose Luis Molina López",	24.37,	21.12,	0,	16.47,	0,	0,	0);
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (3,	"Skewb",	1,	"Manuel Prieto de Antón",	1.93,	2.43,	2.36,	3.35,	2.64,	100.00,	25),
-(3,	"Skewb",	2,	"Miguel Ángel González-Herrero García",	3.32,	0,	5.04,	3.77,	3.40,	71.00,	19),
-(3,	"Skewb",	3,	"Fernando Sáez Lázaro",	3.58,	2.79,	4.17,	3.20,	4.78,	68.00,	15),
-(3,	"Skewb",	4,	"María del Mar Gallego Vicente",	5.63,	3.27,	4.50,	4.01,	3.21,	63.00,	12),
+(3,	"Skewb",	2,	"Fernando Sáez Lázaro",	3.58,	2.79,	4.17,	3.20,	4.78,	68.00,	19),
+(3,	"Skewb",	3,	"María del Mar Gallego Vicente",	5.63,	3.27,	4.50,	4.01,	3.21,	63.00,	15),
+(3,	"Skewb",	4,	"Miguel Ángel González-Herrero García",	3.32,	0,	5.04,	3.77,	3.40,	61.00,	12),
 (3,	"Skewb",	5,	"Pol Juny Sánchez",	2.98,	4.01,	4.80,	8.73,	4.12,	58.00,	10),
 (3,	"Skewb",	6,	"Jhon sebastian mejia",	4.80,	2.61,	4.51,	3.70,	4.92,	57.00,	8),
 (3,	"Skewb",	7,	"Raúl Martínez Redondo",	5.24,	3.60,	4.39,	2.96,	6.11,	56.00,	6),
@@ -2151,6 +2493,42 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (4,	"Skewb",	37,	"Jose Luis Molina López",	10.71,	19.97,	18.22,	18.14,	18.43,	18.00,	0),
 (4,	"Skewb",	38,	"Fernando Cascares",	14.25,	16.79,	24.80,	40.72,	17.43,	17.00,	0),
 (4,	"Skewb",	39,	"Ayyob assaidi",	17.48,	36.27,	7.22,	25.17,	35.36,	13.00,	0);
+INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
+(5,	"Skewb",	1,	"Manuel Prieto de Antón",	3.72,	3.68,	4.62,	3.40,	3.89,	100.00,	25),
+(5,	"Skewb",	2,	"Fernando Sáez Lázaro",	2.65,	3.86,	4.97,	4.49,	3.63,	94.00,	19),
+(5,	"Skewb",	3,	"Jhon sebastian mejia",	4.17,	4.02,	4.30,	5.56,	4.24,	89.00,	15),
+(5,	"Skewb",	4,	"Julio Perugorria Lorente",	4.63,	3.65,	3.97,	4.81,	0,	84.00,	12),
+(5,	"Skewb",	5,	"Pol Juny Sánchez",	4.32,	4.75,	4.00,	4.39,	5.09,	84.00,	10),
+(5,	"Skewb",	6,	"Héctor Haro Guerrero",	5.42,	4.22,	4.59,	3.73,	4.77,	83.00,	8),
+(5,	"Skewb",	7,	"Raúl Martínez Redondo",	4.11,	5.12,	4.82,	8.04,	4.48,	78.00,	6),
+(5,	"Skewb",	8,	"Miguel Ángel González-Herrero García",	3.02,	6.11,	4.52,	8.38,	4.50,	75.00,	5),
+(5,	"Skewb",	9,	"Marcos Castelló Pastor",	6.13,	8.55,	4.39,	6.54,	5.23,	63.00,	4),
+(5,	"Skewb",	10,	"María del Mar Gallego Vicente",	10.68,	6.15,	5.75,	5.73,	6.64,	61.00,	3),
+(5,	"Skewb",	11,	"Alberto Romero",	7.46,	7.19,	8.26,	5.52,	5.71,	55.00,	2),
+(5,	"Skewb",	12,	"Raúl Cuevas Castillo",	7.62,	7.82,	6.00,	5.09,	8.10,	53.00,	1),
+(5,	"Skewb",	13,	"Javier Tovar Castro",	16.90,	6.60,	6.46,	8.22,	6.70,	52.00,	0),
+(5,	"Skewb",	14,	"Leon Jakub Wyrobek",	0,	6.91,	6.85,	5.98,	8.62,	50.00,	0),
+(5,	"Skewb",	15,	"Fernando Astasio Ávila",	3.28,	7.06,	8.11,	10.29,	7.26,	50.00,	0),
+(5,	"Skewb",	16,	"Juan Pablo Rodríguez",	12.67,	7.60,	5.30,	8.98,	6.15,	50.00,	0),
+(5,	"Skewb",	17,	"Alejandro Martín López",	8.06,	19.26,	7.17,	5.93,	7.54,	50.00,	0),
+(5,	"Skewb",	18,	"Eki González García",	10.71,	8.03,	8.86,	5.70,	6.84,	48.00,	0),
+(5,	"Skewb",	19,	"Carmen Centelles",	14.04,	9.77,	7.44,	7.45,	7.27,	46.00,	0),
+(5,	"Skewb",	20,	"Rafael Alférez Robisco",	8.99,	11.28,	7.76,	4.73,	9.70,	43.00,	0),
+(5,	"Skewb",	21,	"Lorenzo Escobar Kraskouskaya",	13.60,	5.89,	8.89,	9.84,	8.00,	42.00,	0),
+(5,	"Skewb",	22,	"Rubén López de Juan",	18.17,	11.07,	7.65,	8.95,	7.42,	41.00,	0),
+(5,	"Skewb",	23,	"Maider Arce López De Ipiña",	9.09,	7.51,	10.99,	9.05,	9.98,	40.00,	0),
+(5,	"Skewb",	24,	"Marc Garcia Diaz",	11.11,	10.51,	7.02,	8.45,	10.15,	39.00,	0),
+(5,	"Skewb",	25,	"Jorge Martín Espinosa",	14.57,	9.19,	9.58,	13.16,	10.67,	34.00,	0),
+(5,	"Skewb",	26,	"Laura Freitas Martín",	0,	12.46,	11.24,	7.87,	10.16,	33.00,	0),
+(5,	"Skewb",	27,	"Marcos Plaza Nocito",	10.83,	17.99,	12.17,	11.69,	11.50,	32.00,	0),
+(5,	"Skewb",	28,	"Luis Flores",	12.70,	13.87,	11.34,	12.75,	11.20,	31.00,	0),
+(5,	"Skewb",	29,	"Miguel Ángel Galdeano Medina",	19.10,	18.35,	10.01,	6.51,	11.79,	28.00,	0),
+(5,	"Skewb",	30,	"Quirze Ricart Besalu",	17.17,	6.98,	11.15,	29.10,	12.03,	28.00,	0),
+(5,	"Skewb",	31,	"Santiago Borrego Verde",	15.44,	22.54,	14.33,	10.54,	11.94,	27.00,	0),
+(5,	"Skewb",	32,	"Jesús Lindo García",	8.94,	17.40,	15.02,	14.99,	18.89,	24.00,	0),
+(5,	"Skewb",	33,	"Miguel Martín Rodríguez",	26.96,	9.14,	30.89,	8.87,	16.91,	21.00,	0),
+(5,	"Skewb",	34,	"Ayyob assaidi",	23.33,	22.67,	18.35,	29.42,	154.89,	15.00,	0),
+(5,	"Skewb",	35,	"Manuel Ortega",	22.94,	28.10,	34.93,	29.76,	28.06,	13.00,	0);
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"Square-1",	1,	"Artur Miralles Hernàndez",	9.80,	10.48,	7.98,	13.36,	13.11,	100.00,	25),
@@ -2257,6 +2635,25 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (4,	"Square-1",	21,	"Fernando Cascares",	65.98,	57.26,	66.23,	77.93,	76.71,	16.00,	0),
 (4,	"Square-1",	22,	"Raquel Mena Marcos",	81.71,	64.89,	120.61,	63.77,	67.84,	15.00,	0),
 (4,	"Square-1",	23,	"Luis Flores",	119.02,	67.83,	101.32,	103.75,	155.72,	10.00,	0);
+INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
+(5,	"Square-1",	1,	"Manuel Prieto de Antón",	12.07,	11.16,	13.78,	12.44,	10.45,	100.00,	25),
+(5,	"Square-1",	2,	"Javier López Fernández",	10.84,	17.21,	11.37,	11.97,	12.80,	99.00,	19),
+(5,	"Square-1",	3,	"Artur Miralles Hernàndez",	12.70,	12.59,	11.76,	12.88,	14.97,	93.00,	15),
+(5,	"Square-1",	4,	"Alejandro Soriano Compta",	14.48,	15.97,	11.86,	12.08,	11.66,	93.00,	12),
+(5,	"Square-1",	5,	"Oscar Sánchez Najarro",	11.64,	15.22,	9.77,	13.68,	13.74,	91.00,	10),
+(5,	"Square-1",	6,	"Iñigo Mallo Lizaso",	12.89,	21.51,	15.92,	10.39,	11.10,	89.00,	8),
+(5,	"Square-1",	7,	"Miguel Ángel González-Herrero García",	16.45,	25.89,	13.25,	11.80,	15.90,	78.00,	6),
+(5,	"Square-1",	8,	"Rubén López de Juan",	11.58,	20.48,	14.56,	15.21,	16.12,	78.00,	5),
+(5,	"Square-1",	9,	"Daniel Gracia Ortiz",	16.37,	16.45,	12.71,	14.49,	15.09,	78.00,	4),
+(5,	"Square-1",	10,	"Raúl Cuevas Castillo",	24.87,	23.29,	18.57,	17.66,	17.00,	60.00,	3),
+(5,	"Square-1",	11,	"Pol Juny Sánchez",	21.89,	26.38,	16.33,	24.82,	15.42,	57.00,	2),
+(5,	"Square-1",	12,	"María del Mar Gallego Vicente",	25.78,	26.53,	45.64,	28.88,	26.09,	44.00,	1),
+(5,	"Square-1",	13,	"Alberto Romero",	35.70,	29.63,	27.03,	41.49,	27.28,	39.00,	0),
+(5,	"Square-1",	14,	"Jorge Martín Espinosa",	34.48,	75.04,	34.69,	74.37,	18.65,	25.00,	0),
+(5,	"Square-1",	15,	"Raquel Mena Marcos",	63.26,	54.79,	78.02,	49.40,	67.09,	19.00,	0),
+(5,	"Square-1",	16,	"Miguel Martín Rodríguez",	37.94,	73.21,	54.94,	76.74,	69.32,	18.00,	0),
+(5,	"Square-1",	17,	"Jesús Lindo García",	86.64,	81.89,	111.77,	87.32,	61.39,	14.00,	0),
+(5,	"Square-1",	18,	"Luis Flores",	130.36,	136.36,	112.12,	91.52,	89.65,	11.00,	0);
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
 (1,	"Megaminx",	1,	"Eder Olivencia González",	45.06,	44.60,	47.94,	47.55,	45.85,	100.00,	25),
@@ -2367,6 +2764,24 @@ INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, t
 (4,	"Megaminx",	17,	"Quirze Ricart Besalu",	141.02,	136.49,	189.2,	115.96,	115.78,	36.00,	0),
 (4,	"Megaminx",	18,	"Marc Garcia Diaz",	160.41,	127.86,	117.24,	127.37,	144.13,	36.00,	0),
 (4,	"Megaminx",	19,	"Alejandro Martín López",	160.01,	168.31,	144.21,	22468,	169.05,	29.00,	0);
+INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus) VALUES
+(5,	"Megaminx",	1,	"Eder Olivencia González",	41.39,	47.66,	49.81,	46.78,	46.13,	100.00,	25),
+(5,	"Megaminx",	2,	"Raúl Cuevas Castillo",	44.81,	49.32,	47.04,	47.98,	46.93,	99.00,	19),
+(5,	"Megaminx",	3,	"Raúl Martínez Redondo",	50.93,	57.47,	57.60,	49.90,	51.66,	88.00,	15),
+(5,	"Megaminx",	4,	"Jorge Marín Segovia",	56.56,	54.93,	57.56,	55.72,	53.48,	84.00,	12),
+(5,	"Megaminx",	5,	"Miguel Ángel González-Herrero García",	72.06,	52.42,	62.36,	53.53,	54.96,	82.00,	10),
+(5,	"Megaminx",	6,	"Manuel Prieto de Antón",	54.97,	55.84,	59.09,	58.28,	59.35,	81.00,	8),
+(5,	"Megaminx",	7,	"Laura Tarrés Gimeno",	59.55,	63.54,	62.81,	57.21,	59.57,	77.00,	6),
+(5,	"Megaminx",	8,	"Luis Flores",	84.93,	87.49,	92.7,	87.74,	93.84,	52.00,	5),
+(5,	"Megaminx",	9,	"Jorge Martín Espinosa",	95.72,	90.63,	109.04,	119.39,	92.49,	47.00,	4),
+(5,	"Megaminx",	10,	"Agustín Wals",	87.95,	109.95,	99.63,	108.27,	104.62,	45.00,	3),
+(5,	"Megaminx",	11,	"Laura Freitas Martín",	112.95,	108.2,	106.27,	108.65,	110.32,	43.00,	2),
+(5,	"Megaminx",	12,	"Leon Jakub Wyrobek",	130.81,	100.07,	108,	114.49,	109.33,	42.00,	1),
+(5,	"Megaminx",	13,	"María del Mar Gallego Vicente",	122.79,	104.43,	118.34,	108.06,	127.72,	40.00,	0),
+(5,	"Megaminx",	14,	"Alberto Romero",	121.76,	107,	112.16,	117.12,	132.3,	40.00,	0),
+(5,	"Megaminx",	15,	"Maider Arce López De Ipiña",	116.8,	110.75,	118.07,	134.68,	146,	38.00,	0),
+(5,	"Megaminx",	16,	"Marc Garcia Diaz",	123.67,	120.07,	120.07,	144.74,	132.23,	37.00,	0),
+(5,	"Megaminx",	17,	"Quirze Ricart Besalu",	113.13,	143.01,	128.01,	157.95,	141.47,	34.00,	0);
 
 
 INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus, solucion, explicacion) VALUES
@@ -2910,3 +3325,107 @@ Esqueleto: [*1] D2 B' U' B R' U R2 B R' B' U' B U L U' L' U' R' F R2 F' R' U R U
 Notas: Ante esta solución, se me han ocurrido dos preguntas: ¿Es probable que Ander Sevilla Hernández (Pi), sea uno de los mejores competidores de FMC de la historia? La respuesta es clara, Sí. Y la otra pregunta es, ¿Después de este momento, merece la pena que Ander Sevilla Hernández (Pi) siga invirtiendo tiempo en esta categoría sabiendo que nunca se le podrá superar? "),
 (4,	"FMC",	14,	"Jorge Arto García",	0,	0,	0,	0,	0,	0,	0,	"-",	"-"),
 (4,	"FMC",	15,	"Oscar Sánchez Najarro",	0,	0,	0,	0,	0,	0,	0,	"-",	"-");
+INSERT INTO tiempos (jornada, categoria_nombre, posicion, participante_nombre, tiempo1, tiempo2, tiempo3, tiempo4, tiempo5, puntos_tiempo, puntos_bonus, solucion, explicacion) VALUES
+(5,	"FMC",	1,	"Mauro Moisés Ortega López",	26.00,	0,	0,	0,	0,	100.00,	25,	"U F2 U2 D2 R2 B2 U2 F2 R F2 U2 B' R F2 L' B2 R' F2 L2 F2 R' B' U' R F' B",	" U (B' F R' U)//EO (5/5)
+(B)//DR-4e4c (1/6)
+F2 U2 D2 R2 L' B//DR (6/12)
+R F2 L' B2//corner bars (4/16)
+R' F2 L2 F2 R'//AB3E (5/21)
+
+Skeleton: U F2 U2 D2 R2 L' * B R F2 L' B2 R' F2 L2 F2 R' B' U' R F' B 21 to 3e
+
+*L B2 U2 F2 R F2 U2 B2//3e (8-3/26)
+
+Solution: U F2 U2 D2 R2 B2 U2 F2 R F2 U2 B' R F2 L' B2 R' F2 L2 F2 R' B' U' R F' B "),
+(5,	"FMC",	2,	"Álvaro Aguilar Salobreña",	29.00,	0,	0,	0,	0,	90.00,	19,	"U' D2 R L' D R' D' L D2 R D R' D2 B R' B' R F' D2 R2 F R' F D' F2 U' F2 D L'",	" (L D' F2 U) U' // 222 (5/5)
+(F2 D F' R F' R2 D2 F) // F2L-1 (8/13)
+(R' B R B' D2 R D' R' D' R D' R' D2) // AB3C (13/26)
+-------------------------------------------------------------------------------
+Skeleton: U' D2 R * D R' D R D R' D2 B R' B' R F' D2 R2 F R' F D' F2 U' F2 D L' (26)
+*: L' D R' D' L D R D' (8-5)
+-------------------------------------------------------------------------------
+Sol: U' D2 R L' D R' D' L D2 R D R' D2 B R' B' R F' D2 R2 F R' F D' F2 U' F2 D L' (29) "),
+(5,	"FMC",	3,	"Rafael Rodriguez Santana",	33.00,	0,	0,	0,	0,	79.00,	15,	"L2 F2 U2 B' R U2 R2 U R2 U' R2 U L2 U B2 U B2 R2 D' B R B' L2 B R' B' L' U2 D' B2 L2 D F",	" Scr: R' U' F L' F2 R' F2 R2 B2 F2 L' U' F' U' L' F2 L2 U2 B' L2 R' U R' U' F
+
+(F') L2 F2 U2 B' // EO (5/5)
+R // DR-2E4C (1/6)
+(D' L2 B2) // Trigger DR (3/9)
+(U2 D L') // DR (3/12)
+(D R2 B2 U' B2 U' L2) // 123 (7/19)
+(U' R2 U R2 U' R2 U2) // AB3c (7/26)
+
+Skeleton: L2 F2 U2 B' R U2 R2 U R2 U' R2 U L2 U B2 U B2 R2 D' @ L D' U2 B2 L2 D F
+@: B R B' L2 B R' B' L2 (8-1/33)
+
+Solution: L2 F2 U2 B' R U2 R2 U R2 U' R2 U L2 U B2 U B2 R2 D' B R B' L2 B R' B' L' U2 D' B2 L2 D F (33) "),
+(5,	"FMC",	4,	"Eki González García",	33.00,	0,	0,	0,	0,	79.00,	15,	"U' R F' L2 D2 L F' L F' L' R U' R' U2 F' U L2 F' R2 F L2 F' R2 F2 U2 R U R' U' B' U' B F'",	" U' R F' L2 D2 // 2x2x2  (5/5)
+(F B' U B) L // 2x2x3 (5/10)
+F' L F' L' // F2L-1 (4/14)
+R U' R' U2 F' U F // EO (7/21)
+U2 R U R' U' // Todo menos tres esquinas (5/26)
+
+Esqueleto: U' R F' L2 D2 L F' L F' L' R U' R' U2 F' U (*) F U2 R U R' U' B' U' B F' (26)
+Inserción en (*): L2 F' R2 F L2 F' R2 F (8-1=7 / 33)
+
+Solución final: U' R F' L2 D2 L F' L F' L' R U' R' U2 F' U L2 F' R2 F L2 F' R2 F2 U2 R U R' U' B' U' B F' (33) "),
+(5,	"FMC",	5,	"Alexander Olleta del Molino",	36.00,	0,	0,	0,	0,	72.00,	10,	"B2 U' R' B' R2 B R F2 R' B2 R D2 F B' L2 F B R' F2 U B L' U2 F' R' F2 R L' U2 L' U2 B' U B U D2",	" Una mierda xD
+2x2x2: B2 U' R' B' R2 [5]
+1x2x2: B' (.) F2 U B L' U2 [6]
+2x2x3: F' R' F2 R [4]
+F2L-1: L' U2 L' [3]
+Terminar: U2 B'U B U [5]
+(.): B2 R F2 R' B2 R (..) F2 R' [8-1]
+(..): D2 F B' L2 B F' [6-1] "),
+(5,	"FMC",	6,	"Manuel Prieto de Antón",	37.00,	0,	0,	0,	0,	70.00,	8,	"D' R' D' B' D B R L' F' D' F D L B' F L B F' D' F L F' D' B' L2 B L U' R2 U' R' D' F2 D F' L' F'",	" (F L F D' F2 D R U R2 U) // 2x2x3 10/10
+(L' B' L2 B D F L' F' D F B' L' F' B) // F2L 14/24
+(L' D' F' D F L R' B' D' B D R D) // ZBLL 13/37
+
+Final solve:
+D' R' D' B' D B R L' F' D' F D L B' F L B F' D' F L F' D' B' L2 B L U' R2 U' R' D' F2 D F' L' F' (37)
+
+Solve encontrada en los últimos 5 minutos después de estar 30 mins intentado DR y otros 20 haciendo bloques que sabía que no llevaban a ningún lado xD, le di a enviar a falta de 1 LOL "),
+(5,	"FMC",	7,	"Jose Antonio Navarro Sánchez",	38.00,	0,	0,	0,	0,	68.00,	6,	"U' F' D2 R' U2 R2 F' U' L' F' B' U B U F U F' U R U' R' U2 R U' R' B U2 B' U' B U B' U2 B' R B R' U'",	" Cara amarilla como referencia.
+
+U' F' D2 R' U2 R2 (Bloque 2x2x2)
+F' U' L' F' B' U B (Bloque 2x2x3)
+U F U F' (3er Par F2L)
+U R U' R' U2 R U' R' (4º Par F2L)
+B U2 B' U' B U B' U2 B' R B R' U' (OLLCP + PLLskip + AUF) "),
+(5,	"FMC",	8,	"Rubén López de Juan",	38.00,	0,	0,	0,	0,	68.00,	6,	"U' R F' L2 D2 L F2 L U' L' D R U2 R' U2 F U' F R' F' R F' D' F' L' U' L U F B2 U L' R B2 R' L U B2",	" U' R F' L2 D2 // 2x2x2 (5/5)
+L F2 // xcross (2/7)
+L U' L' D R U2 R' // pseudo pair (7/14)
+U2 F U' F R' F' R F' D' // F2L (9/23)
+F' L' U' L U F // OLL (6/29)
+B2 U L' R B2 R' L U B2 //PLL (9/38) "),
+(5,	"FMC",	9,	"Raúl Cuevas Castillo",	39.00,	0,	0,	0,	0,	67.00,	4,	"L F'L D' U2 B R2 U' R2 U2 L2 U' L' U R' F R' B2 R F' R' B2 R2 F U R U2 R' U R U2 R' U' F2 U2 R U R' F2",	" L F'L D' U2 B R2 U' R2 // 2X2X2
+U2 L2 U' L' // 2X2X3
+U R' F R' B2 R F' R' B2 R2 // PLL
+F U R U2 R' U R U2 R' U' F2 // OLL
+U2 R U R' F2 // F2L
+Solution:L F'L D' U2 B R2 U' R2 U2 L2 U' L' U R' F R' B2 R F' R' B2 R2 F U R U2 R' U R U2 R' U' F2 U2 R U R' F2 (39) "),
+(5,	"FMC",	10,	"Jesús Lindo García",	43.00,	0,	0,	0,	0,	60.00,	3,	"L2 U' R' U2 B R2 F2 U' L' U D' L U' F U F2 D2 F' D' F2 D R' D' R F D F D' F' D F' D' R' F L' F2 R F' R' F2 R L F'",	" Al final resuelvo por cara azul:
+L2 U' R' U2 B R2 (2x2x2)
+F2 U' L' U (2x2x3)
+D' L U' F U F2 D2 F' D' (2x2x3 + 2 pares formados) (No sé cómo acabo cambiando el bloque original de 2x2x3 por otro distinto xD)
+F2 D R' D' R (OLL a falta de meter un par)
+F D F D' F' D F' D' (meto el último par resolviendo a la vez el OLL, cancelo varios movimientos de un antisune)
+R' F L' F2 R F' R' F2 R L F' (PLL de la L) "),
+(5,	"FMC",	11,	"Jorge Martín Espinosa",	44.00,	0,	0,	0,	0,	59.00,	2,	"y U' F L' B2 D2 B L2 B D L2 D' x' L' U L U' L' U L U F' U F U2 R U R' y R' F' L' F R F' L F L2 U F' B L2 F B' U L2 U'",	" y U' F L' B2 D2 (BLOQUE 2X2)
+B L2 B D L2 D' (BLOQUE 2X2X3)
+x' L' U L U' L' U L (3º PAR)
+U F' U F U2 R U R' (4º PAR)
+y R' F' L' F R F' L F (OLL)
+L2 U F' B L2 F B' U L2 U' (PLL) "),
+(5,	"FMC",	12,	"Ander Sevilla Hernández (Pi)",	0,	0,	0,	0,	0,	0,	1,	"-",	" Mezcla: R' U' F L' F2 R' F2 R2 B2 F2 L' U' F' U' L' F2 L2 U2 B' L2 R' U R' U' F
+Inversa: (F' U R U' R L2 B U2 L2 F2 L U F U L F2 B2 R2 F2 R F2 L F' U R )
+
+(L U' R2 U2)            / Pseudo 2x2x2  4/4
+U' R D2 F' R2 F' R' F R / Pseudo 2x2x3  9/13
+D' F D2 F R'            / AB 2c2c1c     5/18
+
+Esqueleto: U' R D2 F' R2 F' R' F R D' F D2 F R' U2 R2 U *1 [*2 L']
+
+1* [R2 L U2 R' U' R U2 L' U R' U' R'] 12/30
+2* [F L2 F' U R2 U' F L2 F' U R2 U']  12/42
+
+Nota: DNF. Mal Reescrito, escribió el L' final antes de las inserciones sin querer ");

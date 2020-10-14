@@ -6,7 +6,6 @@ public class KeyClasificado implements Serializable {
 
     private String categoria;
     private String ronda;
-    private int posicion;
     private String participante;
 
 

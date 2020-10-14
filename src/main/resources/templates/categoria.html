@@ -30,7 +30,7 @@
 <div th:replace="fragments/backButton :: backButton"/>
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 15px; display: flex; align-items: center">
-        <div th:if="${categoria.orden > 1}" class="bouncyContainer backward" style="margin: auto">
+        <div th:if="${categoria.orden > 1}" class="bouncyContainer backward"  th:classappend="${isAdmin} ? adminclass : userclass" style="margin: auto">
             <a th:data-desiredCategory="${categorias.get(categoria.orden -1 - 1).nombre}"
                th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
                 <img class="bouncyButton backward" src="/img/backbutton.png"/>

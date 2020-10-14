@@ -1,16 +1,14 @@
 package com.example.miwebbase.Entities;
 
 import com.example.miwebbase.Entities.Keys.KeyClasificado;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Table(name = "Clasificados")
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,13 +26,19 @@ public class Clasificado {
     @ManyToOne
     private Participante participante;
 
-    @Id
+    @Transient
     private int posicion;
 
+    @Transient
     private boolean victoria;
 
+    @Column
+    private String tiempo;
+
     public enum NombreRonda {
+        CUARTO,
         SEMIFINAL,
-        FINAL
+        FINAL,
+        GANADOR
     }
 }

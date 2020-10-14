@@ -1,6 +1,6 @@
 @import 'https://fonts.googleapis.com/css?family=Roboto+Slab:400,700';
 
-#cuerpoModal div div{
+#cuerpoModal div div {
 
     position: inherit;
     left: 0;
@@ -10,9 +10,9 @@
 
 
 .bracket {
-
     white-space: nowrap;
     font-size: 0;
+    width: 100%;
 }
 
 .bracket .round {
@@ -33,6 +33,7 @@
     display: inline-block;
     vertical-align: middle;
 }
+
 .bracket .round .winners > div.matchups .matchup:last-child {
     margin-bottom: 0 !important;
 }
@@ -48,7 +49,7 @@
     border-left: 0.25rem solid #858585;
     background: white;
     width: 100%;
-    height: 5rem;
+    height: 3rem;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
 }
 
@@ -73,6 +74,15 @@
     font-family: "Roboto Slab";
 }
 
+@media (min-width: 1000px) {
+    .bracket .round .winners > div.matchups .matchup .participants .participant span {
+        margin: 0 1.25rem;
+        line-height: 3;
+        font-size: 1.3rem;
+        font-family: "Roboto Slab";
+    }
+}
+
 .bracket .round .winners > div.connector.filled .line, .bracket .round .winners > div.connector.filled.bottom .merger:after, .bracket .round .winners > div.connector.filled.top .merger:before {
     border-color: #60c645;
 }
@@ -86,12 +96,12 @@
 
 .bracket .round .winners > div.connector .line {
     border-bottom: thin solid #c0c0c8;
-    height: 6rem;
+    height: 4rem;
 }
 
 .bracket .round .winners > div.connector .merger {
     position: relative;
-    height: 12rem;
+    height: 8rem;
 }
 
 .bracket .round .winners > div.connector .merger:before, .bracket .round .winners > div.connector .merger:after {
@@ -123,15 +133,15 @@
 }
 
 .bracket .round.semifinals .winners .matchups .matchup:not(:last-child) {
-    margin-bottom: 14rem;
+    margin-bottom: 10rem;
 }
 
 .bracket .round.semifinals .winners .connector .merger {
-    height: 24rem;
+    height: 16rem;
 }
 
 .bracket .round.semifinals .winners .connector .line {
-    height: 12rem;
+    height: 8rem;
 }
 
 .bracket .round.finals .winners .connector .merger {

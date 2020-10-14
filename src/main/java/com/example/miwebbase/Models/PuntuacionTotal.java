@@ -44,7 +44,7 @@ public class PuntuacionTotal implements Cloneable {
     public void setPuntuacionesIndividuales(List<PuntuacionIndividual> puntuacionesIndividuales){
 
         List<PuntuacionIndividual> puntuacionesOrdenadas = new ArrayList<>();
-        for (int i = 1; i < AESUtils.JORNADAS_CAMPEONATO; i++){
+        for (int i = 1; i <= AESUtils.JORNADAS_CAMPEONATO; i++){
             final int ii = i;
             puntuacionesOrdenadas.add(puntuacionesIndividuales.stream().filter(p -> p.jornada == ii).findFirst()
                     .orElseGet(() -> new PuntuacionIndividual(this.nombre, ii, 0, false)));

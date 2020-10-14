@@ -32,5 +32,21 @@ public class Categoria {
     @NotNull
     private Integer cortePlayOffs;
 
+    @Override
+    public boolean equals(Object o) {
 
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof Categoria)) {
+            return false;
+        }
+
+        Categoria c = (Categoria) o;
+
+        return c.getNombre().equals(this.getNombre());
+    }
 }
+
+
