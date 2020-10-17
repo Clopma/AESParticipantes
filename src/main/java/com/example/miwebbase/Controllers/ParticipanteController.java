@@ -21,6 +21,9 @@ public class ParticipanteController {
     @Autowired
     private TiempoRepository tiempoRepository;
 
+    @Autowired
+    private CategoriaController categoriaController;
+
     @Autowired ParticipanteController self;
 
     @RequestMapping("/participante/{nombreParticipante}")
@@ -42,8 +45,9 @@ public class ParticipanteController {
 
         Resultado resultado = new Resultado();
         resultado.setCategoriasParticipadas(new ArrayList<>());
+
         for (Map.Entry<Integer, List<Tiempo>> categoriaEntry : categoriasInformadas.entrySet()) {
-            resultado.generarYAnadirCategoria(categoriaEntry.getValue(), nombreParticipante, tiempoRepository);
+            resultado.generarYAnadirCategoria(categoriaEntry.getValue(), categoriaController, nombreParticipante);
         }
 
         return resultado;

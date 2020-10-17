@@ -3,7 +3,8 @@ package com.example.miwebbase.Controllers;
 import com.example.miwebbase.Entities.Categoria;
 import com.example.miwebbase.Entities.Descalificacion;
 import com.example.miwebbase.Entities.Tiempo;
-import com.example.miwebbase.Models.PuntuacionTotal;
+import com.example.miwebbase.Models.PuntuacionIndividual;
+import com.example.miwebbase.Models.RankingCategoriaParticipante;
 import com.example.miwebbase.Models.Resultado;
 import com.example.miwebbase.Utils.AESUtils;
 import com.example.miwebbase.repositories.CategoriaRepository;
@@ -17,12 +18,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-
-import static com.example.miwebbase.Utils.AESUtils.getPosicionDeParticipante;
 
 @Controller
 public class CategoriaController {
@@ -43,7 +43,7 @@ public class CategoriaController {
 
         Categoria categoria = self.getCategoria(nombreCategoria);
 
-        List<PuntuacionTotal> puntuaciones = self.getRankingCategoria(categoria);
+        List<RankingCategoriaParticipante> puntuaciones = self.getRankingsCategoria(categoria);
 
 
         model.addAttribute("categoria", categoria);
@@ -55,11 +55,11 @@ public class CategoriaController {
         return "categoria";
     }
 
-    private int getLargoClasificacion(List<PuntuacionTotal> puntuaciones, int largoPredeterminado) {
+    private int getLargoClasificacion(List<RankingCategoriaParticipante> puntuaciones, int largoPredeterminado) {
 
         int largoClasificacion = 0;
         int numClasificados = 0;
-        for (PuntuacionTotal puntuacion : puntuaciones){
+        for (RankingCategoriaParticipante puntuacion : puntuaciones){
 
             if(numClasificados == largoPredeterminado){
                 break;
@@ -89,21 +89,20 @@ public class CategoriaController {
 
 
     @Cacheable(key = "#categoria.nombre", value = "puntuacionesGenerales")
-    public List<PuntuacionTotal> getRankingCategoria(Categoria categoria){
+    public List<RankingCategoriaParticipante> getRankingsCategoria(Categoria categoria){
 
-        List<PuntuacionTotal> puntuacionesTotales = tiempoRepository.getParticipantesPuntosTotalesCategoria(categoria);
+        List<RankingCategoriaParticipante> puntuacionesTotales = tiempoRepository.getParticipantesPuntosTotalesCategoria(categoria);
 
-        List<PuntuacionTotal> puntuacionesTotalesAux = new ArrayList<>(puntuacionesTotales);
 
-        // Ordenamos por puntuación y si no, sacamos la posición desempatada
-        Comparator<PuntuacionTotal> comparadorPuntosYPosiciones =  ((Comparator<PuntuacionTotal>)(p1, p2) -> p2.getPuntuacion_total().compareTo(p1.getPuntuacion_total()))
-                .thenComparing(p -> {
-                    p.setPosicion(getPosicionDeParticipante(p.getNombre(), categoria, puntuacionesTotalesAux, tiempoRepository));
-                    return p.getPosicion();
-                });
+        List<RankingCategoriaParticipante> puntuacionesTotalesAux = new ArrayList<>(puntuacionesTotales);
+
+        // Ordena por puntuación y si no, por puntuación desempatada
+        Comparator<RankingCategoriaParticipante> comparadorPuntosYPosiciones =  ((Comparator<RankingCategoriaParticipante>)(p1, p2) -> p2.getPuntuacion_total().compareTo(p1.getPuntuacion_total()))
+                .thenComparing(p -> getPosicionDeParticipante(p.getNombre(), categoria, puntuacionesTotalesAux, tiempoRepository));
 
         puntuacionesTotales.sort(comparadorPuntosYPosiciones);
 
+        // Setea todas las posiciones tal y como se han ordenado
         AtomicInteger posicion = new AtomicInteger(1);
         puntuacionesTotales.forEach(p -> p.setPosicion(posicion.getAndIncrement()));
 
@@ -113,7 +112,7 @@ public class CategoriaController {
 
         List<Descalificacion> descalificados = descalificacionRepository.findAllByCategoria(categoria);
         puntuacionesTotales.stream().filter(p -> descalificados.stream()
-                .noneMatch(d -> p.getNombre().equals(d.getParticipante().getNombre())))
+                .noneMatch(d -> p.equals(d.getParticipante())))
                 .collect(Collectors.toList())
                 .subList(0, categoria.getCortePlayOffs())
                 .forEach(p -> p.setClasificado(true));
@@ -134,6 +133,10 @@ public class CategoriaController {
 
     }
 
+    public RankingCategoriaParticipante getRankingParticipante(Categoria categoria, String nombreParticipante) {
+        return getRankingsCategoria(categoria).stream().filter(r -> nombreParticipante.equals(r.getNombre())).findFirst().orElse(null);
+    }
+
     @Cacheable(value = "categorias")
     public Categoria getCategoria(String nombreCategoria){
         return  categoriaRepository.findByNombre(nombreCategoria);
@@ -142,6 +145,103 @@ public class CategoriaController {
     @Cacheable(value = "listaDeCategorias")
     public List<Categoria> getCategoriasEnOrden(){
         return categoriaRepository.findAllByOrderByOrden();
+    }
+
+
+    private static Integer getPosicionDeParticipante(String nombreParticipante, Categoria categoria, List<RankingCategoriaParticipante> puntuaciones, TiempoRepository tiempoRepository) {
+
+        RankingCategoriaParticipante puntuacionTotalParticipantes = puntuaciones.stream()
+                .filter(p -> p.getNombre().equals(nombreParticipante))
+                .findFirst()
+                .get().clone();
+
+        List<RankingCategoriaParticipante> puntuacionesEmpatadasOriginalmentePorPuntuacionTotal = puntuaciones.stream().map(RankingCategoriaParticipante::clone)
+                .filter(p -> p.getPuntuacion_total().intValue() == puntuacionTotalParticipantes.getPuntuacion_total().intValue()).collect(Collectors.toList());
+
+        if (puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.size() == 1) {
+            return puntuaciones.indexOf(puntuaciones.stream().filter(p -> p.getNombre().equals(nombreParticipante)).findFirst().get()) + 1;
+        }
+
+        puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.forEach(p -> p.setPuntuacionesIndividuales(tiempoRepository.getParticipantePuntosIndividualesCategoria(categoria, p.getNombre())));
+
+        List<RankingCategoriaParticipante> puntuacionesEmpatadasActualmentePorPuntuacionTotal = puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.stream().map(RankingCategoriaParticipante::clone).collect(Collectors.toList());
+
+        List<String> personasDesempatadasEnOrden = new ArrayList<>();
+
+        //Mientras el nombre que buscamos no esté ordenado
+        while (!personasDesempatadasEnOrden.stream().anyMatch(p -> p.equals(nombreParticipante))) {
+
+            List<RankingCategoriaParticipante> puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas =
+                    puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream().map(RankingCategoriaParticipante::clone).collect(Collectors.toList());
+
+            puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.forEach(p -> p.getPuntuacionesIndividuales().sort(Comparator.comparingInt(PuntuacionIndividual::getPuntuacion_jornada).reversed()));
+
+            List<RankingCategoriaParticipante> puntuacionesEmpatadasPorPuntuacionesIndividuales;
+            while (true) {
+
+                int mejorPuntuacionJornadaN = puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.stream()
+                        .mapToInt(ps -> ps.getPuntuacionesIndividuales().size() > 0 ? ps.getPuntuacionesIndividuales().get(0).getPuntuacion_jornada() : 0)
+                        .max().getAsInt();
+
+                List<RankingCategoriaParticipante> aux = puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.stream().map(RankingCategoriaParticipante::clone)
+                        .filter(p -> p.getPuntuacionesIndividuales().size() > 0 && p.getPuntuacionesIndividuales().get(0).getPuntuacion_jornada() == mejorPuntuacionJornadaN)
+                        .collect(Collectors.toList());
+
+                if (aux.size() > 1) {
+
+                    puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.forEach(p -> p.getPuntuacionesIndividuales().remove(0));
+
+                } else if (aux.size() == 1) {
+
+                    puntuacionesEmpatadasPorPuntuacionesIndividuales = aux;
+                    break;
+
+                } else if (aux.size() == 0) {
+
+                    puntuacionesEmpatadasPorPuntuacionesIndividuales = puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas;
+                    break;
+
+                }
+
+            }
+
+            if (puntuacionesEmpatadasPorPuntuacionesIndividuales.size() == 1) {
+
+                String personaConMejorPuntuacionIndividual = puntuacionesEmpatadasPorPuntuacionesIndividuales.get(0).getNombre();
+                personasDesempatadasEnOrden.add(personaConMejorPuntuacionIndividual);
+                puntuacionesEmpatadasActualmentePorPuntuacionTotal = puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream()
+                        .filter(p -> !p.getNombre().equals(personaConMejorPuntuacionIndividual))
+                        .collect(Collectors.toList());
+
+            } else {
+
+                //Desempatar por media
+                List<Tiempo> tiemposEmpatados = tiempoRepository.getTiemposDeVariosParticipantes(categoria, puntuacionesEmpatadasPorPuntuacionesIndividuales.stream().map(RankingCategoriaParticipante::getNombre).collect(Collectors.toSet()));
+                tiemposEmpatados.stream().forEach(t -> t.setMedia(AESUtils.getTiemposCalculados(Arrays.asList(t.getTiempo1(), t.getTiempo2(), t.getTiempo3(), t.getTiempo4(), t.getTiempo5()), categoria)[1]));
+
+                Tiempo mejorMedia = tiemposEmpatados.stream().reduce((acc, val) -> (acc.getMedia() > 0) && (acc.getMedia() < val.getMedia()) ? acc : val).get();
+
+                String personaConMejorMedia = puntuacionesEmpatadasPorPuntuacionesIndividuales.stream().filter(p -> p.getNombre().equals(mejorMedia.getParticipante().getNombre())).findFirst().get().getNombre();
+                personasDesempatadasEnOrden.add(personaConMejorMedia);
+                puntuacionesEmpatadasActualmentePorPuntuacionTotal = puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream()
+                        .filter(p -> !p.getNombre().equals(personaConMejorMedia))
+                        .collect(Collectors.toList());
+
+            }
+        }
+
+        List<String> nombresEmpatados = puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.stream().map(RankingCategoriaParticipante::getNombre).collect(Collectors.toList());
+        int posicionParticipanteSuperior = puntuaciones.indexOf(puntuaciones.stream()
+                .filter(p -> nombresEmpatados.contains(p.getNombre()))
+                .findFirst()
+                .get());
+
+        int posicionParticipante = personasDesempatadasEnOrden.indexOf(personasDesempatadasEnOrden.stream()
+                .filter(nombreParticipante::equals)
+                .findFirst()
+                .get()) + 1;
+
+        return posicionParticipanteSuperior + posicionParticipante;
     }
 
 

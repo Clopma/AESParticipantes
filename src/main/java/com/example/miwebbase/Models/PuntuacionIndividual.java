@@ -15,6 +15,22 @@ public class PuntuacionIndividual implements Cloneable {
 
 
 
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof PuntuacionIndividual)) {
+            return false;
+        }
+
+        PuntuacionIndividual p = (PuntuacionIndividual) o;
+
+        return p.getNombre().equals(this.getNombre());
+    }
+
 
 
 }

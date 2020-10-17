@@ -33,7 +33,7 @@ public class Clasificado {
     private boolean victoria;
 
     @Column
-    private String tiempo;
+    private String puntuacion;
 
     public enum NombreRonda {
         CUARTO,

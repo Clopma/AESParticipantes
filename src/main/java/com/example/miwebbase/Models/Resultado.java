@@ -1,8 +1,8 @@
 package com.example.miwebbase.Models;
 
+import com.example.miwebbase.Controllers.CategoriaController;
 import com.example.miwebbase.Entities.Tiempo;
 import com.example.miwebbase.Utils.AESUtils;
-import com.example.miwebbase.repositories.TiempoRepository;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +28,7 @@ public class Resultado {
         int numTiempos;
         List<Jornada> jornadas;
         int posicion;
+        boolean clasificado;
         double tamano;
 
         @Setter
@@ -36,6 +37,8 @@ public class Resultado {
 
             int numJornada;
             int posicion;
+            int tiempoDescartadoArriba;
+            int tiempoDescartadoAbajo;
             String tiempo1;
             String tiempo2;
             String tiempo3;
@@ -95,19 +98,17 @@ public class Resultado {
             //Si la media no es un DNF
             if(singleMediaYpeor[1] > 0 && categoria.getNumTiempos() == 5){
 
-                if(tiempo.getTiempo1() == singleMediaYpeor[0]){ jornadaObj.setTiempo1("(" + jornadaObj.getTiempo1() + ")");}
-                else if(tiempo.getTiempo2() == singleMediaYpeor[0]){ jornadaObj.setTiempo2("(" + jornadaObj.getTiempo2() + ")"); }
-                else if(tiempo.getTiempo3() == singleMediaYpeor[0]){ jornadaObj.setTiempo3("(" + jornadaObj.getTiempo3() + ")"); }
-                else if(tiempo.getTiempo4() == singleMediaYpeor[0]){ jornadaObj.setTiempo4("(" + jornadaObj.getTiempo4() + ")"); }
-                else if(tiempo.getTiempo5() == singleMediaYpeor[0]){ jornadaObj.setTiempo5("(" + jornadaObj.getTiempo5() + ")"); }
+                if(tiempo.getTiempo1() == singleMediaYpeor[0]){ jornadaObj.setTiempoDescartadoAbajo(1);}
+                else if(tiempo.getTiempo2() == singleMediaYpeor[0]){ jornadaObj.setTiempoDescartadoAbajo(2); }
+                else if(tiempo.getTiempo3() == singleMediaYpeor[0]){ jornadaObj.setTiempoDescartadoAbajo(3); }
+                else if(tiempo.getTiempo4() == singleMediaYpeor[0]){ jornadaObj.setTiempoDescartadoAbajo(4); }
+                else if(tiempo.getTiempo5() == singleMediaYpeor[0]){ jornadaObj.setTiempoDescartadoAbajo(5); }
 
-                if(tiempo.getTiempo1() == singleMediaYpeor[2]){ jornadaObj.setTiempo1("(" + jornadaObj.getTiempo1() + ")");}
-                else if(tiempo.getTiempo2() == singleMediaYpeor[2]){ jornadaObj.setTiempo2("(" + jornadaObj.getTiempo2() + ")"); }
-                else if(tiempo.getTiempo3() == singleMediaYpeor[2]){ jornadaObj.setTiempo3("(" + jornadaObj.getTiempo3() + ")"); }
-                else if(tiempo.getTiempo4() == singleMediaYpeor[2]){ jornadaObj.setTiempo4("(" + jornadaObj.getTiempo4() + ")"); }
-                else if(tiempo.getTiempo5() == singleMediaYpeor[2]){ jornadaObj.setTiempo5("(" + jornadaObj.getTiempo5() + ")"); }
-
-
+                if(tiempo.getTiempo1() == singleMediaYpeor[2]){ jornadaObj.setTiempoDescartadoArriba(1);}
+                else if(tiempo.getTiempo2() == singleMediaYpeor[2]){ jornadaObj.setTiempoDescartadoArriba(2); }
+                else if(tiempo.getTiempo3() == singleMediaYpeor[2]){ jornadaObj.setTiempoDescartadoArriba(3); }
+                else if(tiempo.getTiempo4() == singleMediaYpeor[2]){ jornadaObj.setTiempoDescartadoArriba(4); }
+                else if(tiempo.getTiempo5() == singleMediaYpeor[2]){ jornadaObj.setTiempoDescartadoArriba(5); }
 
             }
 
@@ -118,13 +119,17 @@ public class Resultado {
 
     }
 
-    public void generarYAnadirCategoria(List<Tiempo> tiemposJornadasCategoria, String nombreParticipante, TiempoRepository tiempoRepository) {
+    public void generarYAnadirCategoria(List<Tiempo> tiemposJornadasCategoria, CategoriaController categoriaController, String nombreParticipante) {
 
         com.example.miwebbase.Entities.Categoria categoria = tiemposJornadasCategoria.get(0).getCategoria();
         Resultado.Categoria categoriaObj = new Resultado.Categoria(categoria);
         categoriaObj.setNombreCategoria(categoria.getNombre());
         categoriaObj.setNumTiempos(categoria.getNumTiempos());
-        categoriaObj.setPosicion(AESUtils.getPosicionDeParticipante(nombreParticipante, categoria, tiempoRepository.getParticipantesPuntosTotalesCategoria(categoria), tiempoRepository));
+
+        RankingCategoriaParticipante rankingCategoriaParticipante = categoriaController.getRankingParticipante(categoria, nombreParticipante);
+
+        categoriaObj.setPosicion(rankingCategoriaParticipante.getPosicion());
+        categoriaObj.setClasificado(rankingCategoriaParticipante.isClasificado());
         categoriaObj.setTamano(50.0/Math.pow(categoriaObj.getPosicion(), 0.3) + 10);
 
         this.getCategoriasParticipadas().add(categoriaObj);

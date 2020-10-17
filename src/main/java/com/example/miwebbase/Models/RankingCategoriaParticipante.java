@@ -11,7 +11,9 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PuntuacionTotal implements Cloneable {
+public class RankingCategoriaParticipante implements Cloneable {
+
+
     String nombre;
     Integer puntuacion_total;
     int posicion;
@@ -20,14 +22,14 @@ public class PuntuacionTotal implements Cloneable {
 
 
 
-    public PuntuacionTotal(String nombre, Long puntuacion_total) {
+    public RankingCategoriaParticipante(String nombre, Long puntuacion_total) {
         this.nombre = nombre;
         this.puntuacion_total = Math.toIntExact(puntuacion_total);
     }
 
-    public PuntuacionTotal clone(){
+    public RankingCategoriaParticipante clone(){
 
-        return new PuntuacionTotal(this.nombre, this.puntuacion_total, this.posicion, puntuacionesIndividuales == null ? null : new ArrayList<>(puntuacionesIndividuales), this.clasificado);
+        return new RankingCategoriaParticipante(this.nombre, this.puntuacion_total, this.posicion, puntuacionesIndividuales == null ? null : new ArrayList<>(puntuacionesIndividuales), this.clasificado);
 
     }
 
@@ -53,6 +55,22 @@ public class PuntuacionTotal implements Cloneable {
 
         this.puntuacionesIndividuales = puntuacionesOrdenadas;
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof RankingCategoriaParticipante)) {
+            return false;
+        }
+
+        RankingCategoriaParticipante r = (RankingCategoriaParticipante) o;
+
+        return r.getNombre().equals(this.getNombre());
     }
 
 

@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600");
 
-
+/* TO DEPRECATE */
 
 #twitchmodal{
     padding: 0 !important;
@@ -11,7 +11,6 @@
     max-width: none !important;
 }
 .cd-schedule__top-info span{
-
     font-size: x-large !important;
 }
 
@@ -100,15 +99,6 @@ li.cd-schedule__event:hover {
 
 }
 
-.participant {
-    display: flex;
-    align-items: center;
-    min-width: 100px!important;
-}
-
-.participants {
-   min-width: 150px!important;
-}
 
 *, *::after, *::before {
     box-sizing: inherit

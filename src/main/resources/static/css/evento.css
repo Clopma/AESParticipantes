@@ -8,6 +8,16 @@
     transform: none;
 }
 
+.participant {
+    display: flex;
+    align-items: center;
+    min-width: 100px!important;
+}
+
+.participants {
+    min-width: 150px!important;
+}
+
 
 .bracket {
     white-space: nowrap;
@@ -58,9 +68,20 @@
     border-color: #60c645;
 }
 
-.bracket .round .winners > div.matchups .matchup .participants .participant.loser {
-    color: #dc563f;
-    border-color: #dc563f;
+.bracket .round .winners > div.matchups .matchup .participants .participant.winner a span {
+    color: #60c645;
+}
+
+.bracket .round .winners > div.matchups .matchup .participants .participant a span {
+    color: #858585;
+}
+
+.bracket .round .winners > div.matchups .matchup .participants .participant.winner a:hover span {
+    color: #326e26;
+}
+
+.bracket .round .winners > div.matchups .matchup .participants .participant a:hover span {
+    color: #414141;
 }
 
 .bracket .round .winners > div.matchups .matchup .participants .participant:not(:last-child) {

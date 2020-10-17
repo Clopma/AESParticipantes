@@ -4,7 +4,7 @@ import com.example.miwebbase.Entities.Categoria;
 import com.example.miwebbase.Entities.Clasificado;
 import com.example.miwebbase.Entities.Descalificacion;
 import com.example.miwebbase.Entities.Participante;
-import com.example.miwebbase.Models.PuntuacionTotal;
+import com.example.miwebbase.Models.RankingCategoriaParticipante;
 import com.example.miwebbase.repositories.CategoriaRepository;
 import com.example.miwebbase.repositories.ClasificadoRepository;
 import com.example.miwebbase.repositories.DescalificacionRepository;
@@ -58,13 +58,13 @@ public class CalendarioController {
         model.addAttribute("categoria", categoria);
 
         if(categoria.getCortePlayOffs() == 8){
-            cuartosClasi = iniciarBracket(categoriaController.getRankingCategoria(categoria), descalificacionRepository.findAllByCategoria(categoria), 8, semis, cuartos);
+            cuartosClasi = iniciarBracket(categoriaController.getRankingsCategoria(categoria), descalificacionRepository.findAllByCategoria(categoria), 8, semis, cuartos);
             semisClasi = rellenarBracket(semis, 4, categoria, finales, Arrays.asList(cuartosClasi));
             model.addAttribute("listaCuartos", cuartosClasi);
             model.addAttribute("listaSemis", semisClasi);
             model.addAttribute("listaFinal", rellenarBracket(finales, 2, categoria, ganador, Arrays.asList(semisClasi)));
         } else if (categoria.getCortePlayOffs() == 4) {
-            semisClasi = iniciarBracket(categoriaController.getRankingCategoria(categoria), descalificacionRepository.findAllByCategoria(categoria), 4, finales, semis);
+            semisClasi = iniciarBracket(categoriaController.getRankingsCategoria(categoria), descalificacionRepository.findAllByCategoria(categoria), 4, finales, semis);
             model.addAttribute("listaSemis", semisClasi);
             model.addAttribute("listaFinal", rellenarBracket(finales, 2, categoria, ganador, Arrays.asList(semisClasi)));
         }
@@ -85,11 +85,11 @@ public class CalendarioController {
         for (int i = 0; i < numClasificados; i++) {
             int finalI = i;
 
-            clasificados.forEach(c -> c.setPosicion((rondaAnterior.indexOf(rondaAnterior.stream().filter(a -> a.getParticipante().getNombre().equals(c.getParticipante().getNombre())).findFirst().get())/2)));
+            clasificados.forEach(c -> c.setPosicion((rondaAnterior.indexOf(rondaAnterior.stream().filter(a -> a.getParticipante().equals(c.getParticipante())).findFirst().get())/2)));
             rondas[i] = clasificados.stream().filter(c -> c.getPosicion() == finalI).findFirst().orElse(
                     Clasificado.builder().participante(Participante.builder().nombre(categoria.getCortePlayOffs() == numClasificados ? puestoEnLugar(finalI, numClasificados) : "-").build()).posicion(i).build());
             int finalI1 = i;
-            rondas[i].setVictoria(siguienteRonda.stream().anyMatch(s -> rondas[finalI1].getParticipante().getNombre().equals(s.getParticipante().getNombre())));
+            rondas[i].setVictoria(siguienteRonda.stream().anyMatch(s -> rondas[finalI1].getParticipante().equals(s.getParticipante())));
         }
         return rondas;
     }
@@ -110,14 +110,14 @@ public class CalendarioController {
     }
 
 
-    private Clasificado[] iniciarBracket(List<PuntuacionTotal> rankingCategoria, List<Descalificacion> descalificados, int numClasificados, List<Clasificado> siguienteRonda, List<Clasificado> rondaActual)  {
+    private Clasificado[] iniciarBracket(List<RankingCategoriaParticipante> rankingCategoria, List<Descalificacion> descalificados, int numClasificados, List<Clasificado> siguienteRonda, List<Clasificado> rondaActual)  {
 
         List<Clasificado>  clasificados = rankingCategoria.stream().filter(p -> descalificados.stream()
-                .noneMatch(d -> p.getNombre().equals(d.getParticipante().getNombre())))
+                .noneMatch(d -> p.equals(d.getParticipante())))
                 .map(p -> Clasificado.builder()
                         .participante(Participante.builder().nombre(p.getNombre()).build())
-                        .victoria(siguienteRonda.stream().anyMatch(s -> s.getParticipante().getNombre().equals(p.getNombre())))
-                        .tiempo(rondaActual.stream().filter(a -> a.getParticipante().getNombre().equals(p.getNombre())).findFirst().orElse(Clasificado.builder().build()).getTiempo())
+                        .victoria(siguienteRonda.stream().anyMatch(s -> s.getParticipante().equals(p)))
+                        .puntuacion(rondaActual.stream().filter(a -> a.getParticipante().equals(p)).findFirst().orElse(Clasificado.builder().build()).getPuntuacion())
                 .build())
                 .collect(Collectors.toList())
                 .subList(0, numClasificados);

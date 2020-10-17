@@ -4,8 +4,10 @@
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
 
-    <link rel="stylesheet" href="/css/calendario.css" />
+    <link rel="stylesheet" href="/css/evento.css" />
     <script type="text/javascript" src="/js/ScrollUtils.js"></script>
+    <script type="text/javascript" src="/js/ModalUtils.js"></script>
+
 
 
 </head>
@@ -73,38 +75,36 @@
             <tbody style="background-color: white;">
             <tr th:each="posicion, iStat: ${posiciones}" th:id="${posicion.nombre}"
                 th:data-posicion="${posicion.posicion}" style="position: relative;"
-                th:classappend="
-
-                ${
-                (posicion.clasificado ? 'clasificado': '')
-                + ' ' +
-                ((iStat.index + 1 <= largoClasificacion && !posicion.clasificado) ? 'descalificado': '')
-                 + ' ' +
-                 (iStat.index + 1 == largoClasificacion ? 'ultimoClasificado': '')
-
-                 }">
+                th:classappend="${(posicion.clasificado ? 'clasificado': '')
+                 + ' ' + ((iStat.index + 1 <= largoClasificacion && !posicion.clasificado) ? 'descalificado': '')
+                 + ' ' + (iStat.index + 1 == largoClasificacion ? 'ultimoClasificado': '')}">
 
                 <td th:if="${iStat.index == 0 && largoClasificacion > 0}" th:rowspan="${largoClasificacion}"
                     style="vertical-align: middle; background-color: white;" class="ultimoClasificado clasificado">
                     <span class="playoffsText">
                     CLASIFICACIÓN A PLAYOFFS
-                    </span></td>
-                <td th:if="${iStat.index >= largoClasificacion && largoClasificacion > 0}"></td>
-                <td th:text="${posicion.posicion}"></td>
-                <td><a th:text="${posicion.nombre}"
-                       th:href="'/participante/'+${posicion.nombre}+'#'+${nombreCategoria}"></a></td>
-                <td th:each="jornada, iStat : ${columnasJornadas}"
-                    th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''"><a
-                        th:href="'/categoria/'+${nombreCategoria}+'/jornada/'+(${iStat.index}+1)+'#'+${posicion.nombre}"
-                        th:text="${posicion.getPuntuacionIndividual(iStat.index)}"></a></td>
-                <td style="font-weight: bold" th:text="${posicion.puntuacion_total}" class="borderLeftColumn"></td>
+                    </span>
+                </td>
+
+                <td th:if="${iStat.index >= largoClasificacion && largoClasificacion > 0}" />
+
+                <td th:text="${posicion.posicion}">posición</td>
+
+                <td><a th:text="${posicion.nombre}" th:href="'/participante/'+${posicion.nombre}+'#'+${nombreCategoria}">nombre</a></td>
+
+                <td th:each="jornada, iStat : ${columnasJornadas}" th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''">
+                        <a th:href="'/categoria/'+${nombreCategoria}+'/jornada/'+(${iStat.index}+1)+'#'+${posicion.nombre}"
+                        th:text="${posicion.getPuntuacionIndividual(iStat.index)}">puntuaciones individuales</a>
+                </td>
+
+                <td style="font-weight: bold" th:text="${posicion.puntuacion_total}" class="borderLeftColumn">puntuación total</td>
+
                 <td th:if="${largoClasificacion > 0}">
 
 
                         <div th:if="${largoClasificacion > 0 && posicion.clasificado}"  class="bouncyContainer podio"
                              style="width: 100%; max-width: 80px; max-height: 80px; margin: auto;">
-                            <a th:href="'/categoria/'+${nombreCategoria}+'/jornada/'+(${iStat.index}+1)" data-toggle="modal" data-target="#playOffsModal"
-                               class="bouncyContainer">
+                            <a data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
                                 <img class="bouncyButton podio" src="/img/bracket.png"/>
                             </a>
                         </div>
@@ -117,16 +117,16 @@
 <!-- Modal -->
 <div class="modal fade" id="playOffsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content"style="background-color: #eaeaea">
+        <div class="modal-content" style="background-color: #eaeaea">
             <div class="modal-header">
-                <h2 th:text="${'PlayOffs ' + categoria.nombre}" class="modal-title" id="exampleModalLabel">Modal title</h2>
+                <h2 th:text="${'PlayOffs ' + categoria.nombre}" class="modal-title" id="exampleModalLabel">(título)</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
 
-<div id="cuerpoModal" class="fixedBracket"></div>
+                <div id="cuerpoModal" class="fixedBracket"></div>
             </div>
 
         </div>
@@ -134,23 +134,8 @@
 </div>
 <script th:inline="javascript">
 
-    httpRequest = new XMLHttpRequest();
-    httpRequest.onreadystatechange = function () {
-        if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            if (httpRequest.status === 200) {
-                document.getElementById("cuerpoModal").innerHTML = self.getEventContent(httpRequest.responseText).outerHTML;
-            }
-        }
-    };
-    httpRequest.open('GET', window.location.origin + '/calendario/playoffs/' + [[${categoria.nombre}]] );
-    httpRequest.send();
+    loadBracket([[${categoria.nombre}]]);
 
-     function getEventContent(string) {
-        // reset the loaded event content so that it can be inserted in the modal
-        var div = document.createElement('div');
-        div.innerHTML = string.trim();
-        return div;
-    };
 </script>
 </body>
 </html>
