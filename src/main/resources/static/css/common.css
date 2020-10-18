@@ -97,8 +97,12 @@ a.bouncyContainer {
     cursor: pointer;
 
 }
+a {
+ color: #007bff !important;
 
+}
 a:hover {
+    color: #0056b3 !important;
     text-decoration: none !important;
 }
 

@@ -5,11 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name = Participante.T_PARTICIPANTES)
+@Table(name = "Participantes")
 @Entity
 @Builder
 @Getter
@@ -17,9 +18,9 @@ import javax.persistence.Table;
 @AllArgsConstructor
 public class Participante {
 
-    public static final String T_PARTICIPANTES = "Participantes";
 
     @Id
+    @Column(length = 75)
     private String nombre;
 
     @Override

@@ -1,7 +1,6 @@
 package com.example.miwebbase.Controllers;
 
 import com.example.miwebbase.Entities.Categoria;
-import com.example.miwebbase.Utils.AESUtils;
 import com.example.miwebbase.repositories.CategoriaRepository;
 import com.example.miwebbase.repositories.ParticipanteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class LoginController {
 
         model.addAttribute("participantes", self.getParticipantes());
         model.addAttribute("categorias", self.getCategoriasEnOrden());
-        model.addAttribute("jornadas", new int[AESUtils.JORNADAS_CAMPEONATO]);
+        model.addAttribute("numJornadas", 5); //TODO CON REDISEÑO DE INICIO
 
         return "login";
     }

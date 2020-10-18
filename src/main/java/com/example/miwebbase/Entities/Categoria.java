@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -21,6 +22,7 @@ public class Categoria {
 
 
     @Id
+    @Column(length = 25)
     private String nombre;
 
     @NotNull

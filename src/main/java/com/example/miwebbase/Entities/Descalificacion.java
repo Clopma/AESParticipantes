@@ -18,4 +18,8 @@ public class Descalificacion {
     @Id
     @ManyToOne
     private Participante participante;
+
+    @Id
+    @ManyToOne
+    private Competicion competicion;
 }

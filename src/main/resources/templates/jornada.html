@@ -1,6 +1,6 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title th:text="${categoria.nombre} + ' Jornada ' + ${numeroJornada}">Nacional Online 2020</title>
+    <title th:text="${categoria.nombre} + ' J' + ${numeroJornada} + ' en ' + ${nombreCompeticion}">Nacional Online 2020</title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet"/>
@@ -23,7 +23,7 @@
     /* CAMBIAR URL MANTENIENDO ANCHORS */
 
     function navigateCategoryWithAnchor(a) {
-        window.location.href = window.location.href.replace('categoria/' + [[${categoria.nombre}]], 'categoria/' + $(a).attr("data-desiredCategory"));
+        window.location.href = window.location.href.replace(/\/[^\/]*\/jornada/, '/' + $(a).attr("data-desiredCategory") + '/jornada');
     }
 
     function changeJornada(n) {
@@ -104,7 +104,7 @@
             <tr th:each="tiempo: ${resultado}" th:id="${tiempo.nombreParticipante}">
                 <td style="font-weight: bold" th:text="${tiempo.posicion}"></td>
                 <td><a th:text="${tiempo.nombreParticipante}"
-                       th:href="'/participante/'+${tiempo.nombreParticipante}+'#'+${nombreCategoria}"></a></td>
+                       th:href="'/participante/'+${tiempo.nombreParticipante}+'/' + ${nombreCompeticion} + '#' + ${nombreCategoria}"></a></td>
                 <td class="borderLeftColumn" th:text="${tiempo.tiempo1}"></td>
                 <td th:text="${tiempo.tiempo2}"></td>
                 <td th:text="${tiempo.tiempo3}"></td>

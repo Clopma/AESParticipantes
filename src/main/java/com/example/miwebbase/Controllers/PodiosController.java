@@ -1,11 +1,14 @@
 package com.example.miwebbase.Controllers;
 
 import com.example.miwebbase.Entities.Categoria;
+import com.example.miwebbase.Entities.Competicion;
 import com.example.miwebbase.Entities.Participante;
 import com.example.miwebbase.repositories.ClasificadoRepository;
+import com.example.miwebbase.repositories.CompeticionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
@@ -21,11 +24,15 @@ public class PodiosController {
     @Autowired
     ClasificadoRepository clasificadoRepository;
 
-    @RequestMapping("/podios")
-    public String getPodios(Model model) {
+    @Autowired
+    CompeticionRepository competicionRepository;
 
+    @RequestMapping("/podios/{nombreCompeticion}")
+    public String getPodios(Model model, @PathVariable("nombreCompeticion") String nombreCompeticion) {
 
-        Map<Categoria, List<ClasificadoRepository.Medalla>> podios = clasificadoRepository.getMedallas().stream().map(m ->
+        Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
+
+        Map<Categoria, List<ClasificadoRepository.Medalla>> podios = clasificadoRepository.getMedallas(competicion.getNombre()).stream().map(m ->
 
                ClasificadoRepository.Medalla.builder()
                 .categoria((Categoria) m[0])
@@ -35,6 +42,7 @@ public class PodiosController {
 
         podios = podios.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> ordenarMedallas(e.getValue()), (u, v) -> {throw new IllegalStateException(String.format("Duplicate key %s", u));}, LinkedHashMap::new));
 
+        model.addAttribute("nombre", competicion.getNombre());
         model.addAttribute("podios", podios);
 
         return "podios";

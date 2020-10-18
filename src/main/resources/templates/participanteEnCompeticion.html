@@ -1,0 +1,149 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title th:text="${participante}"></title>
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+    <th:block th:include="fragments/head :: datatablesHead"></th:block>
+    <script type="text/javascript" src="/js/ScrollUtils.js"></script>
+    <script type="text/javascript" src="/js/ModalUtils.js"></script>
+    <link rel="stylesheet" href="/css/evento.css" />
+
+</head>
+
+<script>
+    $(document).ready(function () {
+
+        var numberOfTables = 0;
+
+        do {
+            var tabla = $('#dataTable' + numberOfTables);
+            if (tabla) {
+                initializeForParticipante(tabla, tabla.attr("data-numTiempos"), tabla.attr("data-nombreCat"));
+            }
+            numberOfTables++;
+        } while (tabla.length && numberOfTables < 100)
+
+
+        scrollAFila();
+
+    });
+</script>
+<body class="cubosbg">
+<div th:replace="fragments/backButton :: backButton"/>
+<div class="vertical-flex-wrapper">
+    <div class="whitePanel" style="margin-top: 15px;">
+        <h1 style="text-align: center;">
+            <a th:href="${'/participante/'+ participante + '#' + competicion}"><span th:text="${participante}"/></a>
+            <br /> en <br />
+            <a th:href="${'/competicion/'+ competicion}"><span th:text="${competicion}"/></a>
+        </h1>
+    </div>
+    <div th:id="${categoria.nombreCategoria}" th:each="categoria, iStat : ${resultado.getCategoriasParticipadas()}"
+         class="whitePanel"
+         style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; position: relative;">
+
+        <!-- Relative para la posición y el anchor-->
+        <div class="puntuacion whitePanel">
+            <h1 th:text="${categoria.posicion} + 'ª POSICIÓN'"
+                th:style="'font-size: '+${categoria.tamano}+'px !important; align-self: center'"> Posición </h1>
+        </div>
+        <div style="display: flex; align-items: center">
+
+            <h1 th:text="${categoria.nombreCategoria}"></h1>
+            <div class="bouncyContainer podio" style="width: 75px; height: 75px">
+                <a th:href="'/ranking/' + ${nombreCompeticion} + '/' +${categoria.nombreCategoria}+'#'+${nombreParticipante}"
+                   class="bouncyContainer">
+                    <img class="bouncyButton podio" src="/img/podiologo.png"/>
+                </a>
+            </div>
+            <a th:if="${categoria.clasificado}" href="#" onclick="loadModal(this)" th:data-nombreCategoria="${categoria.nombreCategoria}" data-toggle="modal" data-target="#playOffsModal">
+                <h3 style="margin-left: 30px"> Clasificado a playoffs</h3>
+                <div th:data-nombreCategoria="${categoria.nombreCategoria}" style="width: 75px; height: 75px">
+                    <a onclick="loadModal(this)" th:data-nombreCategoria="${categoria.nombreCategoria}" data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
+                        <img class="bouncyButton podio" src="/img/bracket.png" />
+                    </a>
+                </div>
+            </a>
+        </div>
+        <table th:data-numTiempos="${categoria.numTiempos}" th:data-nombreCat="${categoria.nombreCategoria}"
+               th:id="'dataTable'+ ${iStat.index}" class="table centerCols">
+            <thead>
+            <tr>
+                <th>Jornada</th>
+                <th>Posición</th>
+                <th>Tiempo 1</th>
+                <th>Tiempo 2</th>
+                <th>Tiempo 3</th>
+                <th>Tiempo 4</th>
+                <th>Tiempo 5</th>
+                <th>Single</th>
+                <th>Media</th>
+                <th>Solución</th>
+                <th>Explicación</th>
+                <th>Puntos Jornada</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="jornada: ${categoria.getJornadas()}">
+                <td style="display: flex">
+                    <div class="bouncyContainer podio" style="width: 50px; height: 50px; min-width: 50px;">
+                        <a  th:href="'/ranking/' + ${nombreCompeticion} + '/' +${categoria.nombreCategoria}+'/jornada/' + ${jornada.numJornada} + '#'+${nombreParticipante}"
+                           class="bouncyContainer">
+                            <img class="bouncyButton podio" src="/img/podiologo.png"/>
+                        </a>
+                    </div>
+                    <span th:text="'Jornada ' + ${jornada.numJornada}" style="display: flex; align-items: center; width: max-content"></span>
+                </td>
+                <td style="font-weight: bold" th:text="${jornada.posicion}"></td>
+                <td class="borderLeftColumn"> <span th:class="${(jornada.getTiempoDescartadoAbajo() == 1 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 1 ? 'badge badge-danger ' : '')}"  th:text="${jornada.tiempo1}"></span></td>
+                <td>
+                    <span th:class="${(jornada.getTiempoDescartadoAbajo() == 2 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 2 ? 'badge badge-danger ' : '')}"  th:text="${jornada.tiempo2}"></span>
+                </td>
+                <td>
+                    <span th:class="${(jornada.getTiempoDescartadoAbajo() == 3 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 3 ? 'badge badge-danger ' : '')}"  th:text="${jornada.tiempo3}"></span>
+                </td>
+                <td>
+                    <span th:class="${(jornada.getTiempoDescartadoAbajo() == 4 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 4 ? 'badge badge-danger ' : '')}"  th:text="${jornada.tiempo4}"></span>
+                </td>
+                <td>
+                    <span th:class="${(jornada.getTiempoDescartadoAbajo() == 5 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 5 ? 'badge badge-danger ' : '')}"  th:text="${jornada.tiempo5}"></span>
+                </td>
+                <td style="font-weight: bold;" class="borderLeftColumn" th:text="${jornada.single}"></td>
+                <td style="font-weight: bold" th:text="${jornada.media}"></td>
+                <td th:text="${jornada.solucion}"></td>
+                <td th:text="${jornada.explicacion}"></td>
+                <td style="font-weight: bold" th:text="${jornada.puntos}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="playOffsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #eaeaea">
+            <div class="modal-header">
+                <h2 th:text="${'PlayOffs '}" class="modal-title" id="exampleModalLabel">(título)</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="cuerpoModal" class="fixedBracket"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+
+    function loadModal(activador) {
+
+        var nombreCategoria = $(activador).attr("data-nombreCategoria");
+        loadBracket(nombreCategoria);
+    }
+
+</script>
+</body>
+</html>

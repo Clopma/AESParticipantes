@@ -22,24 +22,33 @@ public class ParticipanteController {
     private TiempoRepository tiempoRepository;
 
     @Autowired
-    private CategoriaController categoriaController;
+    private RankingGeneralController rankingGeneralController;
 
     @Autowired ParticipanteController self;
 
+
     @RequestMapping("/participante/{nombreParticipante}")
-    public String inicio(Model model, @PathVariable("nombreParticipante") String nombreParticipante) throws Exception {
-
-        model.addAttribute("participante", nombreParticipante);
-
-        model.addAttribute("resultado", self.getResultadoParticipante(nombreParticipante));
+    public String inicio(Model model, @PathVariable("nombreParticipante") String nombreParticipante) {
 
         return "participante";
     }
 
-    @Cacheable(value = "participantes")
-    public Resultado getResultadoParticipante(String nombreParticipante) {
 
-        List<Tiempo> tiemposParticipante = tiempoRepository.getTiemposOfParticipante(nombreParticipante);
+    @RequestMapping("/participante/{nombreParticipante}/{nombreCompeticion}")
+    public String inicio(Model model, @PathVariable("nombreParticipante") String nombreParticipante, @PathVariable("nombreCompeticion") String nombreCompeticion) throws Exception {
+
+        model.addAttribute("participante", nombreParticipante);
+        model.addAttribute("competicion", nombreCompeticion);
+
+        model.addAttribute("resultado", self.getResultadoParticipante(nombreParticipante, nombreCompeticion));
+
+        return "participanteEnCompeticion";
+    }
+
+    @Cacheable(value = "participantes")
+    public Resultado getResultadoParticipante(String nombreParticipante, String nombreCompeticion) {
+
+        List<Tiempo> tiemposParticipante = tiempoRepository.getTiemposOfParticipante(nombreParticipante, nombreCompeticion);
 
         Map<Integer, List<Tiempo>> categoriasInformadas = tiemposParticipante.stream().collect(Collectors.groupingBy(t -> t.getCategoria().getOrden()));
 
@@ -47,7 +56,7 @@ public class ParticipanteController {
         resultado.setCategoriasParticipadas(new ArrayList<>());
 
         for (Map.Entry<Integer, List<Tiempo>> categoriaEntry : categoriasInformadas.entrySet()) {
-            resultado.generarYAnadirCategoria(categoriaEntry.getValue(), categoriaController, nombreParticipante);
+            resultado.generarYAnadirCategoria(categoriaEntry.getValue(), rankingGeneralController, nombreParticipante);
         }
 
         return resultado;

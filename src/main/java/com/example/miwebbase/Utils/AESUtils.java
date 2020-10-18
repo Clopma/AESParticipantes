@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 public class AESUtils {
 
     public static String DNF = "DNF";
-    public static final int JORNADAS_CAMPEONATO = 5;
 
     //devuelve un double[]{single, media, peor}
     public static double[] getTiemposCalculados(List<Double> tiempos, Categoria categoria) {

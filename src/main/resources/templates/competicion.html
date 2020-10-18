@@ -1,6 +1,6 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title th:text="${nombreParticipante}"></title>
+    <title th:text="${nombreCompeticion}"></title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
     <script type="text/javascript" src="/js/ScrollUtils.js"></script>
@@ -15,7 +15,7 @@
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 300px;">
         <h1 style="text-align: center;">
-            ¡Pronto aparecerá aquí el perfil de <span th:text="${nombreParticipante}" /> con todas sus competiciones participadas y más!
+            ¡Pronto aparecerá aquí la página para <span th:text="${nombreCompeticion}" /> con toda la información!
         </h1>
     </div>
 </div>

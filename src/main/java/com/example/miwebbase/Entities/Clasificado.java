@@ -17,9 +17,14 @@ public class Clasificado {
 
     @Id
     @ManyToOne
+    private Competicion competicion;
+
+    @Id
+    @ManyToOne
     private Categoria categoria;
 
     @Id
+    @Column(length = 25)
     private String ronda;
 
     @Id

@@ -56,7 +56,7 @@
         var s = document.getElementById("selectorCategoria");
 
         if (s && s.selectedIndex !== -1) {
-            var destino = window.location + 'categoria/' + s.options[s.selectedIndex].value;
+            var destino = window.location + 'ranking/Nacionline 2020/' + s.options[s.selectedIndex].value; //TODO
 
 
             var r = document.getElementById("selectorRanking");
@@ -75,16 +75,16 @@
 
     <div class="whitePanel top" style="display: flex; align-items: center">
 
-        <div class="bouncyContainer forward" style="margin: auto">
-            <a href="/calendario" class="bouncyContainer">
+        <div class="bouncyContainer forward" style="margin: auto"> <!-- TODO -->
+            <a href="/podios/Nacionline 2020" class="bouncyContainer">
                 <img class="bouncyButton forward" src="/img/podiologo.png"/>
             </a>
         </div>
 
 
         <h1>
-            <a href="/podios">
-               ¡Echa un ojo a los podios!
+            <a href="/podios/Nacionline 2020"> <!-- TODO -->
+               ¡Echa un ojo a los podios del Nacionline 2020!
             </a>
         </h1>
 
@@ -109,7 +109,7 @@
                     <h3 style="padding-right: 10px">Ranking:</h3>
                     <select class="form-control form-control-lg miSelect" id="selectorRanking">
                         <option value="0">Ranking general</option>
-                        <option th:each="jornada, iStat : ${jornadas}" th:text="'Jornada ' + ${iStat.index + 1}"
+                        <option th:each="jornada, iStat :  ${#numbers.sequence(0, numJornadas - 1)}" th:text="'Jornada ' + ${iStat.index + 1}"
                                 th:value="${iStat.index+1}"></option>
                     </select>
                 </div>
@@ -126,7 +126,7 @@
         </div>
         <div class="whitePanel">
             <img src="/img/aes_logo.png" width="300px"/>
-            <h1>Campeonato Nacional Online 2020</h1>
+            <h1>Web de competiciones online</h1>
         </div>
 
         <div class="whitePanel right" style="margin-right: 0px">
@@ -134,7 +134,7 @@
             <h2>Buscar participante:</h2>
 
             <p style="font-size: large">A continuación puedes buscar el nombre de un participante para ver sus
-                resultados:</p>
+                resultados del Nacionline:</p>
 
             <div class="container" style="width: min-content">
                 <div id="dropdown" class="dropdown">
@@ -147,7 +147,7 @@
                         <input id="selectorParticipantes" autocomplete="off" class="form-control" type="text"
                                placeholder="Busca..."/>
                         <li id="participante" th:each="participante : ${participantes}">
-                            <a th:href="@{|/participante/${participante}|}" th:text="${participante}"></a></li>
+                            <a th:href="@{|/participante/${participante}/Nacionline 2020|}" th:text="${participante}"></a></li> <!-- TODO -->
                     </ul>
                 </div>
             </div>

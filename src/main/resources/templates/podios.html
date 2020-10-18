@@ -11,7 +11,7 @@
 <div th:replace="fragments/backButton :: backButton"/>
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 15px; margin-bottom: 75px">
-        <h1><span> PODIOS </span></h1>
+        <h1><span th:text="${'PODIOS DE ' + nombre}"/></h1>
     </div>
 
     <div style="display: flex; flex-wrap: wrap; justify-content: center; width: 90%;">
@@ -42,8 +42,7 @@
                         <span style="font-weight: bolder" th:text="${nombreParticipante}"> </span>
                     </a>
                 </div>
-
-
+            </div>
         </div>
     </div>
 </div>

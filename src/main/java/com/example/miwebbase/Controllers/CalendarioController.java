@@ -1,12 +1,10 @@
 package com.example.miwebbase.Controllers;
 
-import com.example.miwebbase.Entities.Categoria;
-import com.example.miwebbase.Entities.Clasificado;
-import com.example.miwebbase.Entities.Descalificacion;
-import com.example.miwebbase.Entities.Participante;
+import com.example.miwebbase.Entities.*;
 import com.example.miwebbase.Models.RankingCategoriaParticipante;
 import com.example.miwebbase.repositories.CategoriaRepository;
 import com.example.miwebbase.repositories.ClasificadoRepository;
+import com.example.miwebbase.repositories.CompeticionRepository;
 import com.example.miwebbase.repositories.DescalificacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,10 +23,13 @@ public class CalendarioController {
     ClasificadoRepository clasificadoRepository;
 
     @Autowired
-    CategoriaController categoriaController;
+    RankingGeneralController rankingGeneralController;
 
     @Autowired
     CategoriaRepository categoriaRepository;
+
+    @Autowired
+    CompeticionRepository competicionRepository;
 
     @Autowired
     DescalificacionRepository descalificacionRepository;
@@ -42,10 +43,11 @@ public class CalendarioController {
     }
 
 
-    @GetMapping("/calendario/playoffs/{categoria}")
-    public String evento(@PathVariable("categoria") String nombreCategoria, Model model) {
+    @GetMapping("/calendario/playoffs/{nombreCompeticion}/{nombreCategoria}")
+    public String evento(@PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("nombreCompeticion") String nombreCompeticion, Model model) {
 
         Categoria categoria = categoriaRepository.findByNombre(nombreCategoria);
+        Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
 
         List<Clasificado> cuartos = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.CUARTO.name());
         List<Clasificado> semis = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.SEMIFINAL.name());
@@ -58,18 +60,16 @@ public class CalendarioController {
         model.addAttribute("categoria", categoria);
 
         if(categoria.getCortePlayOffs() == 8){
-            cuartosClasi = iniciarBracket(categoriaController.getRankingsCategoria(categoria), descalificacionRepository.findAllByCategoria(categoria), 8, semis, cuartos);
+            cuartosClasi = iniciarBracket(rankingGeneralController.getRankingsCategoria(categoria, competicion), descalificacionRepository.findAllByCategoria(categoria), 8, semis, cuartos);
             semisClasi = rellenarBracket(semis, 4, categoria, finales, Arrays.asList(cuartosClasi));
             model.addAttribute("listaCuartos", cuartosClasi);
             model.addAttribute("listaSemis", semisClasi);
             model.addAttribute("listaFinal", rellenarBracket(finales, 2, categoria, ganador, Arrays.asList(semisClasi)));
         } else if (categoria.getCortePlayOffs() == 4) {
-            semisClasi = iniciarBracket(categoriaController.getRankingsCategoria(categoria), descalificacionRepository.findAllByCategoria(categoria), 4, finales, semis);
+            semisClasi = iniciarBracket(rankingGeneralController.getRankingsCategoria(categoria, competicion), descalificacionRepository.findAllByCategoria(categoria), 4, finales, semis);
             model.addAttribute("listaSemis", semisClasi);
             model.addAttribute("listaFinal", rellenarBracket(finales, 2, categoria, ganador, Arrays.asList(semisClasi)));
         }
-
-
 
         return "fragments/bracket";
     }
@@ -77,6 +77,7 @@ public class CalendarioController {
 
     @GetMapping("/calendario/evento/{evento}")
     public String evento(@PathVariable("evento") String evento) {
+
         return "fragments/eventos/"+evento;
     }
 
@@ -113,11 +114,11 @@ public class CalendarioController {
     private Clasificado[] iniciarBracket(List<RankingCategoriaParticipante> rankingCategoria, List<Descalificacion> descalificados, int numClasificados, List<Clasificado> siguienteRonda, List<Clasificado> rondaActual)  {
 
         List<Clasificado>  clasificados = rankingCategoria.stream().filter(p -> descalificados.stream()
-                .noneMatch(d -> p.equals(d.getParticipante())))
+                .noneMatch(d -> p.getNombreParticipante().equals(d.getParticipante().getNombre())))
                 .map(p -> Clasificado.builder()
-                        .participante(Participante.builder().nombre(p.getNombre()).build())
-                        .victoria(siguienteRonda.stream().anyMatch(s -> s.getParticipante().equals(p)))
-                        .puntuacion(rondaActual.stream().filter(a -> a.getParticipante().equals(p)).findFirst().orElse(Clasificado.builder().build()).getPuntuacion())
+                        .participante(Participante.builder().nombre(p.getNombreParticipante()).build())
+                        .victoria(siguienteRonda.stream().anyMatch(s -> s.getParticipante().getNombre().equals(p.getNombreParticipante())))
+                        .puntuacion(rondaActual.stream().filter(a -> a.getParticipante().getNombre().equals(p.getNombreParticipante())).findFirst().orElse(Clasificado.builder().build()).getPuntuacion())
                 .build())
                 .collect(Collectors.toList())
                 .subList(0, numClasificados);

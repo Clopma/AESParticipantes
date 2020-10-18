@@ -6,6 +6,7 @@ public class KeyDescalificacion implements Serializable {
 
     private String categoria;
     private String participante;
+    private String competicion;
 
 
 }

@@ -18,8 +18,8 @@ public interface ClasificadoRepository extends CrudRepository<Clasificado, Long>
     @Query("from Clasificado c where c.categoria = ?1 and c.ronda = ?2")
     List<Clasificado> getRonda(Categoria categoria, String ronda);
 
-    @Query("select c.categoria, c.participante, c.ronda from Clasificado c where c.ronda like 'MEDALLA_%' order by c.categoria.orden")
-    List<Object[]> getMedallas();
+    @Query("select c.categoria, c.participante, c.ronda from Clasificado c where c.ronda like 'MEDALLA_%' and c.competicion.nombre = ?1 order by c.categoria.orden")
+    List<Object[]> getMedallas(String nombreCompeticion);
 
     @Builder
     @Getter

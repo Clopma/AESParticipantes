@@ -18,6 +18,10 @@ public class Tiempo {
 
     @Id
     @ManyToOne
+    private Competicion competicion;
+
+    @Id
+    @ManyToOne
     private Categoria categoria;
 
     @Id

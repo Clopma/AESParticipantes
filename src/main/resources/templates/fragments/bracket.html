@@ -13,14 +13,14 @@
                             <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
                             <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
-                            <span style="margin: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
+                            <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
                         </div>
 
                         <div th:with="c=${listaCuartos[1]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
                             <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
-                            <span style="margin: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
+                            <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
                         </div>
                     </div>
                 </div>
@@ -30,14 +30,14 @@
                             <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
-                            <span style="margin: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
+                            <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
                         </div>
 
                         <div th:with="c=${listaCuartos[3]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
                             <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
-                            <span style="margin: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
+                            <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
                         </div>
                     </div>
                 </div>

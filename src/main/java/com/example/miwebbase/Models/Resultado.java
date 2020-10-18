@@ -1,6 +1,6 @@
 package com.example.miwebbase.Models;
 
-import com.example.miwebbase.Controllers.CategoriaController;
+import com.example.miwebbase.Controllers.RankingGeneralController;
 import com.example.miwebbase.Entities.Tiempo;
 import com.example.miwebbase.Utils.AESUtils;
 import lombok.Getter;
@@ -119,14 +119,16 @@ public class Resultado {
 
     }
 
-    public void generarYAnadirCategoria(List<Tiempo> tiemposJornadasCategoria, CategoriaController categoriaController, String nombreParticipante) {
+    public void generarYAnadirCategoria(List<Tiempo> tiemposJornadasCategoria, RankingGeneralController rankingGeneralController, String nombreParticipante) {
 
         com.example.miwebbase.Entities.Categoria categoria = tiemposJornadasCategoria.get(0).getCategoria();
+        com.example.miwebbase.Entities.Competicion competicion = tiemposJornadasCategoria.get(0).getCompeticion();
+
         Resultado.Categoria categoriaObj = new Resultado.Categoria(categoria);
         categoriaObj.setNombreCategoria(categoria.getNombre());
         categoriaObj.setNumTiempos(categoria.getNumTiempos());
 
-        RankingCategoriaParticipante rankingCategoriaParticipante = categoriaController.getRankingParticipante(categoria, nombreParticipante);
+        RankingCategoriaParticipante rankingCategoriaParticipante = rankingGeneralController.getRankingParticipante(categoria, competicion, nombreParticipante);
 
         categoriaObj.setPosicion(rankingCategoriaParticipante.getPosicion());
         categoriaObj.setClasificado(rankingCategoriaParticipante.isClasificado());

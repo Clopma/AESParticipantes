@@ -1,6 +1,7 @@
 package com.example.miwebbase.Controllers;
 
 import com.example.miwebbase.Entities.Categoria;
+import com.example.miwebbase.Entities.Competicion;
 import com.example.miwebbase.Entities.Descalificacion;
 import com.example.miwebbase.Entities.Tiempo;
 import com.example.miwebbase.Models.PuntuacionIndividual;
@@ -8,6 +9,7 @@ import com.example.miwebbase.Models.RankingCategoriaParticipante;
 import com.example.miwebbase.Models.Resultado;
 import com.example.miwebbase.Utils.AESUtils;
 import com.example.miwebbase.repositories.CategoriaRepository;
+import com.example.miwebbase.repositories.CompeticionRepository;
 import com.example.miwebbase.repositories.DescalificacionRepository;
 import com.example.miwebbase.repositories.TiempoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Controller
-public class CategoriaController {
+public class RankingGeneralController {
 
     @Autowired
     TiempoRepository tiempoRepository;
@@ -34,23 +36,27 @@ public class CategoriaController {
     CategoriaRepository categoriaRepository;
 
     @Autowired
+    CompeticionRepository competicionRepository;
+
+    @Autowired
     DescalificacionRepository descalificacionRepository;
 
-    @Autowired CategoriaController self;
+    @Autowired
+    RankingGeneralController self;
 
-    @RequestMapping("/categoria/{nombreCategoria}")
-    public String getVistaCategoria(Model model, @PathVariable("nombreCategoria") String nombreCategoria){
+    @RequestMapping("/ranking/{nombreCompeticion}/{nombreCategoria}")
+    public String getVistaCategoria(Model model, @PathVariable("nombreCompeticion") String nombreCompeticion, @PathVariable("nombreCategoria") String nombreCategoria){
 
         Categoria categoria = self.getCategoria(nombreCategoria);
+        Competicion competicion = self.getCompeticion(nombreCompeticion);
 
-        List<RankingCategoriaParticipante> puntuaciones = self.getRankingsCategoria(categoria);
+        List<RankingCategoriaParticipante> puntuaciones = self.getRankingsCategoria(categoria, competicion);
 
-
+        model.addAttribute("competicion", competicion);
         model.addAttribute("categoria", categoria);
         model.addAttribute("posiciones", puntuaciones);
         model.addAttribute("largoClasificacion", getLargoClasificacion(puntuaciones, categoria.getCortePlayOffs()));
         model.addAttribute("categorias", self.getCategoriasEnOrden());
-        model.addAttribute("columnasJornadas", new int[AESUtils.JORNADAS_CAMPEONATO]);
 
         return "categoria";
     }
@@ -75,30 +81,31 @@ public class CategoriaController {
         return largoClasificacion;
     }
 
-    @RequestMapping("/categoria/{nombreCategoria}/jornada/{numeroJornada}")
-    public String getVistaCategoriaJornada(Model model, @PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("numeroJornada") int numeroJornada){
+    @RequestMapping("/ranking/{nombreCompeticion}/{nombreCategoria}/jornada/{numeroJornada}")
+    public String getVistaCategoriaJornada(Model model, @PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("nombreCompeticion") String nombreCompeticion, @PathVariable("numeroJornada") int numeroJornada){
 
         Categoria categoria = self.getCategoria(nombreCategoria);
+        Competicion competicion = self.getCompeticion(nombreCompeticion);
+
         model.addAttribute("categoria", categoria);
         model.addAttribute("categorias", self.getCategoriasEnOrden());
         model.addAttribute("resultado", self.getRankingJornada(categoria, numeroJornada));
-        model.addAttribute("numJornadas", AESUtils.JORNADAS_CAMPEONATO);
+        model.addAttribute("numJornadas", competicion.getNumJornadas());
 
         return "jornada";
     }
 
 
     @Cacheable(key = "#categoria.nombre", value = "puntuacionesGenerales")
-    public List<RankingCategoriaParticipante> getRankingsCategoria(Categoria categoria){
+    public List<RankingCategoriaParticipante> getRankingsCategoria(Categoria categoria, Competicion competicion){
 
-        List<RankingCategoriaParticipante> puntuacionesTotales = tiempoRepository.getParticipantesPuntosTotalesCategoria(categoria);
-
+        List<RankingCategoriaParticipante> puntuacionesTotales = tiempoRepository.getParticipantesPuntosTotalesCategoria(categoria, competicion);
 
         List<RankingCategoriaParticipante> puntuacionesTotalesAux = new ArrayList<>(puntuacionesTotales);
 
         // Ordena por puntuación y si no, por puntuación desempatada
         Comparator<RankingCategoriaParticipante> comparadorPuntosYPosiciones =  ((Comparator<RankingCategoriaParticipante>)(p1, p2) -> p2.getPuntuacion_total().compareTo(p1.getPuntuacion_total()))
-                .thenComparing(p -> getPosicionDeParticipante(p.getNombre(), categoria, puntuacionesTotalesAux, tiempoRepository));
+                .thenComparing(p -> getPosicionDeParticipante(p.getNombreParticipante(), categoria, puntuacionesTotalesAux, tiempoRepository, competicion));
 
         puntuacionesTotales.sort(comparadorPuntosYPosiciones);
 
@@ -106,15 +113,17 @@ public class CategoriaController {
         AtomicInteger posicion = new AtomicInteger(1);
         puntuacionesTotales.forEach(p -> p.setPosicion(posicion.getAndIncrement()));
 
-        puntuacionesTotales.forEach(pt -> pt.setPuntuacionesIndividuales(tiempoRepository.getParticipantesPuntosIndividualesCategoria(categoria).stream()
-                .filter(pi -> pi.getNombre().equals(pt.getNombre())).collect(Collectors.toList())));
+        puntuacionesTotales.forEach(pt -> pt.setPuntuacionesIndividuales(
+                tiempoRepository.getParticipantesPuntosIndividualesCategoria(categoria, competicion).stream()
+                .filter(pi -> pi.getNombre().equals(pt.getNombreParticipante())).collect(Collectors.toList()), competicion));
 
 
         List<Descalificacion> descalificados = descalificacionRepository.findAllByCategoria(categoria);
-        puntuacionesTotales.stream().filter(p -> descalificados.stream()
-                .noneMatch(d -> p.equals(d.getParticipante())))
+        puntuacionesTotales.stream().filter(
+                p -> descalificados.stream().noneMatch(d -> p.getNombreParticipante().equals(d.getParticipante().getNombre()))
+                                            )
                 .collect(Collectors.toList())
-                .subList(0, categoria.getCortePlayOffs())
+                .subList(0, categoria.getCortePlayOffs()) //TODO: Puede fallar cuando hay pocos tiempos
                 .forEach(p -> p.setClasificado(true));
 
         return puntuacionesTotales;
@@ -133,8 +142,8 @@ public class CategoriaController {
 
     }
 
-    public RankingCategoriaParticipante getRankingParticipante(Categoria categoria, String nombreParticipante) {
-        return getRankingsCategoria(categoria).stream().filter(r -> nombreParticipante.equals(r.getNombre())).findFirst().orElse(null);
+    public RankingCategoriaParticipante getRankingParticipante(Categoria categoria, Competicion competicion, String nombreParticipante) {
+        return getRankingsCategoria(categoria, competicion).stream().filter(r -> nombreParticipante.equals(r.getNombreParticipante())).findFirst().orElse(null);
     }
 
     @Cacheable(value = "categorias")
@@ -142,16 +151,21 @@ public class CategoriaController {
         return  categoriaRepository.findByNombre(nombreCategoria);
     }
 
+    @Cacheable(value = "competiciones")
+    public Competicion getCompeticion(String nombreCompeticion){
+        return  competicionRepository.findByNombre(nombreCompeticion);
+    }
+
     @Cacheable(value = "listaDeCategorias")
     public List<Categoria> getCategoriasEnOrden(){
-        return categoriaRepository.findAllByOrderByOrden();
+        return categoriaRepository.findAllByOrderByOrden(); //TODO
     }
 
 
-    private static Integer getPosicionDeParticipante(String nombreParticipante, Categoria categoria, List<RankingCategoriaParticipante> puntuaciones, TiempoRepository tiempoRepository) {
+    private static Integer getPosicionDeParticipante(String nombreParticipante, Categoria categoria, List<RankingCategoriaParticipante> puntuaciones, TiempoRepository tiempoRepository, Competicion competicion) {
 
         RankingCategoriaParticipante puntuacionTotalParticipantes = puntuaciones.stream()
-                .filter(p -> p.getNombre().equals(nombreParticipante))
+                .filter(p -> p.getNombreParticipante().equals(nombreParticipante))
                 .findFirst()
                 .get().clone();
 
@@ -159,10 +173,10 @@ public class CategoriaController {
                 .filter(p -> p.getPuntuacion_total().intValue() == puntuacionTotalParticipantes.getPuntuacion_total().intValue()).collect(Collectors.toList());
 
         if (puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.size() == 1) {
-            return puntuaciones.indexOf(puntuaciones.stream().filter(p -> p.getNombre().equals(nombreParticipante)).findFirst().get()) + 1;
+            return puntuaciones.indexOf(puntuaciones.stream().filter(p -> p.getNombreParticipante().equals(nombreParticipante)).findFirst().get()) + 1;
         }
 
-        puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.forEach(p -> p.setPuntuacionesIndividuales(tiempoRepository.getParticipantePuntosIndividualesCategoria(categoria, p.getNombre())));
+        puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.forEach(p -> p.setPuntuacionesIndividuales(tiempoRepository.getParticipantePuntosIndividualesCategoria(categoria, p.getNombreParticipante(), competicion), competicion)); //TODO maybe get todo y luego filter
 
         List<RankingCategoriaParticipante> puntuacionesEmpatadasActualmentePorPuntuacionTotal = puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.stream().map(RankingCategoriaParticipante::clone).collect(Collectors.toList());
 
@@ -196,7 +210,7 @@ public class CategoriaController {
                     puntuacionesEmpatadasPorPuntuacionesIndividuales = aux;
                     break;
 
-                } else if (aux.size() == 0) {
+                } else /*if (aux.size() == 0)*/ {
 
                     puntuacionesEmpatadasPorPuntuacionesIndividuales = puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas;
                     break;
@@ -207,32 +221,32 @@ public class CategoriaController {
 
             if (puntuacionesEmpatadasPorPuntuacionesIndividuales.size() == 1) {
 
-                String personaConMejorPuntuacionIndividual = puntuacionesEmpatadasPorPuntuacionesIndividuales.get(0).getNombre();
+                String personaConMejorPuntuacionIndividual = puntuacionesEmpatadasPorPuntuacionesIndividuales.get(0).getNombreParticipante();
                 personasDesempatadasEnOrden.add(personaConMejorPuntuacionIndividual);
                 puntuacionesEmpatadasActualmentePorPuntuacionTotal = puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream()
-                        .filter(p -> !p.getNombre().equals(personaConMejorPuntuacionIndividual))
+                        .filter(p -> !p.getNombreParticipante().equals(personaConMejorPuntuacionIndividual))
                         .collect(Collectors.toList());
 
             } else {
 
                 //Desempatar por media
-                List<Tiempo> tiemposEmpatados = tiempoRepository.getTiemposDeVariosParticipantes(categoria, puntuacionesEmpatadasPorPuntuacionesIndividuales.stream().map(RankingCategoriaParticipante::getNombre).collect(Collectors.toSet()));
-                tiemposEmpatados.stream().forEach(t -> t.setMedia(AESUtils.getTiemposCalculados(Arrays.asList(t.getTiempo1(), t.getTiempo2(), t.getTiempo3(), t.getTiempo4(), t.getTiempo5()), categoria)[1]));
+                List<Tiempo> tiemposEmpatados = tiempoRepository.getTiemposDeVariosParticipantes(categoria, puntuacionesEmpatadasPorPuntuacionesIndividuales.stream().map(RankingCategoriaParticipante::getNombreParticipante).collect(Collectors.toSet()), competicion);
+                tiemposEmpatados.forEach(t -> t.setMedia(AESUtils.getTiemposCalculados(Arrays.asList(t.getTiempo1(), t.getTiempo2(), t.getTiempo3(), t.getTiempo4(), t.getTiempo5()), categoria)[1]));
 
                 Tiempo mejorMedia = tiemposEmpatados.stream().reduce((acc, val) -> (acc.getMedia() > 0) && (acc.getMedia() < val.getMedia()) ? acc : val).get();
 
-                String personaConMejorMedia = puntuacionesEmpatadasPorPuntuacionesIndividuales.stream().filter(p -> p.getNombre().equals(mejorMedia.getParticipante().getNombre())).findFirst().get().getNombre();
+                String personaConMejorMedia = puntuacionesEmpatadasPorPuntuacionesIndividuales.stream().filter(p -> p.getNombreParticipante().equals(mejorMedia.getParticipante().getNombre())).findFirst().get().getNombreParticipante();
                 personasDesempatadasEnOrden.add(personaConMejorMedia);
                 puntuacionesEmpatadasActualmentePorPuntuacionTotal = puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream()
-                        .filter(p -> !p.getNombre().equals(personaConMejorMedia))
+                        .filter(p -> !p.getNombreParticipante().equals(personaConMejorMedia))
                         .collect(Collectors.toList());
 
             }
         }
 
-        List<String> nombresEmpatados = puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.stream().map(RankingCategoriaParticipante::getNombre).collect(Collectors.toList());
+        List<String> nombresEmpatados = puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.stream().map(RankingCategoriaParticipante::getNombreParticipante).collect(Collectors.toList());
         int posicionParticipanteSuperior = puntuaciones.indexOf(puntuaciones.stream()
-                .filter(p -> nombresEmpatados.contains(p.getNombre()))
+                .filter(p -> nombresEmpatados.contains(p.getNombreParticipante()))
                 .findFirst()
                 .get());
 

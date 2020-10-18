@@ -19,11 +19,8 @@
 
 
     function navigateCategoryWithAnchor(a) {
-        window.location.href = window.location.href.replace('categoria/' + [[${categoria.nombre}]], 'categoria/' + $(a).attr("data-desiredCategory"));
-    }
 
-    function changeJornada(n) {
-        window.location.href = window.location.href.replace('jornada/' + [[${numeroJornada}]], 'jornada/' + ([[${numeroJornada}]] + n));
+        window.location.href = window.location.href.replace(/\/[^\/]*\/?$/, '/' + $(a).attr("data-desiredCategory"));
     }
 
 </script>
@@ -32,7 +29,8 @@
 <div th:replace="fragments/backButton :: backButton"/>
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 15px; display: flex; align-items: center">
-        <div th:if="${categoria.orden > 1}" class="bouncyContainer backward"  th:classappend="${isAdmin} ? adminclass : userclass" style="margin: auto">
+        <div th:if="${categoria.orden > 1}" class="bouncyContainer backward" style="margin: auto">
+
             <a th:data-desiredCategory="${categorias.get(categoria.orden -1 - 1).nombre}"
                th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
                 <img class="bouncyButton backward" src="/img/backbutton.png"/>
@@ -40,7 +38,7 @@
         </div>
         <h1><span th:text="${nombreCategoria}">ATRIBUTO_CATEGORIA_NO_ENCONTRADO</span></h1>
         <div th:if="${categoria.orden < categorias.size()}" class="bouncyContainer forward" style="margin: auto">
-            <a th:data-desiredCategory="${categorias.get(categoria.orden -1 +1).nombre}"
+            <a th:data-desiredCategory="${categorias.get(categoria.orden -1 + 1).nombre}"
                th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
                 <img class="bouncyButton forward" src="/img/forwardbutton.png"/>
             </a>
@@ -54,26 +52,23 @@
             <tr>
                 <th th:if="${largoClasificacion > 0}"></th>
                 <th>Posición</th>
-                <th>Nombre</th>
-                <th th:each="jornada, iStat : ${columnasJornadas}">
-                    <!--                    <div style="display: flex">-->
+                <th>Nombre </th>
+                <th th:each="jornada, iStat : ${#numbers.sequence(0, competicion.getNumJornadas() - 1)}">
                     <div class="bouncyContainer podio"
                          style="width: 50px; height: 50px; min-width: 50px; margin: auto;">
-                        <a th:href="'/categoria/'+${nombreCategoria}+'/jornada/'+(${iStat.index}+1)"
+                        <a th:href="'/ranking/' + ${nombreCompeticion} + '/' + ${nombreCategoria} + '/jornada/' + (${iStat.index}+1)"
                            class="bouncyContainer">
                             <img class="bouncyButton podio" src="/img/podiologo.png"/>
                         </a>
                     </div>
                     <span th:text="'Jornada '+(${iStat.index}+1)"></span>
-
-                    <!--                    </div>-->
                 </th>
                 <th>Puntos Totales</th>
                 <th th:if="${largoClasificacion > 0}">PlayOffs</th>
             </tr>
             </thead>
             <tbody style="background-color: white;">
-            <tr th:each="posicion, iStat: ${posiciones}" th:id="${posicion.nombre}"
+            <tr th:each="posicion, iStat: ${posiciones}" th:id="${posicion.getNombreParticipante()}"
                 th:data-posicion="${posicion.posicion}" style="position: relative;"
                 th:classappend="${(posicion.clasificado ? 'clasificado': '')
                  + ' ' + ((iStat.index + 1 <= largoClasificacion && !posicion.clasificado) ? 'descalificado': '')
@@ -90,10 +85,10 @@
 
                 <td th:text="${posicion.posicion}">posición</td>
 
-                <td><a th:text="${posicion.nombre}" th:href="'/participante/'+${posicion.nombre}+'#'+${nombreCategoria}">nombre</a></td>
+                <td><a th:text="${posicion.getNombreParticipante()}" th:href="'/participante/'+${posicion.getNombreParticipante()}+'/' +  ${nombreCompeticion} + '#'+${nombreCategoria}">nombre</a></td>
 
-                <td th:each="jornada, iStat : ${columnasJornadas}" th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''">
-                        <a th:href="'/categoria/'+${nombreCategoria}+'/jornada/'+(${iStat.index}+1)+'#'+${posicion.nombre}"
+                <td th:each="jornada, iStat : ${#numbers.sequence(0, competicion.getNumJornadas() - 1)}" th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''">
+                        <a th:href="'/ranking/'+${nombreCompeticion}+'/' +  ${nombreCategoria} + '/jornada/'+(${iStat.index}+1)+'#'+${posicion.getNombreParticipante()}"
                         th:text="${posicion.getPuntuacionIndividual(iStat.index)}">puntuaciones individuales</a>
                 </td>
 
