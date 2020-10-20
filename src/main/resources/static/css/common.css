@@ -115,10 +115,17 @@ img.bouncyButton {
 
 }
 
-.bouncyButton:hover {
+.bouncyButton:not(.quieto):hover {
     animation: bounce 0.3s;
     height: 80%;
     width: 80%;
+}
+div.quieto {
+    opacity: 0.5;
+}
+
+div.quieto a {
+    cursor: inherit !important;
 }
 
 @keyframes bounce {

@@ -43,25 +43,25 @@ function initializeForParticipante(tabla, numTiempos, categoria) {
 
 }
 
-function initializeForCategoria(tabla) {
-
-
-    tabla.DataTable({
-        "paging": false,
-        "ordering": true,
-        "info": false,
-        "searching": false,
-        "autoWidth": false,
-        columnDefs: [{
-            orderable: true,
-            className: 'select-checkbox select-checkbox-all',
-            targets: 0
-        }],
-        select: {
-            style: 'multi',
-            selector: 'td:first-child'
-        }
-    });
-
-
-}
+// function initializeForCategoria(tabla) {
+//
+//
+//     tabla.DataTable({
+//         "paging": false,
+//         "ordering": true,
+//         "info": false,
+//         "searching": false,
+//         "autoWidth": false,
+//         columnDefs: [{
+//             orderable: true,
+//             className: 'select-checkbox select-checkbox-all',
+//             targets: 0
+//         }],
+//         select: {
+//             style: 'multi',
+//             selector: 'td:first-child'
+//         }
+//     });
+//
+//
+// }

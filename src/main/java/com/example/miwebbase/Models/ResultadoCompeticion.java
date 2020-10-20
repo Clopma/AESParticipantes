@@ -15,8 +15,9 @@ import static com.example.miwebbase.Utils.AESUtils.formatTime;
 
 @Setter
 @Getter
-public class Resultado {
+public class ResultadoCompeticion {
 
+    String nombreCompeticion;
     List<Categoria> categoriasParticipadas;
 
 
@@ -62,7 +63,7 @@ public class Resultado {
         }
 
         public void generarYAnadirJornada(Tiempo tiempo, com.example.miwebbase.Entities.Categoria categoria){
-            Resultado.Categoria.Jornada jornadaObj = new Resultado.Categoria.Jornada();
+            ResultadoCompeticion.Categoria.Jornada jornadaObj = new ResultadoCompeticion.Categoria.Jornada();
             jornadaObj.setNumJornada(tiempo.getJornada());
             jornadaObj.setPosicion(tiempo.getPosicion());
             jornadaObj.setSolucion(tiempo.getSolucion() == null ? "" : tiempo.getSolucion());
@@ -124,7 +125,7 @@ public class Resultado {
         com.example.miwebbase.Entities.Categoria categoria = tiemposJornadasCategoria.get(0).getCategoria();
         com.example.miwebbase.Entities.Competicion competicion = tiemposJornadasCategoria.get(0).getCompeticion();
 
-        Resultado.Categoria categoriaObj = new Resultado.Categoria(categoria);
+        ResultadoCompeticion.Categoria categoriaObj = new ResultadoCompeticion.Categoria(categoria);
         categoriaObj.setNombreCategoria(categoria.getNombre());
         categoriaObj.setNumTiempos(categoria.getNumTiempos());
 

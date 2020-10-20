@@ -22,4 +22,6 @@ public class Descalificacion {
     @Id
     @ManyToOne
     private Competicion competicion;
+
+
 }

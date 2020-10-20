@@ -8,7 +8,7 @@ spring:
     jpa:
         hibernate:
             ddl-auto: none
-    resources:c
+    resources:
         static-locations: classpath:/static/
 
 server:

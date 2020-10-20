@@ -5,19 +5,72 @@
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
     <script type="text/javascript" src="/js/ScrollUtils.js"></script>
     <script type="text/javascript" src="/js/ModalUtils.js"></script>
-    <link rel="stylesheet" href="/css/evento.css" />
+    <link rel="stylesheet" href="/css/evento.css"/>
+    <link rel="stylesheet" href="/css/cubing-icons.css"/>
+    <link rel="stylesheet" href="/css/tooltips.css"/>
+
 
 </head>
 
 
 <body class="cubosbg">
+
+<script>
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+</script>
 <div th:replace="fragments/backButton :: backButton"/>
 <div class="vertical-flex-wrapper">
-    <div class="whitePanel" style="margin-top: 300px;">
+    <div class="whitePanel" style="margin-top: 50px;">
         <h1 style="text-align: center;">
-            ¡Pronto aparecerá aquí el perfil de <span th:text="${nombreParticipante}" /> con todas sus competiciones participadas y más!
+            <img src="/img/userIcon.png" style="width: 100px; height: 100px"/>
+            <span th:text="${nombreParticipante}"/>
         </h1>
     </div>
+
+    <div class="whitePanel" style="margin-top: 50px;">
+        <h1 style="text-align: center; padding-bottom: 30px">
+            Competiciones completadas
+        </h1>
+
+        <table class="table dataTable centerCols" style="font-size: 20px;">
+            <thead>
+            <th>Competición</th>
+            <th colspan="100%">Categorías completadas</th>
+            </thead>
+            <tbody th:each="competicion: ${resultados}">
+            <tr>
+
+                <td rowspan="2"><a
+                        th:href="@{|/participante/${nombreParticipante}/${competicion.getNombreCompeticion()}|}"><span
+                        th:text="${competicion.getNombreCompeticion()}"/></a>
+                </td>
+
+                <td th:each="categoria : ${competicion.getCategoriasParticipadas()}">
+
+                    <div class="tooltip"><a th:href="@{|/participante/${nombreParticipante}/${competicion.getNombreCompeticion()}/#${categoria.getNombreCategoria()}|}"><span
+                            th:class="'cubing-icon event-' + ${categoria.getNombreCategoria()}"/></a>
+                        <span class="tooltiptext">Ver todos los tiempos</span>
+                    </div>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td th:each="categoria : ${competicion.getCategoriasParticipadas()}">
+                    <div class="tooltip">
+                        <a th:href="@{|/ranking/${competicion.getNombreCompeticion()}/${categoria.getNombreCategoria()}/#${nombreParticipante}|}"><span th:text="${categoria.getPosicion()+'º'}"></a>
+                        <span class="tooltiptext">Ver ranking completo</span>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 </body>
 </html>

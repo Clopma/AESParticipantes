@@ -47,4 +47,7 @@ public interface TiempoRepository extends CrudRepository<Tiempo, Long> {
             "where categoria = ?1 AND competicion = ?3 " +
             "AND participante.nombre IN ?2 ")
     List<Tiempo> getTiemposDeVariosParticipantes(Categoria categoria, Set<String> participantes, Competicion competicion);
+
+    @Query("select distinct t.competicion from Tiempo t where t.participante.nombre = ?1")
+    List<Competicion> findCompeticionesParticipadasPor(String nombreParticipante);
 }

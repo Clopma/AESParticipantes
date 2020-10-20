@@ -133,8 +133,7 @@
             <img src="/img/userIcon.png" width="200px;"/>
             <h2>Buscar participante:</h2>
 
-            <p style="font-size: large">A continuación puedes buscar el nombre de un participante para ver sus
-                resultados del Nacionline:</p>
+            <p style="font-size: large">Busca el perfil de un participante para ver sus competiciones y tiempos:</p>
 
             <div class="container" style="width: min-content">
                 <div id="dropdown" class="dropdown">
@@ -147,7 +146,7 @@
                         <input id="selectorParticipantes" autocomplete="off" class="form-control" type="text"
                                placeholder="Busca..."/>
                         <li id="participante" th:each="participante : ${participantes}">
-                            <a th:href="@{|/participante/${participante}/Nacionline 2020|}" th:text="${participante}"></a></li> <!-- TODO -->
+                            <a th:href="@{|/participante/${participante}|}" th:text="${participante}" /></li> <!-- TODO -->
                     </ul>
                 </div>
             </div>

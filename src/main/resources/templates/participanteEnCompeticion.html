@@ -22,6 +22,10 @@
             numberOfTables++;
         } while (tabla.length && numberOfTables < 100)
 
+        if(numberOfTables > 98) {
+            alert('Este mensaje no debería aparecer, por favor, envíame un mensaje y infórmame, te lo agradeceré: @Klopma')
+        }
+
 
         scrollAFila();
 
@@ -32,7 +36,7 @@
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 15px;">
         <h1 style="text-align: center;">
-            <a th:href="${'/participante/'+ participante + '#' + competicion}"><span th:text="${participante}"/></a>
+            <a th:href="${'/participante/'+ participante}"><span th:text="${participante}"/></a> <!-- Puede que en el futuro: cambiar por <a th:href="${'/participante/'+ participante + '#' + competicion}"> -->
             <br /> en <br />
             <a th:href="${'/competicion/'+ competicion}"><span th:text="${competicion}"/></a>
         </h1>

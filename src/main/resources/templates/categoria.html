@@ -1,12 +1,13 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title th:text="'Ranking ' + ${categoria.nombre}">Nacional Online 2020</title>
+    <title th:text="${categoria.nombre} + ' en ' +${nombreCompeticion}"></title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
 
     <link rel="stylesheet" href="/css/evento.css" />
     <script type="text/javascript" src="/js/ScrollUtils.js"></script>
     <script type="text/javascript" src="/js/ModalUtils.js"></script>
+    <link rel="stylesheet" href="/css/tooltips.css"/>
 
 
 
@@ -20,7 +21,9 @@
 
     function navigateCategoryWithAnchor(a) {
 
-        window.location.href = window.location.href.replace(/\/[^\/]*\/?$/, '/' + $(a).attr("data-desiredCategory"));
+        if($(a).attr("data-desiredCategory")){
+            window.location.href = window.location.href.replace(/\/[^\/]*\/?$/, '/' + $(a).attr("data-desiredCategory"));
+        }
     }
 
 </script>
@@ -28,21 +31,26 @@
 <body class="cubosbg">
 <div th:replace="fragments/backButton :: backButton"/>
 <div class="vertical-flex-wrapper">
-    <div class="whitePanel" style="margin-top: 15px; display: flex; align-items: center">
-        <div th:if="${categoria.orden > 1}" class="bouncyContainer backward" style="margin: auto">
-
-            <a th:data-desiredCategory="${categorias.get(categoria.orden -1 - 1).nombre}"
-               th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
-                <img class="bouncyButton backward" src="/img/backbutton.png"/>
-            </a>
+    <div class="whitePanel" style="margin-top: 15px;">
+        <div style="display: flex; align-items: center; justify-content: center">
+            <div class="bouncyContainer backward" th:classappend="${categoria.orden <=1  ? 'quieto':' '}">
+                <a th:data-desiredCategory="${categoria.orden > 1 ? categorias.get(categoria.orden -1 - 1).nombre : ''}"
+                   th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
+                    <img class="bouncyButton backward" th:classappend="${categoria.orden <=1  ? 'quieto':' '}" src="/img/backbutton.png"/>
+                </a>
+            </div>
+            <h1><span th:text="${nombreCategoria}">ATRIBUTO_CATEGORIA_NO_ENCONTRADO</span></h1>
+            <div class="bouncyContainer forward" th:classappend="${categoria.orden >= categorias.size() ? 'quieto':' '}">
+                <a th:data-desiredCategory="${categoria.orden < categorias.size() ? categorias.get(categoria.orden -1 + 1).nombre : ''}"
+                   th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
+                    <img class="bouncyButton forward" th:classappend="${categoria.orden >= categorias.size() ? 'quieto':' '}" src="/img/forwardbutton.png"/>
+                </a>
+            </div>
         </div>
-        <h1><span th:text="${nombreCategoria}">ATRIBUTO_CATEGORIA_NO_ENCONTRADO</span></h1>
-        <div th:if="${categoria.orden < categorias.size()}" class="bouncyContainer forward" style="margin: auto">
-            <a th:data-desiredCategory="${categorias.get(categoria.orden -1 + 1).nombre}"
-               th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
-                <img class="bouncyButton forward" src="/img/forwardbutton.png"/>
-            </a>
-        </div>
+        <h1 style="text-align: center">
+           en <br />
+            <a th:href="${'/competicion/'+ competicion.getNombre()}"><span th:text="${competicion.getNombre()}"/></a>
+        </h1>
     </div>
 
     <div class="whitePanel"
@@ -88,8 +96,11 @@
                 <td><a th:text="${posicion.getNombreParticipante()}" th:href="'/participante/'+${posicion.getNombreParticipante()}+'/' +  ${nombreCompeticion} + '#'+${nombreCategoria}">nombre</a></td>
 
                 <td th:each="jornada, iStat : ${#numbers.sequence(0, competicion.getNumJornadas() - 1)}" th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''">
+                    <div class="tooltip">
                         <a th:href="'/ranking/'+${nombreCompeticion}+'/' +  ${nombreCategoria} + '/jornada/'+(${iStat.index}+1)+'#'+${posicion.getNombreParticipante()}"
                         th:text="${posicion.getPuntuacionIndividual(iStat.index)}">puntuaciones individuales</a>
+                        <span class="tooltiptext">Ver tiempos en esta jornada</span>
+                    </div>
                 </td>
 
                 <td style="font-weight: bold" th:text="${posicion.puntuacion_total}" class="borderLeftColumn">puntuación total</td>

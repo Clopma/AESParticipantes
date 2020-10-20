@@ -6,7 +6,7 @@ import com.example.miwebbase.Entities.Descalificacion;
 import com.example.miwebbase.Entities.Tiempo;
 import com.example.miwebbase.Models.PuntuacionIndividual;
 import com.example.miwebbase.Models.RankingCategoriaParticipante;
-import com.example.miwebbase.Models.Resultado;
+import com.example.miwebbase.Models.ResultadoCompeticion;
 import com.example.miwebbase.Utils.AESUtils;
 import com.example.miwebbase.repositories.CategoriaRepository;
 import com.example.miwebbase.repositories.CompeticionRepository;
@@ -96,7 +96,7 @@ public class RankingGeneralController {
     }
 
 
-    @Cacheable(key = "#categoria.nombre", value = "puntuacionesGenerales")
+    @Cacheable(key = "#categoria.nombre + '-' + #competicion.nombre", value = "puntuacionesGenerales")
     public List<RankingCategoriaParticipante> getRankingsCategoria(Categoria categoria, Competicion competicion){
 
         List<RankingCategoriaParticipante> puntuacionesTotales = tiempoRepository.getParticipantesPuntosTotalesCategoria(categoria, competicion);
@@ -119,11 +119,13 @@ public class RankingGeneralController {
 
 
         List<Descalificacion> descalificados = descalificacionRepository.findAllByCategoria(categoria);
-        puntuacionesTotales.stream().filter(
-                p -> descalificados.stream().noneMatch(d -> p.getNombreParticipante().equals(d.getParticipante().getNombre()))
-                                            )
-                .collect(Collectors.toList())
-                .subList(0, categoria.getCortePlayOffs()) //TODO: Puede fallar cuando hay pocos tiempos
+
+
+        List<RankingCategoriaParticipante> noDescalificados = puntuacionesTotales.stream().filter(
+                p -> descalificados.stream().noneMatch(d -> p.getNombreParticipante().equals(d.getParticipante().getNombre())))
+                .collect(Collectors.toList());
+
+                noDescalificados.subList(0, Math.min(categoria.getCortePlayOffs(), noDescalificados.size() - 1)) //TODO: TEST
                 .forEach(p -> p.setClasificado(true));
 
         return puntuacionesTotales;
@@ -131,11 +133,11 @@ public class RankingGeneralController {
     }
 
     @Cacheable(key = "#categoria.nombre + #numeroJornada", value = "puntuacionesJornada")
-    public List<Resultado.Categoria.Jornada> getRankingJornada(Categoria categoria, int numeroJornada){
+    public List<ResultadoCompeticion.Categoria.Jornada> getRankingJornada(Categoria categoria, int numeroJornada){
 
         List<Tiempo> tiemposJornada = tiempoRepository.findAllByCategoriaAndJornadaOrderByPosicion(categoria, numeroJornada);
 
-        Resultado.Categoria categoriaModel = new Resultado.Categoria(categoria);
+        ResultadoCompeticion.Categoria categoriaModel = new ResultadoCompeticion.Categoria(categoria);
         tiemposJornada.forEach(p -> categoriaModel.generarYAnadirJornada(p, categoria));
 
         return categoriaModel.getJornadas();
@@ -158,7 +160,7 @@ public class RankingGeneralController {
 
     @Cacheable(value = "listaDeCategorias")
     public List<Categoria> getCategoriasEnOrden(){
-        return categoriaRepository.findAllByOrderByOrden(); //TODO
+        return categoriaRepository.findAllByOrderByOrden(); //TODO: solo las de la competicion en concreto
     }
 
 
