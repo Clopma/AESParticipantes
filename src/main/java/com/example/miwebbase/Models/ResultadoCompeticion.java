@@ -1,10 +1,10 @@
 package com.example.miwebbase.Models;
 
 import com.example.miwebbase.Controllers.RankingGeneralController;
+import com.example.miwebbase.Entities.Competicion;
 import com.example.miwebbase.Entities.Tiempo;
 import com.example.miwebbase.Utils.AESUtils;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,40 +20,66 @@ public class ResultadoCompeticion {
     String nombreCompeticion;
     List<Categoria> categoriasParticipadas;
 
-
+    @AllArgsConstructor
     @Setter
     @Getter
     public static class Categoria {
 
+        String nombreParticipante;
+        Integer puntuacion_total;
+
         String nombreCategoria;
         int numTiempos;
+        @Setter(AccessLevel.NONE)
         List<Jornada> jornadas;
         int posicion;
         boolean clasificado;
         double tamano;
 
-        @Setter
-        @Getter
-        public static class Jornada {
+        public Categoria(String nombreParticipante, Long puntuacion_total) {
+            this.nombreParticipante = nombreParticipante;
+            this.puntuacion_total = Math.toIntExact(puntuacion_total);
+        }
 
-            int numJornada;
-            int posicion;
-            int tiempoDescartadoArriba;
-            int tiempoDescartadoAbajo;
-            String tiempo1;
-            String tiempo2;
-            String tiempo3;
-            String tiempo4;
-            String tiempo5;
-            String single;
-            String media;
-            String solucion;
-            String explicacion;
-            int puntos;
-            String nombreParticipante;
+        public Categoria clone(){
 
+            return new Categoria(
+                    this.nombreParticipante,
+                    this.puntuacion_total,
+                    this.nombreCategoria,
+                    this.numTiempos,
+                    jornadas == null ? null : new ArrayList<>(jornadas),
+                    this.posicion,
+                    this.clasificado,
+                    this.tamano);
 
         }
+
+
+        public void setPuntuacionesIndividuales(List<Jornada> jornadas, Competicion competicion){
+
+            List<Jornada> puntuacionesOrdenadas = new ArrayList<>();
+            for (int i = 1; i <= competicion.getNumJornadas(); i++){
+                final int ii = i;
+                puntuacionesOrdenadas.add(jornadas.stream().filter(p -> p.numJornada == ii).findFirst()
+                        .orElseGet(() -> Jornada.builder().numJornada(ii).participado(false).build()));
+
+            }
+
+            this.jornadas = jornadas;
+
+        }
+
+        public String getPuntuacionJornada(int i) {
+
+            if (jornadas.size()-1 >= i && jornadas.get(i).isParticipado()){
+                return jornadas.get(i).getPuntos()+"";
+            } else {
+                return "-";
+            }
+        }
+
+
 
         public Categoria(com.example.miwebbase.Entities.Categoria categoria){
             this.nombreCategoria = categoria.getNombre();
@@ -118,6 +144,56 @@ public class ResultadoCompeticion {
             this.getJornadas().add(jornadaObj);
         }
 
+        @Setter
+        @Getter
+        @Builder
+        @AllArgsConstructor
+        @NoArgsConstructor
+        public static class Jornada {
+
+            int numJornada;
+            int posicion;
+            int tiempoDescartadoArriba;
+            int tiempoDescartadoAbajo;
+            String tiempo1;
+            String tiempo2;
+            String tiempo3;
+            String tiempo4;
+            String tiempo5;
+            String single;
+            String media;
+            String solucion;
+            String explicacion;
+            int puntos;
+            String nombreParticipante;
+
+            boolean participado;
+
+            @Override
+            public boolean equals(Object o) {
+
+                if (o == this) {
+                    return true;
+                }
+
+                if (!(o instanceof Jornada)) {
+                    return false;
+                }
+
+                Jornada j = (Jornada) o;
+
+                return j.getNombreParticipante().equals(this.getNombreParticipante()); //TODO: nombreParticipante? por?
+            }
+
+            public Jornada(String nombreParticipante, int numJornada, int puntos, boolean participado){
+                this.nombreParticipante = nombreParticipante;
+                this.numJornada = numJornada;
+                this.puntos = puntos;
+                this.participado = participado;
+            }
+
+        }
+
     }
 
     public void generarYAnadirCategoria(List<Tiempo> tiemposJornadasCategoria, RankingGeneralController rankingGeneralController, String nombreParticipante) {
@@ -129,7 +205,7 @@ public class ResultadoCompeticion {
         categoriaObj.setNombreCategoria(categoria.getNombre());
         categoriaObj.setNumTiempos(categoria.getNumTiempos());
 
-        RankingCategoriaParticipante rankingCategoriaParticipante = rankingGeneralController.getRankingParticipante(categoria, competicion, nombreParticipante);
+        ResultadoCompeticion.Categoria rankingCategoriaParticipante = rankingGeneralController.getRankingParticipante(categoria, competicion, nombreParticipante);
 
         categoriaObj.setPosicion(rankingCategoriaParticipante.getPosicion());
         categoriaObj.setClasificado(rankingCategoriaParticipante.isClasificado());

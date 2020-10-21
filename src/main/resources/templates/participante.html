@@ -62,8 +62,17 @@
             <tr>
                 <td th:each="categoria : ${competicion.getCategoriasParticipadas()}">
                     <div class="tooltip">
-                        <a th:href="@{|/ranking/${competicion.getNombreCompeticion()}/${categoria.getNombreCategoria()}/#${nombreParticipante}|}"><span th:text="${categoria.getPosicion()+'º'}"></a>
-                        <span class="tooltiptext">Ver ranking completo</span>
+                        <a th:href="@{|/ranking/${competicion.getNombreCompeticion()}/${categoria.getNombreCategoria()}/#${nombreParticipante}|}">
+                            <span th:text="${categoria.getPosicion()+'º'}" />
+                        </a>
+                        <span class="tooltiptext">Posición en el ránking</span>
+                    </div>
+                    <span th:if="${categoria.isClasificado()}">&rarr;</span>
+                    <div th:if="${categoria.isClasificado()}" class="tooltip">
+                        <a th:href="@{|/ranking/${competicion.getNombreCompeticion()}/${categoria.getNombreCategoria()}/#${nombreParticipante}|}">
+                            <span th:text="'1º'" />
+                        </a>
+                        <span class="tooltiptext">Posición en playoffs</span>
                     </div>
                 </td>
             </tr>

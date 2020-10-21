@@ -98,7 +98,7 @@
                 <td th:each="jornada, iStat : ${#numbers.sequence(0, competicion.getNumJornadas() - 1)}" th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''">
                     <div class="tooltip">
                         <a th:href="'/ranking/'+${nombreCompeticion}+'/' +  ${nombreCategoria} + '/jornada/'+(${iStat.index}+1)+'#'+${posicion.getNombreParticipante()}"
-                        th:text="${posicion.getPuntuacionIndividual(iStat.index)}">puntuaciones individuales</a>
+                        th:text="${posicion.getPuntuacionJornada(iStat.index)}">puntuaciones individuales</a>
                         <span class="tooltiptext">Ver tiempos en esta jornada</span>
                     </div>
                 </td>

@@ -1,7 +1,7 @@
 package com.example.miwebbase.Controllers;
 
 import com.example.miwebbase.Entities.*;
-import com.example.miwebbase.Models.RankingCategoriaParticipante;
+import com.example.miwebbase.Models.ResultadoCompeticion;
 import com.example.miwebbase.repositories.CategoriaRepository;
 import com.example.miwebbase.repositories.ClasificadoRepository;
 import com.example.miwebbase.repositories.CompeticionRepository;
@@ -111,7 +111,7 @@ public class CalendarioController {
     }
 
 
-    private Clasificado[] iniciarBracket(List<RankingCategoriaParticipante> rankingCategoria, List<Descalificacion> descalificados, int numClasificados, List<Clasificado> siguienteRonda, List<Clasificado> rondaActual)  {
+    private Clasificado[] iniciarBracket(List<ResultadoCompeticion.Categoria> rankingCategoria, List<Descalificacion> descalificados, int numClasificados, List<Clasificado> siguienteRonda, List<Clasificado> rondaActual)  {
 
         List<Clasificado>  clasificados = rankingCategoria.stream().filter(p -> descalificados.stream()
                 .noneMatch(d -> p.getNombreParticipante().equals(d.getParticipante().getNombre())))
