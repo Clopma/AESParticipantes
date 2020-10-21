@@ -65,7 +65,7 @@
                         <a th:href="@{|/ranking/${competicion.getNombreCompeticion()}/${categoria.getNombreCategoria()}/#${nombreParticipante}|}">
                             <span th:text="${categoria.getPosicion()+'º'}" />
                         </a>
-                        <span class="tooltiptext">Posición en el ránking</span>
+                        <span class="tooltiptext">Posición en el ránking (con <span style="font-weight: bold" th:text="${categoria.getPuntuacion_total()}" /> puntos)</span>
                     </div>
                     <span th:if="${categoria.isClasificado()}">&rarr;</span>
                     <div th:if="${categoria.isClasificado()}" class="tooltip">

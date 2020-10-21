@@ -21,12 +21,14 @@ public class ResultadoCompeticion {
     List<Categoria> categoriasParticipadas;
 
     @AllArgsConstructor
+    @Builder
     @Setter
     @Getter
     public static class Categoria {
 
         String nombreParticipante;
-        Integer puntuacion_total;
+        @Setter(AccessLevel.NONE)
+        private Integer puntuacion_total;
 
         String nombreCategoria;
         int numTiempos;
@@ -55,8 +57,11 @@ public class ResultadoCompeticion {
 
         }
 
+        public void resetJornadas(){
+            jornadas = new ArrayList<>();
+        }
 
-        public void setPuntuacionesIndividuales(List<Jornada> jornadas, Competicion competicion){
+        public void setPuntuacionesJornadas(List<Jornada> jornadas, Competicion competicion){
 
             List<Jornada> puntuacionesOrdenadas = new ArrayList<>();
             for (int i = 1; i <= competicion.getNumJornadas(); i++){
@@ -86,9 +91,11 @@ public class ResultadoCompeticion {
             this.numTiempos = categoria.getNumTiempos();
             this.posicion = categoria.getOrden();
             this.jornadas = new ArrayList<>();
+            this.nombreCategoria = categoria.getNombre();
+            this.numTiempos = categoria.getNumTiempos();
         }
 
-        public void generarYAnadirJornada(Tiempo tiempo, com.example.miwebbase.Entities.Categoria categoria){
+        public void generarYAnadirJornada(Tiempo tiempo){
             ResultadoCompeticion.Categoria.Jornada jornadaObj = new ResultadoCompeticion.Categoria.Jornada();
             jornadaObj.setNumJornada(tiempo.getJornada());
             jornadaObj.setPosicion(tiempo.getPosicion());
@@ -103,7 +110,7 @@ public class ResultadoCompeticion {
             tiempos.add(tiempo.getTiempo4());
             tiempos.add(tiempo.getTiempo5());
 
-            double[] singleMediaYpeor = AESUtils.getTiemposCalculados(tiempos, categoria);
+            double[] singleMediaYpeor = AESUtils.getTiemposCalculados(tiempos, numTiempos);
 
             jornadaObj.setTiempo1(tiempo.getTiempo1() == 0 ? AESUtils.DNF : formatTime(tiempo.getTiempo1()));
 
@@ -123,7 +130,7 @@ public class ResultadoCompeticion {
             jornadaObj.setMedia(singleMediaYpeor[1] == 0 ? AESUtils.DNF : formatTime(singleMediaYpeor[1]));
 
             //Si la media no es un DNF
-            if(singleMediaYpeor[1] > 0 && categoria.getNumTiempos() == 5){
+            if(singleMediaYpeor[1] > 0 && numTiempos == 5){
 
                 if(tiempo.getTiempo1() == singleMediaYpeor[0]){ jornadaObj.setTiempoDescartadoAbajo(1);}
                 else if(tiempo.getTiempo2() == singleMediaYpeor[0]){ jornadaObj.setTiempoDescartadoAbajo(2); }
@@ -169,22 +176,6 @@ public class ResultadoCompeticion {
 
             boolean participado;
 
-            @Override
-            public boolean equals(Object o) {
-
-                if (o == this) {
-                    return true;
-                }
-
-                if (!(o instanceof Jornada)) {
-                    return false;
-                }
-
-                Jornada j = (Jornada) o;
-
-                return j.getNombreParticipante().equals(this.getNombreParticipante()); //TODO: nombreParticipante? por?
-            }
-
             public Jornada(String nombreParticipante, int numJornada, int puntos, boolean participado){
                 this.nombreParticipante = nombreParticipante;
                 this.numJornada = numJornada;
@@ -201,27 +192,20 @@ public class ResultadoCompeticion {
         com.example.miwebbase.Entities.Categoria categoria = tiemposJornadasCategoria.get(0).getCategoria();
         com.example.miwebbase.Entities.Competicion competicion = tiemposJornadasCategoria.get(0).getCompeticion();
 
-        ResultadoCompeticion.Categoria categoriaObj = new ResultadoCompeticion.Categoria(categoria);
-        categoriaObj.setNombreCategoria(categoria.getNombre());
-        categoriaObj.setNumTiempos(categoria.getNumTiempos());
+        ResultadoCompeticion.Categoria resultadoCategoria = rankingGeneralController.getRankingParticipante(categoria, competicion, nombreParticipante);
 
-        ResultadoCompeticion.Categoria rankingCategoriaParticipante = rankingGeneralController.getRankingParticipante(categoria, competicion, nombreParticipante);
+        resultadoCategoria.setNombreCategoria(categoria.getNombre());
+        resultadoCategoria.setNumTiempos(categoria.getNumTiempos());
+        resultadoCategoria.setTamano(50.0/Math.pow(resultadoCategoria.getPosicion(), 0.3) + 10);
 
-        categoriaObj.setPosicion(rankingCategoriaParticipante.getPosicion());
-        categoriaObj.setClasificado(rankingCategoriaParticipante.isClasificado());
-        categoriaObj.setTamano(50.0/Math.pow(categoriaObj.getPosicion(), 0.3) + 10);
 
-        this.getCategoriasParticipadas().add(categoriaObj);
+        List<Tiempo> jornadasParticipadasEnOrden = tiemposJornadasCategoria.stream().sorted(Comparator.comparingInt(Tiempo::getJornada)).collect(Collectors.toList());
 
-       List<Tiempo> jornadasParticipadasEnOrden = tiemposJornadasCategoria.stream().sorted(Comparator.comparingInt(Tiempo::getJornada)).collect(Collectors.toList());
+        resultadoCategoria.resetJornadas();
+        jornadasParticipadasEnOrden.forEach(t -> resultadoCategoria.generarYAnadirJornada(t));
 
-        for (Tiempo tiempo : jornadasParticipadasEnOrden) {
-            categoriaObj.generarYAnadirJornada(tiempo, categoria);
-        }
+        getCategoriasParticipadas().add(resultadoCategoria);
     }
-
-
-
 
 
 }

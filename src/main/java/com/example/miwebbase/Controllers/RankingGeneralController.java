@@ -111,7 +111,7 @@ public class RankingGeneralController {
         AtomicInteger posicion = new AtomicInteger(1);
         puntuacionesTotales.forEach(p -> p.setPosicion(posicion.getAndIncrement()));
 
-        puntuacionesTotales.forEach(pt -> pt.setPuntuacionesIndividuales(
+        puntuacionesTotales.forEach(pt -> pt.setPuntuacionesJornadas(
                 tiempoRepository.getParticipantesPuntosIndividualesCategoria(categoria, competicion).stream()
                 .filter(pi -> pi.getNombreParticipante().equals(pt.getNombreParticipante())).collect(Collectors.toList()), competicion));
 
@@ -133,20 +133,20 @@ public class RankingGeneralController {
 
     }
 
-    @Cacheable(key = "#categoria.nombre + #numeroJornada", value = "puntuacionesJornada")
+    @Cacheable(key = "#categoria.nombre + #numeroJornada", value = "puntuacionesJornada") //TODO: Campeonato
     public List<ResultadoCompeticion.Categoria.Jornada> getRankingJornada(Categoria categoria, int numeroJornada){
 
         List<Tiempo> tiemposJornada = tiempoRepository.findAllByCategoriaAndJornadaOrderByPosicion(categoria, numeroJornada);
 
         ResultadoCompeticion.Categoria categoriaModel = new ResultadoCompeticion.Categoria(categoria);
-        tiemposJornada.forEach(p -> categoriaModel.generarYAnadirJornada(p, categoria));
+        tiemposJornada.forEach(categoriaModel::generarYAnadirJornada);
 
         return categoriaModel.getJornadas();
 
     }
 
     public ResultadoCompeticion.Categoria getRankingParticipante(Categoria categoria, Competicion competicion, String nombreParticipante) {
-        return getRankingsCategoria(categoria, competicion).stream().filter(r -> nombreParticipante.equals(r.getNombreParticipante())).findFirst().orElse(null);
+        return self.getRankingsCategoria(categoria, competicion).stream().filter(r -> nombreParticipante.equals(r.getNombreParticipante())).findFirst().orElse(null);
     }
 
     @Cacheable(value = "categorias")
@@ -179,7 +179,7 @@ public class RankingGeneralController {
             return puntuaciones.indexOf(puntuaciones.stream().filter(p -> p.getNombreParticipante().equals(nombreParticipante)).findFirst().get()) + 1;
         }
 
-        puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.forEach(p -> p.setPuntuacionesIndividuales(tiempoRepository.getParticipantePuntosIndividualesCategoria(categoria, p.getNombreParticipante(), competicion), competicion)); //TODO maybe get todo y luego filter
+        puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.forEach(p -> p.setPuntuacionesJornadas(tiempoRepository.getParticipantePuntosIndividualesCategoria(categoria, p.getNombreParticipante(), competicion), competicion)); //TODO maybe get todo y luego filter
 
         List<ResultadoCompeticion.Categoria> puntuacionesEmpatadasActualmentePorPuntuacionTotal = puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.stream().map(ResultadoCompeticion.Categoria::clone).collect(Collectors.toList());
 
@@ -235,7 +235,7 @@ public class RankingGeneralController {
 
                 //Desempatar por media
                 List<Tiempo> tiemposEmpatados = tiempoRepository.getTiemposDeVariosParticipantes(categoria, puntuacionesEmpatadasPorPuntuacionesIndividuales.stream().map(ResultadoCompeticion.Categoria::getNombreParticipante).collect(Collectors.toSet()), competicion);
-                tiemposEmpatados.forEach(t -> t.setMedia(AESUtils.getTiemposCalculados(Arrays.asList(t.getTiempo1(), t.getTiempo2(), t.getTiempo3(), t.getTiempo4(), t.getTiempo5()), categoria)[1]));
+                tiemposEmpatados.forEach(t -> t.setMedia(AESUtils.getTiemposCalculados(Arrays.asList(t.getTiempo1(), t.getTiempo2(), t.getTiempo3(), t.getTiempo4(), t.getTiempo5()), categoria.getNumTiempos())[1]));
 
                 Tiempo mejorMedia = tiemposEmpatados.stream().reduce((acc, val) -> (acc.getMedia() > 0) && (acc.getMedia() < val.getMedia()) ? acc : val).get();
 

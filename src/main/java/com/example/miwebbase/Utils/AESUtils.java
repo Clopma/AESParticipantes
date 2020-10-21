@@ -1,7 +1,5 @@
 package com.example.miwebbase.Utils;
 
-import com.example.miwebbase.Entities.Categoria;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collections;
@@ -13,7 +11,7 @@ public class AESUtils {
     public static String DNF = "DNF";
 
     //devuelve un double[]{single, media, peor}
-    public static double[] getTiemposCalculados(List<Double> tiempos, Categoria categoria) {
+    public static double[] getTiemposCalculados(List<Double> tiempos, int numTiempos) {
 
         tiempos = tiempos.stream().filter(t -> t > 0).collect(Collectors.toList());
 
@@ -22,7 +20,7 @@ public class AESUtils {
         Collections.sort(tiempos);
         double peorTiempo = 0;
         double media = 0;
-        if (categoria.getNumTiempos() == 5) {
+        if (numTiempos == 5) {
 
             if (tiempos.size() == 4) {
                 tiempos.remove(0);
@@ -33,7 +31,7 @@ public class AESUtils {
                 tiempos.remove(4 - 1);
                 media = tiempos.stream().mapToDouble(d -> d).average().getAsDouble();
             }
-        } else if (categoria.getNumTiempos() == 3) {
+        } else if (numTiempos == 3) {
             if (tiempos.size() == 3) {
                 media = tiempos.stream().mapToDouble(d -> d).average().getAsDouble();
                 peorTiempo = tiempos.get(2);
