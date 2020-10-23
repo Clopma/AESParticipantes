@@ -1,30 +1,24 @@
 package com.example.miwebbase.Controllers;
 
+import com.example.miwebbase.Entities.Competicion;
+import com.example.miwebbase.Entities.Participante;
 import com.example.miwebbase.Entities.Tiempo;
-import com.example.miwebbase.Models.ResultadoCompeticion;
+import com.example.miwebbase.Models.Posicion;
 import com.example.miwebbase.repositories.ClasificadoRepository;
 import com.example.miwebbase.repositories.CompeticionRepository;
-import com.example.miwebbase.repositories.TiempoRepository;
+import com.example.miwebbase.repositories.DescalificacionRepository;
+import com.example.miwebbase.repositories.ParticipanteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 public class ParticipanteController {
-
-    @Autowired
-    private TiempoRepository tiempoRepository;
-
-    @Autowired
-    private RankingGeneralController rankingGeneralController;
 
     @Autowired
     CompeticionRepository competicionRepository;
@@ -32,6 +26,11 @@ public class ParticipanteController {
     @Autowired
     ClasificadoRepository clasificadoRepository;
 
+    @Autowired
+    ParticipanteRepository participanteRepository;
+
+    @Autowired
+    DescalificacionRepository descalificacionRepository;
 
     @Autowired
     ParticipanteController self;
@@ -41,13 +40,9 @@ public class ParticipanteController {
     public String inicio(Model model, @PathVariable("nombreParticipante") String nombreParticipante) {
 
 
-         List<ResultadoCompeticion> resultados = new ArrayList<>();
-
-        tiempoRepository.findCompeticionesParticipadasPor(nombreParticipante).forEach(c -> {
-             ResultadoCompeticion resultadoCompeticion = self.getResultadoParticipante(nombreParticipante, c.getNombre());
-             resultadoCompeticion.setNombreCompeticion(c.getNombre());
-             resultados.add(resultadoCompeticion);
-         });
+        Participante participante =  participanteRepository.getByNombre(nombreParticipante);
+        Map<Competicion, List<Posicion>> resultados = participante.getPosicionesEnCompeticiones(descalificacionRepository);
+        resultados.values().forEach(pl -> pl.forEach(p -> p.setMedalla(clasificadoRepository)));
 
         model.addAttribute("resultados", resultados);
 
@@ -56,33 +51,23 @@ public class ParticipanteController {
 
 
     @RequestMapping("/participante/{nombreParticipante}/{nombreCompeticion}")
-    public String inicio(Model model, @PathVariable("nombreParticipante") String nombreParticipante, @PathVariable("nombreCompeticion") String nombreCompeticion) throws Exception {
+    public String inicio(Model model, @PathVariable("nombreParticipante") String nombreParticipante, @PathVariable("nombreCompeticion") String nombreCompeticion) {
 
+
+        List<Posicion> resultado = participanteRepository.getByNombre(nombreParticipante).getPosicionesEnCompeticion(competicionRepository.findByNombre(nombreCompeticion), descalificacionRepository);
         model.addAttribute("participante", nombreParticipante);
         model.addAttribute("competicion", nombreCompeticion);
+        model.addAttribute("resultado", resultado);
+        resultado.forEach(p -> {
+            p.setMedalla(clasificadoRepository);
+            p.getTiempos().forEach(Tiempo::calcularDatos);
+        });
 
-        model.addAttribute("resultado", self.getResultadoParticipante(nombreParticipante, nombreCompeticion));
+
 
         return "participanteEnCompeticion";
     }
 
-    @Cacheable(value = "participantes")
-    public ResultadoCompeticion getResultadoParticipante(String nombreParticipante, String nombreCompeticion) {
-
-        List<Tiempo> tiemposParticipante = tiempoRepository.getTiemposOfParticipante(nombreParticipante, nombreCompeticion);
-
-        Map<Integer, List<Tiempo>> categoriasInformadas = tiemposParticipante.stream().collect(Collectors.groupingBy(t -> t.getCategoria().getOrden()));
-
-        ResultadoCompeticion resultadoCompeticion = new ResultadoCompeticion();
-        resultadoCompeticion.setCategoriasParticipadas(new ArrayList<>());
-        resultadoCompeticion.setNombreCompeticion(nombreCompeticion);
-
-        for (Map.Entry<Integer, List<Tiempo>> categoriaEntry : categoriasInformadas.entrySet()) {
-            resultadoCompeticion.generarYAnadirCategoria(categoriaEntry.getValue(), nombreParticipante, rankingGeneralController, clasificadoRepository);
-        }
-
-        return resultadoCompeticion;
-    }
 
 
 }

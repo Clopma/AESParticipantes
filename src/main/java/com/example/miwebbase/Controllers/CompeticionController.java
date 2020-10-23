@@ -14,6 +14,7 @@ public class CompeticionController {
     @Autowired
     CompeticionRepository competicionRepository;
 
+
     @GetMapping("/competicion/{nombreCompeticion}")
     public String showForm(Model model, @PathVariable("nombreCompeticion") String nombreCompeticion) {
         Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);

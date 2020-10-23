@@ -1,6 +1,6 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title th:text="${categoria.nombre} + ' en ' +${nombreCompeticion}"></title>
+    <title th:text="${nombreCategoria} + ' en ' +${nombreCompeticion}"></title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
 
@@ -76,8 +76,8 @@
             </tr>
             </thead>
             <tbody style="background-color: white;">
-            <tr th:each="posicion, iStat: ${posiciones}" th:id="${posicion.getNombreParticipante()}"
-                th:data-posicion="${posicion.posicion}" style="position: relative;"
+            <tr th:each="posicion, iStat: ${posiciones}" th:id="${posicion.getParticipante().getNombre()}"
+                th:data-posicion="${posicion.posicionGeneral}" style="position: relative;"
                 th:classappend="${(posicion.clasificado ? 'clasificado': '')
                  + ' ' + ((iStat.index + 1 <= largoClasificacion && !posicion.clasificado) ? 'descalificado': '')
                  + ' ' + (iStat.index + 1 == largoClasificacion ? 'ultimoClasificado': '')}">
@@ -91,19 +91,19 @@
 
                 <td th:if="${iStat.index >= largoClasificacion && largoClasificacion > 0}" />
 
-                <td th:text="${posicion.posicion}">posición</td>
+                <td th:text="${posicion.getPosicionGeneral()}">posición</td>
 
-                <td><a th:text="${posicion.getNombreParticipante()}" th:href="'/participante/'+${posicion.getNombreParticipante()}+'/' +  ${nombreCompeticion} + '#'+${nombreCategoria}">nombre</a></td>
+                <td><a th:text="${posicion.getParticipante().getNombre()}" th:href="'/participante/'+${posicion.getParticipante().getNombre()}+'/' +  ${nombreCompeticion} + '#'+${nombreCategoria}">nombre</a></td>
 
                 <td th:each="jornada, iStat : ${#numbers.sequence(0, competicion.getNumJornadas() - 1)}" th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''">
                     <div class="tooltip">
-                        <a th:href="'/ranking/'+${nombreCompeticion}+'/' +  ${nombreCategoria} + '/jornada/'+(${iStat.index}+1)+'#'+${posicion.getNombreParticipante()}"
+                        <a th:href="'/ranking/'+${nombreCompeticion}+'/' +  ${nombreCategoria} + '/jornada/'+(${iStat.index}+1)+'#'+${posicion.getParticipante().getNombre()}"
                         th:text="${posicion.getPuntuacionJornada(iStat.index)}">puntuaciones individuales</a>
                         <span class="tooltiptext">Ver tiempos en esta jornada</span>
                     </div>
                 </td>
 
-                <td style="font-weight: bold" th:text="${posicion.puntuacion_total}" class="borderLeftColumn">puntuación total</td>
+                <td style="font-weight: bold" th:text="${posicion.getPuntuacionTotal()}" class="borderLeftColumn">puntuación total</td>
 
                 <td th:if="${largoClasificacion > 0}">
 

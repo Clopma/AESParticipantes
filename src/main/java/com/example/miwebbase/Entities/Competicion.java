@@ -1,12 +1,18 @@
 package com.example.miwebbase.Entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Table(name = "Competiciones")
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class Competicion {
 
