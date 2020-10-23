@@ -2,6 +2,7 @@ package com.example.miwebbase.Controllers;
 
 import com.example.miwebbase.Entities.Tiempo;
 import com.example.miwebbase.Models.ResultadoCompeticion;
+import com.example.miwebbase.repositories.ClasificadoRepository;
 import com.example.miwebbase.repositories.CompeticionRepository;
 import com.example.miwebbase.repositories.TiempoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class ParticipanteController {
 
     @Autowired
     CompeticionRepository competicionRepository;
+
+    @Autowired
+    ClasificadoRepository clasificadoRepository;
 
 
     @Autowired
@@ -71,9 +75,10 @@ public class ParticipanteController {
 
         ResultadoCompeticion resultadoCompeticion = new ResultadoCompeticion();
         resultadoCompeticion.setCategoriasParticipadas(new ArrayList<>());
+        resultadoCompeticion.setNombreCompeticion(nombreCompeticion);
 
         for (Map.Entry<Integer, List<Tiempo>> categoriaEntry : categoriasInformadas.entrySet()) {
-            resultadoCompeticion.generarYAnadirCategoria(categoriaEntry.getValue(), rankingGeneralController, nombreParticipante);
+            resultadoCompeticion.generarYAnadirCategoria(categoriaEntry.getValue(), nombreParticipante, rankingGeneralController, clasificadoRepository);
         }
 
         return resultadoCompeticion;

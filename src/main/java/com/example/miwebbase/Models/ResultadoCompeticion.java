@@ -4,11 +4,13 @@ import com.example.miwebbase.Controllers.RankingGeneralController;
 import com.example.miwebbase.Entities.Competicion;
 import com.example.miwebbase.Entities.Tiempo;
 import com.example.miwebbase.Utils.AESUtils;
+import com.example.miwebbase.repositories.ClasificadoRepository;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.example.miwebbase.Utils.AESUtils.formatTime;
@@ -19,6 +21,28 @@ public class ResultadoCompeticion {
 
     String nombreCompeticion;
     List<Categoria> categoriasParticipadas;
+
+    public void generarYAnadirCategoria(List<Tiempo> tiemposJornadasCategoria, String nombreParticipante, RankingGeneralController rankingGeneralController, ClasificadoRepository clasificadoRepository) {
+
+        com.example.miwebbase.Entities.Categoria categoria = tiemposJornadasCategoria.get(0).getCategoria();
+        com.example.miwebbase.Entities.Competicion competicion = tiemposJornadasCategoria.get(0).getCompeticion();
+
+        ResultadoCompeticion.Categoria resultadoCategoria = rankingGeneralController.getRankingParticipante(categoria, competicion, nombreParticipante);
+
+        resultadoCategoria.setNombreCategoria(categoria.getNombre());
+        resultadoCategoria.setNumTiempos(categoria.getNumTiempos());
+        resultadoCategoria.setTamano(50.0/Math.pow(resultadoCategoria.getPosicion(), 0.3) + 10);
+
+
+        resultadoCategoria.setMedalla(AESUtils.getPosicionFinal(clasificadoRepository.getRondasParticipante(nombreCompeticion, nombreParticipante, categoria.getNombre())));
+
+        List<Tiempo> jornadasParticipadasEnOrden = tiemposJornadasCategoria.stream().sorted(Comparator.comparingInt(Tiempo::getJornada)).collect(Collectors.toList());
+
+        jornadasParticipadasEnOrden.forEach(resultadoCategoria::generarYAnadirJornada);
+
+        getCategoriasParticipadas().add(resultadoCategoria);
+    }
+
 
     @AllArgsConstructor
     @Builder
@@ -36,12 +60,23 @@ public class ResultadoCompeticion {
         List<Jornada> jornadas;
         int posicion;
         boolean clasificado;
+        String medalla;
         double tamano;
 
         public Categoria(String nombreParticipante, Long puntuacion_total) {
             this.nombreParticipante = nombreParticipante;
             this.puntuacion_total = Math.toIntExact(puntuacion_total);
         }
+
+        public Categoria(com.example.miwebbase.Entities.Categoria categoria){
+            this.nombreCategoria = categoria.getNombre();
+            this.numTiempos = categoria.getNumTiempos();
+            this.posicion = categoria.getOrden();
+            this.jornadas = new ArrayList<>();
+            this.nombreCategoria = categoria.getNombre();
+            this.numTiempos = categoria.getNumTiempos();
+        }
+
 
         public Categoria clone(){
 
@@ -53,6 +88,7 @@ public class ResultadoCompeticion {
                     jornadas == null ? null : new ArrayList<>(jornadas),
                     this.posicion,
                     this.clasificado,
+                    this.medalla,
                     this.tamano);
 
         }
@@ -68,13 +104,12 @@ public class ResultadoCompeticion {
                 final int ii = i;
                 puntuacionesOrdenadas.add(jornadas.stream().filter(p -> p.numJornada == ii).findFirst()
                         .orElseGet(() -> Jornada.builder().numJornada(ii).participado(false).build()));
-
             }
-
             this.jornadas = jornadas;
 
         }
 
+        // categoria.html
         public String getPuntuacionJornada(int i) {
 
             if (jornadas.size()-1 >= i && jornadas.get(i).isParticipado()){
@@ -84,19 +119,18 @@ public class ResultadoCompeticion {
             }
         }
 
-
-
-        public Categoria(com.example.miwebbase.Entities.Categoria categoria){
-            this.nombreCategoria = categoria.getNombre();
-            this.numTiempos = categoria.getNumTiempos();
-            this.posicion = categoria.getOrden();
-            this.jornadas = new ArrayList<>();
-            this.nombreCategoria = categoria.getNombre();
-            this.numTiempos = categoria.getNumTiempos();
-        }
-
         public void generarYAnadirJornada(Tiempo tiempo){
-            ResultadoCompeticion.Categoria.Jornada jornadaObj = new ResultadoCompeticion.Categoria.Jornada();
+
+            ResultadoCompeticion.Categoria.Jornada jornadaObj;
+            Optional<Jornada> jornadaYaCreada = jornadas.stream().filter(j -> j.numJornada == tiempo.getJornada() && tiempo.getParticipante().getNombre().equals(nombreParticipante)).findFirst();
+
+            if(jornadaYaCreada.isPresent()){
+                jornadaObj = jornadaYaCreada.get();
+            } else {
+                jornadaObj = new ResultadoCompeticion.Categoria.Jornada();
+                this.getJornadas().add(jornadaObj);
+            }
+
             jornadaObj.setNumJornada(tiempo.getJornada());
             jornadaObj.setPosicion(tiempo.getPosicion());
             jornadaObj.setSolucion(tiempo.getSolucion() == null ? "" : tiempo.getSolucion());
@@ -148,7 +182,6 @@ public class ResultadoCompeticion {
 
 
             jornadaObj.setPuntos(tiempo.getPuntosTotales());
-            this.getJornadas().add(jornadaObj);
         }
 
         @Setter
@@ -187,25 +220,7 @@ public class ResultadoCompeticion {
 
     }
 
-    public void generarYAnadirCategoria(List<Tiempo> tiemposJornadasCategoria, RankingGeneralController rankingGeneralController, String nombreParticipante) {
 
-        com.example.miwebbase.Entities.Categoria categoria = tiemposJornadasCategoria.get(0).getCategoria();
-        com.example.miwebbase.Entities.Competicion competicion = tiemposJornadasCategoria.get(0).getCompeticion();
-
-        ResultadoCompeticion.Categoria resultadoCategoria = rankingGeneralController.getRankingParticipante(categoria, competicion, nombreParticipante);
-
-        resultadoCategoria.setNombreCategoria(categoria.getNombre());
-        resultadoCategoria.setNumTiempos(categoria.getNumTiempos());
-        resultadoCategoria.setTamano(50.0/Math.pow(resultadoCategoria.getPosicion(), 0.3) + 10);
-
-
-        List<Tiempo> jornadasParticipadasEnOrden = tiemposJornadasCategoria.stream().sorted(Comparator.comparingInt(Tiempo::getJornada)).collect(Collectors.toList());
-
-        resultadoCategoria.resetJornadas();
-        jornadasParticipadasEnOrden.forEach(t -> resultadoCategoria.generarYAnadirJornada(t));
-
-        getCategoriasParticipadas().add(resultadoCategoria);
-    }
 
 
 }

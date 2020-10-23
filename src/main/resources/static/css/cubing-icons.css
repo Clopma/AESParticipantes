@@ -36,8 +36,8 @@
 
 .cubing-icon.event-2x2x2:before { content: "\EA01" }
 .cubing-icon.event-3x3x3:before { content: "\EA02" }
-.cubing-icon.event-333bf:before { content: "\EA03" }
-.cubing-icon.event-333fm:before { content: "\EA04" }
+.cubing-icon.event-BLD:before { content: "\EA03" }
+.cubing-icon.event-FMC:before { content: "\EA04" }
 .cubing-icon.event-333ft:before { content: "\EA05" }
 .cubing-icon.event-333mbf:before { content: "\EA06" }
 .cubing-icon.event-333mbo:before { content: "\EA07" }

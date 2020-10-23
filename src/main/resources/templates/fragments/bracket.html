@@ -97,6 +97,7 @@
                     <div class="participants">
                         <div class="participants">
                             <div th:with="c=${listaSemis[0]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                                <img th:if="${c.getMedalla().equals('MEDALLA_BRONCE')}" th:src="'/img/MEDALLA_BRONCE.png'" style="width: 30px" />
                                 <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
                                     <span th:text="${c.getParticipante().getNombre()}" />
                                 </a>
@@ -104,6 +105,7 @@
                             </div>
 
                             <div th:with="c=${listaSemis[1]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                                <img th:if="${c.getMedalla().equals('MEDALLA_BRONCE')}" th:src="'/img/MEDALLA_BRONCE.png'" style="width: 30px" />
                                 <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
                                     <span th:text="${c.getParticipante().getNombre()}" />
                                 </a>
@@ -115,6 +117,7 @@
                 <div class="matchup">
                     <div class="participants">
                         <div th:with="c=${listaSemis[2]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <img th:if="${c.getMedalla().equals('MEDALLA_BRONCE')}" th:src="'/img/MEDALLA_BRONCE.png'" style="width: 30px" />
                             <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
@@ -122,6 +125,7 @@
                         </div>
 
                         <div th:with="c=${listaSemis[3]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <img th:if="${c.getMedalla().equals('MEDALLA_BRONCE')}" th:src="'/img/MEDALLA_BRONCE.png'" style="width: 30px" />
                             <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
@@ -142,6 +146,7 @@
                 <div class="matchup">
                     <div class="participants">
                         <div th:with="c=${listaFinal[0]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <img th:if="${!c.getMedalla().equals('OTRO')}" th:src="'/img/'+${c.getMedalla()}+'.png'" style="width: 30px" />
                             <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
@@ -149,6 +154,7 @@
                         </div>
 
                         <div th:with="c=${listaFinal[1]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
+                            <img th:if="${!c.getMedalla().equals('OTRO')}" th:src="'/img/'+${c.getMedalla()}+'.png'" style="width: 30px" />
                             <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>

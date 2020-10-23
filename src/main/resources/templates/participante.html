@@ -41,7 +41,7 @@
             <th>Competición</th>
             <th colspan="100%">Categorías completadas</th>
             </thead>
-            <tbody th:each="competicion: ${resultados}">
+            <tbody th:each="competicion: ${resultados}" class="alto">
             <tr>
 
                 <td rowspan="2"><a
@@ -49,7 +49,7 @@
                         th:text="${competicion.getNombreCompeticion()}"/></a>
                 </td>
 
-                <td th:each="categoria : ${competicion.getCategoriasParticipadas()}">
+                <td th:each="categoria : ${competicion.getCategoriasParticipadas()}" style="border-bottom: 0">
 
                     <div class="tooltip"><a th:href="@{|/participante/${nombreParticipante}/${competicion.getNombreCompeticion()}/#${categoria.getNombreCategoria()}|}"><span
                             th:class="'cubing-icon event-' + ${categoria.getNombreCategoria()}"/></a>
@@ -61,18 +61,21 @@
             </tr>
             <tr>
                 <td th:each="categoria : ${competicion.getCategoriasParticipadas()}">
-                    <div class="tooltip">
-                        <a th:href="@{|/ranking/${competicion.getNombreCompeticion()}/${categoria.getNombreCategoria()}/#${nombreParticipante}|}">
-                            <span th:text="${categoria.getPosicion()+'º'}" />
-                        </a>
-                        <span class="tooltiptext">Posición en el ránking (con <span style="font-weight: bold" th:text="${categoria.getPuntuacion_total()}" /> puntos)</span>
-                    </div>
-                    <span th:if="${categoria.isClasificado()}">&rarr;</span>
-                    <div th:if="${categoria.isClasificado()}" class="tooltip">
-                        <a th:href="@{|/ranking/${competicion.getNombreCompeticion()}/${categoria.getNombreCategoria()}/#${nombreParticipante}|}">
-                            <span th:text="'1º'" />
-                        </a>
-                        <span class="tooltiptext">Posición en playoffs</span>
+                    <div style="display: flex; align-items: center">
+                        <div class="tooltip">
+                            <a th:href="@{|/ranking/${competicion.getNombreCompeticion()}/${categoria.getNombreCategoria()}/#${nombreParticipante}|}">
+                                <span th:text="${categoria.getPosicion()+'º'}" />
+                            </a>
+                            <span class="tooltiptext">Posición en el ránking (con <span style="font-weight: bold" th:text="${categoria.getPuntuacion_total()}" /> puntos)</span>
+                        </div>
+                        <span th:if="${categoria.isClasificado()}">&rarr;</span>
+                        <div th:if="${categoria.isClasificado()}" class="tooltip" style="height: 50px; width: 50px">
+                            <a onclick="loadModal(this)" th:data-nombreCategoria="${categoria.nombreCategoria}" data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
+                                <img class="bouncyButton podio" th:if="${!categoria.getMedalla().equals('OTRO')}" th:src="'/img/'+${categoria.getMedalla()+'.png'}" />
+                                <img class="bouncyButton podio" th:if="${categoria.getMedalla().equals('OTRO')}"  src="/img/bracket.png"/>
+                            </a>
+                            <span class="tooltiptext">Posición en playoffs</span>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -81,5 +84,16 @@
     </div>
 
 </div>
+<th:block th:include="fragments/modal :: modalBracket"></th:block>
+
+<script th:inline="javascript">
+
+    function loadModal(activador) {
+
+        var nombreCategoria = $(activador).attr("data-nombreCategoria");
+        loadBracket(nombreCategoria);
+    }
+
+</script>
 </body>
 </html>

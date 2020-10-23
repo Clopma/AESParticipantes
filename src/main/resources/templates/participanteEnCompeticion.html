@@ -60,10 +60,11 @@
                 </a>
             </div>
             <a th:if="${categoria.clasificado}" href="#" onclick="loadModal(this)" th:data-nombreCategoria="${categoria.nombreCategoria}" data-toggle="modal" data-target="#playOffsModal">
-                <h3 style="margin-left: 30px"> Clasificado a playoffs</h3>
+                <h3 style="margin-left: 30px"> Clasificado a playoffs </h3>
                 <div th:data-nombreCategoria="${categoria.nombreCategoria}" style="width: 75px; height: 75px">
                     <a onclick="loadModal(this)" th:data-nombreCategoria="${categoria.nombreCategoria}" data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
-                        <img class="bouncyButton podio" src="/img/bracket.png" />
+                        <img class="bouncyButton" th:if="${!categoria.getMedalla().equals('OTRO')}" th:src="'/img/'+${categoria.getMedalla()+'.png'}"/>
+                        <img class="bouncyButton podio" th:if="${categoria.getMedalla().equals('OTRO')}"  src="/img/bracket.png"/>
                     </a>
                 </div>
             </a>
@@ -123,7 +124,6 @@
 </div>
 
 
-
 <div class="modal fade" id="playOffsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="background-color: #eaeaea">
@@ -140,6 +140,9 @@
         </div>
     </div>
 </div>
+
+
+
 <script th:inline="javascript">
 
     function loadModal(activador) {

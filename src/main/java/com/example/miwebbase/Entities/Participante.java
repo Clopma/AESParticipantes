@@ -5,10 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Table(name = "Participantes")
 @Entity
@@ -22,6 +20,9 @@ public class Participante {
     @Id
     @Column(length = 75)
     private String nombre;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "participante")
+    List<Tiempo> tiempos;
 
     @Override
     public boolean equals(Object o) {

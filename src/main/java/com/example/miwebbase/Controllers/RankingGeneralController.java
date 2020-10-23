@@ -113,7 +113,7 @@ public class RankingGeneralController {
 
         puntuacionesTotales.forEach(pt -> pt.setPuntuacionesJornadas(
                 tiempoRepository.getParticipantesPuntosIndividualesCategoria(categoria, competicion).stream()
-                .filter(pi -> pi.getNombreParticipante().equals(pt.getNombreParticipante())).collect(Collectors.toList()), competicion));
+                        .filter(pi -> pi.getNombreParticipante().equals(pt.getNombreParticipante())).collect(Collectors.toList()), competicion));
 
 
         List<Descalificacion> descalificados = descalificacionRepository.findAllByCategoria(categoria);
@@ -123,7 +123,7 @@ public class RankingGeneralController {
                 p -> descalificados.stream().noneMatch(d -> p.getNombreParticipante().equals(d.getParticipante().getNombre())))
                 .collect(Collectors.toList());
 
-                noDescalificados.subList(0, Math.min(categoria.getCortePlayOffs(), noDescalificados.size() - 1)) //TODO: TEST
+        noDescalificados.subList(0, Math.min(categoria.getCortePlayOffs(), noDescalificados.size() - 1)) //TODO: TEST
                 .forEach(p -> {
                     p.setClasificado(true);
 

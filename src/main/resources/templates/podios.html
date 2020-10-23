@@ -25,19 +25,19 @@
             <div style="align-items: center">
 
                 <div style=" text-align: left" th:with="nombreParticipante  = ${podio.getValue().get(0).getParticipante().getNombre()}">
-                    <img src="/img/gold.png" style="width: 50px; margin-right: 10px;  "/>
+                    <img src="/img/MEDALLA_ORO.png" style="width: 50px; margin-right: 10px;  "/>
                     <a th:href="'/participante/'+${nombreParticipante}+'/'+ ${nombreCompeticion} +'#'+${podio.getKey().getNombre()}" th:style="${nombreParticipante.equals('-')} ? 'pointer-events: none' : '' ">
                     <span style="font-weight: bolder" th:text="${nombreParticipante}"> </span>
                     </a>
                 </div>
                 <div style=" text-align: left" th:with="nombreParticipante  = ${podio.getValue().get(1).getParticipante().getNombre()}">
-                    <img src="/img/silver.png" style="width: 50px; margin-right: 10px;  "/>
+                    <img src="/img/MEDALLA_PLATA.png" style="width: 50px; margin-right: 10px;  "/>
                     <a th:href="'/participante/'+${nombreParticipante}+'/'+ ${nombreCompeticion} +'#'+${podio.getKey().getNombre()}" th:style="${nombreParticipante.equals('-')} ? 'pointer-events: none' : '' ">
                         <span style="font-weight: bolder" th:text="${nombreParticipante}"> </span>
                     </a>
                 </div>
                 <div style=" text-align: left" th:with="nombreParticipante  = ${podio.getValue().get(2).getParticipante().getNombre()}">
-                    <img src="/img/bronze.png" style="width: 50px; margin-right: 10px;  "/>
+                    <img src="/img/MEDALLA_BRONCE.png" style="width: 50px; margin-right: 10px;  "/>
                     <a th:href="'/participante/'+${nombreParticipante}+'/'+ ${nombreCompeticion} +'#'+${podio.getKey().getNombre()}" th:style="${nombreParticipante.equals('-')} ? 'pointer-events: none' : '' ">
                         <span style="font-weight: bolder" th:text="${nombreParticipante}"> </span>
                     </a>

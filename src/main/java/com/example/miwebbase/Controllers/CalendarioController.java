@@ -2,6 +2,7 @@ package com.example.miwebbase.Controllers;
 
 import com.example.miwebbase.Entities.*;
 import com.example.miwebbase.Models.ResultadoCompeticion;
+import com.example.miwebbase.Utils.AESUtils;
 import com.example.miwebbase.repositories.CategoriaRepository;
 import com.example.miwebbase.repositories.ClasificadoRepository;
 import com.example.miwebbase.repositories.CompeticionRepository;
@@ -49,7 +50,7 @@ public class CalendarioController {
         Categoria categoria = categoriaRepository.findByNombre(nombreCategoria);
         Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
 
-        List<Clasificado> cuartos = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.CUARTO.name());
+        List<Clasificado> cuartos = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.CUARTO.name()); //TODO: COMPETICION
         List<Clasificado> semis = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.SEMIFINAL.name());
         List<Clasificado> finales = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.FINAL.name());
         List<Clasificado> ganador = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.GANADOR.name());
@@ -91,6 +92,7 @@ public class CalendarioController {
                     Clasificado.builder().participante(Participante.builder().nombre(categoria.getCortePlayOffs() == numClasificados ? puestoEnLugar(finalI, numClasificados) : "-").build()).posicion(i).build());
             int finalI1 = i;
             rondas[i].setVictoria(siguienteRonda.stream().anyMatch(s -> rondas[finalI1].getParticipante().equals(s.getParticipante())));
+            rondas[i].setMedalla(AESUtils.getPosicionFinal(clasificadoRepository.getRondasParticipante(rondas[i].getCompeticion().getNombre(), rondas[i].getParticipante().getNombre(), categoria.getNombre())));
         }
         return rondas;
     }

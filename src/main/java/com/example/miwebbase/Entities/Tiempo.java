@@ -17,15 +17,15 @@ import javax.validation.constraints.NotNull;
 public class Tiempo {
 
     @Id
+    private int jornada;
+
+    @Id
     @ManyToOne
     private Competicion competicion;
 
     @Id
     @ManyToOne
     private Categoria categoria;
-
-    @Id
-    private int jornada;
 
     @Id
     @ManyToOne
@@ -39,9 +39,6 @@ public class Tiempo {
 
     @NotNull
     private int puntosBonus;
-
-    @Transient
-    private int puntosTotales;
 
     public int getPuntosTotales(){
         return puntosTiempo + puntosBonus;
@@ -62,12 +59,23 @@ public class Tiempo {
     @NotNull
     private double tiempo5;
 
-    @Transient
-    private double media;
-
     private String solucion;
 
     @Column(length = 2000)
     private String explicacion;
+
+    @Transient
+    private double media;
+
+    @Transient double single;
+
+    @Transient
+    int tiempoDescartadoArriba;
+
+    @Transient
+    int tiempoDescartadoAbajo;
+
+    @Transient
+    boolean participado;
 
 }

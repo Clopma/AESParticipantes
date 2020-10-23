@@ -22,7 +22,7 @@
     function navigateCategoryWithAnchor(a) {
 
         if($(a).attr("data-desiredCategory")){
-            window.location.href = window.location.href.replace(/\/[^\/]*\/?$/, '/' + $(a).attr("data-desiredCategory"));
+            window.location.href = window.location.href.replace(/\/([^\/]*)(\/?(#.*)?)$/, '/' + $(a).attr("data-desiredCategory")+"$2");
         }
     }
 

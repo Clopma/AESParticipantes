@@ -37,6 +37,9 @@ public class Clasificado {
     @Transient
     private boolean victoria;
 
+    @Transient
+    private String medalla;
+
     @Column
     private String puntuacion;
 
@@ -44,6 +47,9 @@ public class Clasificado {
         CUARTO,
         SEMIFINAL,
         FINAL,
-        GANADOR
+        GANADOR,
+        MEDALLA_ORO,
+        MEDALLA_PLATA,
+        MEDALLA_BRONCE
     }
 }

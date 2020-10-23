@@ -1,6 +1,7 @@
 package com.example.miwebbase.Controllers;
 
 import com.example.miwebbase.Entities.Categoria;
+import com.example.miwebbase.Entities.Clasificado;
 import com.example.miwebbase.Entities.Competicion;
 import com.example.miwebbase.Entities.Participante;
 import com.example.miwebbase.repositories.ClasificadoRepository;
@@ -51,9 +52,9 @@ public class PodiosController {
     private List<ClasificadoRepository.Medalla> ordenarMedallas(List<ClasificadoRepository.Medalla> l) {
 
         List<ClasificadoRepository.Medalla> medallasOrdenadas = new ArrayList<>();
-        medallasOrdenadas.add(l.stream().filter(m -> m.getRonda().equals("MEDALLA_ORO")).findFirst().orElse(ClasificadoRepository.Medalla.builder().participante(Participante.builder().nombre("-").build()).build()));
-        medallasOrdenadas.add(l.stream().filter(m -> m.getRonda().equals("MEDALLA_PLATA")).findFirst().orElse(ClasificadoRepository.Medalla.builder().participante(Participante.builder().nombre("-").build()).build()));
-        medallasOrdenadas.add(l.stream().filter(m -> m.getRonda().equals("MEDALLA_BRONCE")).findFirst().orElse(ClasificadoRepository.Medalla.builder().participante(Participante.builder().nombre("-").build()).build()));
+        medallasOrdenadas.add(l.stream().filter(m -> m.getRonda().equals(Clasificado.NombreRonda.MEDALLA_ORO.name())).findFirst().orElse(ClasificadoRepository.Medalla.builder().participante(Participante.builder().nombre("-").build()).build()));
+        medallasOrdenadas.add(l.stream().filter(m -> m.getRonda().equals(Clasificado.NombreRonda.MEDALLA_PLATA.name())).findFirst().orElse(ClasificadoRepository.Medalla.builder().participante(Participante.builder().nombre("-").build()).build()));
+        medallasOrdenadas.add(l.stream().filter(m -> m.getRonda().equals(Clasificado.NombreRonda.MEDALLA_BRONCE.name())).findFirst().orElse(ClasificadoRepository.Medalla.builder().participante(Participante.builder().nombre("-").build()).build()));
 
         return medallasOrdenadas;
     }
