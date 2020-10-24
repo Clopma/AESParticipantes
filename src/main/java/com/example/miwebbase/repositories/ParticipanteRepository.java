@@ -13,5 +13,7 @@ public interface ParticipanteRepository extends CrudRepository<Participante, Lon
     @Query("select nombre from Participante")
     List<String> getAllNames();
 
+    Participante getByNombre(String nombre);
+
 
 }

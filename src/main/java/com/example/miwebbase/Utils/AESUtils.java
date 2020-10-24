@@ -1,9 +1,10 @@
 package com.example.miwebbase.Utils;
 
-import com.example.miwebbase.Entities.Categoria;
+import com.example.miwebbase.Entities.Clasificado;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,7 +14,7 @@ public class AESUtils {
     public static String DNF = "DNF";
 
     //devuelve un double[]{single, media, peor}
-    public static double[] getTiemposCalculados(List<Double> tiempos, Categoria categoria) {
+    public static double[] getTiemposCalculados(List<Double> tiempos, int numTiempos) {
 
         tiempos = tiempos.stream().filter(t -> t > 0).collect(Collectors.toList());
 
@@ -22,7 +23,7 @@ public class AESUtils {
         Collections.sort(tiempos);
         double peorTiempo = 0;
         double media = 0;
-        if (categoria.getNumTiempos() == 5) {
+        if (numTiempos == 5) {
 
             if (tiempos.size() == 4) {
                 tiempos.remove(0);
@@ -33,7 +34,7 @@ public class AESUtils {
                 tiempos.remove(4 - 1);
                 media = tiempos.stream().mapToDouble(d -> d).average().getAsDouble();
             }
-        } else if (categoria.getNumTiempos() == 3) {
+        } else if (numTiempos == 3) {
             if (tiempos.size() == 3) {
                 media = tiempos.stream().mapToDouble(d -> d).average().getAsDouble();
                 peorTiempo = tiempos.get(2);
@@ -70,6 +71,26 @@ public class AESUtils {
         BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    public static String getPosicionFinal(List<Clasificado.NombreRonda> clasificaciones){
+
+        if (clasificaciones.size() > 0) {
+            List<Clasificado.NombreRonda> order = Arrays.asList(Clasificado.NombreRonda.MEDALLA_BRONCE, Clasificado.NombreRonda.MEDALLA_PLATA, Clasificado.NombreRonda.MEDALLA_ORO);
+
+            Clasificado.NombreRonda max = clasificaciones.get(0);
+
+            for (Clasificado.NombreRonda c : clasificaciones) {
+                if (order.indexOf(max) < order.indexOf(c)) {
+                    max = c;
+                }
+            }
+
+            return max.name();
+
+        }
+
+        return "OTRO";
     }
 
 }

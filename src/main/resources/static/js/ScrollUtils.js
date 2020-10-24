@@ -13,7 +13,7 @@ function scrollAFila() {
             page.stop();
         });
 
-        var goto = p.getBoundingClientRect().top + document.body.scrollTop - (window.innerHeight/2) + (p.scrollHeight/2);
+        var goto = p.getBoundingClientRect().top + document.body.scrollTop - (window.innerHeight/2) + (p.offsetHeight/2);
         var max = document.documentElement.scrollHeight - window.innerHeight;
 
         page.animate({scrollTop: goto > max ? max : goto}, 2000, 'easeInOutQuint', function () {

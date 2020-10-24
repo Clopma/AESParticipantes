@@ -41,34 +41,35 @@
             <a th:href="${'/competicion/'+ competicion}"><span th:text="${competicion}"/></a>
         </h1>
     </div>
-    <div th:id="${categoria.nombreCategoria}" th:each="categoria, iStat : ${resultado.getCategoriasParticipadas()}"
+    <div th:id="${posicion.getCategoria().getNombre()}" th:each="posicion, iStat : ${resultado}"
          class="whitePanel"
          style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; position: relative;">
 
         <!-- Relative para la posición y el anchor-->
         <div class="puntuacion whitePanel">
-            <h1 th:text="${categoria.posicion} + 'ª POSICIÓN'"
-                th:style="'font-size: '+${categoria.tamano}+'px !important; align-self: center'"> Posición </h1>
+            <h1 th:text="${posicion.getPosicionGeneral()} + 'ª POSICIÓN'"
+                th:style="'font-size: '+${posicion.getTamano()}+'px !important; align-self: center'"> Posición </h1>
         </div>
         <div style="display: flex; align-items: center">
 
-            <h1 th:text="${categoria.nombreCategoria}"></h1>
+            <h1 th:text="${posicion.getCategoria().getNombre()}"></h1>
             <div class="bouncyContainer podio" style="width: 75px; height: 75px">
-                <a th:href="'/ranking/' + ${nombreCompeticion} + '/' +${categoria.nombreCategoria}+'#'+${nombreParticipante}"
+                <a th:href="'/ranking/' + ${nombreCompeticion} + '/' +${posicion.getCategoria().getNombre()}+'#'+${nombreParticipante}"
                    class="bouncyContainer">
                     <img class="bouncyButton podio" src="/img/podiologo.png"/>
                 </a>
             </div>
-            <a th:if="${categoria.clasificado}" href="#" onclick="loadModal(this)" th:data-nombreCategoria="${categoria.nombreCategoria}" data-toggle="modal" data-target="#playOffsModal">
-                <h3 style="margin-left: 30px"> Clasificado a playoffs</h3>
-                <div th:data-nombreCategoria="${categoria.nombreCategoria}" style="width: 75px; height: 75px">
-                    <a onclick="loadModal(this)" th:data-nombreCategoria="${categoria.nombreCategoria}" data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
-                        <img class="bouncyButton podio" src="/img/bracket.png" />
+            <a th:if="${posicion.isClasificado()}" href="#" onclick="loadModal(this)" th:data-nombreCategoria="${posicion.getCategoria().getNombre()}" data-toggle="modal" data-target="#playOffsModal">
+                <h3 style="margin-left: 30px"> Clasificado a playoffs </h3>
+                <div th:data-nombreCategoria="${posicion.getCategoria().getNombre()}" style="width: 75px; height: 75px">
+                    <a onclick="loadModal(this)" th:data-nombreCategoria="${posicion.getCategoria().getNombre()}" data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
+                        <img class="bouncyButton" th:if="${!'OTRO'.equals(posicion.getMedalla())}" th:src="'/img/'+${posicion.getMedalla()+'.png'}"/>
+                        <img class="bouncyButton podio" th:if="${'OTRO'.equals(posicion.getMedalla())}"  src="/img/bracket.png"/>
                     </a>
                 </div>
             </a>
         </div>
-        <table th:data-numTiempos="${categoria.numTiempos}" th:data-nombreCat="${categoria.nombreCategoria}"
+        <table th:data-numTiempos="${posicion.getCategoria().getNumTiempos()}" th:data-nombreCat="${posicion.getCategoria().getNombre()}"
                th:id="'dataTable'+ ${iStat.index}" class="table centerCols">
             <thead>
             <tr>
@@ -87,41 +88,40 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="jornada: ${categoria.getJornadas()}">
+            <tr th:each="jornada: ${posicion.getTiempos()}">
                 <td style="display: flex">
                     <div class="bouncyContainer podio" style="width: 50px; height: 50px; min-width: 50px;">
-                        <a  th:href="'/ranking/' + ${nombreCompeticion} + '/' +${categoria.nombreCategoria}+'/jornada/' + ${jornada.numJornada} + '#'+${nombreParticipante}"
+                        <a  th:href="'/ranking/' + ${nombreCompeticion} + '/' +${posicion.getCategoria().getNombre()}+'/jornada/' + ${jornada.getJornada()} + '#'+${nombreParticipante}"
                            class="bouncyContainer">
                             <img class="bouncyButton podio" src="/img/podiologo.png"/>
                         </a>
                     </div>
-                    <span th:text="'Jornada ' + ${jornada.numJornada}" style="display: flex; align-items: center; width: max-content"></span>
+                    <span th:text="'Jornada ' + ${jornada.getJornada()}" style="display: flex; align-items: center; width: max-content" />
                 </td>
-                <td style="font-weight: bold" th:text="${jornada.posicion}"></td>
-                <td class="borderLeftColumn"> <span th:class="${(jornada.getTiempoDescartadoAbajo() == 1 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 1 ? 'badge badge-danger ' : '')}"  th:text="${jornada.tiempo1}"></span></td>
+                <td style="font-weight: bold" th:text="${jornada.getPosicion()}" />
+                <td class="borderLeftColumn"> <span th:class="${(jornada.getTiempoDescartadoAbajo() == 1 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 1 ? 'badge badge-danger ' : '')}"  th:text="${jornada.getTiempo1Str()}" /></td>
                 <td>
-                    <span th:class="${(jornada.getTiempoDescartadoAbajo() == 2 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 2 ? 'badge badge-danger ' : '')}"  th:text="${jornada.tiempo2}"></span>
-                </td>
-                <td>
-                    <span th:class="${(jornada.getTiempoDescartadoAbajo() == 3 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 3 ? 'badge badge-danger ' : '')}"  th:text="${jornada.tiempo3}"></span>
+                    <span th:class="${(jornada.getTiempoDescartadoAbajo() == 2 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 2 ? 'badge badge-danger ' : '')}"  th:text="${jornada.getTiempo2Str()}" />
                 </td>
                 <td>
-                    <span th:class="${(jornada.getTiempoDescartadoAbajo() == 4 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 4 ? 'badge badge-danger ' : '')}"  th:text="${jornada.tiempo4}"></span>
+                    <span th:class="${(jornada.getTiempoDescartadoAbajo() == 3 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 3 ? 'badge badge-danger ' : '')}"  th:text="${jornada.getTiempo3Str()}" />
                 </td>
                 <td>
-                    <span th:class="${(jornada.getTiempoDescartadoAbajo() == 5 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 5 ? 'badge badge-danger ' : '')}"  th:text="${jornada.tiempo5}"></span>
+                    <span th:class="${(jornada.getTiempoDescartadoAbajo() == 4 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 4 ? 'badge badge-danger ' : '')}"  th:text="${jornada.getTiempo4Str()}" />
                 </td>
-                <td style="font-weight: bold;" class="borderLeftColumn" th:text="${jornada.single}"></td>
-                <td style="font-weight: bold" th:text="${jornada.media}"></td>
-                <td th:text="${jornada.solucion}"></td>
-                <td th:text="${jornada.explicacion}"></td>
-                <td style="font-weight: bold" th:text="${jornada.puntos}"></td>
+                <td>
+                    <span th:class="${(jornada.getTiempoDescartadoAbajo() == 5 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 5 ? 'badge badge-danger ' : '')}"  th:text="${jornada.getTiempo5Str()}" />
+                </td>
+                <td style="font-weight: bold;" class="borderLeftColumn" th:text="${jornada.getSingleStr()}" />
+                <td style="font-weight: bold" th:text="${jornada.getMediaStr()}" />
+                <td th:text="${jornada.getSolucion()}" />
+                <td th:text="${jornada.getExplicacion()}" />
+                <td style="font-weight: bold" th:text="${jornada.getPuntosTotales()}" />
             </tr>
             </tbody>
         </table>
     </div>
 </div>
-
 
 
 <div class="modal fade" id="playOffsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -140,6 +140,9 @@
         </div>
     </div>
 </div>
+
+
+
 <script th:inline="javascript">
 
     function loadModal(activador) {

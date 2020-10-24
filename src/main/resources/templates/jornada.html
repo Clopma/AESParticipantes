@@ -34,7 +34,7 @@
         }
     }
 
-    function navigateToGeneral(n) {
+    function navigateToGeneral() {
         window.location.href = window.location.href.replace('jornada/' + [[${numeroJornada}]], '');
     }
 
@@ -111,20 +111,20 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="tiempo: ${resultado}" th:id="${tiempo.nombreParticipante}">
-                <td style="font-weight: bold" th:text="${tiempo.posicion}"></td>
-                <td><a th:text="${tiempo.nombreParticipante}"
-                       th:href="'/participante/'+${tiempo.nombreParticipante}+'/' + ${nombreCompeticion} + '#' + ${nombreCategoria}"></a></td>
-                <td class="borderLeftColumn" th:text="${tiempo.tiempo1}"></td>
-                <td th:text="${tiempo.tiempo2}"></td>
-                <td th:text="${tiempo.tiempo3}"></td>
-                <td th:text="${tiempo.tiempo4}"></td>
-                <td th:text="${tiempo.tiempo5}"></td>
-                <td style="font-weight: bold;" class="borderLeftColumn" th:text="${tiempo.single}"></td>
-                <td style="font-weight: bold" th:text="${tiempo.media}"></td>
-                <td th:text="${tiempo.solucion}"></td>
-                <td th:text="${tiempo.explicacion}"></td>
-                <td style="font-weight: bold" th:text="${tiempo.puntos}"></td>
+            <tr th:each="tiempo: ${tiempos}" th:id="${tiempo.getParticipante().getNombre()}" class="trJornadas">
+                <td style="font-weight: bold" th:text="${tiempo.posicion}" />
+                <td><a th:text="${tiempo.getParticipante().getNombre()}"
+                       th:href="'/participante/'+${tiempo.getParticipante().getNombre()}+'/' + ${nombreCompeticion} + '#' + ${nombreCategoria}" /></td>
+                <td class="borderLeftColumn"> <span  th:class="${(tiempo.getTiempoDescartadoAbajo() == 1 ? 'badge badge-success ' : ' ') + (tiempo.getTiempoDescartadoArriba() == 1 ? 'badge badge-danger ' : '')}" th:text="${tiempo.getTiempo1Str()}" /></td>
+                <td><span  th:class="${(tiempo.getTiempoDescartadoAbajo() == 2 ? 'badge badge-success ' : ' ') + (tiempo.getTiempoDescartadoArriba() == 2 ? 'badge badge-danger ' : '')}" th:text="${tiempo.getTiempo2Str()}" /></td>
+                <td><span  th:class="${(tiempo.getTiempoDescartadoAbajo() == 3 ? 'badge badge-success ' : ' ') + (tiempo.getTiempoDescartadoArriba() == 3 ? 'badge badge-danger ' : '')}" th:text="${tiempo.getTiempo3Str()}" /></td>
+                <td><span  th:class="${(tiempo.getTiempoDescartadoAbajo() == 4 ? 'badge badge-success ' : ' ') + (tiempo.getTiempoDescartadoArriba() == 4 ? 'badge badge-danger ' : '')}" th:text="${tiempo.getTiempo4Str()}" /></td>
+                <td><span  th:class="${(tiempo.getTiempoDescartadoAbajo() == 5 ? 'badge badge-success ' : ' ') + (tiempo.getTiempoDescartadoArriba() == 5 ? 'badge badge-danger ' : '')}" th:text="${tiempo.getTiempo5Str()}" /></td>
+                <td style="font-weight: bold;" class="borderLeftColumn" th:text="${tiempo.getSingleStr()}" />
+                <td style="font-weight: bold" th:text="${tiempo.getMediaStr()}" />
+                <td th:text="${tiempo.solucion}" />
+                <td th:text="${tiempo.explicacion}" />
+                <td style="font-weight: bold" th:text="${tiempo.getPuntosTotales()}" />
             </tr>
             </tbody>
         </table>

@@ -13,13 +13,14 @@ public class MiWebBaseApplication {
 
 
     @Autowired
-     InscripcionRepository inscripcionRepository;
+    InscripcionRepository inscripcionRepository;
 
     public static void main(String[] args) {
 
         SpringApplication.run(MiWebBaseApplication.class, args);
 
-        //TODO: Schedule limpiar caché
 
     }
+
 }
+

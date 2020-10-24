@@ -2,6 +2,7 @@ package com.example.miwebbase.repositories;
 
 import com.example.miwebbase.Entities.Categoria;
 import com.example.miwebbase.Entities.Clasificado;
+import com.example.miwebbase.Entities.Competicion;
 import com.example.miwebbase.Entities.Participante;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +21,10 @@ public interface ClasificadoRepository extends CrudRepository<Clasificado, Long>
 
     @Query("select c.categoria, c.participante, c.ronda from Clasificado c where c.ronda like 'MEDALLA_%' and c.competicion.nombre = ?1 order by c.categoria.orden")
     List<Object[]> getMedallas(String nombreCompeticion);
+
+    @Query("select c.ronda from Clasificado c where c.competicion = ?1 and c.participante = ?2 and c.categoria = ?3 and c.ronda like 'MEDALLA_%'")
+    List<Clasificado.NombreRonda> getRondasParticipante(Competicion nombreCompeticion, Participante nombreParticipante, Categoria nombreCategoria);
+
 
     @Builder
     @Getter
