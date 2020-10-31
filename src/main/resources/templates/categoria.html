@@ -111,7 +111,8 @@
                         <div th:if="${largoClasificacion > 0 && posicion.clasificado}"  class="bouncyContainer podio"
                              style="width: 100%; max-width: 80px; max-height: 80px; margin: auto;">
                             <a data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
-                                <img class="bouncyButton podio" src="/img/bracket.png"/>
+                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() != null && !'OTRO'.equals(posicion.getMedalla())}" th:src="'/img/'+${posicion.getMedalla()+'.png'}" />
+                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() == null && posicion.isClasificado()}"  src="/img/bracket.png"/>
                             </a>
                         </div>
                 </td>

@@ -1,0 +1,25 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Autenticación WCA</title>
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+    <th:block th:include="fragments/head :: datatablesHead"></th:block>
+    <script type="text/javascript" src="/js/ScrollUtils.js"></script>
+    <script type="text/javascript" src="/js/ModalUtils.js"></script>
+    <link rel="stylesheet" href="/css/evento.css" />
+    <script th:inline="javascript">
+       if ([[${redirect}]]){
+          window.location.href = [[${redirect}]];
+       }
+    </script>
+</head>
+
+
+<body class="cubosbg">
+<div th:replace="fragments/backButton :: backButton"/>
+<div class="vertical-flex-wrapper">
+    <div class="whitePanel" style="margin-top: 300px; width: 80%">
+        <h1 th:text="${mensaje}" style="text-align: center;" />
+    </div>
+</div>
+</body>
+</html>

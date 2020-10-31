@@ -1,0 +1,227 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Nacional Online 2020</title>
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+    <link rel="stylesheet" href="css/dropdown.css"/>
+    <script type="text/javascript" src="js/TiempoUtils.js"></script>
+    <script type="text/javascript" src="js/CookieUtils.js"></script>
+
+
+</head>
+<script th:inline="javascript">
+
+    $(document).ready(function () {
+        $("#selectorParticipantes").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".dropdown-menu li").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(value) > -1)
+            });
+        });
+
+        document.getElementById("botonSeleccionar").onclick = function () {
+            if ($("#dropdown").hasClass("open")) {
+                $("#dropdown").removeClass("open");
+            } else {
+                $("#dropdown").addClass("open");
+            }
+
+        }
+
+
+        var ignore1 = document.getElementById('listaParticipantes');
+        var ignore2 = document.getElementById('botonSeleccionar');
+        document.addEventListener('click', function (event) {
+            var isClickInsideElement = ignore1.contains(event.target) || ignore2.contains(event.target);
+            if (!isClickInsideElement) {
+                if ($("#dropdown").hasClass("open")) {
+                    $("#dropdown").removeClass("open");
+                }
+            }
+        });
+    });
+
+    $(document).keypress(function (e) {
+        if (e.key === "Enter") {
+            Array.from(document.getElementById("listaParticipantes").querySelectorAll("li")).filter(li => li.style.display != "none")[0].children[0].click();
+        }
+
+        if (!$("#dropdown").hasClass("open")) {
+            $("#dropdown").addClass("open");
+        }
+        document.getElementById("selectorParticipantes").focus();
+    });
+
+    function irACategoria() {
+
+        var s = document.getElementById("selectorCategoria");
+
+        if (s && s.selectedIndex !== -1) {
+            var destino = window.location + 'ranking/Nacionline 2020/' + s.options[s.selectedIndex].value; //TODO
+
+
+            var r = document.getElementById("selectorRanking");
+            if (r.value > 0) {
+                destino += "/jornada/" + r.options[r.selectedIndex].value
+            }
+
+            window.location = destino;
+        }
+    }
+
+    function irAWCA() {
+        window.location = "https://www.worldcubeassociation.org/oauth/authorize?client_id=" + [[${@environment.getProperty('wca.clientId')}]] +
+            "&amp;redirect_uri=" + [[${@environment.getProperty('wca.callbackUrl')}]] + "&amp;response_type=code&amp;scope=public"
+    }
+
+</script>
+<body class="cubosbg">
+<div class="vertical-flex-wrapper">
+
+
+    <div id="login" class="whitePanel top mensajeSuperior">
+
+        <div class="bouncyContainer backward" style="width: 120px; height: 120px">
+            <a class="bouncyContainer">
+                <img onclick="irAWCA()" class="bouncyButton" src="/img/WCAlogo.png"/>
+            </a>
+        </div>
+        <h1><a class="clicker" onclick="irAWCA()">Iniciar sesión con WCA</a></h1>
+    </div>
+
+
+    <div id="V"  class="whitePanel top mensajeSuperior">
+        <h3>Bienvenido, <a id="nombreV" style="font-weight: bold;"> desconocido (reemplazado) </a>.</h3>
+    </div>
+
+
+    <div id="NV"  class="whitePanel top mensajeSuperior">
+
+        <h3>Bienvenido, <span style="font-weight: bold" id="nombreNV"> desconocido (reemplazado) </span>, no conocemos cuál es tu perfil. Si has participado en
+            alguna competición en esta web anteriormente, por favor, busca tu perfil y vincula tu cuenta, así estarás
+            listo para inscribirte a competiciones.</h3>
+    </div>
+
+    <div id="NC"  class="whitePanel top mensajeSuperior">
+        <h3>Bienvenido, <span style="font-weight: bold;" id="nombreNC"> desconocido (reemplazado) </span>, creemos que tu perfil puede ser
+            <a id="linkNC">este</a>. Si es correcto, puedes vincularlo y estarás listo para inscribirte a competiciones.</h3>
+    </div>
+
+    <script>
+        var tipoUsuario = getCookie("TIUS");
+        if(tipoUsuario){
+            document.getElementById(tipoUsuario).style.display = 'flex';
+            if(tipoUsuario === 'V'){
+                document.getElementById('nombreV').innerText = decodeURIComponent(getCookie('NOPA'));
+                document.getElementById('nombreV').href = 'participante/' + getCookie('NOPA');
+            } else if (tipoUsuario === 'NV'){
+                document.getElementById('nombreNV').innerText = decodeURIComponent(getCookie('WCNO'));
+            } else if (tipoUsuario === 'NC') {
+                document.getElementById('nombreNC').innerText = decodeURIComponent(getCookie('NOPA'));
+                document.getElementById('linkNC').href = 'participante/' + getCookie('NOPA');
+            }
+        } else {
+            document.getElementById('login').style.display = 'flex';
+        }
+
+
+    </script>
+
+    <div class="login-content">
+
+        <div class="whitePanel left" style="margin-left: 0px;">
+            <img src="/img/podiologo.png" width="200px"/>
+            <h2>Buscar ranking:</h2>
+            <p style="font-size: large">Puedes ver los resultados generales y de cada jornada de una categoría:</p>
+
+            <div style="width: 100%">
+
+                <div style="display: flex; justify-content: center; align-items: center; padding-bottom: 10px">
+                    <h3 style="padding-right: 10px"> Categoría:</h3>
+
+                    <select class="form-control form-control-lg miSelect" id="selectorCategoria">
+                        <option th:each="categoria: ${categorias}" th:text="${categoria.nombre}"/>
+                    </select>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center">
+                    <h3 style="padding-right: 10px">Ranking:</h3>
+                    <select class="form-control form-control-lg miSelect" id="selectorRanking">
+                        <option value="0">Ranking general</option>
+                        <option th:each="jornada, iStat :  ${#numbers.sequence(0, numJornadas - 1)}"
+                                th:text="'Jornada ' + ${iStat.index + 1}"
+                                th:value="${iStat.index+1}"/>
+                    </select>
+                </div>
+                <script>
+                    document.getElementById("selectorCategoria").selectedIndex = -1;
+                    document.getElementById("selectorRanking").selectedIndex = -1;
+                </script>
+                <div class="bouncyContainer forward" style="margin: auto">
+                    <a onclick="irACategoria()" class="bouncyContainer" style="cursor: pointer">
+                        <img class="bouncyButton forward" src="/img/forwardbutton.png"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="whitePanel">
+            <img src="/img/aes_logo.png" width="300px"/>
+            <h1>Web de competiciones online</h1>
+        </div>
+
+        <div class="whitePanel right" style="margin-right: 0px">
+            <img src="/img/userIcon.png" width="200px;"/>
+            <h2>Buscar participante:</h2>
+
+            <p style="font-size: large">Busca el perfil de un participante para ver sus competiciones y tiempos:</p>
+
+            <div class="container" style="width: min-content">
+                <div id="dropdown" class="dropdown">
+                    <button id="botonSeleccionar" class="btn btn-primary dropdown-toggle" type="button"
+                            data-toggle="dropdown">
+                        Seleccionar participante
+                        <!--                        <span class="caret"></span>-->
+                    </button>
+                    <ul id="listaParticipantes" class="dropdown-menu">
+                        <input id="selectorParticipantes" autocomplete="off" class="form-control" type="text"
+                               placeholder="Busca..."/>
+                        <li id="participante" th:each="participante : ${participantes}">
+                            <a th:href="@{|/participante/${participante}|}" th:text="${participante}"/>
+                        </li> <!-- TODO -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer th:replace="fragments/footer :: creditFooter"/>
+</div>
+
+
+<!--<div class="modal fade" id="twitchmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--    <div>-->
+<!--        <div class="modal-dialog" style="margin: 0;">-->
+<!--            <div class="modal-content"-->
+<!--                 style="background-color: #eaeaea; width: 90% !important; height: 95% !important;">-->
+<!--                <div class="modal-header">-->
+<!--                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                        <span aria-hidden="true">&times;</span>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--                <div class="modal-body">-->
+
+
+<!--                    <iframe-->
+<!--                            src="https://player.twitch.tv/?channel=aespeedcubing&parent=nacional2020.carloslopezmari.com"-->
+<!--                            height="100%"-->
+<!--                            width="100%"-->
+<!--                            frameborder="0"-->
+<!--                            scrolling="no"-->
+<!--                            allowfullscreen="true">-->
+<!--                    </iframe>-->
+<!--                </div>-->
+
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+</body>
+</html>

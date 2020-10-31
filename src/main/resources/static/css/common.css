@@ -1,22 +1,22 @@
 .cubosbg {
     background-image: url("../img/rubikColours.png");
     background-size: cover;
+    display: flex;
+    font-family: 'Rajdhani', sans-serif !important;
 }
 
 .modal-content {
-    width: fit-content !important;
+    overflow: overlay;
     width: -moz-fit-content !important;
     margin: auto !important;
 }
 
 .modal-dialog {
-
     max-width: 95% !important;
-
 }
 
 .modal {
-    z-index: 1080!important;
+    z-index: 1080 !important;
 }
 
 table.centerCols th, table.centerCols td {
@@ -24,16 +24,16 @@ table.centerCols th, table.centerCols td {
     vertical-align: middle !important;
 }
 
-table.centerCols th{
+table.centerCols th {
     border-top: none;
 }
 
-table.centerCols tbody.alto tr{
+table.centerCols tbody.alto tr {
 
     height: 50px;
 }
 
-table.centerCols tbody.alto td{
+table.centerCols tbody.alto td {
 
     height: 50px;
     border-right: solid 1px #ebebeb;
@@ -78,6 +78,13 @@ table.centerCols tbody.alto td{
     margin-top: 0;
 }
 
+.mensajeSuperior {
+    display: none; /* to flex */
+    align-items: center;
+    max-width: 80%;
+    text-align: center;
+}
+
 footer.credit {
     width: 100%;
     text-align: center;
@@ -89,6 +96,7 @@ footer.credit {
     flex-direction: column;
     align-items: center;
     height: 100%;
+    width: 100%;
 }
 
 .flexCenter {
@@ -113,10 +121,12 @@ a.bouncyContainer {
     cursor: pointer;
 
 }
+
 a {
- color: #007bff !important;
+    color: #007bff !important;
 
 }
+
 a:hover {
     color: #0056b3 !important;
     text-decoration: none !important;
@@ -136,6 +146,7 @@ img.bouncyButton {
     height: 80%;
     width: 80%;
 }
+
 div.quieto {
     opacity: 0.5;
 }
@@ -211,7 +222,7 @@ img.bouncyButton.backward {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     font-weight: bold;
-    font-family: 'Rajdhani', sans-serif;
+    /*font-family: 'Rajdhani', sans-serif;*/
     font-size: 2em;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -233,8 +244,8 @@ tr.ultimoClasificado td, td.ultimoClasificado {
 }
 
 .descalificado.participanteEncontrado {
-     background-color: #fdd1d5 !important;
- }
+    background-color: #fdd1d5 !important;
+}
 
 .clasificado td, .descalificado td {
     font-weight: bold;
@@ -248,7 +259,7 @@ tr.ultimoClasificado td, td.ultimoClasificado {
 
 h1, h2, h3 {
 
-    font-family: 'Rajdhani', sans-serif !important;
+    /*font-family: 'Rajdhani', sans-serif !important;*/
     margin-bottom: 0px !important;
 
 }
@@ -273,4 +284,17 @@ h3 {
 
 .badge {
     font-size: 100% !important;
+}
+
+a.clicker:hover {
+    cursor: pointer;
+}
+
+.avatar-thumbnail {
+    display: inline-block;
+    vertical-align: middle;
+    background-size: cover;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
 }

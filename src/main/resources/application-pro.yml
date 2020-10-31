@@ -7,7 +7,7 @@ spring:
         password: rodripass
     jpa:
         hibernate:
-            ddl-auto: create-drop
+            ddl-auto: none
     resources:
         static-locations: classpath:/static/
 
@@ -22,3 +22,8 @@ server:
 
 aes:
     enable-redirect: true
+wca:
+    callbackUrl: https://nacional2020.carloslopezmari.com/loginWCA
+    callbackUrlSoloValidar: https://nacional2020.carloslopezmari.com/validar
+    clientId: _Syvq_7EhXMViil3G0nygoCBTZzpeGL95uJXkpwJgCQ
+    clientSecret: JaDvrqQEUyIYShejo2ZLxqhpIqizmNowvwNb7iaHMQE

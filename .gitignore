@@ -29,3 +29,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Carlos ###
+/src/main/resources/keystore/
+/src/main/resources/application-pro.yml
+/src/main/resources/application.yml

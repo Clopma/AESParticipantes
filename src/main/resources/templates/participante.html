@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/evento.css"/>
     <link rel="stylesheet" href="/css/cubing-icons.css"/>
     <link rel="stylesheet" href="/css/tooltips.css"/>
+    <link rel="stylesheet" href="/css/flags/flags.css"/>
 
 
 </head>
@@ -15,20 +16,40 @@
 
 <body class="cubosbg">
 
-<script>
+<script th:inline="javascript">
 
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
-    })
+    });
+
+    function vincular() {
+
+        window.location.href = '/vincular/' + [[${participante.getNombre()}]];
+    }
+
+
 
 </script>
 <div th:replace="fragments/backButton :: backButton"/>
 <div class="vertical-flex-wrapper">
-    <div class="whitePanel" style="margin-top: 50px;">
-        <h1 style="text-align: center;">
-            <img src="/img/userIcon.png" style="width: 100px; height: 100px"/>
+    <div class="whitePanel" style="margin-top: 50px; text-align: center;">
+
+
+        <h1 style="text-align: center; display: flex; align-items: center">
+            <img th:if="${!participante.isConfirmado()}" src="/img/userIcon.png" style="width: 100px; height: 125px;"/>
+            <div th:if="${participante.isConfirmado()}" style="position: relative; margin-right: 30px">
+                <img  th:src="${participante.getUrlImagenPerfil()}" style="object-fit: cover; height: 125px; border-radius: 100%; border: solid;"/>
+                <span th:class="${'flag-icon flag-icon-'+ participante.getPais()}" style="position: absolute; width: 40px; bottom: 0; right: -10px"></span><!-- No autocerrar -->
+            </div>
             <span th:text="${nombreParticipante}"/>
         </h1>
+
+        <button th:if="${!participante.isConfirmado()}" onclick="vincular()" class="btn btn-outline-dark" > <img src="/img/WCAlogo.png" style="height: 50px; width: 50px;"/> ¿Eres tú? <u>Vincular</u></button>
+
+        <span th:if="${participante.isConfirmado()}" style="font-size: 20px;">
+
+        <a th:href="${participante.getLinkPerfilWCA()}"> <img src="/img/WCAlogo.png" style="height: 30px; margin-right: 10px" /><span th:text="${participante.getWcaId()}" style="margin-right: 10px" /></a>
+        </span>
     </div>
 
     <div class="whitePanel" style="margin-top: 50px;">
@@ -60,7 +81,7 @@
             </tr>
             <tr>
                 <td th:each="posicion : ${competicion.getValue()}">
-                    <div style="display: flex; align-items: center">
+                    <div style="display: flex; align-items: center; justify-content: center">
                         <div class="tooltip">
                             <a th:href="@{|/ranking/${competicion.getKey().getNombre()}/${posicion.getCategoria().getNombre()}/#${nombreParticipante}|}">
                                 <span th:text="${posicion.getPosicionGeneral()+'º'}" />
@@ -81,9 +102,9 @@
             </tbody>
         </table>
     </div>
-
+    <th:block th:include="fragments/modal :: modalBracket"></th:block>
 </div>
-<th:block th:include="fragments/modal :: modalBracket"></th:block>
+
 
 <script th:inline="javascript">
 
