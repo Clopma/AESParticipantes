@@ -79,7 +79,7 @@ table.centerCols tbody.alto td {
 }
 
 .mensajeSuperior {
-    display: none; /* to flex */
+    display: flex;
     align-items: center;
     max-width: 80%;
     text-align: center;

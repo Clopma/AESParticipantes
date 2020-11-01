@@ -1,4 +1,4 @@
-package com.example.aesparticipantes.repositories;
+package com.example.aesparticipantes.Repositories;
 
 import com.example.aesparticipantes.Entities.Tiempo;
 import org.springframework.data.repository.CrudRepository;

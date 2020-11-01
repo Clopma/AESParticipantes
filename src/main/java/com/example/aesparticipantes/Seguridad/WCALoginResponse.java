@@ -1,13 +1,15 @@
 package com.example.aesparticipantes.Seguridad;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Setter
 public class WCALoginResponse implements Serializable {
     public String access_token;

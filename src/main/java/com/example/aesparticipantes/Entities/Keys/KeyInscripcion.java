@@ -4,9 +4,7 @@ import java.io.Serializable;
 
 public class KeyInscripcion implements Serializable {
 
-    private String categoria;
+    private KeyEvento evento;
     private String participante;
-    private String competicion;
-
 
 }

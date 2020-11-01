@@ -8,7 +8,7 @@ function loadBracket(nombreCategoria) {
             }
         }
     };
-    httpRequest.open('GET', window.location.origin + '/calendario/playoffs/Nacionline 2020/' + nombreCategoria);
+    httpRequest.open('GET', window.location.origin + '/calendario/playoffs/Nacionline 2020/' + nombreCategoria); //TODO nombre campeonato
     httpRequest.send();
 
 

@@ -4,8 +4,8 @@ import com.example.aesparticipantes.Entities.Categoria;
 import com.example.aesparticipantes.Entities.Clasificado;
 import com.example.aesparticipantes.Entities.Competicion;
 import com.example.aesparticipantes.Entities.Participante;
-import com.example.aesparticipantes.repositories.ClasificadoRepository;
-import com.example.aesparticipantes.repositories.CompeticionRepository;
+import com.example.aesparticipantes.Repositories.ClasificadoRepository;
+import com.example.aesparticipantes.Repositories.CompeticionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +33,7 @@ public class PodiosController {
 
         Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
 
-        Map<Categoria, List<ClasificadoRepository.Medalla>> podios = clasificadoRepository.getMedallas(competicion.getNombre()).stream().map(m ->
+        Map<Categoria, List<ClasificadoRepository.Medalla>> podios = clasificadoRepository.getMedallas(competicion).stream().map(m ->
 
                ClasificadoRepository.Medalla.builder()
                 .categoria((Categoria) m[0])

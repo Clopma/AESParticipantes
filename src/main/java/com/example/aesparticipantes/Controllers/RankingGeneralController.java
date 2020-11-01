@@ -2,9 +2,10 @@ package com.example.aesparticipantes.Controllers;
 
 import com.example.aesparticipantes.Entities.Categoria;
 import com.example.aesparticipantes.Entities.Competicion;
+import com.example.aesparticipantes.Entities.Evento;
 import com.example.aesparticipantes.Entities.Tiempo;
 import com.example.aesparticipantes.Models.Posicion;
-import com.example.aesparticipantes.repositories.*;
+import com.example.aesparticipantes.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
@@ -21,8 +22,10 @@ public class RankingGeneralController {
     TiempoRepository tiempoRepository;
 
     @Autowired
-    CategoriaRepository categoriaRepository;
+    EventoRepository eventoRepository;
 
+    @Autowired
+    CategoriaRepository categoriaRepository;
     @Autowired
     CompeticionRepository competicionRepository;
 
@@ -38,15 +41,13 @@ public class RankingGeneralController {
     @RequestMapping("/ranking/{nombreCompeticion}/{nombreCategoria}")
     public String getVistaCategoria(Model model, @PathVariable("nombreCompeticion") String nombreCompeticion, @PathVariable("nombreCategoria") String nombreCategoria){
 
-        Categoria categoria = self.getCategoria(nombreCategoria);
-        Competicion competicion = self.getCompeticion(nombreCompeticion);
+        Evento evento = self.getEvento(nombreCategoria, nombreCompeticion);
 
-        List<Posicion> posiciones = self.getRankingGlobal(categoria, competicion, descalificacionRepository, clasificadoRepository);
+        List<Posicion> posiciones = self.getRankingGlobal(evento, descalificacionRepository, clasificadoRepository);
 
-        model.addAttribute("competicion", competicion);
-        model.addAttribute("categoria", categoria);
+        model.addAttribute("evento", evento);
         model.addAttribute("posiciones", posiciones);
-        model.addAttribute("largoClasificacion", getLargoClasificacion(posiciones, categoria.getCortePlayOffs()));
+        model.addAttribute("largoClasificacion", getLargoClasificacion(posiciones, evento.getCortePlayOffs()));
         model.addAttribute("categorias", self.getCategoriasEnOrden());
 
         return "categoria";
@@ -57,21 +58,20 @@ public class RankingGeneralController {
     @RequestMapping("/ranking/{nombreCompeticion}/{nombreCategoria}/jornada/{numeroJornada}")
     public String getVistaCategoriaJornada(Model model, @PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("nombreCompeticion") String nombreCompeticion, @PathVariable("numeroJornada") int numeroJornada){
 
-        Categoria categoria = self.getCategoria(nombreCategoria);
-        Competicion competicion = self.getCompeticion(nombreCompeticion);
+        Evento evento = self.getEvento(nombreCategoria, nombreCompeticion);
 
-        model.addAttribute("categoria", categoria);
+        model.addAttribute("evento", evento);
         model.addAttribute("categorias", self.getCategoriasEnOrden());
-        model.addAttribute("tiempos", self.getRankingJornada(categoria, competicion, numeroJornada));
-        model.addAttribute("numJornadas", competicion.getNumJornadas());
+        model.addAttribute("tiempos", self.getRankingJornada(evento, numeroJornada));
+        model.addAttribute("numJornadas", evento.getCompeticion().getNumJornadas());
 
         return "jornada";
     }
 
 
-    @Cacheable(value = "categorias")
-    public Categoria getCategoria(String nombreCategoria){
-        return  categoriaRepository.findByNombre(nombreCategoria);
+    @Cacheable(value = "eventos")
+    public Evento getEvento(String nombreCategoria, String nombreCompeticion){
+        return  eventoRepository.findByCategoriaNombreAndCompeticionNombre(nombreCategoria, nombreCompeticion);
     }
 
     @Cacheable(value = "competiciones")
@@ -84,15 +84,15 @@ public class RankingGeneralController {
         return categoriaRepository.findAllByOrderByOrden(); //TODO: solo las de la competicion en concreto
     }
 
-    @Cacheable(value = "rankingsGlobales", key = "#categoria.nombre + '-' + #competicion.nombre")
-    public List<Posicion> getRankingGlobal(Categoria categoria, Competicion competicion, DescalificacionRepository descalificacionRepository, ClasificadoRepository clasificadoRepository) {
-        return categoria.getRankingGlobal(competicion, descalificacionRepository, clasificadoRepository);
+    @Cacheable(value = "rankingsGlobales", key = "#evento.id")
+    public List<Posicion> getRankingGlobal(Evento evento, DescalificacionRepository descalificacionRepository, ClasificadoRepository clasificadoRepository) {
+        return evento.getRankingGlobal(descalificacionRepository, clasificadoRepository);
     }
 
 
-    @Cacheable(value = "rankingsJornada", key = "#categoria.nombre + '-' + #competicion.nombre + '-' + #numeroJornada")
-    public List<Tiempo> getRankingJornada(Categoria categoria, Competicion competicion, int numeroJornada){
-        return categoria.getRankingJornada(competicion, numeroJornada);
+    @Cacheable(value = "rankingsJornada", key = "#evento.id+ '-' + #numeroJornada")
+    public List<Tiempo> getRankingJornada(Evento evento, int numeroJornada){
+        return evento.getRankingJornada(numeroJornada);
     }
 
     private int getLargoClasificacion(List<Posicion> puntuaciones, int largoPredeterminado) {

@@ -1,7 +1,7 @@
 package com.example.aesparticipantes.Controllers;
 
 import com.example.aesparticipantes.Entities.Competicion;
-import com.example.aesparticipantes.repositories.CompeticionRepository;
+import com.example.aesparticipantes.Repositories.CompeticionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

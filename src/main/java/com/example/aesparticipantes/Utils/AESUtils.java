@@ -1,30 +1,20 @@
 package com.example.aesparticipantes.Utils;
 
 import com.example.aesparticipantes.Entities.Clasificado;
-import com.example.aesparticipantes.Entities.Participante;
 import com.example.aesparticipantes.Models.Posicion;
-import com.example.aesparticipantes.repositories.ClasificadoRepository;
+import com.example.aesparticipantes.Repositories.ClasificadoRepository;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class AESUtils {
-
-
-    public static final String COOKIE_TOKEN_TEMPORAL = "TOTE";
-    public static final String COOKIE_NOMBRE_PARTICIPANTE = "NOPA";
-    public static final String COOKIE_WCA_ID = "WCID";
-    public static final String COOKIE_NOMBRE_WCA = "WCNO";
-    public static final String COOKIE_TIPO_USUARIO = "TIUS";
-
-
 
     public static final String MENSAJE_ERROR = "Ha habido un error con la autenticación WCA, por favor, contacta un administrador y enséñale este mensaje: ";
 
@@ -33,7 +23,8 @@ public class AESUtils {
     public enum TiposUsuarios {
         NV, // NO VINCULADO
         NC, // NO CONFIRMADO
-        V; // VINCULADO
+        C, // VINCULADO
+        N // NINGUNO
     }
 
     public static String DNF = "DNF";
@@ -118,28 +109,35 @@ public class AESUtils {
         return null;
     }
 
-    public static TiposUsuarios getTipoUsuario(Participante participante) {
-
-        if (participante == null) {
-            return TiposUsuarios.NV;
-        } else {
-           return participante.isConfirmado() ? TiposUsuarios.V : TiposUsuarios.NC;
-        }
-    }
-
-    public static String encodeURL(String str) {
-
-        try {
-            return URLEncoder.encode(str, StandardCharsets.UTF_8.toString()).replaceAll("\\+", "%20");
-        } catch (UnsupportedEncodingException e) {
-            //Nunca ocurrirá
-            e.printStackTrace();
-            return "Imposible";
-        }
-    }
-
     public static void setMedallas(List<Posicion> posiciones, ClasificadoRepository clasificadoRepository) {
         posiciones.stream().filter(Posicion::isClasificado).collect(Collectors.toList()).forEach(p -> p.setMedalla(clasificadoRepository));
+    }
+
+
+    public static String getHash(String str){
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedhash = digest.digest(
+                    str.getBytes(StandardCharsets.UTF_8));
+            return bytesToHex(encodedhash);
+        } catch (NoSuchAlgorithmException e) {
+            return "error"; //Imposible
+        }
+
+
+    }
+
+    private static String bytesToHex(byte[] hash) {
+        StringBuilder hexString = new StringBuilder(2 * hash.length);
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
     }
 
 

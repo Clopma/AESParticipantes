@@ -78,7 +78,7 @@
 <div class="vertical-flex-wrapper">
 
 
-    <div id="login" class="whitePanel top mensajeSuperior">
+    <div th:if="${'N'.equals(tipoUsuario)}" class="whitePanel top mensajeSuperior">
 
         <div class="bouncyContainer backward" style="width: 120px; height: 120px">
             <a class="bouncyContainer">
@@ -89,42 +89,22 @@
     </div>
 
 
-    <div id="V"  class="whitePanel top mensajeSuperior">
-        <h3>Bienvenido, <a id="nombreV" style="font-weight: bold;"> desconocido (reemplazado) </a>.</h3>
+    <div th:if="${'C'.equals(tipoUsuario)}" class="whitePanel top mensajeSuperior">
+        <h3>Bienvenido, <a th:href="@{|/participante/${nombreParticipante}|}" th:text="${nombreParticipante}" style="font-weight: bold;"> desconocido (reemplazado) </a>.</h3>
     </div>
 
 
-    <div id="NV"  class="whitePanel top mensajeSuperior">
+    <div th:if="${'NV'.equals(tipoUsuario)}"  class="whitePanel top mensajeSuperior">
 
-        <h3>Bienvenido, <span style="font-weight: bold" id="nombreNV"> desconocido (reemplazado) </span>, no conocemos cuál es tu perfil. Si has participado en
+        <h3>Bienvenido, <span style="font-weight: bold" th:text="${nombreWca}"> desconocido (reemplazado) </span>, no conocemos cuál es tu perfil. Si has participado en
             alguna competición en esta web anteriormente, por favor, busca tu perfil y vincula tu cuenta, así estarás
             listo para inscribirte a competiciones.</h3>
     </div>
 
-    <div id="NC"  class="whitePanel top mensajeSuperior">
-        <h3>Bienvenido, <span style="font-weight: bold;" id="nombreNC"> desconocido (reemplazado) </span>, creemos que tu perfil puede ser
-            <a id="linkNC">este</a>. Si es correcto, puedes vincularlo y estarás listo para inscribirte a competiciones.</h3>
+    <div th:if="${'NC'.equals(tipoUsuario)}"  class="whitePanel top mensajeSuperior">
+        <h3>Bienvenido, <span style="font-weight: bold;"  th:text="${nombreWca}"> desconocido (reemplazado) </span>, creemos que tu perfil puede ser
+            <a th:href="@{|/participante/${nombreParticipante}|}">este</a>. Si es correcto, puedes vincularlo y estarás listo para inscribirte a competiciones.</h3>
     </div>
-
-    <script>
-        var tipoUsuario = getCookie("TIUS");
-        if(tipoUsuario){
-            document.getElementById(tipoUsuario).style.display = 'flex';
-            if(tipoUsuario === 'V'){
-                document.getElementById('nombreV').innerText = decodeURIComponent(getCookie('NOPA'));
-                document.getElementById('nombreV').href = 'participante/' + getCookie('NOPA');
-            } else if (tipoUsuario === 'NV'){
-                document.getElementById('nombreNV').innerText = decodeURIComponent(getCookie('WCNO'));
-            } else if (tipoUsuario === 'NC') {
-                document.getElementById('nombreNC').innerText = decodeURIComponent(getCookie('NOPA'));
-                document.getElementById('linkNC').href = 'participante/' + getCookie('NOPA');
-            }
-        } else {
-            document.getElementById('login').style.display = 'flex';
-        }
-
-
-    </script>
 
     <div class="login-content">
 

@@ -1,14 +1,20 @@
 package com.example.aesparticipantes.Utils;
 
 import com.example.aesparticipantes.Entities.Participante;
+import com.example.aesparticipantes.Repositories.ParticipanteRepository;
+import com.example.aesparticipantes.Seguridad.AuthProvider;
+import com.example.aesparticipantes.Seguridad.UserData;
 import com.example.aesparticipantes.Seguridad.WCAGetResponse;
 import com.example.aesparticipantes.Seguridad.WCALoginResponse;
-import com.example.aesparticipantes.repositories.ParticipanteRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.reactive.ClientHttpRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -16,13 +22,17 @@ import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
 @Component
 public class AuthUtils {
 
     private static String clientSecret;
+
 
     @Value("${wca.clientSecret}")
     public void setClientSecret(String clientSecret) {
@@ -59,10 +69,6 @@ public class AuthUtils {
                 .retrieve().bodyToMono(String.class).block();
 
         WCALoginResponse wcaLoginResponse = new ObjectMapper().readValue(response, WCALoginResponse.class);
-        Cookie tokenCookie = new Cookie(AESUtils.COOKIE_TOKEN_TEMPORAL, wcaLoginResponse.getAccess_token());
-        tokenCookie.setMaxAge(wcaLoginResponse.getExpires_in());
-        httpServletResponse.addCookie(tokenCookie);
-
         return wcaLoginResponse;
     }
 
@@ -78,28 +84,16 @@ public class AuthUtils {
 
     }
 
-    public static void refreshCookies(HttpServletResponse httpServletResponse, WCAGetResponse wcaGetResponse, Participante participante) {
-        AESUtils.TiposUsuarios tipoUsuario = AESUtils.getTipoUsuario(participante);
 
+    public static void crearSesion(Participante participante, WCALoginResponse wcaLoginResponse, WCAGetResponse wcaGetResponse, HttpServletRequest request, AuthProvider authManager) {
 
-        httpServletResponse.addCookie(AuthUtils.createCookie(AESUtils.COOKIE_TIPO_USUARIO, tipoUsuario.name()));
+        UserData authReq = new UserData(participante.getNombre(), wcaGetResponse.getMe().getName(), wcaLoginResponse.getAccess_token(), DateTime.now().plusSeconds(wcaLoginResponse.getExpires_in()));
+        Authentication auth = authManager.authenticate(authReq);
+        SecurityContext sc = SecurityContextHolder.getContext();
+        sc.setAuthentication(auth);
+        HttpSession session = request.getSession(true);
+        session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
 
-        if(tipoUsuario.equals(AESUtils.TiposUsuarios.V)){
-            Cookie cookieNOPA = AuthUtils.createCookie(AESUtils.COOKIE_NOMBRE_PARTICIPANTE, AESUtils.encodeURL(participante.getNombre()));
-            httpServletResponse.addCookie(cookieNOPA);
-        } else if(tipoUsuario.equals(AESUtils.TiposUsuarios.NC)){
-            httpServletResponse.addCookie(AuthUtils.createCookie(AESUtils.COOKIE_WCA_ID, AESUtils.encodeURL(wcaGetResponse.getMe().getName())));
-            httpServletResponse.addCookie(AuthUtils.createCookie(AESUtils.COOKIE_NOMBRE_PARTICIPANTE, AESUtils.encodeURL(participante.getNombre())));
-        } else if(tipoUsuario.equals(AESUtils.TiposUsuarios.NV)) {
-            httpServletResponse.addCookie(AuthUtils.createCookie(AESUtils.COOKIE_WCA_ID, AESUtils.encodeURL(wcaGetResponse.getMe().getWca_id())));
-            httpServletResponse.addCookie(AuthUtils.createCookie(AESUtils.COOKIE_NOMBRE_WCA, AESUtils.encodeURL(wcaGetResponse.getMe().getName())));
-        }
-    }
-
-    public static Cookie createCookie(String nombre, String valor){
-        Cookie cookie = new Cookie(nombre, valor);
-        cookie.setPath("/");
-        return cookie;
     }
 
 }

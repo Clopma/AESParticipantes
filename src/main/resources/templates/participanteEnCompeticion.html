@@ -41,7 +41,7 @@
             <a th:href="${'/competicion/'+ competicion}"><span th:text="${competicion}"/></a>
         </h1>
     </div>
-    <div th:id="${posicion.getCategoria().getNombre()}" th:each="posicion, iStat : ${resultado}"
+    <div th:id="${posicion.getEvento().getCategoria().getNombre()}" th:each="posicion, iStat : ${resultado}"
          class="whitePanel"
          style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; position: relative;">
 
@@ -52,24 +52,25 @@
         </div>
         <div style="display: flex; align-items: center">
 
-            <h1 th:text="${posicion.getCategoria().getNombre()}"></h1>
+            <h1 th:text="${posicion.getEvento().getCategoria().getNombre()}"></h1>
             <div class="bouncyContainer podio" style="width: 75px; height: 75px">
-                <a th:href="'/ranking/' + ${nombreCompeticion} + '/' +${posicion.getCategoria().getNombre()}+'#'+${nombreParticipante}"
+                <a th:href="'/ranking/' + ${nombreCompeticion} + '/' +${posicion.getEvento().getCategoria().getNombre()}+'#'+${nombreParticipante}"
                    class="bouncyContainer">
                     <img class="bouncyButton podio" src="/img/podiologo.png"/>
                 </a>
             </div>
-            <a th:if="${posicion.isClasificado()}" href="#" onclick="loadModal(this)" th:data-nombreCategoria="${posicion.getCategoria().getNombre()}" data-toggle="modal" data-target="#playOffsModal">
+            <a th:if="${posicion.isClasificado()}" href="#" onclick="loadModal(this)" th:data-nombreCategoria="${posicion.getEvento().getCategoria().getNombre()}" data-toggle="modal" data-target="#playOffsModal">
                 <h3 style="margin-left: 30px"> Clasificado a playoffs </h3>
-                <div th:data-nombreCategoria="${posicion.getCategoria().getNombre()}" style="width: 75px; height: 75px">
-                    <a onclick="loadModal(this)" th:data-nombreCategoria="${posicion.getCategoria().getNombre()}" data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
-                        <img class="bouncyButton" th:if="${!'OTRO'.equals(posicion.getMedalla())}" th:src="'/img/'+${posicion.getMedalla()+'.png'}"/>
-                        <img class="bouncyButton podio" th:if="${'OTRO'.equals(posicion.getMedalla())}"  src="/img/bracket.png"/>
+                <div th:data-nombreCategoria="${posicion.getEvento().getCategoria().getNombre()}" style="width: 75px; height: 75px">
+                    <a onclick="loadModal(this)" th:data-nombreCategoria="${posicion.getEvento().getCategoria().getNombre()}" data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
+                        <img class="bouncyButton" th:if="${posicion.getMedalla() != null}" th:src="'/img/'+${posicion.getMedalla()+'.png'}"/>
+                        <img class="bouncyButton podio" th:if="${posicion.getMedalla() == null}"  src="/img/bracket.png"/>
                     </a>
                 </div>
             </a>
+
         </div>
-        <table th:data-numTiempos="${posicion.getCategoria().getNumTiempos()}" th:data-nombreCat="${posicion.getCategoria().getNombre()}"
+        <table th:data-numTiempos="${posicion.getEvento().getCategoria().getNumTiempos()}" th:data-nombreCat="${posicion.getEvento().getCategoria().getNombre()}"
                th:id="'dataTable'+ ${iStat.index}" class="table centerCols">
             <thead>
             <tr>
@@ -91,7 +92,7 @@
             <tr th:each="jornada: ${posicion.getTiempos()}">
                 <td style="display: flex">
                     <div class="bouncyContainer podio" style="width: 50px; height: 50px; min-width: 50px;">
-                        <a  th:href="'/ranking/' + ${nombreCompeticion} + '/' +${posicion.getCategoria().getNombre()}+'/jornada/' + ${jornada.getJornada()} + '#'+${nombreParticipante}"
+                        <a  th:href="'/ranking/' + ${nombreCompeticion} + '/' +${posicion.getEvento().getCategoria().getNombre()}+'/jornada/' + ${jornada.getJornada()} + '#'+${nombreParticipante}"
                            class="bouncyContainer">
                             <img class="bouncyButton podio" src="/img/podiologo.png"/>
                         </a>

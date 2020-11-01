@@ -20,8 +20,6 @@ server:
         key-password: th1s1smyksp4ss
     port: 8443 #80 forwards to 8080 and 8080 redirects to 433, which forwards to 8443
 
-aes:
-    enable-redirect: true
 wca:
     callbackUrl: https://nacional2020.carloslopezmari.com/loginWCA
     callbackUrlSoloValidar: https://nacional2020.carloslopezmari.com/validar

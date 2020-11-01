@@ -1,10 +1,13 @@
 package com.example.aesparticipantes.Controllers;
 
 import com.example.aesparticipantes.Entities.Participante;
+import com.example.aesparticipantes.Repositories.ParticipanteRepository;
+import com.example.aesparticipantes.Seguridad.AuthProvider;
+import com.example.aesparticipantes.Seguridad.UserData;
 import com.example.aesparticipantes.Seguridad.WCAGetResponse;
+import com.example.aesparticipantes.Seguridad.WCALoginResponse;
 import com.example.aesparticipantes.Utils.AESUtils;
 import com.example.aesparticipantes.Utils.AuthUtils;
-import com.example.aesparticipantes.repositories.ParticipanteRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
@@ -13,12 +16,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 
 
 @Controller
@@ -36,22 +40,25 @@ public class VincularController {
     @Autowired
     VincularController self;
 
+    @Autowired
+    AuthProvider authManager;
+
 
     @RequestMapping("/vincular/{nombreParticipante}")
-    public String vincularController(@CookieValue(value = AESUtils.COOKIE_TOKEN_TEMPORAL, required = false) String token,
-                                     @PathVariable("nombreParticipante") String nombreParticipante,
-                                     HttpServletResponse httpServletResponse, Model model) {
+    public String vincularController(@PathVariable("nombreParticipante") String nombreParticipante,
+                                     HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest, Model model, Principal principal) {
 
         Participante participante = participanteRepository.findByNombre(nombreParticipante);
 
-        if (token == null) {
-            model.addAttribute("mensaje", "Vinculación correcta, redirigiendo");
-            model.addAttribute("redirect", "https://www.worldcubeassociation.org/oauth/authorize?client_id=" + clientId +
-                    "&amp;redirect_uri=" + callbackUrlSoloValidar + "?participante=" + Base64.encode(nombreParticipante.getBytes()) + "&response_type=code&amp;scope=public");
-
-            return "mensaje";
+        if (principal instanceof UserData && ((UserData) principal).getCredentials() != null ) {
+            return self.vincular(participante, model, WCALoginResponse.builder().access_token(((UserData) principal).getCredentials()).build(), httpServletResponse, httpServletRequest);
         } else {
-            return self.vincular(participante, model, token, httpServletResponse);
+        model.addAttribute("mensaje", "Vinculación correcta, redirigiendo");
+        model.addAttribute("redirect", "https://www.worldcubeassociation.org/oauth/authorize?client_id=" + clientId +
+                "&amp;redirect_uri=" + callbackUrlSoloValidar + "?participante=" + Base64.encode(nombreParticipante.getBytes()) + "&response_type=code&amp;scope=public");
+
+        return "mensaje";
+
         }
 
 
@@ -61,19 +68,19 @@ public class VincularController {
     //TODO: Handle exceptions
     @RequestMapping("/validar")
     public String vincularController(@RequestParam("participante") String nombreParticipanteEncoded,
-                                     @RequestParam("code") String code, Model model, HttpServletResponse httpServletResponse)
+                                     @RequestParam("code") String code, Model model, HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest)
             throws Base64DecodingException, JsonProcessingException {
 
         String callbackUrl = callbackUrlSoloValidar + "?participante=" + nombreParticipanteEncoded;
         String nombreParticipante = new String(Base64.decode(nombreParticipanteEncoded.getBytes()));
-        return self.vincular(participanteRepository.findByNombre(nombreParticipante), model, AuthUtils.getWCAToken(code, callbackUrl, httpServletResponse).getAccess_token(), httpServletResponse);
+        return self.vincular(participanteRepository.findByNombre(nombreParticipante), model, AuthUtils.getWCAToken(code, callbackUrl, httpServletResponse), httpServletResponse, httpServletRequest);
 
 
     }
 
     //Solo llamar desde bean
     @CacheEvict(value = "participantes", key = "#participante.nombre")
-    public String vincular(Participante participante, Model model, String token, HttpServletResponse httpServletResponse) {
+    public String vincular(Participante participante, Model model, WCALoginResponse wcaLoginResponse, HttpServletResponse httpServletResponse, HttpServletRequest request) {
 
         if (participante.isConfirmado()) {
             // Alguien ha accedido por un medio que no es el botón
@@ -81,7 +88,7 @@ public class VincularController {
             return "mensaje";
         } else {
             try {
-                WCAGetResponse perfilWCA = AuthUtils.getWCAUser(token, httpServletResponse);
+                WCAGetResponse perfilWCA = AuthUtils.getWCAUser(wcaLoginResponse.getAccess_token(), httpServletResponse);
                 Participante participantePotencial = participanteRepository.findByWcaId(perfilWCA.getMe().getWca_id());
 
                 if(participantePotencial == null || participantePotencial.equals(participante)){
@@ -96,9 +103,9 @@ public class VincularController {
                     participante.setUrlImagenPerfil(perfilWCA.getMe().getAvatar().getUrl());
                     participante.setUrlImagenPerfilIcono(perfilWCA.getMe().getAvatar().getThumb_url());
                     participante.setConfirmado(true);
-
                     participanteRepository.save(participante);
-                    AuthUtils.refreshCookies(httpServletResponse, perfilWCA, participante);
+
+                    AuthUtils.crearSesion(participante, wcaLoginResponse, perfilWCA, request, authManager);
 
                     model.addAttribute("mensaje", "Vinculación correcta, redirigiendo");
                     model.addAttribute("redirect", "/participante/" + participante.getNombre());

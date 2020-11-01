@@ -17,19 +17,15 @@ public class Clasificado {
 
     @Id
     @ManyToOne
-    private Competicion competicion;
-
-    @Id
-    @ManyToOne
-    private Categoria categoria;
-
-    @Id
-    @Column(length = 25)
-    private String ronda;
+    private Evento evento;
 
     @Id
     @ManyToOne
     private Participante participante;
+
+    @Id
+    @Column(length = 25)
+    private String ronda;
 
     @Transient
     private int posicion;
@@ -50,7 +46,6 @@ public class Clasificado {
         GANADOR,
         MEDALLA_ORO,
         MEDALLA_PLATA,
-        MEDALLA_BRONCE,
-        OTRO
+        MEDALLA_BRONCE
     }
 }

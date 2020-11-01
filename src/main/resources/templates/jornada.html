@@ -1,6 +1,6 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title th:text="${categoria.nombre} + ' J' + ${numeroJornada} + ' en ' + ${nombreCompeticion}">Nacional Online 2020</title>
+    <title th:text="${evento.getCategoria().nombre} + ' J' + ${numeroJornada} + ' en ' + ${nombreCompeticion}">Nacional Online 2020</title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet"/>
@@ -14,7 +14,7 @@
 
         var tabla = $('#rankingJornada');
         if (tabla) {
-            initializeForParticipante(tabla, [[${categoria.numTiempos}]], [[${categoria.nombre}]]);
+            initializeForParticipante(tabla, [[${evento.getCategoria().numTiempos}]], [[${evento.getCategoria().nombre}]]);
         }
         scrollAFila();
     });
@@ -46,17 +46,17 @@
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 15px;">
         <div style="display: flex; align-items: center; justify-content: center;">
-            <div class="bouncyContainer backward" th:classappend="${categoria.orden <=1  ? 'quieto':' '}">
-                <a th:data-desiredCategory="${categoria.orden > 1 ? categorias.get(categoria.orden -1 - 1).nombre : ''}"
+            <div class="bouncyContainer backward" th:classappend="${evento.getCategoria().orden <=1  ? 'quieto':' '}">
+                <a th:data-desiredCategory="${evento.getCategoria().orden > 1 ? categorias.get(evento.getCategoria().orden -1 - 1).nombre : ''}"
                    th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
-                    <img class="bouncyButton backward" th:classappend="${categoria.orden <=1  ? 'quieto':' '}" src="/img/backbutton.png"/>
+                    <img class="bouncyButton backward" th:classappend="${evento.getCategoria().orden <=1  ? 'quieto':' '}" src="/img/backbutton.png"/>
                 </a>
             </div>
             <h1><span th:text="${nombreCategoria}">ATRIBUTO_CATEGORIA_NO_ENCONTRADO</span></h1>
-            <div class="bouncyContainer forward" th:classappend="${categoria.orden >= categorias.size()  ? 'quieto':' '}">
-                <a th:data-desiredCategory="${categoria.orden < categorias.size() ? categorias.get(categoria.orden -1 + 1).nombre : ''}"
+            <div class="bouncyContainer forward" th:classappend="${evento.getCategoria().orden >= categorias.size()  ? 'quieto':' '}">
+                <a th:data-desiredCategory="${evento.getCategoria().orden < categorias.size() ? categorias.get(evento.getCategoria().orden -1 + 1).nombre : ''}"
                    th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
-                    <img class="bouncyButton forward"  th:classappend="${categoria.orden >= categorias.size()  ? 'quieto':' '}" src="/img/forwardbutton.png"/>
+                    <img class="bouncyButton forward"  th:classappend="${evento.getCategoria().orden >= categorias.size()  ? 'quieto':' '}" src="/img/forwardbutton.png"/>
                 </a>
             </div>
         </div>

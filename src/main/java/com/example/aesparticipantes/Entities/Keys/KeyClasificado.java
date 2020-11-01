@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 public class KeyClasificado implements Serializable {
 
-    private String categoria;
-    private String ronda;
+    private KeyEvento evento;
     private String participante;
-    private String competicion;
+    private String ronda;
+
 
 
 }

@@ -4,20 +4,20 @@
 </head>
 <div style="height: 100%; display: flex; align-items: center; justify-content: center">
 <div class="bracket">
-    <section class="round quarterfinals" th:if="${categoria.getCortePlayOffs() >= 8}">
+    <section class="round quarterfinals" th:if="${evento.getCortePlayOffs() >= 8}">
         <div class="winners">
             <div class="matchups">
                 <div class="matchup">
                     <div class="participants">
                         <div th:with="c=${listaCuartos[0]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                             <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
                             <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
                         </div>
 
                         <div th:with="c=${listaCuartos[1]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
                             <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
@@ -27,14 +27,14 @@
                 <div class="matchup">
                     <div class="participants">
                         <div th:with="c=${listaCuartos[2]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
                             <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
                         </div>
 
                         <div th:with="c=${listaCuartos[3]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
                             <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
@@ -52,14 +52,14 @@
                 <div class="matchup">
                     <div class="participants">
                         <div th:with="c=${listaCuartos[4]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
                             <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
                         </div>
 
                         <div th:with="c=${listaCuartos[5]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
                             <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
@@ -69,14 +69,14 @@
                 <div class="matchup">
                     <div class="participants">
                         <div th:with="c=${listaCuartos[6]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
                             <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
                         </div>
 
                         <div th:with="c=${listaCuartos[7]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
                             <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
@@ -90,7 +90,7 @@
             </div>
         </div>
     </section>
-    <section class="round semifinals" th:if="${categoria.getCortePlayOffs() >= 4}">
+    <section class="round semifinals" th:if="${evento.getCortePlayOffs() >= 4}">
         <div class="winners">
             <div class="matchups">
                 <div class="matchup">
@@ -98,7 +98,7 @@
                         <div class="participants">
                             <div th:with="c=${listaSemis[0]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
                                 <img th:if="${'MEDALLA_BRONCE'.equals(c.getMedalla())}" th:src="'/img/MEDALLA_BRONCE.png'" style="width: 30px" />
-                                <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                                <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                                     <span th:text="${c.getParticipante().getNombre()}" />
                                 </a>
                                 <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
@@ -106,7 +106,7 @@
 
                             <div th:with="c=${listaSemis[1]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
                                 <img th:if="${'MEDALLA_BRONCE'.equals(c.getMedalla())}" th:src="'/img/MEDALLA_BRONCE.png'" style="width: 30px" />
-                                <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                                <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                                     <span th:text="${c.getParticipante().getNombre()}" />
                                 </a>
                                 <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
@@ -118,7 +118,7 @@
                     <div class="participants">
                         <div th:with="c=${listaSemis[2]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
                             <img th:if="${'MEDALLA_BRONCE'.equals(c.getMedalla())}" th:src="'/img/MEDALLA_BRONCE.png'" style="width: 30px" />
-                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
                             <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
@@ -126,7 +126,7 @@
 
                         <div th:with="c=${listaSemis[3]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
                             <img th:if="${'MEDALLA_BRONCE'.equals(c.getMedalla())}" th:src="'/img/MEDALLA_BRONCE.png'" style="width: 30px" />
-                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
                             <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
@@ -140,22 +140,22 @@
             </div>
         </div>
     </section>
-    <section class="round finals" th:if="${categoria.getCortePlayOffs() >= 2}">
+    <section class="round finals" th:if="${evento.getCortePlayOffs() >= 2}">
         <div class="winners">
             <div class="matchups">
                 <div class="matchup">
                     <div class="participants">
                         <div th:with="c=${listaFinal[0]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <img th:if="${!c.getMedalla().equals('OTRO')}" th:src="'/img/'+${c.getMedalla()}+'.png'" style="width: 30px" />
-                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                            <img th:if="${c.getMedalla() != null}" th:src="'/img/'+${c.getMedalla()}+'.png'" style="width: 30px" />
+                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
                             <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>
                         </div>
 
                         <div th:with="c=${listaFinal[1]}" th:class="${c != null and c.isVictoria() ? 'participant winner': 'participant'}">
-                            <img th:if="${!c.getMedalla().equals('OTRO')}" th:src="'/img/'+${c.getMedalla()}+'.png'" style="width: 30px" />
-                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${categoria.nombre}">
+                            <img th:if="${c.getMedalla() != null}" th:src="'/img/'+${c.getMedalla()}+'.png'" style="width: 30px" />
+                            <a th:if="${c != null}"  th:href="'/participante/'+${c.getParticipante().getNombre()}+'#'+${evento.getCategoria().nombre}">
                                 <span th:text="${c.getParticipante().getNombre()}" />
                             </a>
                             <span style="margin-left: 0" th:text="${(c.getPuntuacion() != null ? ' (' + c.getPuntuacion() +')' : '')}">nombre</span>

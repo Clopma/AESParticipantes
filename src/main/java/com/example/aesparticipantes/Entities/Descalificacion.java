@@ -2,6 +2,7 @@ package com.example.aesparticipantes.Entities;
 
 import com.example.aesparticipantes.Entities.Keys.KeyDescalificacion;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -9,19 +10,17 @@ import javax.persistence.*;
 @IdClass(KeyDescalificacion.class)
 @Entity
 @Getter
+@Setter
 public class Descalificacion {
 
     @Id
     @ManyToOne
-    private Categoria categoria;
+    private Evento evento;
 
     @Id
     @ManyToOne
     private Participante participante;
 
-    @Id
-    @ManyToOne
-    private Competicion competicion;
 
 
 }

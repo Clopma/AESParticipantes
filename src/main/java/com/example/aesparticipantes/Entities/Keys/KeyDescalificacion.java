@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class KeyDescalificacion implements Serializable {
 
-    private String categoria;
+    private KeyEvento evento;
     private String participante;
-    private String competicion;
+
 
 
 }

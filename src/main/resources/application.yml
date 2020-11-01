@@ -24,7 +24,6 @@ spring:
 #             token-uri: https://www.worldcubeassociation.org/api/v0/me
 
 
-
 wca:
   callbackUrl: http://localhost:8080/loginWCA
   callbackUrlSoloValidar: http://localhost:8080/validar
@@ -35,3 +34,8 @@ wca:
 #    properties:
 #      hibernate:
 #        dialect:  org.hibernate.dialect.MySQLDialect
+
+
+server:
+  error:
+    path: /error #TODO

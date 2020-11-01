@@ -1,12 +1,12 @@
 package com.example.aesparticipantes.Controllers;
 
-import com.example.aesparticipantes.Entities.*;
+import com.example.aesparticipantes.Entities.Clasificado;
+import com.example.aesparticipantes.Entities.Descalificacion;
+import com.example.aesparticipantes.Entities.Evento;
+import com.example.aesparticipantes.Entities.Participante;
 import com.example.aesparticipantes.Models.Posicion;
+import com.example.aesparticipantes.Repositories.*;
 import com.example.aesparticipantes.Utils.AESUtils;
-import com.example.aesparticipantes.repositories.CategoriaRepository;
-import com.example.aesparticipantes.repositories.ClasificadoRepository;
-import com.example.aesparticipantes.repositories.CompeticionRepository;
-import com.example.aesparticipantes.repositories.DescalificacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +30,9 @@ public class CalendarioController {
     CategoriaRepository categoriaRepository;
 
     @Autowired
+    EventoRepository eventoRepository;
+
+    @Autowired
     CompeticionRepository competicionRepository;
 
     @Autowired
@@ -47,30 +50,30 @@ public class CalendarioController {
     @GetMapping("/calendario/playoffs/{nombreCompeticion}/{nombreCategoria}")
     public String evento(@PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("nombreCompeticion") String nombreCompeticion, Model model) {
 
-        Categoria categoria = categoriaRepository.findByNombre(nombreCategoria);
-        Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
+        Evento evento = eventoRepository.findByCategoriaNombreAndCompeticionNombre(nombreCategoria, nombreCompeticion);
 
-        List<Clasificado> cuartos = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.CUARTO.name()); //TODO: COMPETICION
-        List<Clasificado> semis = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.SEMIFINAL.name());
-        List<Clasificado> finales = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.FINAL.name());
-        List<Clasificado> ganador = clasificadoRepository.getRonda(categoria, Clasificado.NombreRonda.GANADOR.name());
+        model.addAttribute("evento", evento);
+        List<Clasificado> cuartos = clasificadoRepository.getRonda(evento, Clasificado.NombreRonda.CUARTO.name()); //TODO: COMPETICION
+        List<Clasificado> semis = clasificadoRepository.getRonda(evento, Clasificado.NombreRonda.SEMIFINAL.name());
+        List<Clasificado> finales = clasificadoRepository.getRonda(evento, Clasificado.NombreRonda.FINAL.name());
+        List<Clasificado> ganador = clasificadoRepository.getRonda(evento, Clasificado.NombreRonda.GANADOR.name());
 
         Clasificado[] cuartosClasi;
         Clasificado[] semisClasi;
 
-        model.addAttribute("categoria", categoria);
 
-        if(categoria.getCortePlayOffs() == 8){
-            cuartosClasi = iniciarBracket(rankingGeneralController.getRankingGlobal(categoria, competicion, descalificacionRepository, clasificadoRepository), descalificacionRepository.findAllByCategoriaAndCompeticion(categoria, competicion), 8, semis, cuartos);
-            semisClasi = rellenarBracket(semis, 4, categoria, finales, Arrays.asList(cuartosClasi));
+        if(evento.getCortePlayOffs() == 8){
+            cuartosClasi = iniciarBracket(rankingGeneralController.getRankingGlobal(evento, descalificacionRepository, clasificadoRepository), descalificacionRepository.findAllByEvento(evento), 8, semis, cuartos);
+            semisClasi = rellenarBracket(semis, 4, evento, finales, Arrays.asList(cuartosClasi));
             model.addAttribute("listaCuartos", cuartosClasi);
             model.addAttribute("listaSemis", semisClasi);
-            model.addAttribute("listaFinal", rellenarBracket(finales, 2, categoria, ganador, Arrays.asList(semisClasi)));
-        } else if (categoria.getCortePlayOffs() == 4) {
-            semisClasi = iniciarBracket(rankingGeneralController.getRankingGlobal(categoria, competicion, descalificacionRepository, clasificadoRepository), descalificacionRepository.findAllByCategoriaAndCompeticion(categoria, competicion), 4, finales, semis);
+            model.addAttribute("listaFinal", rellenarBracket(finales, 2, evento, ganador, Arrays.asList(semisClasi)));
+        } else if (evento.getCortePlayOffs() == 4) {
+            semisClasi = iniciarBracket(rankingGeneralController.getRankingGlobal(evento, descalificacionRepository, clasificadoRepository), descalificacionRepository.findAllByEvento(evento), 4, finales, semis);
             model.addAttribute("listaSemis", semisClasi);
-            model.addAttribute("listaFinal", rellenarBracket(finales, 2, categoria, ganador, Arrays.asList(semisClasi)));
+            model.addAttribute("listaFinal", rellenarBracket(finales, 2, evento, ganador, Arrays.asList(semisClasi)));
         }
+
 
         return "fragments/bracket";
     }
@@ -82,17 +85,17 @@ public class CalendarioController {
         return "fragments/eventos/"+evento;
     }
 
-    private Clasificado[] rellenarBracket(List<Clasificado> clasificados, int numClasificados, Categoria categoria, List<Clasificado> siguienteRonda, List<Clasificado> rondaAnterior) {
+    private Clasificado[] rellenarBracket(List<Clasificado> clasificados, int numClasificados, Evento evento, List<Clasificado> siguienteRonda, List<Clasificado> rondaAnterior) {
         Clasificado[] rondas = new Clasificado[numClasificados];
         for (int i = 0; i < numClasificados; i++) {
             int finalI = i;
 
             clasificados.forEach(c -> c.setPosicion((rondaAnterior.indexOf(rondaAnterior.stream().filter(a -> a.getParticipante().equals(c.getParticipante())).findFirst().get())/2)));
             rondas[i] = clasificados.stream().filter(c -> c.getPosicion() == finalI).findFirst().orElse(
-                    Clasificado.builder().participante(Participante.builder().nombre(categoria.getCortePlayOffs() == numClasificados ? puestoEnLugar(finalI, numClasificados) : "-").build()).posicion(i).build());
+                    Clasificado.builder().participante(Participante.builder().nombre(evento.getCortePlayOffs() == numClasificados ? puestoEnLugar(finalI, numClasificados) : "-").build()).posicion(i).build());
             int finalI1 = i;
             rondas[i].setVictoria(siguienteRonda.stream().anyMatch(s -> rondas[finalI1].getParticipante().equals(s.getParticipante())));
-            rondas[i].setMedalla(AESUtils.getPosicionFinal(clasificadoRepository.getRondasParticipante(rondas[i].getCompeticion(), rondas[i].getParticipante(), categoria)));
+            rondas[i].setMedalla(AESUtils.getPosicionFinal(clasificadoRepository.getRondasParticipante(rondas[i].getParticipante(), evento)));
         }
         return rondas;
     }

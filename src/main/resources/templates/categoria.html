@@ -33,23 +33,23 @@
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 15px;">
         <div style="display: flex; align-items: center; justify-content: center">
-            <div class="bouncyContainer backward" th:classappend="${categoria.orden <=1  ? 'quieto':' '}">
-                <a th:data-desiredCategory="${categoria.orden > 1 ? categorias.get(categoria.orden -1 - 1).nombre : ''}"
+            <div class="bouncyContainer backward" th:classappend="${evento.getCategoria().orden <=1  ? 'quieto':' '}">
+                <a th:data-desiredCategory="${evento.getCategoria().orden > 1 ? categorias.get(evento.getCategoria().orden -1 - 1).nombre : ''}"
                    th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
-                    <img class="bouncyButton backward" th:classappend="${categoria.orden <=1  ? 'quieto':' '}" src="/img/backbutton.png"/>
+                    <img class="bouncyButton backward" th:classappend="${evento.getCategoria().orden <=1  ? 'quieto':' '}" src="/img/backbutton.png"/>
                 </a>
             </div>
             <h1><span th:text="${nombreCategoria}">ATRIBUTO_CATEGORIA_NO_ENCONTRADO</span></h1>
-            <div class="bouncyContainer forward" th:classappend="${categoria.orden >= categorias.size() ? 'quieto':' '}">
-                <a th:data-desiredCategory="${categoria.orden < categorias.size() ? categorias.get(categoria.orden -1 + 1).nombre : ''}"
+            <div class="bouncyContainer forward" th:classappend="${evento.getCategoria().orden >= categorias.size() ? 'quieto':' '}">
+                <a th:data-desiredCategory="${evento.getCategoria().orden < categorias.size() ? categorias.get(evento.getCategoria().orden -1 + 1).nombre : ''}"
                    th:onclick="'navigateCategoryWithAnchor(this)'" class="bouncyContainer">
-                    <img class="bouncyButton forward" th:classappend="${categoria.orden >= categorias.size() ? 'quieto':' '}" src="/img/forwardbutton.png"/>
+                    <img class="bouncyButton forward" th:classappend="${evento.getCategoria().orden >= categorias.size() ? 'quieto':' '}" src="/img/forwardbutton.png"/>
                 </a>
             </div>
         </div>
         <h1 style="text-align: center">
            en <br />
-            <a th:href="${'/competicion/'+ competicion.getNombre()}"><span th:text="${competicion.getNombre()}"/></a>
+            <a th:href="${'/competicion/'+ evento.getCompeticion().getNombre()}"><span th:text="${evento.getCompeticion().getNombre()}"/></a>
         </h1>
     </div>
 
@@ -61,7 +61,7 @@
                 <th th:if="${largoClasificacion > 0}"></th>
                 <th>Posición</th>
                 <th>Nombre </th>
-                <th th:each="jornada, iStat : ${#numbers.sequence(0, competicion.getNumJornadas() - 1)}">
+                <th th:each="jornada, iStat : ${#numbers.sequence(0, evento.getCompeticion().getNumJornadas() - 1)}">
                     <div class="bouncyContainer podio"
                          style="width: 50px; height: 50px; min-width: 50px; margin: auto;">
                         <a th:href="'/ranking/' + ${nombreCompeticion} + '/' + ${nombreCategoria} + '/jornada/' + (${iStat.index}+1)"
@@ -95,7 +95,7 @@
 
                 <td><a th:text="${posicion.getParticipante().getNombre()}" th:href="'/participante/'+${posicion.getParticipante().getNombre()}+'/' +  ${nombreCompeticion} + '#'+${nombreCategoria}">nombre</a></td>
 
-                <td th:each="jornada, iStat : ${#numbers.sequence(0, competicion.getNumJornadas() - 1)}" th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''">
+                <td th:each="jornada, iStat : ${#numbers.sequence(0, evento.getCompeticion().getNumJornadas() - 1)}" th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''">
                     <div class="tooltip">
                         <a th:href="'/ranking/'+${nombreCompeticion}+'/' +  ${nombreCategoria} + '/jornada/'+(${iStat.index}+1)+'#'+${posicion.getParticipante().getNombre()}"
                         th:text="${posicion.getPuntuacionJornada(iStat.index)}">puntuaciones individuales</a>
@@ -111,8 +111,8 @@
                         <div th:if="${largoClasificacion > 0 && posicion.clasificado}"  class="bouncyContainer podio"
                              style="width: 100%; max-width: 80px; max-height: 80px; margin: auto;">
                             <a data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
-                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() != null && !'OTRO'.equals(posicion.getMedalla())}" th:src="'/img/'+${posicion.getMedalla()+'.png'}" />
-                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() == null && posicion.isClasificado()}"  src="/img/bracket.png"/>
+                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() != null}" th:src="'/img/'+${posicion.getMedalla()+'.png'}" />
+                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() == null}"  src="/img/bracket.png"/>
                             </a>
                         </div>
                 </td>
@@ -126,7 +126,7 @@
     <div class="modal-dialog">
         <div class="modal-content" style="background-color: #eaeaea">
             <div class="modal-header">
-                <h2 th:text="${'PlayOffs ' + categoria.nombre}" class="modal-title" id="exampleModalLabel">(título)</h2>
+                <h2 th:text="${'PlayOffs ' + evento.getCategoria().nombre}" class="modal-title" id="exampleModalLabel">(título)</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -141,7 +141,7 @@
 </div>
 <script th:inline="javascript">
 
-    loadBracket([[${categoria.nombre}]]);
+    loadBracket([[${evento.getCategoria().nombre}]]);
 
 </script>
 </body>

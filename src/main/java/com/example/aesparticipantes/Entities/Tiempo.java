@@ -25,11 +25,7 @@ public class Tiempo {
 
     @Id
     @ManyToOne
-    private Competicion competicion;
-
-    @Id
-    @ManyToOne
-    private Categoria categoria;
+    private Evento evento;
 
     @Id
     @ManyToOne
@@ -103,17 +99,17 @@ public class Tiempo {
 
     public void calcularDatos() {
         
-        double[] singleMediaYpeor = AESUtils.getTiemposCalculados(Arrays.asList(tiempo1, tiempo2, tiempo3, tiempo4, tiempo5), categoria.getNumTiempos());
+        double[] singleMediaYpeor = AESUtils.getTiemposCalculados(Arrays.asList(tiempo1, tiempo2, tiempo3, tiempo4, tiempo5), evento.getCategoria().getNumTiempos());
 
         tiempo1Str = tiempo1 == 0 ? AESUtils.DNF : formatTime(this.tiempo1);
 
-        if (categoria.getNumTiempos() > 1) {
+        if (evento.getCategoria().getNumTiempos() > 1) {
 
             tiempo2Str = tiempo2 == 0 ? AESUtils.DNF : formatTime(tiempo2);
             tiempo3Str = tiempo3 == 0 ? AESUtils.DNF : formatTime(tiempo3);
         }
 
-        if (categoria.getNumTiempos() > 3) {
+        if (evento.getCategoria().getNumTiempos() > 3) {
 
             tiempo4Str = tiempo4 == 0 ? AESUtils.DNF : formatTime(tiempo4);
             tiempo5Str = tiempo5 == 0 ? AESUtils.DNF : formatTime(tiempo5);
@@ -123,7 +119,7 @@ public class Tiempo {
         mediaStr = singleMediaYpeor[1] == 0 ? AESUtils.DNF : formatTime(singleMediaYpeor[1]);
 
         //Si la media no es un DNF
-        if (singleMediaYpeor[1] > 0 && categoria.getNumTiempos() == 5) {
+        if (singleMediaYpeor[1] > 0 && evento.getCategoria().getNumTiempos() == 5) {
 
             if (tiempo1 == singleMediaYpeor[0]) {
                tiempoDescartadoAbajo = 1;

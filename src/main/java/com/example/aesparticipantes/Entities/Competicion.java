@@ -6,9 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Table(name = "Competiciones")
+//@IdClass(KeyCompeticion.class)
 @Entity
 @Builder
 @NoArgsConstructor
@@ -21,7 +23,9 @@ public class Competicion {
     private String nombre;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "competicion")
-    private List<Tiempo> tiempos;
+    private List<Evento> eventos;
+
+    private Date inicio;
 
     private int numJornadas;
 

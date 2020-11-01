@@ -22,15 +22,11 @@ public class Inscripcion {
 
     @Id
     @ManyToOne
-    private Categoria categoria;
+    private Evento evento;
 
     @Id
     @ManyToOne
     private Participante participante;
-
-    @Id
-    @ManyToOne
-    private Competicion competicion;
 
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull

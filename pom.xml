@@ -13,11 +13,9 @@
     <version>1.0</version>
     <name>Nacional Speedcubing 2020</name>
     <description>Web de muestra de resultados de los participantes</description>
-
     <properties>
-        <java.version>1.8</java.version>
+        <hibernate.version>5.4.22.Final</hibernate.version>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -90,6 +88,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.10.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId> <!--todo: NECESARIO? -->
+            <version>3.27.0-GA</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

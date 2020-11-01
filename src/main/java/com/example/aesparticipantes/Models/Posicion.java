@@ -1,12 +1,11 @@
 package com.example.aesparticipantes.Models;
 
 
-import com.example.aesparticipantes.Entities.Categoria;
-import com.example.aesparticipantes.Entities.Competicion;
+import com.example.aesparticipantes.Entities.Evento;
 import com.example.aesparticipantes.Entities.Participante;
 import com.example.aesparticipantes.Entities.Tiempo;
+import com.example.aesparticipantes.Repositories.ClasificadoRepository;
 import com.example.aesparticipantes.Utils.AESUtils;
-import com.example.aesparticipantes.repositories.ClasificadoRepository;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +27,7 @@ public class Posicion implements Comparable {
     String medalla;
 
     public void setMedalla(ClasificadoRepository clasificadoRepository){
-        medalla = AESUtils.getPosicionFinal(clasificadoRepository.getRondasParticipante(getCompeticion(), getParticipante(), getCategoria()));
+        medalla = AESUtils.getPosicionFinal(clasificadoRepository.getRondasParticipante(getParticipante(), getEvento()));
     }
 
     public double getTamano(){
@@ -47,21 +46,14 @@ public class Posicion implements Comparable {
         }
     }
 
-    public Categoria getCategoria(){
+    public Evento getEvento(){
         if(tiempos == null || tiempos.size() < 1){
-            return Categoria.builder().nombre("misterio").build();
+            return Evento.builder().build();
         } else {
-            return  tiempos.get(0).getCategoria();
+            return  tiempos.get(0).getEvento();
         }
     }
 
-    public Competicion getCompeticion(){
-        if(tiempos == null || tiempos.size() < 1){
-            return Competicion.builder().nombre("misterio").build();
-        } else {
-            return tiempos.get(0).getCompeticion();
-        }
-    }
 
     public Posicion clone(){
         return new Posicion(
@@ -83,6 +75,6 @@ public class Posicion implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        return  Integer.compare(this.getCategoria().getOrden(), ((Posicion) o).getCategoria().getOrden());
+        return  Integer.compare(this.getEvento().getCategoria().getOrden(), ((Posicion) o).getEvento().getCategoria().getOrden());
     }
 }
