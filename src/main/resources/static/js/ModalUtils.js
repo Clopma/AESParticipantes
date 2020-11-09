@@ -22,3 +22,5 @@ function getEventContent(string) {
     div.innerHTML = string.trim();
     return div;
 };
+
+

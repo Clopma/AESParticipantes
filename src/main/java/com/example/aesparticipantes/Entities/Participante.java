@@ -35,7 +35,7 @@ public class Participante {
     @Column(columnDefinition = "boolean default false")
     private boolean confirmado;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "participante")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "participante")
     List<Tiempo> tiempos;
 
 

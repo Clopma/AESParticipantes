@@ -43,7 +43,7 @@ public class WCALoginController {
 
                 if (participante != null) {
 
-
+                    //TODO: If vinculado, actualizar base de datos (en segundo plano a ser posible)
                     model.addAttribute("mensaje", "Login correcto, redirigiendo");
                     model.addAttribute("redirect", "/participante/"+participante.getNombre());
                     return "mensaje";

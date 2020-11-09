@@ -1,9 +1,6 @@
 package com.example.aesparticipantes.Controllers;
 
-import com.example.aesparticipantes.Entities.Competicion;
-import com.example.aesparticipantes.Entities.Evento;
-import com.example.aesparticipantes.Entities.Participante;
-import com.example.aesparticipantes.Entities.Tiempo;
+import com.example.aesparticipantes.Entities.*;
 import com.example.aesparticipantes.Models.Posicion;
 import com.example.aesparticipantes.Repositories.*;
 import com.example.aesparticipantes.Seguridad.UserData;
@@ -48,27 +45,27 @@ public class ParticipanteController {
     @RequestMapping("/participante/{nombreParticipante}")
     public String inicio(Model model, @PathVariable("nombreParticipante") String nombreParticipante, Principal principal) {
 
-        if(principal instanceof UserData){
+
+        model.addAttribute("soyYo", false);
+
+        if (principal instanceof UserData) { //TODO: Repetido en inscripción: refactor
             String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
-            Participante yo = participanteRepository.findByNombre(nombreParticipanteGuardado);
-            if(yo != null){
-                if(nombreParticipante.equals(yo.getNombre())){
-                    model.addAttribute("competicionesFuturas", self.getCompeticionesFuturas());
-                    model.addAttribute("soyYo", true);
-                }
+            Participante yo = participanteRepository.findByNombre(nombreParticipanteGuardado); //TODO cache
+            if (yo != null && nombreParticipante.equals(yo.getNombre())) {
+                model.addAttribute("soyYo", true);
             }
         }
+
         Participante participante = self.getParticipante(nombreParticipante);
         Map<Competicion, List<Posicion>> resultados = getResultadosParticipante(participante);
 
+        model.addAttribute("competicionesFuturas", self.getCompeticionesFuturas());
         model.addAttribute("resultados", resultados);
         model.addAttribute("participante", participante);
 
 
         return "participante";
     }
-
-
 
 
     @RequestMapping("/participante/{nombreParticipante}/{nombreCompeticion}")
@@ -84,7 +81,7 @@ public class ParticipanteController {
     }
 
     @Cacheable(value = "participantes") // Tiempos EAGER...
-    public Participante getParticipante(String nombreparticipante){
+    public Participante getParticipante(String nombreparticipante) {
         return participanteRepository.findByNombre(nombreparticipante);
     }
 
@@ -105,7 +102,8 @@ public class ParticipanteController {
 
         List<Posicion> posiciones = new ArrayList<>();
 
-        List<Evento> eventosParticipado = inscripcionRepository.findAllByParticipante(participante).stream().map(i -> i.getEvento()).collect(Collectors.toList());
+        List<Evento> eventosParticipado = inscripcionRepository.getInscripcionesDeParticipanteEnCompeticion(participante.getNombre(), competicion.getNombre()).stream().map(Inscripcion::getEvento)
+                .filter(e -> e.getTiempos().stream().anyMatch(t -> t.getParticipante().equals(participante))).collect(Collectors.toList());
 
         eventosParticipado.forEach(e -> posiciones.add(rankingGeneralController.getRankingGlobal(e, descalificacionRepository, clasificadoRepository).stream()
                 .filter(p -> p.getParticipante().equals(participante)).findFirst().get()));
@@ -119,7 +117,7 @@ public class ParticipanteController {
     }
 
     @Cacheable(value = "competicionesFuturas")
-    public List<Competicion> getCompeticionesFuturas(){
+    public List<Competicion> getCompeticionesFuturas() {
         return competicionRepository.findCompeticionesFuturas();
     }
 }

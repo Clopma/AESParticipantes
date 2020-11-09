@@ -286,7 +286,7 @@ h3 {
     font-size: 100% !important;
 }
 
-a.clicker:hover {
+.clicker:hover {
     cursor: pointer;
 }
 
@@ -297,4 +297,34 @@ a.clicker:hover {
     width: 100px;
     height: 100px;
     border-radius: 100%;
+}
+
+.iconoStandard{
+    font-size: 35px;
+}
+
+.categoriaSeleccionada{
+    padding-left: 3px;
+    padding-right: 3px;
+    color: #007bff;
+    transition: 0.3s;
+}
+
+.categoriaSeleccionada:hover{
+    color: #0056b3;
+}
+
+.categoriaDeseleccionada{
+    padding-left: 3px;
+    padding-right: 3px;
+    color: #818181;
+    transition: 0.3s;
+}
+
+.categoriaDeseleccionada:hover{
+    color: #616161;
+}
+
+.categoriaOculta{
+    display: none;
 }

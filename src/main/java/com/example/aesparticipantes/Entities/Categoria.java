@@ -49,7 +49,6 @@ public class Categoria {
         return c.getNombre().equals(this.getNombre());
     }
 
-
 }
 
 

@@ -38,11 +38,20 @@ public class Evento {
     @ManyToOne
     private Competicion competicion;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "evento")
-    List<Tiempo> tiempos;
+
+    @OneToMany(mappedBy = "evento")  //TODO Cuando lea esto, si no ha dado ningún lazy inizialization exception, he superado la prueba
+    private List<Tiempo> tiempos;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "evento")
+//  @Fetch(value = FetchMode.SUBSELECT) //TODO esto creo que se puede quitar si la prueba de arriba es superada
+    private List<Inscripcion> inscripciones;
 
     @NotNull
     private Integer cortePlayOffs;
+
+    public boolean isParticipanteInscrito(Participante p){
+       return inscripciones.stream().anyMatch(i -> i.getParticipante().equals(p));
+    }
 
     //Ser llamado solo desde cacheable
     public List<Tiempo> getRankingJornada(int numJornada){
@@ -91,8 +100,10 @@ public class Evento {
                     p -> descalificados.stream().noneMatch(d -> p.getParticipante().equals(d.getParticipante())))
                     .collect(Collectors.toList());
 
-            noDescalificados.subList(0, Math.min(this.getCortePlayOffs(), noDescalificados.size() - 1)) //TODO: TEST
-                    .forEach(p -> p.setClasificado(true));
+            if (noDescalificados.size() > 0) {
+                noDescalificados.subList(0, Math.min(this.getCortePlayOffs(), noDescalificados.size() - 1)) //TODO: TEST un poco mas
+                        .forEach(p -> p.setClasificado(true));
+            }
 
                 AESUtils.setMedallas(puntuacionesTotales, clasificadoRepository);
 

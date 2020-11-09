@@ -1,9 +1,6 @@
 package com.example.aesparticipantes.Entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,18 +13,23 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class Competicion {
 
     @Id
     @Column(length = 25)
     private String nombre;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "competicion")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "competicion")
     private List<Evento> eventos;
 
     private Date inicio;
 
     private int numJornadas;
+
+    public boolean isParticipanteInscrito(Participante p){
+        return eventos.stream().anyMatch(i -> i.isParticipanteInscrito(p));
+    }
 
     @Override
     public boolean equals(Object o) {

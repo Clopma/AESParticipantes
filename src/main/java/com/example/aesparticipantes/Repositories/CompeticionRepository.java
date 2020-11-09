@@ -14,7 +14,7 @@ public interface CompeticionRepository extends CrudRepository<Competicion, Long>
 
     Competicion findByNombre(String nombre);
 
-    @Query("from Competicion c where c.inicio > current_date")
+    @Query("from Competicion c where c.inicio > current_timestamp")
     List<Competicion> findCompeticionesFuturas();
 
 

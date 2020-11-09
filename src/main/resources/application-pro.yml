@@ -3,14 +3,15 @@ spring:
         initialization-mode: always
         driverClassName: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://localhost:3306/aesparticipantes?serverTimezone=Europe/Madrid
-        username: rodrisan
-        password: rodripass
+        username: api
+        password: n_nslp0nssAA22q3aq1!
     jpa:
         hibernate:
             ddl-auto: none
     resources:
         static-locations: classpath:/static/
 
+#TODO: EN TEORÍA YA NO SE NECESITA YA QUE EL CERTIFICADO LO COGE NGNIX, DE HECHO, ESTE ES PARA UN DOMINIO NO VÁLIDO YA
 server:
     ssl:
         key-store: classpath:keystore/ccc.p12
@@ -21,7 +22,10 @@ server:
     port: 8443 #80 forwards to 8080 and 8080 redirects to 433, which forwards to 8443
 
 wca:
-    callbackUrl: https://nacional2020.carloslopezmari.com/loginWCA
-    callbackUrlSoloValidar: https://nacional2020.carloslopezmari.com/validar
+    callbackUrl: https://aesonline.speedcubingspain.org/loginWCA
+    callbackUrlSoloValidar: https://aesonline.speedcubingspain.org/validar
     clientId: _Syvq_7EhXMViil3G0nygoCBTZzpeGL95uJXkpwJgCQ
     clientSecret: JaDvrqQEUyIYShejo2ZLxqhpIqizmNowvwNb7iaHMQE
+
+
+

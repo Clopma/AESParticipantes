@@ -1,10 +1,7 @@
 package com.example.aesparticipantes.Entities;
 
 import com.example.aesparticipantes.Entities.Keys.KeyInscripcion;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,6 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 public class Inscripcion {
 
     @Id

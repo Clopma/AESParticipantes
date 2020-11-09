@@ -53,7 +53,7 @@ public class CalendarioController {
         Evento evento = eventoRepository.findByCategoriaNombreAndCompeticionNombre(nombreCategoria, nombreCompeticion);
 
         model.addAttribute("evento", evento);
-        List<Clasificado> cuartos = clasificadoRepository.getRonda(evento, Clasificado.NombreRonda.CUARTO.name()); //TODO: COMPETICION
+        List<Clasificado> cuartos = clasificadoRepository.getRonda(evento, Clasificado.NombreRonda.CUARTO.name());
         List<Clasificado> semis = clasificadoRepository.getRonda(evento, Clasificado.NombreRonda.SEMIFINAL.name());
         List<Clasificado> finales = clasificadoRepository.getRonda(evento, Clasificado.NombreRonda.FINAL.name());
         List<Clasificado> ganador = clasificadoRepository.getRonda(evento, Clasificado.NombreRonda.GANADOR.name());

@@ -56,7 +56,7 @@ public class InicioController {
 
         model.addAttribute("participantes", self.getParticipantes()); //TODO: Ponerte a ti mismo primero quizás...
         model.addAttribute("categorias", self.getCategoriasEnOrden());
-        model.addAttribute("numJornadas", 5); //TODO CON REDISEÑO DE INICIO
+        model.addAttribute("numJornadas", 5);
 
         return "inicio";
     }

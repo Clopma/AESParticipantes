@@ -5,7 +5,7 @@ spring:
     url: jdbc:mysql://localhost:3306/aesparticipantes?serverTimezone=Europe/Madrid
     username: root
     password: karateka123
-#    data: classpath:sql/aesparticipantes_participantes.sql
+  #    data: classpath:sql/aesparticipantes_participantes.sql
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -36,6 +36,9 @@ wca:
 #        dialect:  org.hibernate.dialect.MySQLDialect
 
 
-server:
+server: #TODO error/404, los 500 distintos etc
   error:
-    path: /error #TODO
+    whitelabel:
+      enabled: false
+
+
