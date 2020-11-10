@@ -11,16 +11,6 @@ spring:
     resources:
         static-locations: classpath:/static/
 
-#TODO: EN TEORÍA YA NO SE NECESITA YA QUE EL CERTIFICADO LO COGE NGNIX, DE HECHO, ESTE ES PARA UN DOMINIO NO VÁLIDO YA
-server:
-    ssl:
-        key-store: classpath:keystore/ccc.p12
-        key-store-password: th1s1smyksp4ss
-        key-store-type: pkcs12
-        key-alias: "*.carloslopezmari.com"
-        key-password: th1s1smyksp4ss
-    port: 8443 #80 forwards to 8080 and 8080 redirects to 433, which forwards to 8443
-
 wca:
     callbackUrl: https://aesonline.speedcubingspain.org/loginWCA
     callbackUrlSoloValidar: https://aesonline.speedcubingspain.org/validar
