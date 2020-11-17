@@ -2,26 +2,12 @@ spring:
   datasource:
     initialization-mode: always
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/aesparticipantes?serverTimezone=Europe/Madrid
+    url: jdbc:mysql://localhost:3306/aesonline?serverTimezone=Europe/Madrid
     username: root
     password: karateka123
-  #    data: classpath:sql/aesparticipantes_participantes.sql
   jpa:
     hibernate:
       ddl-auto: create-drop
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          wca:
-#            client-id: 0YekXxbT20En0V96-cr-bmmTk9pGam2K9HvIA0fTPP0
-#            client-secret: cm_cAljWpZTzAplkoDt3xG4KDWxjhGNICxzAwNKqFMg
-#            authorization-grant-type: authorization_code
-#            redirect-uri: '{baseUrl}/loginWCA'
-#        provider:
-#           wca:
-#             authorization-uri: https://www.worldcubeassociation.org/oauth/authorize
-#             token-uri: https://www.worldcubeassociation.org/api/v0/me
 
 
 wca:
@@ -31,12 +17,12 @@ wca:
   clientSecret: cm_cAljWpZTzAplkoDt3xG4KDWxjhGNICxzAwNKqFMg
 
 
-#    properties:
-#      hibernate:
-#        dialect:  org.hibernate.dialect.MySQLDialect
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+   # org.hibernate.type: TRACE
 
-
-server: #TODO error/404, los 500 distintos etc
+server:
   error:
     whitelabel:
       enabled: false

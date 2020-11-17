@@ -1,12 +1,13 @@
 package com.example.aesparticipantes.Entities.Keys;
 
 
+import com.example.aesparticipantes.Entities.Participante;
+
 import java.io.Serializable;
 
 public class KeyTiempo implements Serializable {
 
-    private int jornada;
-    private String participante;
-    private KeyEvento evento;
+    private Participante participante;
+    private KeyJornada jornada;
 
 }

@@ -97,7 +97,7 @@
                             <img class="bouncyButton podio" src="/img/podiologo.png"/>
                         </a>
                     </div>
-                    <span th:text="'Jornada ' + ${jornada.getJornada()}" style="display: flex; align-items: center; width: max-content" />
+                    <span th:text="'Jornada ' + ${jornada.getJornada().getNumeroJornada()}" style="display: flex; align-items: center; width: max-content" />
                 </td>
                 <td style="font-weight: bold" th:text="${jornada.getPosicion()}" />
                 <td class="borderLeftColumn"> <span th:class="${(jornada.getTiempoDescartadoAbajo() == 1 ? 'badge badge-success ' : ' ') + (jornada.getTiempoDescartadoArriba() == 1 ? 'badge badge-danger ' : '')}"  th:text="${jornada.getTiempo1Str()}" /></td>

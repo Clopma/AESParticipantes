@@ -35,7 +35,7 @@ public class Posicion implements Comparable {
     }
 
     public Integer getPuntuacionTotal(){
-       return tiempos.stream().mapToInt(Tiempo::getPuntosTotales).reduce(Integer::sum).orElse(0);
+        return tiempos.stream().mapToInt(Tiempo::getPuntosTotales).reduce(Integer::sum).orElse(0);
     }
 
     public Participante getParticipante(){
@@ -50,7 +50,7 @@ public class Posicion implements Comparable {
         if(tiempos == null || tiempos.size() < 1){
             return Evento.builder().build();
         } else {
-            return  tiempos.get(0).getEvento();
+            return  tiempos.get(0).getJornada().getEvento();
         }
     }
 

@@ -38,12 +38,10 @@ public class Evento {
     @ManyToOne
     private Competicion competicion;
 
+    @OneToMany(mappedBy = "evento")
+    private List<Jornada> jornadas;
 
-    @OneToMany(mappedBy = "evento")  //TODO Cuando lea esto, si no ha dado ningún lazy inizialization exception, he superado la prueba
-    private List<Tiempo> tiempos;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "evento")
-//  @Fetch(value = FetchMode.SUBSELECT) //TODO esto creo que se puede quitar si la prueba de arriba es superada
+    @OneToMany(mappedBy = "evento")
     private List<Inscripcion> inscripciones;
 
     @NotNull
@@ -53,25 +51,33 @@ public class Evento {
        return inscripciones.stream().anyMatch(i -> i.getParticipante().equals(p));
     }
 
+    public List<Tiempo> getTiempos(){
+        List<Tiempo> tiempos = new ArrayList<>();
+        jornadas.forEach(j -> tiempos.addAll(j.getTiempos()));
+        return tiempos;
+    }
+
     //Ser llamado solo desde cacheable
     public List<Tiempo> getRankingJornada(int numJornada){
 
-        List<Tiempo> tiemposJornada = tiempos.stream()
-                .filter(t -> t.getJornada() == numJornada && t.getEvento().getCompeticion().equals(competicion))
-                .collect(Collectors.toList());
+        Jornada jornada = jornadas.stream()
+                .filter(j -> j.getNumeroJornada() == numJornada)
+                .findFirst().get(); //TODO: Cuando aun no hay jornadas RIP
 
-        tiemposJornada.forEach(Tiempo::calcularDatos);
+        AESUtils.setPosicionesEnTiempos(jornada.getTiempos());
+        jornada.getTiempos().sort(Comparator.comparingInt(Tiempo::getPosicion));
 
-        tiemposJornada.sort(Comparator.comparingInt(Tiempo::getPosicion));
-
-        return tiemposJornada;
+        return jornada.getTiempos();
 
     }
 
     //Ser llamado solo desde cacheable
     public List<Posicion> getRankingGlobal(DescalificacionRepository descalificacionRepository, ClasificadoRepository clasificadoRepository) {
 
-            List<Tiempo> tiemposRanking = tiempos.stream().filter(t -> t.getEvento().getCompeticion().equals(competicion)).collect(Collectors.toList());
+
+
+            List<Tiempo> tiemposRanking = getTiempos();
+            tiemposRanking.stream().filter(t -> t.getJornada().getEvento().getCompeticion().equals(competicion)).collect(Collectors.toList());
 
             List<Posicion> puntuacionesTotales = tiemposRanking.stream().collect(Collectors.groupingBy(Tiempo::getParticipante))
                             .entrySet().stream().map(m ->
@@ -186,7 +192,7 @@ public class Evento {
                 List<Tiempo> tiemposEmpatados = new ArrayList<>();
                 puntuacionesEmpatadasPorPuntuacionesIndividuales.forEach(p -> tiemposEmpatados.addAll(p.getTiempos()));
 
-                tiemposEmpatados.forEach(Tiempo::calcularDatos);
+                //tiemposEmpatados.forEach(Tiempo::calcularDatos); TODO: Ya deberían estar calculados en este punto, no? Puedo eliminar?
 
                 Optional<Tiempo> mejorMedia = tiemposEmpatados.stream().reduce((acc, val) -> (acc.getMedia() > 0) && (acc.getMedia() < val.getMedia()) ? acc : val);
 

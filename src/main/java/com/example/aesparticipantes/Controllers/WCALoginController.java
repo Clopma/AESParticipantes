@@ -36,8 +36,8 @@ public class WCALoginController {
 
             try {
 
-                WCALoginResponse wcaLoginResponse = AuthUtils.getWCAToken(code, callbackUrl, httpServletResponse);
-                WCAGetResponse perfilWCA = AuthUtils.getWCAUser(wcaLoginResponse.getAccess_token(), httpServletResponse);
+                WCALoginResponse wcaLoginResponse = AuthUtils.getWCAToken(code, callbackUrl);
+                WCAGetResponse perfilWCA = AuthUtils.getWCAUser(wcaLoginResponse.getAccess_token());
                 Participante participante = participanteRepository.findByWcaId(perfilWCA.getMe().getWca_id());
                 AuthUtils.crearSesion(participante, wcaLoginResponse, perfilWCA, httpServletRequest, authenticationManager);
 

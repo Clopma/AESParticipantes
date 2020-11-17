@@ -18,31 +18,15 @@ import static com.example.aesparticipantes.Utils.AESUtils.formatTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Tiempo {
-
-    @Id
-    private int jornada;
+public class Tiempo implements Comparable {
 
     @Id
     @ManyToOne
-    private Evento evento;
+    private Jornada jornada;
 
     @Id
     @ManyToOne
     private Participante participante;
-
-    @NotNull
-    private int posicion;
-
-    @NotNull
-    private int puntosTiempo;
-
-    @NotNull
-    private int puntosBonus;
-
-    public int getPuntosTotales() {
-        return puntosTiempo + puntosBonus;
-    }
 
     @NotNull
     private double tiempo1;
@@ -96,40 +80,57 @@ public class Tiempo {
     @Transient
     private String tiempo5Str;
 
+    @Transient
+    private int posicion;
+
+    @Transient
+    private int puntosTiempo;
+
+    @Transient
+    private int puntosBonus;
+
+    public int getPuntosTotales() {
+        return puntosTiempo + puntosBonus;
+    }
+
+
 
     public void calcularDatos() {
         
-        double[] singleMediaYpeor = AESUtils.getTiemposCalculados(Arrays.asList(tiempo1, tiempo2, tiempo3, tiempo4, tiempo5), evento.getCategoria().getNumTiempos());
+        double[] singleMediaYpeor = AESUtils.getTiemposCalculados(Arrays.asList(tiempo1, tiempo2, tiempo3, tiempo4, tiempo5), jornada.getEvento().getCategoria().getNumTiempos());
+
+        single = singleMediaYpeor[0];
+        media = singleMediaYpeor[1];
 
         tiempo1Str = tiempo1 == 0 ? AESUtils.DNF : formatTime(this.tiempo1);
 
-        if (evento.getCategoria().getNumTiempos() > 1) {
+        if (jornada.getEvento().getCategoria().getNumTiempos() > 1) {
 
             tiempo2Str = tiempo2 == 0 ? AESUtils.DNF : formatTime(tiempo2);
             tiempo3Str = tiempo3 == 0 ? AESUtils.DNF : formatTime(tiempo3);
         }
 
-        if (evento.getCategoria().getNumTiempos() > 3) {
+        if (jornada.getEvento().getCategoria().getNumTiempos() > 3) {
 
             tiempo4Str = tiempo4 == 0 ? AESUtils.DNF : formatTime(tiempo4);
             tiempo5Str = tiempo5 == 0 ? AESUtils.DNF : formatTime(tiempo5);
         }
 
-        singleStr = singleMediaYpeor[0] == 0 ? AESUtils.DNF : formatTime(singleMediaYpeor[0]);
-        mediaStr = singleMediaYpeor[1] == 0 ? AESUtils.DNF : formatTime(singleMediaYpeor[1]);
+        singleStr = single == 0 ? AESUtils.DNF : formatTime(single);
+        mediaStr = media == 0 ? AESUtils.DNF : formatTime(media);
 
         //Si la media no es un DNF
-        if (singleMediaYpeor[1] > 0 && evento.getCategoria().getNumTiempos() == 5) {
+        if (media > 0 && jornada.getEvento().getCategoria().getNumTiempos() == 5) {
 
-            if (tiempo1 == singleMediaYpeor[0]) {
+            if (tiempo1 == single) {
                tiempoDescartadoAbajo = 1;
-            } else if (tiempo2 == singleMediaYpeor[0]) {
+            } else if (tiempo2 == single) {
                 tiempoDescartadoAbajo = 2;
-            } else if (tiempo3 == singleMediaYpeor[0]) {
+            } else if (tiempo3 == single) {
                 tiempoDescartadoAbajo = 3;
-            } else if (tiempo4 == singleMediaYpeor[0]) {
+            } else if (tiempo4 == single) {
                 tiempoDescartadoAbajo = 4;
-            } else if (tiempo5 == singleMediaYpeor[0]) {
+            } else if (tiempo5 == single) {
                 tiempoDescartadoAbajo = 5;
             }
 
@@ -147,5 +148,18 @@ public class Tiempo {
 
         }
 
+    }
+
+    @Override
+    public int compareTo(Object o) {
+
+        Tiempo t = (Tiempo) o;
+        if (this.getMedia() == 0){
+           if(t.getMedia() == 0) return 0;
+           return 1;
+        } else if (t.getMedia() == 0){
+            return -1;
+        }
+        return Double.compare(this.getMedia(), t.getMedia());
     }
 }

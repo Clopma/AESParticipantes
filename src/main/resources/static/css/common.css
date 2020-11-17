@@ -122,6 +122,10 @@ a.bouncyContainer {
 
 }
 
+.bouncyContainer img {
+    z-index: 2;
+}
+
 a {
     color: #007bff !important;
 
@@ -173,6 +177,12 @@ div.quieto a {
     top: -30px;
 }
 
+.forth {
+    position: absolute;
+    top: -30px;
+    right: 0;
+}
+
 img.bouncyButton.podio {
     filter: drop-shadow(2px 2px 2px #222);
     -webkit-filter: drop-shadow(2px 2px 2px #222);
@@ -193,6 +203,15 @@ img.bouncyButton.backward {
     -webkit-filter: drop-shadow(-3px 3px 3px #222);
 }
 
+
+.tagNav {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
 
 .puntuacion {
 
@@ -286,10 +305,6 @@ h3 {
     font-size: 100% !important;
 }
 
-.clicker:hover {
-    cursor: pointer;
-}
-
 .avatar-thumbnail {
     display: inline-block;
     vertical-align: middle;
@@ -299,32 +314,36 @@ h3 {
     border-radius: 100%;
 }
 
-.iconoStandard{
+.iconoStandard {
     font-size: 35px;
 }
 
-.categoriaSeleccionada{
+.categoriaSeleccionada {
     padding-left: 3px;
     padding-right: 3px;
     color: #007bff;
     transition: 0.3s;
 }
 
-.categoriaSeleccionada:hover{
+.categoriaSeleccionada:hover {
     color: #0056b3;
 }
 
-.categoriaDeseleccionada{
+.categoriaDeseleccionada {
     padding-left: 3px;
     padding-right: 3px;
     color: #818181;
     transition: 0.3s;
 }
 
-.categoriaDeseleccionada:hover{
+.categoriaDeseleccionada:hover {
     color: #616161;
 }
 
-.categoriaOculta{
+.categoriaOculta {
     display: none;
+}
+
+.clicker {
+    cursor: pointer;
 }

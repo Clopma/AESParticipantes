@@ -8,10 +8,13 @@
 </head>
 
 <body class="cubosbg">
-<div th:replace="fragments/backButton :: backButton"/>
-<div class="vertical-flex-wrapper">
-    <div class="whitePanel" style="margin-top: 15px; margin-bottom: 75px">
-        <h1><span th:text="${'Podios de ' + nombre}"/></h1>
+<div th:fragment="backButton" class="bouncyContainer back">
+    <a th:href="'/competicion/' + ${nombreCompeticion}" class="bouncyContainer">
+        <img class="bouncyButton" src="/img/backbutton.png"/>
+    </a> <div class="tagNav"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px">COMPETICIÓN</h2></div>
+</div><div class="vertical-flex-wrapper">
+    <div class="whitePanel" style="margin-top: 15px; margin-bottom: 175px">
+        <h1> Podios de <a th:text="${nombre}" th:href="'/competicion/' + ${nombreCompeticion}"/></h1>
     </div>
 
     <div style="display: flex; flex-wrap: wrap; justify-content: center; width: 90%;">

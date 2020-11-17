@@ -1,5 +1,6 @@
 package com.example.aesparticipantes.Entities;
 
+import com.example.aesparticipantes.Utils.AESUtils;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,7 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Participante {
+public class Participante implements Comparable {
 
 
     @Id
@@ -35,8 +36,9 @@ public class Participante {
     @Column(columnDefinition = "boolean default false")
     private boolean confirmado;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "participante")
+    @OneToMany(mappedBy = "participante")
     List<Tiempo> tiempos;
+
 
 
     @Override
@@ -53,5 +55,10 @@ public class Participante {
         Participante p = (Participante) o;
 
         return p.getNombre().equals(this.getNombre());
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return  AESUtils.COLLATOR.compare(this.getNombre(), ((Participante) o).getNombre());
     }
 }

@@ -7,13 +7,6 @@ function formatearFechas() {
 
 }
 
-
-
-
-
-
-
-
 function formatTiempos(text, categoria, numTiempos, jornada) {
 
     var re = /(\d{1,2}):(\d{1,2})(,(\d{1,2}))?/g;

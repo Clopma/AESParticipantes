@@ -6,6 +6,7 @@ import com.example.aesparticipantes.Entities.Evento;
 import com.example.aesparticipantes.Entities.Tiempo;
 import com.example.aesparticipantes.Models.Posicion;
 import com.example.aesparticipantes.Repositories.*;
+import com.example.aesparticipantes.Utils.AESUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class RankingGeneralController {
@@ -63,7 +65,7 @@ public class RankingGeneralController {
         model.addAttribute("evento", evento);
         model.addAttribute("categorias", self.getCategoriasEnOrden());
         model.addAttribute("tiempos", self.getRankingJornada(evento, numeroJornada));
-        model.addAttribute("numJornadas", evento.getCompeticion().getNumJornadas());
+        model.addAttribute("numJornadas", evento.getJornadas().size());
 
         return "jornada";
     }
@@ -86,6 +88,8 @@ public class RankingGeneralController {
 
     @Cacheable(value = "rankingsGlobales", key = "#evento.id")
     public List<Posicion> getRankingGlobal(Evento evento, DescalificacionRepository descalificacionRepository, ClasificadoRepository clasificadoRepository) {
+
+        evento.getTiempos().stream().collect(Collectors.groupingBy(Tiempo::getJornada)).forEach((k, v) -> AESUtils.setPosicionesEnTiempos(v));
         return evento.getRankingGlobal(descalificacionRepository, clasificadoRepository);
     }
 

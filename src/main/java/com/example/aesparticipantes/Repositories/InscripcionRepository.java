@@ -15,5 +15,4 @@ public interface InscripcionRepository extends CrudRepository<Inscripcion, Long>
 
 
 
-
 }

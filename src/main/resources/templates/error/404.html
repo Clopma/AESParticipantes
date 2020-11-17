@@ -1,0 +1,24 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>404</title>
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+    <link rel="stylesheet" href="/css/evento.css" />
+    <script th:inline="javascript">
+        if ([[${redirect}]]){
+            window.location.href = [[${redirect}]];
+        }
+    </script>
+</head>
+
+
+<body class="cubosbg">
+<div th:replace="fragments/backButton :: backButton"/>
+<div class="vertical-flex-wrapper" style="text-align: center">
+    <div class="whitePanel" style="margin-top: 200px; width: 80%">
+        <img src="/img/DNF.png" style="width: 50%"></img><h1 style="font-size: 400% !important;">NOT FOUND</h1>
+        <h2> No hemos podido encontrar la página que estás buscando, si piensas que esto es un error, por favor ponte en
+            <a href="https://twitter.com/messages/klopma-304958244?recipient_id=klopma">contacto</a> con el desarrollador.</h2>
+    </div>
+</div>
+</body>
+</html>

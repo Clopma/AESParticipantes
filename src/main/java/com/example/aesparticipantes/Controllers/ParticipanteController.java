@@ -50,7 +50,7 @@ public class ParticipanteController {
 
         if (principal instanceof UserData) { //TODO: Repetido en inscripción: refactor
             String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
-            Participante yo = participanteRepository.findByNombre(nombreParticipanteGuardado); //TODO cache
+            Participante yo = self.getParticipante(nombreParticipanteGuardado);
             if (yo != null && nombreParticipante.equals(yo.getNombre())) {
                 model.addAttribute("soyYo", true);
             }
@@ -80,18 +80,13 @@ public class ParticipanteController {
         return "participanteEnCompeticion";
     }
 
-    @Cacheable(value = "participantes") // Tiempos EAGER...
-    public Participante getParticipante(String nombreparticipante) {
-        return participanteRepository.findByNombre(nombreparticipante);
-    }
-
 
     // Recoje los datos cacheados por getPosicionesEnCompeticion TODO: Pensarse si cachear dos veces aunque ya se cachee getPosicionEnParticipante
     public Map<Competicion, List<Posicion>> getResultadosParticipante(Participante participante) {
 
         Map<Competicion, List<Posicion>> resultados = new HashMap<>();
 
-        Set<Competicion> competicionesParticipadas = participante.getTiempos().stream().collect(Collectors.groupingBy(t -> t.getEvento().getCompeticion())).keySet();
+        Set<Competicion> competicionesParticipadas = participante.getTiempos().stream().collect(Collectors.groupingBy(t -> t.getJornada().getEvento().getCompeticion())).keySet();
         competicionesParticipadas.forEach(competicion -> resultados.put(competicion, self.getPosicionesEnCompeticion(competicion, participante, descalificacionRepository)));
         return resultados;
 
@@ -103,15 +98,16 @@ public class ParticipanteController {
         List<Posicion> posiciones = new ArrayList<>();
 
         List<Evento> eventosParticipado = inscripcionRepository.getInscripcionesDeParticipanteEnCompeticion(participante.getNombre(), competicion.getNombre()).stream().map(Inscripcion::getEvento)
-                .filter(e -> e.getTiempos().stream().anyMatch(t -> t.getParticipante().equals(participante))).collect(Collectors.toList());
+                .filter(e -> e.isParticipanteInscrito(participante)).collect(Collectors.toList());
+
+        posiciones.forEach(p -> {
+            p.getTiempos().forEach(Tiempo::calcularDatos);
+        });
+
+        Collections.sort(posiciones);
 
         eventosParticipado.forEach(e -> posiciones.add(rankingGeneralController.getRankingGlobal(e, descalificacionRepository, clasificadoRepository).stream()
                 .filter(p -> p.getParticipante().equals(participante)).findFirst().get()));
-
-        posiciones.forEach(p -> {
-            p.getTiempos().forEach(Tiempo::calcularDatos); //Solo se necesita para el enpoint de competición, pero mejor tener los datos ya cacheados
-        });
-        Collections.sort(posiciones);
 
         return posiciones;
     }
@@ -119,5 +115,10 @@ public class ParticipanteController {
     @Cacheable(value = "competicionesFuturas")
     public List<Competicion> getCompeticionesFuturas() {
         return competicionRepository.findCompeticionesFuturas();
+    }
+
+    @Cacheable(value = "participantes") // Tiempos EAGER...
+    public Participante getParticipante(String nombreparticipante) {
+        return participanteRepository.findByNombre(nombreparticipante);
     }
 }

@@ -73,7 +73,7 @@ public class VincularController {
 
         String callbackUrl = callbackUrlSoloValidar + "?participante=" + nombreParticipanteEncoded;
         String nombreParticipante = new String(Base64.decode(nombreParticipanteEncoded.getBytes()));
-        return self.vincular(participanteRepository.findByNombre(nombreParticipante), model, AuthUtils.getWCAToken(code, callbackUrl, httpServletResponse), httpServletResponse, httpServletRequest);
+        return self.vincular(participanteRepository.findByNombre(nombreParticipante), model, AuthUtils.getWCAToken(code, callbackUrl), httpServletResponse, httpServletRequest);
 
 
     }
@@ -88,7 +88,7 @@ public class VincularController {
             return "mensaje";
         } else {
             try {
-                WCAGetResponse perfilWCA = AuthUtils.getWCAUser(wcaLoginResponse.getAccess_token(), httpServletResponse);
+                WCAGetResponse perfilWCA = AuthUtils.getWCAUser(wcaLoginResponse.getAccess_token());
                 Participante participantePotencial = participanteRepository.findByWcaId(perfilWCA.getMe().getWca_id());
 
                 if(participantePotencial == null || participantePotencial.equals(participante)){

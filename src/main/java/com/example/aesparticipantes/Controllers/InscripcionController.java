@@ -37,20 +37,20 @@ public class InscripcionController {
     InscripcionController self;
 
     @ResponseBody
-    @PostMapping("/inscripcion/{nombreParticipante}/{nombreCompeticion}")
-    public ResponseEntity<String> inscribir(@PathVariable("nombreParticipante") String nombreParticipante, @PathVariable("nombreCompeticion") String nombreCompeticion, @RequestBody List<String> categorias, Principal principal) {
+    @PostMapping("/inscripcion/{nombreCompeticion}")
+    public ResponseEntity<String> inscribir(@PathVariable("nombreCompeticion") String nombreCompeticion, @RequestBody List<String> categorias, Principal principal) {
 
 
         if (principal instanceof UserData) {
             String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
             Participante yo = participanteRepository.findByNombre(nombreParticipanteGuardado);//TODO: Es posible no cargar todos los tiempos de cada evento? En debug tarda, mala señal?
             Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
-            if(competicion.getInicio().before(new Date())){
+            if(competicion.isEmpezada()){
                 return new ResponseEntity<>("No puedes inscribirte en una competición que ya ha comenzado, de hecho, " +
                         "que puedas leer esto es un error, por favor, comunícaselo al desarrollador.", HttpStatus.UNAUTHORIZED);
             }
 
-            if (yo == null || !nombreParticipante.equals(yo.getNombre())) {
+            if (yo == null) {
                 return new ResponseEntity<>("Usuario o competición incorrectos. Warning.", HttpStatus.UNAUTHORIZED); //TODO: Log warning
             } else {
 
@@ -89,7 +89,7 @@ public class InscripcionController {
 
             }
         } else {
-            return new ResponseEntity<>("Este no es tu usuario o estás deslogeado. Warning.", HttpStatus.UNAUTHORIZED); //TODO: Log warning
+            return new ResponseEntity<>("Este no es tu usuario o estás deslogeado. Warning.", HttpStatus.UNAUTHORIZED);
         }
 
 

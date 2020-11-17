@@ -1,6 +1,7 @@
 package com.example.aesparticipantes.Utils;
 
 import com.example.aesparticipantes.Entities.Clasificado;
+import com.example.aesparticipantes.Entities.Tiempo;
 import com.example.aesparticipantes.Models.Posicion;
 import com.example.aesparticipantes.Repositories.ClasificadoRepository;
 
@@ -9,6 +10,7 @@ import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.Collator;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +20,7 @@ public class AESUtils {
 
     public static final String MENSAJE_ERROR = "Ha habido un error con la autenticación WCA, por favor, contacta un administrador y enséñale este mensaje: ";
 
-
+    public static Collator COLLATOR = Collator.getInstance();
 
     public enum TiposUsuarios {
         NV, // NO VINCULADO
@@ -128,6 +130,49 @@ public class AESUtils {
 
     }
 
+    //Asume que se ha llamado a calcular Datos en los tiempos de la lista
+    public static void setPosicionesEnTiempos(List<Tiempo> tiemposJornada){
+
+        tiemposJornada.forEach(Tiempo::calcularDatos);
+        Collections.sort(tiemposJornada);
+
+        if (tiemposJornada.size() == 0) {
+            return;
+        }
+
+        double mejorResultadoJornada = tiemposJornada.get(0).getMedia();
+
+        for(int i = 0; i < tiemposJornada.size(); i++){
+            tiemposJornada.get(i).setPosicion(i+1);
+            tiemposJornada.get(i).setPuntosTiempo(tiemposJornada.get(i).getMedia() == 0 ? 0 : (int) Math.round(mejorResultadoJornada*100/tiemposJornada.get(i).getMedia()));
+            tiemposJornada.get(i).setPuntosBonus(AESUtils.puntosEnPosicion(i+1));
+        }
+
+
+    }
+
+    private static int puntosEnPosicion(int i) {
+
+        switch (i){
+            case 1: return 25;
+            case 2: return 19;
+            case 3: return 15;
+            case 4: return 12;
+            case 5: return 10;
+            case 6: return 8;
+            case 7: return 6;
+            case 8: return 5;
+            case 9: return 4;
+            case 10: return 3;
+            case 11: return 2;
+            case 12: return 1;
+            default: return 0;
+        }
+
+
+    }
+
+
     private static String bytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
         for (byte b : hash) {
@@ -139,6 +184,9 @@ public class AESUtils {
         }
         return hexString.toString();
     }
+
+
+
 
 
 

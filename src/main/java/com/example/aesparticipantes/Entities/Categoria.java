@@ -11,8 +11,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Table(name = "Categorias")
-//@IdClass(KeyCategoria.class)
-
 @Entity
 @Setter
 @Getter

@@ -33,15 +33,17 @@ public class PodiosController {
 
         Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
 
-        Map<Categoria, List<ClasificadoRepository.Medalla>> podios = clasificadoRepository.getMedallas(competicion).stream().map(m ->
+        Map<Categoria, List<ClasificadoRepository.Medalla>> podios = clasificadoRepository.getMedallas(competicion.getNombre()).stream().map(m ->
 
-               ClasificadoRepository.Medalla.builder()
-                .categoria((Categoria) m[0])
-                .participante((Participante) m[1])
-                .ronda((String) m[2]).build()
+                ClasificadoRepository.Medalla.builder()
+                        .categoria((Categoria) m[0])
+                        .participante((Participante) m[1])
+                        .ronda((String) m[2]).build()
         ).collect(Collectors.groupingBy(ClasificadoRepository.Medalla::getCategoria, LinkedHashMap::new, Collectors.toList()));
 
-        podios = podios.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> ordenarMedallas(e.getValue()), (u, v) -> {throw new IllegalStateException(String.format("Duplicate key %s", u));}, LinkedHashMap::new));
+        podios = podios.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> ordenarMedallas(e.getValue()), (u, v) -> {
+            throw new IllegalStateException(String.format("Duplicate key %s", u));
+        }, LinkedHashMap::new));
 
         model.addAttribute("nombre", competicion.getNombre());
         model.addAttribute("podios", podios);

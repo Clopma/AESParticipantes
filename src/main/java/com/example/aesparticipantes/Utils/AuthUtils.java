@@ -23,7 +23,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
@@ -51,7 +50,7 @@ public class AuthUtils {
         AuthUtils.participanteRepository = participanteRepository;
     }
 
-    public static WCALoginResponse getWCAToken(String code, String callbackUrl, HttpServletResponse httpServletResponse) throws JsonProcessingException {
+    public static WCALoginResponse getWCAToken(String code, String callbackUrl) throws JsonProcessingException {
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.set("grant_type", "authorization_code");
@@ -68,11 +67,10 @@ public class AuthUtils {
                 .body(inserter)
                 .retrieve().bodyToMono(String.class).block();
 
-        WCALoginResponse wcaLoginResponse = new ObjectMapper().readValue(response, WCALoginResponse.class);
-        return wcaLoginResponse;
+        return new ObjectMapper().readValue(response, WCALoginResponse.class);
     }
 
-    public static WCAGetResponse getWCAUser(String token, HttpServletResponse httpServletResponse) throws JsonProcessingException {
+    public static WCAGetResponse getWCAUser(String token) throws JsonProcessingException {
 
         String getResponse = WebClient.create("https://www.worldcubeassociation.org/api/v0/me/")
                 .get()

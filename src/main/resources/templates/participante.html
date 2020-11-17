@@ -3,9 +3,9 @@
     <title th:text="${nombreParticipante}"></title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
-    <script type="text/javascript" src="/js/ScrollUtils.js"></script>
     <script type="text/javascript" src="/js/ModalUtils.js"></script>
     <script type="text/javascript" src="/js/TiempoUtils.js"></script>
+    <script type="text/javascript" src="/js/InscripcionUtils.js"></script>
     <link rel="stylesheet" href="/css/evento.css"/>
     <link rel="stylesheet" href="/css/cubing-icons.css"/>
     <link rel="stylesheet" href="/css/tooltips.css"/>
@@ -28,7 +28,6 @@
     }
 
 
-
 </script>
 <div th:replace="fragments/backButton :: backButton"/>
 <div class="vertical-flex-wrapper">
@@ -36,19 +35,25 @@
 
 
         <h1 style="text-align: center; display: flex; align-items: center">
-            <img th:if="${!participante.isConfirmado()}" src="/img/userIcon.png" style="height: 125px; margin-right: 30px"/>
+            <img th:if="${!participante.isConfirmado()}" src="/img/userIcon.png"
+                 style="height: 125px; margin-right: 30px"/>
             <div th:if="${participante.isConfirmado()}" style="position: relative; margin-right: 30px">
-                <img  th:src="${participante.getUrlImagenPerfil()}" style="object-fit: cover; height: 125px; border-radius: 100%; border: solid;"/>
-                <span th:class="${'flag-icon flag-icon-'+ participante.getPais()}" style="position: absolute; width: 40px; bottom: 0; right: -10px"></span><!-- No autocerrar -->
+                <img th:src="${participante.getUrlImagenPerfil()}"
+                     style="object-fit: cover; height: 125px; border-radius: 100%; border: solid;"/>
+                <span th:class="${'flag-icon flag-icon-'+ participante.getPais()}"
+                      style="position: absolute; width: 40px; bottom: 0; right: -10px"></span><!-- No autocerrar -->
             </div>
             <span th:text="${nombreParticipante}"/>
         </h1>
 
-        <button th:if="${!participante.isConfirmado()}" onclick="vincular()" class="btn btn-outline-dark" > <img src="/img/WCAlogo.png" style="height: 50px; width: 50px;"/> ¿Eres tú? <u>Vincular</u></button>
+        <button th:if="${!participante.isConfirmado()}" onclick="vincular()" class="btn btn-outline-dark"><img
+                src="/img/WCAlogo.png" style="height: 50px; width: 50px;"/> ¿Eres tú? <u>Vincular</u></button>
 
         <span th:if="${participante.isConfirmado()}" style="font-size: 20px;">
 
-        <a th:href="${participante.getLinkPerfilWCA()}"> <img src="/img/WCAlogo.png" style="height: 30px; margin-right: 10px" /><span th:text="${participante.getWcaId()}" style="margin-right: 10px" /></a>
+        <a th:href="${participante.getLinkPerfilWCA()}"> <img src="/img/WCAlogo.png"
+                                                              style="height: 30px; margin-right: 10px"/><span
+                th:text="${participante.getWcaId()}" style="margin-right: 10px"/></a>
         </span>
     </div>
 
@@ -72,7 +77,8 @@
 
                 <td th:each="posicion : ${resultado.getValue()}" style="border-bottom: 0">
 
-                    <div class="tooltip"><a th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}/#${posicion.getEvento().getCategoria().getNombre()}|}"><span
+                    <div class="tooltip"><a
+                            th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}/#${posicion.getEvento().getCategoria().getNombre()}|}"><span
                             th:class="'cubing-icon event-' + ${posicion.getEvento().getCategoria().getNombre()}"/></a>
                         <span class="tooltiptext">Ver todos los tiempos</span>
                     </div>
@@ -84,15 +90,20 @@
                     <div style="display: flex; align-items: center; justify-content: center">
                         <div class="tooltip">
                             <a th:href="@{|/ranking/${resultado.getKey().getNombre()}/${posicion.getEvento().getCategoria().getNombre()}/#${nombreParticipante}|}">
-                                <span class="iconoStandard" th:text="${posicion.getPosicionGeneral()+'º'}" />
+                                <span class="iconoStandard" th:text="${posicion.getPosicionGeneral()+'º'}"/>
                             </a>
-                            <span class="tooltiptext">Posición en el ránking (con <span style="font-weight: bold" th:text="${posicion.getPuntuacionTotal()}" /> puntos)</span>
+                            <span class="tooltiptext">Posición en el ránking (con <span style="font-weight: bold"
+                                                                                        th:text="${posicion.getPuntuacionTotal()}"/> puntos)</span>
                         </div>
                         <span th:if="${posicion.isClasificado()}" class="iconoStandard">&rarr;</span>
                         <div th:if="${posicion.isClasificado()}" class="tooltip" style="height: 80px; width: 80px">
-                            <a onclick="loadModal(this)" th:data-nombreCategoria="${posicion.getEvento().getCategoria().getNombre()}" data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
-                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() != null}" th:src="'/img/'+${posicion.getMedalla()+'.png'}" />
-                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() == null}"  src="/img/bracket.png"/>
+                            <a onclick="loadModal(this)"
+                               th:data-nombreCategoria="${posicion.getEvento().getCategoria().getNombre()}"
+                               data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
+                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() != null}"
+                                     th:src="'/img/'+${posicion.getMedalla()+'.png'}"/>
+                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() == null}"
+                                     src="/img/bracket.png"/>
                             </a>
                             <span class="tooltiptext">Posición en playoffs</span>
                         </div>
@@ -103,40 +114,62 @@
         </table>
     </div>
 
-    <div class="whitePanel" style="margin-top: 50px;">
+    <div id="proximasCompeticiones" class="whitePanel" style="margin-top: 50px;">
         <h1 style="text-align: center; padding-bottom: 30px">
             Próximas competiciones:
         </h1>
-
-        <div th:if="${soyYo || competicion.isParticipanteInscrito(participante)}" th:each="competicion: ${competicionesFuturas}" style="background-color: white; padding: 10px; border-top: solid 1px black;">
+        <h3 id="noHayCompeticiones" style="display: none; text-align: center">Este participante no está inscrito en próximas competiciones</h3>
+        <div id="competicionProxima"
+             th:if="${soyYo || competicion.isParticipanteInscrito(participante)}"
+             th:each="competicion: ${competicionesFuturas}"
+             style="background-color: white; padding: 10px; border-top: solid 1px black;">
 
             Inicio: <span class="fecha" th:text="${competicion.getInicio()}"/>
             <div style="display: flex; align-items: center">
                 <a th:href="${'/competicion/'+ competicion}">
                     <span th:text="${competicion.getNombre()}" style="margin-right: 10px" class="iconoStandard"/>
                 </a>
-                <div th:if="${competicion.isParticipanteInscrito(participante)}" style="font-size: 20px; margin-right: 10px">
-                    <svg style="vertical-align: middle" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check" fill="currentColor" xmlns="http://www.w3.org/2000/svg" >
-                        <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
-                    </svg>Inscrito
+                <div th:if="${competicion.isParticipanteInscrito(participante)}"
+                     style="font-size: 20px; margin-right: 10px">
+                    <svg style="vertical-align: middle" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check"
+                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                              d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
+                    </svg>
+                    Inscrito
                 </div>
                 <div class="tooltip">
-                <button th:if="${soyYo}" onclick="inscribirse(this)" th:data-competicion="${competicion.getNombre()}" class="btn btn-outline-primary" style="height: min-content" disabled>
-                    <svg style="vertical-align: middle" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                    </svg>  <span th:text="${competicion.isParticipanteInscrito(participante) ? 'Editar inscripción' : 'Inscríbete'}"/></button>
+                    <button th:if="${soyYo}" onclick="inscribirse(this)"
+                            th:data-competicion="${competicion.getNombre()}" class="btn btn-outline-primary"
+                            style="height: min-content" disabled>
+                        <svg style="vertical-align: middle" width="1em" height="1em" viewBox="0 0 16 16"
+                             class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd"
+                                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                        </svg>
+                        <span th:text="${competicion.isParticipanteInscrito(participante) ? 'Editar inscripción' : 'Inscríbete'}"/>
+                    </button>
                     <span class="tooltiptext">Selecciona las categorías en las que quieras participar</span>
                 </div>
             </div>
             <div style="display:flex; justify-content: center">
                 <div th:each="evento : ${competicion.getEventos()}" class="tooltip">
-                    <span th:data-competicion="${competicion.getNombre()}" th:data-categoria="${evento.getCategoria().getNombre()}" onclick="cambiarSeleccion(this)" th:class="${'cubing-icon event-' + evento.getCategoria().getNombre() + (soyYo ?' clicker ': ' ')+ (evento.isParticipanteInscrito(participante) ? 'categoriaSeleccionada': (soyYo ? 'categoriaDeseleccionada': 'categoriaOculta'))}" style="width: 10px;"/>
-                    <span class="tooltiptext" th:text="${evento.getCategoria().getNombre() + ': ' + (evento.getCortePlayOffs() == 0 ? 'No habrá play-offs': (evento.getCortePlayOffs() == 4 ? 'Habrá dos rondas de play-offs': (evento.getCortePlayOffs() == 8 ? 'Habrá tres rondas de play-offs': '')))}"/>
+                    <span th:data-competicion="${competicion.getNombre()}"
+                          th:data-categoria="${evento.getCategoria().getNombre()}" onclick="cambiarSeleccion(this)"
+                          th:class="${'cubing-icon event-' + evento.getCategoria().getNombre() + (soyYo ?' clicker ': ' ')+ (evento.isParticipanteInscrito(participante) ? 'categoriaSeleccionada': (soyYo ? 'categoriaDeseleccionada': 'categoriaOculta'))}"
+                          style="width: 10px;"/>
+                    <span class="tooltiptext"
+                          th:text="${evento.getCategoria().getNombre() + ': ' + (evento.getCortePlayOffs() == 0 ? 'No habrá play-offs': (evento.getCortePlayOffs() == 4 ? 'Habrá dos rondas de play-offs': (evento.getCortePlayOffs() == 8 ? 'Habrá tres rondas de play-offs': '')))}"/>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+            if($('#proximasCompeticiones').children('#competicionProxima').length === 0){
+                document.getElementById("noHayCompeticiones").style.display = 'block';
+            }
+    </script>
     <th:block th:include="fragments/modal :: modalBracket"></th:block>
 </div>
 
@@ -146,41 +179,6 @@
     function loadModal(activador) {
         var nombreCategoria = $(activador).attr("data-nombreCategoria");
         loadBracket(nombreCategoria);
-    }
-
-    function cambiarSeleccion(span) {
-
-        if([[${soyYo}]]){
-            $("button[data-competicion='"+  $(span).attr("data-competicion") +"']")[0].disabled = false;
-            if(span.classList.contains('categoriaDeseleccionada')){
-                span.classList.remove('categoriaDeseleccionada');
-                span.classList.add('categoriaSeleccionada');
-            } else {
-                span.classList.remove('categoriaSeleccionada');
-                span.classList.add('categoriaDeseleccionada');
-            }
-        }
-    }
-
-    function inscribirse(button) {
-
-       var spansCategorias = $("span.categoriaSeleccionada[data-competicion='"+  $(button).attr("data-competicion") +"']").toArray();
-       var categorias = spansCategorias.map(s => $(s).attr("data-categoria"));
-
-           var xhttp = new XMLHttpRequest();
-           xhttp.onreadystatechange = function () {
-               if (this.readyState === 4 && this.status === 200) {
-                   alert(xhttp.responseText);
-                   location.reload();
-               } else if(this.readyState === 4) {
-                   alert('Esto es un error, por favor, contacta con el desarrollador y muéstrale lo siguente: '+ xhttp.responseText);
-               }
-           };
-           xhttp.open("POST", "/inscripcion/"+[[${participante.getNombre()}]]+"/"+ $(button).attr("data-competicion"), true);
-           xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-           xhttp.send(JSON.stringify(categorias));
-
-
     }
 
 </script>
