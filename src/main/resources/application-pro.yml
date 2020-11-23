@@ -2,7 +2,7 @@ spring:
     datasource:
         initialization-mode: always
         driverClassName: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/aesparticipantes?serverTimezone=Europe/Madrid
+        url: jdbc:mysql://localhost:3306/aesonline?serverTimezone=Europe/Madrid
         username: api
         password: n_nslp0nssAA22q3aq1!
     jpa:
@@ -12,7 +12,7 @@ spring:
         static-locations: classpath:/static/
 
 wca:
-    callbackUrl: https://aesonline.speedcubingspain.org/loginWCA
+    callbackUrlLogin: https://aesonline.speedcubingspain.org/loginInicio
     callbackUrlSoloValidar: https://aesonline.speedcubingspain.org/validar
     clientId: _Syvq_7EhXMViil3G0nygoCBTZzpeGL95uJXkpwJgCQ
     clientSecret: JaDvrqQEUyIYShejo2ZLxqhpIqizmNowvwNb7iaHMQE

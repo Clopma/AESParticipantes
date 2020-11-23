@@ -11,7 +11,7 @@ spring:
 
 
 wca:
-  callbackUrl: http://localhost:8080/loginWCA
+  callbackUrlLogin: http://localhost:8080/loginInicio
   callbackUrlSoloValidar: http://localhost:8080/validar
   clientId: 0YekXxbT20En0V96-cr-bmmTk9pGam2K9HvIA0fTPP0
   clientSecret: cm_cAljWpZTzAplkoDt3xG4KDWxjhGNICxzAwNKqFMg

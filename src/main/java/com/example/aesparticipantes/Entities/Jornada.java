@@ -4,6 +4,7 @@ import com.example.aesparticipantes.Entities.Keys.KeyJornada;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class Jornada {
 
     @Id
     @ManyToOne
-    private Evento evento;
+    private Competicion competicion;
 
     @Id
     private int numeroJornada;
@@ -28,8 +29,10 @@ public class Jornada {
     @OneToMany(mappedBy = "jornada")
     private List<Tiempo> tiempos;
 
+    @NotNull
     private Date fechaInicio;
 
+    @NotNull
     private Date fechaFin;
 
 

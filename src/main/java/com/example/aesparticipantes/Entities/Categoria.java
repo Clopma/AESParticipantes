@@ -4,11 +4,9 @@ package com.example.aesparticipantes.Entities;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Configurable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Table(name = "Categorias")
 @Entity
@@ -24,6 +22,9 @@ public class Categoria {
     @Id
     @Column(length = 25)
     private String nombre;
+
+    @OneToMany(mappedBy = "categoria")
+    private List<Evento> eventos;
 
     @NotNull
     private int numTiempos;

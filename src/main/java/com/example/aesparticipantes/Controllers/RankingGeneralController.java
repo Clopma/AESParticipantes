@@ -65,7 +65,7 @@ public class RankingGeneralController {
         model.addAttribute("evento", evento);
         model.addAttribute("categorias", self.getCategoriasEnOrden());
         model.addAttribute("tiempos", self.getRankingJornada(evento, numeroJornada));
-        model.addAttribute("numJornadas", evento.getJornadas().size());
+        model.addAttribute("numJornadas", evento.getCompeticion().getJornadas().size());
 
         return "jornada";
     }

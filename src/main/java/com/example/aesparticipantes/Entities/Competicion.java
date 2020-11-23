@@ -23,14 +23,20 @@ public class Competicion {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "competicion")
     private List<Evento> eventos;
 
-    private Date inicio;
+    @OneToMany(mappedBy = "competicion")
+    private List<Jornada> jornadas;
 
     @Column(length = 1000)
     private String descripcion;
 
+    public Date getInicio(){
+        Optional<Jornada> primeraJornda = jornadas.stream().filter(j -> j.getNumeroJornada()==1).findFirst();
+        return primeraJornda.map(Jornada::getFechaInicio).orElse(null);
+    }
+    
     //TODO si quiero sacar los participantes inscritos puedo sacarlos desde eventos y si se actualiza, estará la lista actualizada? (hibernate lo handlea), o tengo que hacer una query en el controller con cacheable (yo lo handleo)?
 
-    //TODO: quizá mejor query? (Y añadir quizá count de inscripciones/evento)
+    //TODO: quizá mejor query? (Y añadir quizá el count de inscripciones/evento)
     public TreeMap<Participante, Map<String, Categoria>> getCategoriasInscritasPorParticipanteMap(){
         List<Inscripcion> inscripciones = new ArrayList<>();
         eventos.forEach(e -> inscripciones.addAll(e.getInscripciones()));
@@ -62,5 +68,9 @@ public class Competicion {
 
     public boolean isEmpezada() {
         return this.getInicio().before(new Date());
+    }
+
+    public Optional<Jornada> getJornadaActiva() {
+        return getJornadas().stream().filter(j -> j.getFechaInicio().before(new Date()) && j.getFechaFin().after(new Date())).findFirst();
     }
 }

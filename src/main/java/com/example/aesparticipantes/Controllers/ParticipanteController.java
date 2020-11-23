@@ -57,6 +57,7 @@ public class ParticipanteController {
         }
 
         Participante participante = self.getParticipante(nombreParticipante);
+        if(participante == null) {return "error/404";}
         Map<Competicion, List<Posicion>> resultados = getResultadosParticipante(participante);
 
         model.addAttribute("competicionesFuturas", self.getCompeticionesFuturas());
@@ -86,7 +87,7 @@ public class ParticipanteController {
 
         Map<Competicion, List<Posicion>> resultados = new HashMap<>();
 
-        Set<Competicion> competicionesParticipadas = participante.getTiempos().stream().collect(Collectors.groupingBy(t -> t.getJornada().getEvento().getCompeticion())).keySet();
+        Set<Competicion> competicionesParticipadas = participante.getTiempos().stream().collect(Collectors.groupingBy(t -> t.getJornada().getCompeticion())).keySet();
         competicionesParticipadas.forEach(competicion -> resultados.put(competicion, self.getPosicionesEnCompeticion(competicion, participante, descalificacionRepository)));
         return resultados;
 
@@ -107,7 +108,9 @@ public class ParticipanteController {
         Collections.sort(posiciones);
 
         eventosParticipado.forEach(e -> posiciones.add(rankingGeneralController.getRankingGlobal(e, descalificacionRepository, clasificadoRepository).stream()
-                .filter(p -> p.getParticipante().equals(participante)).findFirst().get()));
+                .filter(p -> p.getParticipante().equals(participante)).findFirst()
+                .orElse(Posicion.builder().evento(e).posicionGeneral(0).build() // Aun no ha participado
+                )));
 
         return posiciones;
     }

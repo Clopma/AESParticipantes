@@ -61,7 +61,7 @@
                 <th th:if="${largoClasificacion > 0}" />
                 <th>Posición</th>
                 <th>Nombre </th>
-                <th th:each="jornada, iStat : ${#numbers.sequence(0, evento.getJornadas().size() - 1)}">
+                <th th:each="jornada, iStat : ${#numbers.sequence(0, evento.getCompeticion().getJornadas().size() - 1)}">
                     <div class="bouncyContainer podio"
                          style="width: 50px; height: 50px; min-width: 50px; margin: auto;">
                         <a th:href="'/ranking/' + ${nombreCompeticion} + '/' + ${nombreCategoria} + '/jornada/' + (${iStat.index}+1)"
@@ -95,7 +95,7 @@
 
                 <td><a th:text="${posicion.getParticipante().getNombre()}" th:href="'/participante/'+${posicion.getParticipante().getNombre()}+'/' +  ${nombreCompeticion} + '#'+${nombreCategoria}">nombre</a></td>
 
-                <td th:each="jornada, iStat : ${#numbers.sequence(0, evento.getJornadas().size() - 1)}" th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''">
+                <td th:each="jornada, iStat : ${#numbers.sequence(0, evento.getCompeticion().getJornadas().size() - 1)}" th:classappend="${iStat.index} == 0 ? 'borderLeftColumn': ''">
                     <div class="tooltip">
                         <a th:href="'/ranking/'+${nombreCompeticion}+'/' +  ${nombreCategoria} + '/jornada/'+(${iStat.index}+1)+'#'+${posicion.getParticipante().getNombre()}"
                         th:text="${posicion.getPuntuacionJornada(iStat.index)}">puntuaciones individuales</a>

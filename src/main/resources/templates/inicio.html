@@ -70,7 +70,7 @@
 
     function irAWCA() {
         window.location = "https://www.worldcubeassociation.org/oauth/authorize?client_id=" + [[${@environment.getProperty('wca.clientId')}]] +
-            "&amp;redirect_uri=" + [[${@environment.getProperty('wca.callbackUrl')}]] + "&amp;response_type=code&amp;scope=public"
+            "&amp;redirect_uri=" + [[${@environment.getProperty('wca.callbackUrlLogin')}]] + "&amp;response_type=code&amp;scope=public"
     }
 
 </script>

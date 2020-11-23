@@ -1,0 +1,35 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Autenticación WCA</title>
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+    <link rel="stylesheet" href="/css/evento.css" />
+    <link rel="stylesheet" href="/css/cubing-icons.css"/>
+
+    <script th:inline="javascript">
+       if ([[${redirect}]]){
+          window.location.href = [[${redirect}]];
+       }
+    </script>
+</head>
+
+
+<body class="cubosbg">
+<div th:replace="fragments/backButton :: backButton"/>
+<div class="vertical-flex-wrapper">
+    <div class="whitePanel" style="margin-top: 300px; width: 80%; text-align: center">
+        <h1 style="text-align: center;" > ¿En qué categoría quieres participar? </h1>
+        <span th:each="inscripcion : ${inscripciones}">
+            <a th:if="${!inscripcion.isParticipado()}" th:href="'/participar/' + ${nombreCompeticion} + '/' +${inscripcion.getCategoria().getNombre()}">
+                <span th:class="${'cubing-icon event-' + inscripcion.getCategoria().getNombre()}">
+                   <!-- ::before -->
+                </span>
+            </a>
+
+            <span th:if="${inscripcion.isParticipado()}" th:class="${'cubing-icon event-' + inscripcion.getCategoria().getNombre()}" style="width: 10px; position: relative">
+                <img src="/img/tick.png" style="width: 40px; position: absolute; left: 0"/>
+            </span>
+        </span>
+    </div>
+</div>
+</body>
+</html>

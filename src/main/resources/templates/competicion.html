@@ -12,7 +12,17 @@
     <link rel="stylesheet" href="/css/evento.css" />
 
 </head>
+<script th:inline="javascript">
+    function irAWCA() {
+        window.location = "https://www.worldcubeassociation.org/oauth/authorize?client_id=" + [[${@environment.getProperty('wca.clientId')}]] +
+            "&amp;redirect_uri=" + [[${@environment.getProperty('wca.callbackUrlLogin')}]] + "&amp;response_type=code&amp;scope=public";
+    }
 
+    function participar() {
+        window.location.href = '/participar/' + [[${nombreCompeticion}]];
+    }
+
+</script>
 
 <body class="cubosbg" onload="formatearFechas()">
 <div th:replace="fragments/backButton :: backButton"/>
@@ -22,14 +32,14 @@
     </a> <div class="tagNav"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px">PODIOS</h2></div>
 </div>
 <div class="vertical-flex-wrapper">
-    <div class="whitePanel" style="margin-top: 100px;">
+    <div class="whitePanel" style="margin-top: 80px;">
         <div style="display: flex; align-items: center; justify-content: center;">
 
-            <h1><span th:text="${nombreCompeticion}"/></h1>
+            <h1 style="font-size: 3.5em !important;"><span th:text="${nombreCompeticion}"/></h1>
 
         </div>
     </div>
-    <div class="whitePanel" style="max-width: 65%; margin-top: 75px; font-size: larger; text-align: center">
+    <div class="whitePanel" style="max-width: 65%; margin-top: 65px; font-size: larger; text-align: center">
         <span th:text="${competicion.getDescripcion()}"/>
     </div>
 
@@ -37,26 +47,63 @@
         <div style="margin-top: 15px; font-size: larger; text-align: center">
             <h1>Inscripción</h1>
             Esta competición comienza el <span class="fecha" th:text="${competicion.getInicio()}" />.
-            <br />
-            Hasta entonces puedes modificar las categorías en las que estás inscrito:
+
         </div>
-        <div style="display:flex; justify-content: center">
-            <div th:each="evento : ${competicion.getEventos()}" class="tooltip" style="margin: 3px">
-                    <span th:data-competicion="${competicion.getNombre()}"
-                          th:data-categoria="${evento.getCategoria().getNombre()}" onclick="cambiarSeleccion(this)"
-                          th:class="${'cubing-icon event-' + evento.getCategoria().getNombre() + ' clicker '+ (evento.isParticipanteInscrito(participanteLogeado) ? 'categoriaSeleccionada': 'categoriaDeseleccionada')}"
-                          style="width: 10px;"/>
-                <span class="tooltiptext"
-                      th:text="${evento.getCategoria().getNombre() + ': ' + (evento.getCortePlayOffs() == 0 ? 'No habrá play-offs': (evento.getCortePlayOffs() == 4 ? 'Habrá dos rondas de play-offs': (evento.getCortePlayOffs() == 8 ? 'Habrá tres rondas de play-offs': '')))}"/>
+        <div th:if="${participanteLogeado != null}">
+            Hasta entonces puedes modificar las categorías en las que estás inscrito:
+            <div style="display:flex; justify-content: center">
+                <div th:each="evento : ${competicion.getEventos()}" class="tooltip" style="margin: 3px">
+                        <span th:data-competicion="${competicion.getNombre()}"
+                              th:data-categoria="${evento.getCategoria().getNombre()}" onclick="cambiarSeleccion(this)"
+                              th:class="${'cubing-icon event-' + evento.getCategoria().getNombre() + ' clicker '+ (evento.isParticipanteInscrito(participanteLogeado) ? 'categoriaSeleccionada': 'categoriaDeseleccionada')}"
+                              style="width: 10px;"/>
+                    <span class="tooltiptext"
+                          th:text="${evento.getCategoria().getNombre() + ': ' + (evento.getCortePlayOffs() == 0 ? 'No habrá play-offs': (evento.getCortePlayOffs() == 4 ? 'Habrá dos rondas de play-offs': (evento.getCortePlayOffs() == 8 ? 'Habrá tres rondas de play-offs': '')))}"/>
+                </div>
+            </div>
+            <div class="tooltip">
+                <button onclick="inscribirse(this)" th:data-competicion="${competicion.getNombre()}" class="btn btn-outline-primary" style="height: min-content; margin-top: 10px" disabled>
+                    <svg style="vertical-align: middle" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                    </svg>  <span th:text="${competicion.isParticipanteInscrito(participanteLogeado) ? 'Editar inscripción' : 'Inscríbete'}"/></button>
+                <span class="tooltiptext">Selecciona las categorías en las que quieras participar</span>
             </div>
         </div>
-        <div class="tooltip">
-            <button onclick="inscribirse(this)" th:data-competicion="${competicion.getNombre()}" class="btn btn-outline-primary" style="height: min-content; margin-top: 10px" disabled>
-                <svg style="vertical-align: middle" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                </svg>  <span th:text="${competicion.isParticipanteInscrito(participanteLogeado) ? 'Editar inscripción' : 'Inscríbete'}"/></button>
-            <span class="tooltiptext">Selecciona las categorías en las que quieras participar</span>
+        <div th:if="${participanteLogeado == null}">
+            Para inscribirte debes estar logueado:
+            <div style="display: flex; justify-content: center; align-items: center">
+                <div class="bouncyContainer backward" style="width: 50px; height: 50px">
+                    <a class="bouncyContainer">
+                        <img onclick="irAWCA()" class="bouncyButton" src="/img/WCAlogo.png"/>
+                    </a>
+                </div>
+                <h3><a class="clicker" onclick="irAWCA()">Iniciar sesión con WCA</a></h3>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${jornadaActiva.isPresent()}" class="whitePanel" style="margin-top: 15px; font-size: larger; text-align: center">
+        <div style="margin-top: 15px; font-size: larger; text-align: center">
+            <h1>¡Hay una jornada en progreso ahora mismo!</h1>
+
+
+            La <span th:text="${jornadaActiva.get().getNumeroJornada()}" />ª jornada acabará el <span class="fecha" th:text="${jornadaActiva.get().getFechaFin()}" />.
+            <span th:if="${participanteLogeado == null}">
+                 Si estás inscrito, inicia sesión para participar:
+                    <div style="display: flex; justify-content: center; align-items: center">
+                        <div class="bouncyContainer backward" style="width: 50px; height: 50px">
+                            <a class="bouncyContainer">
+                                <img onclick="irAWCA()" class="bouncyButton" src="/img/WCAlogo.png"/>
+                            </a>
+                        </div>
+                        <h3><a class="clicker" onclick="irAWCA()">Iniciar sesión con WCA</a></h3>
+                    </div>
+            </span>
+            <span th:if="${participanteLogeado != null}">
+                 Hasta entonces, tienes tiempo para <br /> <button onclick="participar()" style="font-size: xx-large" class="btn btn-outline-primary">participar</button>
+            </span>
+
         </div>
     </div>
 
@@ -74,30 +121,37 @@
         </div>
     </div>
 
-    <div class="whitePanel" style="margin-top: 15px; font-size: larger; text-align: center">
+    <div class="whitePanel" style="margin-top: 15px; font-size: larger; text-align: center; width: 90%;">
         <h1>Participantes</h1>
-        <table class="datatable table centerCols">
-            <thead>
-            <tr id="cats">
-                <th>Nombre</th>
-                <th class='cat' th:each="evento : ${competicion.getEventos()}">
-                    <span id="catName" th:class="${evento.getCategoria().getNombre()}" th:text="${evento.getCategoria().getNombre()}" style="font-size: larger"/>
-                    <br />(<span id="numParticipantes"></span>)
-                </th>
+        <div style="overflow: auto;">
+            <table class="datatable table centerCols">
+                <thead>
+                <tr id="cats">
+                    <th>Nombre</th>
+                    <th class='cat' th:each="evento : ${competicion.getEventos()}">
+                        <span id="catName" th:class="${evento.getCategoria().getNombre()}" th:text="${evento.getCategoria().getNombre()}" style="font-size: larger"/>
+                        <br />(<span id="numParticipantes">?</span>)
+                    </th>
 
-            </tr>
-            </thead>
-            <tbody style="background-color: white;">
-            <tr th:each="participante : ${competicion.getCategoriasInscritasPorParticipanteMap()}">
+                </tr>
+                </thead>
+                <tbody style="background-color: white;">
+                <tr th:each="participante : ${competicion.getCategoriasInscritasPorParticipanteMap()}">
 
-                <td th:text="${participante.getKey().getNombre()}" />
-                <!-- No tocar las clases ni nada que afecte al recuento de categorías -->
-                <td class="insc" th:each="evento : ${competicion.getEventos()}" ><span th:class="${evento.getCategoria().getNombre()}" th:if="${participante.getValue().get(evento.getCategoria().getNombre()) != null}"> <span
-                        th:class="'cubing-icon event-' + ${evento.getCategoria().getNombre()}"/> </span></td>
+                    <td><a th:href="'/participante/'+${participante.getKey().getNombre()}+'/' +  ${nombreCompeticion}"><span th:text="${participante.getKey().getNombre()}" /></a></td>
+                    <!-- No tocar las clases ni nada que afecte al recuento de categorías -->
+                    <td class="insc" th:each="evento : ${competicion.getEventos()}">
+                        <span th:class="${evento.getCategoria().getNombre()}" th:if="${participante.getValue().get(evento.getCategoria().getNombre()) != null}">
+                            <a th:href="'/participante/'+${participante.getKey().getNombre()}+'/' +  ${nombreCompeticion} + '#' + ${evento.getCategoria().getNombre()}">
+                                <span th:class="'cubing-icon event-' + ${evento.getCategoria().getNombre()}"/>
+                            </a>
+                        </span>
+                    </td>
 
-            </tr>
-            </tbody>
-        </table>
+                </tr>
+                </tbody>
+            </table>
+        </div>
         <script>
 
             //TODO: Rehacer de forma más resilente y, sobretodo, menos cutre...

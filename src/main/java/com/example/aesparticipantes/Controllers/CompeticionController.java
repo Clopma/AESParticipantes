@@ -31,14 +31,15 @@ public class CompeticionController {
 
     @GetMapping("/competicion/{nombreCompeticion}")
     public String showForm(Model model, @PathVariable("nombreCompeticion") String nombreCompeticion, Principal principal) {
-        Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
+        Competicion competicion = competicionRepository.findByNombre(nombreCompeticion); //TODO: Maybe cachear
 
-        if (principal instanceof UserData) { //TODO: Repetido en inscripción: refactor
+        if (principal instanceof UserData) { //TODO: Repetido en inscripción y participar: refactor
             String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
             Participante yo = participanteController.getParticipante(nombreParticipanteGuardado);
             model.addAttribute("participanteLogeado", yo);
         }
 
+        model.addAttribute("jornadaActiva", competicion.getJornadaActiva());
         model.addAttribute("competicion", competicion);
         model.addAttribute("inscripciones", self.getCategoriasInscritasPorParticipante(competicion));
         return "competicion";

@@ -39,9 +39,6 @@ public class Evento {
     private Competicion competicion;
 
     @OneToMany(mappedBy = "evento")
-    private List<Jornada> jornadas;
-
-    @OneToMany(mappedBy = "evento")
     private List<Inscripcion> inscripciones;
 
     @NotNull
@@ -53,14 +50,14 @@ public class Evento {
 
     public List<Tiempo> getTiempos(){
         List<Tiempo> tiempos = new ArrayList<>();
-        jornadas.forEach(j -> tiempos.addAll(j.getTiempos()));
+        competicion.getJornadas().forEach(j -> tiempos.addAll(j.getTiempos().stream().filter(t -> t.getCategoria().equals(categoria)).collect(Collectors.toList()))); // TODO: Feísimo: Hay alguna forma de mapear tiempos en esta entidad???
         return tiempos;
     }
 
     //Ser llamado solo desde cacheable
     public List<Tiempo> getRankingJornada(int numJornada){
 
-        Jornada jornada = jornadas.stream()
+        Jornada jornada = competicion.getJornadas().stream()
                 .filter(j -> j.getNumeroJornada() == numJornada)
                 .findFirst().get(); //TODO: Cuando aun no hay jornadas RIP
 
@@ -77,11 +74,12 @@ public class Evento {
 
 
             List<Tiempo> tiemposRanking = getTiempos();
-            tiemposRanking.stream().filter(t -> t.getJornada().getEvento().getCompeticion().equals(competicion)).collect(Collectors.toList());
+//            tiemposRanking.stream().filter(t -> t.getJornada().getEvento().getCompeticion().equals(competicion)).collect(Collectors.toList()); TODO: Ya son de la compecición, cierto?
 
             List<Posicion> puntuacionesTotales = tiemposRanking.stream().collect(Collectors.groupingBy(Tiempo::getParticipante))
                             .entrySet().stream().map(m ->
                             Posicion.builder()
+                                    .evento(this)
                                     .tiempos(m.getValue())
                                     .build()
                     ).collect(Collectors.toList());

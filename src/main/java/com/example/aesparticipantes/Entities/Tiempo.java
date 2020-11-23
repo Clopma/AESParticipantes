@@ -26,6 +26,10 @@ public class Tiempo implements Comparable {
 
     @Id
     @ManyToOne
+    private Categoria categoria;
+
+    @Id
+    @ManyToOne
     private Participante participante;
 
     @NotNull
@@ -97,20 +101,20 @@ public class Tiempo implements Comparable {
 
     public void calcularDatos() {
         
-        double[] singleMediaYpeor = AESUtils.getTiemposCalculados(Arrays.asList(tiempo1, tiempo2, tiempo3, tiempo4, tiempo5), jornada.getEvento().getCategoria().getNumTiempos());
+        double[] singleMediaYpeor = AESUtils.getTiemposCalculados(Arrays.asList(tiempo1, tiempo2, tiempo3, tiempo4, tiempo5), categoria.getNumTiempos());
 
         single = singleMediaYpeor[0];
         media = singleMediaYpeor[1];
 
         tiempo1Str = tiempo1 == 0 ? AESUtils.DNF : formatTime(this.tiempo1);
 
-        if (jornada.getEvento().getCategoria().getNumTiempos() > 1) {
+        if (categoria.getNumTiempos() > 1) {
 
             tiempo2Str = tiempo2 == 0 ? AESUtils.DNF : formatTime(tiempo2);
             tiempo3Str = tiempo3 == 0 ? AESUtils.DNF : formatTime(tiempo3);
         }
 
-        if (jornada.getEvento().getCategoria().getNumTiempos() > 3) {
+        if (categoria.getNumTiempos() > 3) {
 
             tiempo4Str = tiempo4 == 0 ? AESUtils.DNF : formatTime(tiempo4);
             tiempo5Str = tiempo5 == 0 ? AESUtils.DNF : formatTime(tiempo5);
@@ -120,7 +124,7 @@ public class Tiempo implements Comparable {
         mediaStr = media == 0 ? AESUtils.DNF : formatTime(media);
 
         //Si la media no es un DNF
-        if (media > 0 && jornada.getEvento().getCategoria().getNumTiempos() == 5) {
+        if (media > 0 && categoria.getNumTiempos() == 5) {
 
             if (tiempo1 == single) {
                tiempoDescartadoAbajo = 1;

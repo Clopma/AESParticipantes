@@ -26,9 +26,12 @@ public class Inscripcion {
     @ManyToOne
     private Participante participante;
 
+    //TODO ¿Se puede linkar mediante jpa de alguna forma Tiempo aquí?
+
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
     private Date fechaInscripcion;
+
 
 
 }

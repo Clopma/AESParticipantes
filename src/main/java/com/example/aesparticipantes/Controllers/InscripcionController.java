@@ -43,7 +43,7 @@ public class InscripcionController {
 
         if (principal instanceof UserData) {
             String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
-            Participante yo = participanteRepository.findByNombre(nombreParticipanteGuardado);//TODO: Es posible no cargar todos los tiempos de cada evento? En debug tarda, mala señal?
+            Participante yo = participanteRepository.findByNombre(nombreParticipanteGuardado); //TODO: Es posible no cargar todos los tiempos de cada evento? En debug tarda, mala señal?
             Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
             if(competicion.isEmpezada()){
                 return new ResponseEntity<>("No puedes inscribirte en una competición que ya ha comenzado, de hecho, " +

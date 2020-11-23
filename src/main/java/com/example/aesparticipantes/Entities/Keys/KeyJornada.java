@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class KeyJornada implements Serializable {
 
-    private KeyEvento evento;
+    private String competicion;
     private int numeroJornada;
 
 

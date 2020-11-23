@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 @Controller
@@ -24,24 +23,24 @@ public class WCALoginController {
     @Autowired
     ParticipanteRepository participanteRepository;
 
-    @Value("${wca.callbackUrl}")
-    private String callbackUrl;
+    @Value("${wca.callbackUrlLogin}")
+    private String callbackUrlLogin;
 
     @Autowired
     AuthProvider authenticationManager;
 
 
-        @GetMapping("/loginWCA")
-        public String callbackController(@RequestParam("code") String code, HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest, Model model) {
+        @GetMapping("/loginInicio")
+        public String callbackController(@RequestParam("code") String code, HttpServletRequest httpServletRequest, Model model) {
 
             try {
 
-                WCALoginResponse wcaLoginResponse = AuthUtils.getWCAToken(code, callbackUrl);
+                WCALoginResponse wcaLoginResponse = AuthUtils.getWCAToken(code, callbackUrlLogin);
                 WCAGetResponse perfilWCA = AuthUtils.getWCAUser(wcaLoginResponse.getAccess_token());
                 Participante participante = participanteRepository.findByWcaId(perfilWCA.getMe().getWca_id());
                 AuthUtils.crearSesion(participante, wcaLoginResponse, perfilWCA, httpServletRequest, authenticationManager);
 
-                if (participante != null) {
+                if (participante != null) { //TODO: Comprobar qué pasa cuando no está en la base de datos, debería devolver nulo
 
                     //TODO: If vinculado, actualizar base de datos (en segundo plano a ser posible)
                     model.addAttribute("mensaje", "Login correcto, redirigiendo");

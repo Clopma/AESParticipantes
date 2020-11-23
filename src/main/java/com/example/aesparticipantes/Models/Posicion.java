@@ -20,8 +20,9 @@ import java.util.List;
 @AllArgsConstructor
 public class Posicion implements Comparable {
 
-    //TODO: qué me asegura que estén ordenados por jornada?
-    List<Tiempo> tiempos;
+
+    Evento evento; //TODO: Rellenar
+    List<Tiempo> tiempos; //TODO: qué me asegura que estén ordenados por jornada?
     int posicionGeneral;
     boolean clasificado;
     String medalla;
@@ -35,6 +36,7 @@ public class Posicion implements Comparable {
     }
 
     public Integer getPuntuacionTotal(){
+        if(tiempos == null) {return 0;}
         return tiempos.stream().mapToInt(Tiempo::getPuntosTotales).reduce(Integer::sum).orElse(0);
     }
 
@@ -46,17 +48,10 @@ public class Posicion implements Comparable {
         }
     }
 
-    public Evento getEvento(){
-        if(tiempos == null || tiempos.size() < 1){
-            return Evento.builder().build();
-        } else {
-            return  tiempos.get(0).getJornada().getEvento();
-        }
-    }
-
 
     public Posicion clone(){
         return new Posicion(
+                evento,
                 new ArrayList<>(tiempos),
                 this.posicionGeneral,
                 this.clasificado,

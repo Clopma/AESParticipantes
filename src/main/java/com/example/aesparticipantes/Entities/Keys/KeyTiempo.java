@@ -7,7 +7,8 @@ import java.io.Serializable;
 
 public class KeyTiempo implements Serializable {
 
-    private Participante participante;
     private KeyJornada jornada;
+    private Participante participante;
+    private String categoria;
 
 }
