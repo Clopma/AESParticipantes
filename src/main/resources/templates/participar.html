@@ -1,0 +1,121 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title th:text="'Participando en '+ ${nombreCategoria}" />
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+
+</head>
+
+
+<body class="cubosbg">
+<div class="vertical-flex-wrapper">
+
+    <div class="whitePanel" style="width: 80%; margin-top: 50px; margin-bottom: 30px">
+
+        <div id="progressBar">
+            <div class="bar"></div>
+        </div>
+
+        <div id="carruselMezclas" class="carousel slide">
+            <div class="carousel-inner" style="text-align: center;">
+                <div th:each="mezcla : ${mezclas}" class="carousel-item">
+                    <h1 th:text="'Tiempo ' + ${mezcla.getNumTiempo()}" style="color: black"/>
+                    <img th:src="'/img/mezclas/' + ${mezcla.getImagenUrl()}" style="width: 40%"/>
+                    <div class="carousel-caption d-none d-md-block" style="position: initial">
+                        <h2 th:text="${mezcla.getTexto()}" style="color: black"/>
+                        <div th:id="'tiempo'+${mezcla.getNumTiempo()}" style="display: flex; width: fit-content; margin: auto; align-items: flex-end; color: black; font-size: x-large">
+                            <span class="unidad">Tu tiempo: </span>
+                            <input type="number" min="0" max="9" class="form-control minutos" placeholder="m"/><span class="unidad">:</span>
+                            <input type="number" min="0" max="59" class="form-control segundos" placeholder="s"/><span class="unidad">.</span>
+                            <input type="number" min="0" max="99" class="form-control centesimas" placeholder="cs"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div style="text-align: center">
+                Una vez rellenados <b>todos</b> los resultados, haz click aquí:
+                <br />
+                <button onclick="enviarTiempos()" class="btn btn-outline-primary"> Enviar tiempos </button>
+             </div>
+
+
+            <a class="carousel-control-prev clicker" onclick="$('#carruselMezclas').carousel('prev');" role="ºon" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true" />
+            </a>
+            <a class="carousel-control-next clicker" onclick="$('#carruselMezclas').carousel('next');" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true" />
+            </a>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+
+        $('#carruselMezclas').carousel('pause');
+        $('#carruselMezclas div.carousel-inner div.carousel-item:first-child').addClass('active');
+
+        startTimer([[${categoria.getSegundosParticipar()}]], [[${categoria.getSegundosParticipar()}]], $('#progressBar'));
+
+        function startTimer(timeleft, timetotal, $element) {
+
+            setInterval(function () {
+                timeleft--;
+                if (timeleft === 0){
+                    enviarTiempos()
+                } else {
+                    var progressBarWidth = timeleft * $element.width() / timetotal; //TODO: Esto se puede hacer también al resize, para que no espere un segundo
+                    $element.find('div').animate({width: progressBarWidth}, 500).html(Math.floor(timeleft / 60) + ":" + ((timeleft % 60) < 10 ? "0" + (timeleft % 60) : (timeleft % 60)));
+                }
+            }, 1000);
+
+        }
+
+        function enviarTiempos() {
+
+
+            //TODO FMC
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    alert(xhttp.responseText);
+                    window.location.href = '/participante/' + [[${participante.getNombre()}]];
+                } else if(this.readyState === 4 && this.status === 401) {
+                    alert('Ojo, parece que durante este tiempo por algún motivo que desconozco has perdido la sesión. No te preocupes, sigue los siguientes pasos: Primero, abre la web en otra pestaña,' +
+                        ' e inicia sesión en ella. Después vuelve a esta pestaña y (sin refrescar) vuelve a intentar el envío. Si el problema no se soluciona de esta forma, por favor, contacta al desarrollador.');
+                } else if(this.readyState === 4){
+                    alert('Esto es un error, por favor, contacta con el desarrollador y muéstrale lo siguente: '+ xhttp.responseText);
+                }
+            };
+
+            xhttp.open("POST", "/participar/"+ [[${nombreCompeticion}]] + "/" +[[${categoria.getNombre()}]], true);
+            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhttp.setRequestHeader("tiempo1", getTiempo( $("#tiempo" + 1)));
+            xhttp.setRequestHeader("tiempo2", getTiempo( $("#tiempo" + 2)));
+            xhttp.setRequestHeader("tiempo3", getTiempo( $("#tiempo" + 3)));
+            xhttp.setRequestHeader("tiempo4", getTiempo( $("#tiempo" + 4)));
+            xhttp.setRequestHeader("tiempo5", getTiempo( $("#tiempo" + 5)));
+            xhttp.send();
+
+
+
+        }
+
+        function getTiempo(divTiempo) {
+
+            if(!divTiempo){return 0;} //TODO: https://trello.com/c/zx5rFvfH
+
+            var minutos = divTiempo.find(".minutos")[0].value ?  divTiempo.find(".minutos")[0].value : 0;
+            var segundos = divTiempo.find(".segundos")[0].value ?  divTiempo.find(".segundos")[0].value : 0;
+            var centesimas = divTiempo.find(".centesimas")[0].value ?  divTiempo.find(".centesimas")[0].value : 0;
+
+            return +(minutos * 60) + +segundos + +(centesimas/100.0);
+
+
+        }
+
+
+    </script>
+</div>
+<script src="/js/html-duration-picker.min.js"></script>
+</body>
+</html>

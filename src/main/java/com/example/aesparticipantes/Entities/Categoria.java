@@ -30,6 +30,9 @@ public class Categoria {
     private int numTiempos;
 
     @NotNull
+    private int segundosParticipar;
+
+    @NotNull
     private int orden;
 
     @Override

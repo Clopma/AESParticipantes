@@ -29,7 +29,11 @@
 </script>
 
 <body class="cubosbg">
-<div th:replace="fragments/backButton :: backButton"/>
+<div th:fragment="backButton" class="bouncyContainer back">
+    <a th:href="'/competicion/' + ${nombreCompeticion}" class="bouncyContainer">
+        <img class="bouncyButton" src="/img/backbutton.png"/>
+    </a> <div class="tagNav"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px" th:text="${nombreCompeticion}"/></div>
+</div>
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 15px;">
         <div style="display: flex; align-items: center; justify-content: center">

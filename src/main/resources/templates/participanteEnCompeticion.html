@@ -46,8 +46,8 @@
          style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; position: relative;">
 
         <!-- Relative para la posición y el anchor-->
-        <div class="puntuacion whitePanel">
-            <h1 th:text="${posicion.getPosicionGeneral()} + 'ª POSICIÓN'"
+        <div th:if="${posicion.getPosicionGeneral() != 0}" class="puntuacion whitePanel">
+            <h1 th:text="${posicion.getPosicionGeneral() + 'ª POSICIÓN'}"
                 th:style="'font-size: '+${posicion.getTamano()}+'px !important; align-self: center'"> Posición </h1>
         </div>
         <div style="display: flex; align-items: center">
@@ -70,7 +70,8 @@
             </a>
 
         </div>
-        <table th:data-numTiempos="${posicion.getEvento().getCategoria().getNumTiempos()}" th:data-nombreCat="${posicion.getEvento().getCategoria().getNombre()}"
+        <div th:if="${posicion.getPosicionGeneral() == 0}">El participante está inscrito, pero no ha participado.</div>
+        <table th:if="${posicion.getPosicionGeneral() != 0}"  th:data-numTiempos="${posicion.getEvento().getCategoria().getNumTiempos()}" th:data-nombreCat="${posicion.getEvento().getCategoria().getNombre()}"
                th:id="'dataTable'+ ${iStat.index}" class="table centerCols">
             <thead>
             <tr>
@@ -92,7 +93,7 @@
             <tr th:each="jornada: ${posicion.getTiempos()}">
                 <td style="display: flex">
                     <div class="bouncyContainer podio" style="width: 50px; height: 50px; min-width: 50px;">
-                        <a  th:href="'/ranking/' + ${nombreCompeticion} + '/' +${posicion.getEvento().getCategoria().getNombre()}+'/jornada/' + ${jornada.getJornada()} + '#'+${nombreParticipante}"
+                        <a  th:href="'/ranking/' + ${nombreCompeticion} + '/' +${posicion.getEvento().getCategoria().getNombre()}+'/jornada/' + ${jornada.getJornada().getNumeroJornada()} + '#'+${nombreParticipante}"
                            class="bouncyContainer">
                             <img class="bouncyButton podio" src="/img/podiologo.png"/>
                         </a>

@@ -26,9 +26,9 @@
 
 <body class="cubosbg" onload="formatearFechas()">
 <div th:replace="fragments/backButton :: backButton"/>
-<div th:if="${competicion.isEmpezada()}" class="bouncyContainer forth">
+<div th:if="${competicion.isFinalizada()}" class="bouncyContainer forth">
     <a th:href="'/podios/' + ${nombreCompeticion}" class="bouncyContainer">
-        <img class="bouncyButton" src="/img/podiologo.png"/>
+        <img class="bouncyButton makeSmaller" src="/img/podiologo.png"/>
     </a> <div class="tagNav"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px">PODIOS</h2></div>
 </div>
 <div class="vertical-flex-wrapper">

@@ -1,18 +1,17 @@
 package com.example.aesparticipantes.Entities.Keys;
 
+
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 
-
 @Getter
 @Setter
-public class KeyDescalificacion implements Serializable {
+public class KeyMezcla implements Serializable{
 
-    private KeyEvento evento;
-    private String participante;
-
-
+    private String categoria;
+    private KeyJornada jornada;
+    private int numTiempo;
 
 }

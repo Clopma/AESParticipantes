@@ -1,5 +1,6 @@
 package com.example.aesparticipantes.Repositories;
 
+import com.example.aesparticipantes.Entities.Categoria;
 import com.example.aesparticipantes.Entities.Jornada;
 import com.example.aesparticipantes.Entities.Participante;
 import com.example.aesparticipantes.Entities.Tiempo;
@@ -15,5 +16,7 @@ public interface TiempoRepository extends CrudRepository<Tiempo, Long> {
 
     @Query("from Tiempo t where t.jornada = ?1 and t.participante = ?2")
     List<Tiempo> getTiemposEnJornada(Jornada jornada, Participante participante);
+
+    Tiempo getByParticipanteAndCategoriaAndJornada(Participante p, Categoria c, Jornada j);
 
 }

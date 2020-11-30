@@ -109,38 +109,57 @@
     <div class="login-content">
 
         <div class="whitePanel left" style="margin-left: 0px;">
-            <img src="/img/podiologo.png" width="200px"/>
-            <h2>Buscar ranking:</h2>
-            <p style="font-size: large">Puedes ver los resultados generales y de cada jornada de una categoría:</p>
+            <img src="/img/copas/copa.png" class="sombra" width="200px"/>
+            <h1>COMPETICIONES</h1>
+            <p style="font-size: large">Haz click en una competición para ver toda la información:</p>
 
-            <div style="width: 100%">
-
-                <div style="display: flex; justify-content: center; align-items: center; padding-bottom: 10px">
-                    <h3 style="padding-right: 10px"> Categoría:</h3>
-
-                    <select class="form-control form-control-lg miSelect" id="selectorCategoria">
-                        <option th:each="categoria: ${categorias}" th:text="${categoria.nombre}"/>
-                    </select>
+            <div style="display: flex">
+                <div>
+                    <div class="bouncyContainer podio" style="width: 200px; height: 200px;">
+                        <a href="/competicion/Nacionline%202020" class="bouncyContainer">
+                            <img class="bouncyButton podio" src="/img/copas/copa_nacional2020.png"/>
+                        </a>
+                    </div>
+                    <h4>Nacionline 2020</h4>
                 </div>
-                <div style="display: flex; justify-content: center; align-items: center">
-                    <h3 style="padding-right: 10px">Ranking:</h3>
-                    <select class="form-control form-control-lg miSelect" id="selectorRanking">
-                        <option value="0">Ranking general</option>
-                        <option th:each="jornada, iStat :  ${#numbers.sequence(0, numJornadas - 1)}"
-                                th:text="'Jornada ' + ${iStat.index + 1}"
-                                th:value="${iStat.index+1}"/>
-                    </select>
-                </div>
-                <script>
-                    document.getElementById("selectorCategoria").selectedIndex = -1;
-                    document.getElementById("selectorRanking").selectedIndex = -1;
-                </script>
-                <div class="bouncyContainer forward" style="margin: auto">
-                    <a onclick="irACategoria()" class="bouncyContainer" style="cursor: pointer">
-                        <img class="bouncyButton forward" src="/img/forwardbutton.png"/>
-                    </a>
+                <div>
+                    <div class="bouncyContainer podio" style="width: 200px; height: 200px;">
+                        <a href="/competicion/Navidades%20Online" class="bouncyContainer">
+                            <img class="bouncyButton podio" src="/img/copas/copa_navidades_online.png"/>
+                        </a>
+                    </div>
+                    <h4>Navidades Online</h4>
                 </div>
             </div>
+
+<!--            <div style="width: 100%">-->
+
+<!--                <div style="display: flex; justify-content: center; align-items: center; padding-bottom: 10px">-->
+<!--                    <h3 style="padding-right: 10px"> Categoría:</h3>-->
+
+<!--                    <select class="form-control form-control-lg miSelect" id="selectorCategoria">-->
+<!--                        <option th:each="categoria: ${categorias}" th:text="${categoria.nombre}"/>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--                <div style="display: flex; justify-content: center; align-items: center">-->
+<!--                    <h3 style="padding-right: 10px">Ranking:</h3>-->
+<!--                    <select class="form-control form-control-lg miSelect" id="selectorRanking">-->
+<!--                        <option value="0">Ranking general</option>-->
+<!--                        <option th:each="jornada, iStat :  ${#numbers.sequence(0, numJornadas - 1)}"-->
+<!--                                th:text="'Jornada ' + ${iStat.index + 1}"-->
+<!--                                th:value="${iStat.index+1}"/>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--                <script>-->
+<!--                    document.getElementById("selectorCategoria").selectedIndex = -1;-->
+<!--                    document.getElementById("selectorRanking").selectedIndex = -1;-->
+<!--                </script>-->
+<!--                <div class="bouncyContainer forward" style="margin: auto">-->
+<!--                    <a onclick="irACategoria()" class="bouncyContainer" style="cursor: pointer">-->
+<!--                        <img class="bouncyButton forward" src="/img/forwardbutton.png"/>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
         <div class="whitePanel">
             <img src="/img/aes_logo.png" width="300px"/>
@@ -148,8 +167,8 @@
         </div>
 
         <div class="whitePanel right" style="margin-right: 0px">
-            <img src="/img/userIcon.png" width="200px;"/>
-            <h2>Buscar participante:</h2>
+            <img src="/img/userIcon.png" width="200px;" class="sombra"/>
+            <h2>PARTICIPANTES</h2>
 
             <p style="font-size: large">Busca el perfil de un participante para ver sus competiciones y tiempos:</p>
 

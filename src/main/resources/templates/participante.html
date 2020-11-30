@@ -19,14 +19,13 @@
 
 <script th:inline="javascript">
 
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    });
-
     function vincular() {
         window.location.href = '/vincular/' + [[${participante.getNombre()}]];
     }
 
+    function participar(button) {
+        window.location.href = '/participar/' + $(button).attr("data-competicion");
+    }
 
 </script>
 <div th:replace="fragments/backButton :: backButton"/>
@@ -67,7 +66,7 @@
             <th>Competición</th>
             <th colspan="100%">Categorías completadas</th>
             </thead>
-            <tbody th:each="resultado: ${resultados}" class="alto">
+            <tbody th:each="resultado: ${resultados}" th:if="${resultado.getKey().isFinalizada()}" class="alto">
             <tr>
 
                 <td rowspan="2" class="iconoStandard"><a
@@ -90,10 +89,73 @@
                     <div style="display: flex; align-items: center; justify-content: center">
                         <div class="tooltip">
                             <a th:href="@{|/ranking/${resultado.getKey().getNombre()}/${posicion.getEvento().getCategoria().getNombre()}/#${nombreParticipante}|}">
-                                <span class="iconoStandard" th:text="${posicion.getPosicionGeneral()+'º'}"/>
+                                <span class="iconoStandard" th:text="${posicion.getPosicionGeneral() == 0 ? '-' : posicion.getPosicionGeneral()+'º'}"/>
                             </a>
-                            <span class="tooltiptext">Posición en el ránking (con <span style="font-weight: bold"
-                                                                                        th:text="${posicion.getPuntuacionTotal()}"/> puntos)</span>
+                            <span th:if=" ${posicion.getPosicionGeneral() != 0}" class="tooltiptext">Posición en el ránking (con <span style="font-weight: bold" th:text="${posicion.getPuntuacionTotal()}"/> puntos)</span>
+                            <span th:if=" ${posicion.getPosicionGeneral() == 0}" class="tooltiptext">Está inscrito, pero no ha participado en esta categoría.</span>
+                        </div>
+                        <span th:if="${posicion.isClasificado()}" class="iconoStandard">&rarr;</span>
+                        <div th:if="${posicion.isClasificado()}" class="tooltip" style="height: 80px; width: 80px">
+                            <a onclick="loadModal(this)"
+                               th:data-nombreCategoria="${posicion.getEvento().getCategoria().getNombre()}"
+                               data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
+                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() != null}"
+                                     th:src="'/img/'+${posicion.getMedalla()+'.png'}"/>
+                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() == null}"
+                                     src="/img/bracket.png"/>
+                            </a>
+                            <span class="tooltiptext">Posición en playoffs</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="whitePanel" style="margin-top: 50px;">
+        <h1 style="text-align: center; padding-bottom: 30px">
+            Competiciones en curso
+        </h1>
+
+        <table class="table dataTable centerCols" style="font-size: 20px;">
+            <thead>
+                <th>Competición</th>
+                <th colspan="100%">Categorías inscritas</th>
+            </thead>
+            <tbody th:each="resultado: ${resultados}" th:if="${resultado.getKey().isEnCurso()}" class="alto">
+            <tr>
+
+                <td rowspan="2" class="iconoStandard">
+                    <a th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}|}"><span
+                        th:text="${resultado.getKey().getNombre()}"/>
+                    </a>
+                    <div th:with="jornadaActiva = ${resultado.getKey().getJornadaActiva()}">
+                        <span th:if="${soyYo && jornadaActiva.isPresent()}">
+                            <button onclick="participar(this)" th:data-competicion="${resultado.getKey().getNombre()}" style="font-size: x-large" class="btn btn-outline-primary" th:text="${'Participar en la jornada ' + jornadaActiva.get().getNumeroJornada()}" />
+                        </span>
+                    </div>
+                </td>
+
+                <td th:each="posicion : ${resultado.getValue()}" style="border-bottom: 0">
+
+                    <div class="tooltip"><a
+                            th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}/#${posicion.getEvento().getCategoria().getNombre()}|}"><span
+                            th:class="'cubing-icon event-' + ${posicion.getEvento().getCategoria().getNombre()}"/></a>
+                        <span class="tooltiptext">Ver todos los tiempos</span>
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td th:each="posicion : ${resultado.getValue()}">
+                    <div style="display: flex; align-items: center; justify-content: center">
+                        <div class="tooltip">
+                            <a th:href="@{|/ranking/${resultado.getKey().getNombre()}/${posicion.getEvento().getCategoria().getNombre()}/#${nombreParticipante}|}">
+                                <span class="iconoStandard" th:text="${posicion.getPosicionGeneral() == 0 ? '-' : posicion.getPosicionGeneral()+'º'}"/>
+                            </a>
+                            <span th:if=" ${posicion.getPosicionGeneral() != 0}" class="tooltiptext">Posición en el ránking (con <span style="font-weight: bold" th:text="${posicion.getPuntuacionTotal()}"/> puntos)</span>
+                            <span th:if=" ${posicion.getPosicionGeneral() == 0}" class="tooltiptext">Está inscrito, pero aun no ha participado en esta categoría.</span>
                         </div>
                         <span th:if="${posicion.isClasificado()}" class="iconoStandard">&rarr;</span>
                         <div th:if="${posicion.isClasificado()}" class="tooltip" style="height: 80px; width: 80px">

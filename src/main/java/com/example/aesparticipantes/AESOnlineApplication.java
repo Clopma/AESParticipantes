@@ -1,24 +1,26 @@
 package com.example.aesparticipantes;
 
-import com.example.aesparticipantes.Repositories.InscripcionRepository;
-import com.example.aesparticipantes.Repositories.RefreshableRepositoryImpl;
+import com.example.aesparticipantes.Repositories.CompeticionRepository;
+import com.example.aesparticipantes.Repositories.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
-@EnableJpaRepositories(repositoryBaseClass = RefreshableRepositoryImpl.class)
 @EnableCaching
 public class AESOnlineApplication {
 
 
     @Autowired
-    InscripcionRepository inscripcionRepository;
+    EventoRepository eventoRepository;
+
+
+    @Autowired
+    CompeticionRepository competicionRepository;
 
     public static void main(String[] args) {
 
@@ -28,11 +30,11 @@ public class AESOnlineApplication {
     }
 
     @PostConstruct
-    public static void test() {
+    public void test() {
 
-
-
-
+//        Competicion competicion = competicionRepository.findByNombre("Nacionline 2020");
+//        Evento evento = eventoRepository.getEventoPorCategoriaYNombre("3x3x3", "Nacionline 2020");
+//        int a = evento.getCompeticion().getJornadas().size; //DEBERIA SER 5
 
     }
 

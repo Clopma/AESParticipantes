@@ -43,7 +43,7 @@ public class ParticipanteController {
     TiempoRepository tiempoRepository;
 
     @RequestMapping("/participante/{nombreParticipante}")
-    public String inicio(Model model, @PathVariable("nombreParticipante") String nombreParticipante, Principal principal) {
+    public String perfilParticipante(Model model, @PathVariable("nombreParticipante") String nombreParticipante, Principal principal) {
 
 
         model.addAttribute("soyYo", false);
@@ -70,7 +70,7 @@ public class ParticipanteController {
 
 
     @RequestMapping("/participante/{nombreParticipante}/{nombreCompeticion}")
-    public String inicio(Model model, @PathVariable("nombreParticipante") String nombreParticipante, @PathVariable("nombreCompeticion") String nombreCompeticion) {
+    public String participanteEnCompeticion(Model model, @PathVariable("nombreParticipante") String nombreParticipante, @PathVariable("nombreCompeticion") String nombreCompeticion) {
 
 
         List<Posicion> resultado = self.getPosicionesEnCompeticion(competicionRepository.findByNombre(nombreCompeticion), self.getParticipante(nombreParticipante), descalificacionRepository);
@@ -87,8 +87,8 @@ public class ParticipanteController {
 
         Map<Competicion, List<Posicion>> resultados = new HashMap<>();
 
-        Set<Competicion> competicionesParticipadas = participante.getTiempos().stream().collect(Collectors.groupingBy(t -> t.getJornada().getCompeticion())).keySet();
-        competicionesParticipadas.forEach(competicion -> resultados.put(competicion, self.getPosicionesEnCompeticion(competicion, participante, descalificacionRepository)));
+        Set<Competicion> competicionesInscritas = participante.getInscripciones().stream().collect(Collectors.groupingBy(i -> i.getEvento().getCompeticion())).keySet();
+        competicionesInscritas.forEach(competicion -> resultados.put(competicion, self.getPosicionesEnCompeticion(competicion, participante, descalificacionRepository)));
         return resultados;
 
     }

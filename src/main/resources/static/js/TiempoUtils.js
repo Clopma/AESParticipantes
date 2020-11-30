@@ -2,7 +2,7 @@ function formatearFechas() {
     var elements = document.getElementsByClassName("fecha");
     for(var i=0; i<elements.length; i++) {
 
-        elements[i].innerText = new Date(elements[i].innerText).toLocaleString();
+        elements[i].innerText = new Date(elements[i].innerText).toLocaleString('es-ES');
     }
 
 }

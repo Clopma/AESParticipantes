@@ -4,15 +4,22 @@ import com.example.aesparticipantes.Entities.*;
 import com.example.aesparticipantes.Models.Inscripcion;
 import com.example.aesparticipantes.Repositories.CategoriaRepository;
 import com.example.aesparticipantes.Repositories.CompeticionRepository;
+import com.example.aesparticipantes.Repositories.MezclaRepository;
 import com.example.aesparticipantes.Repositories.TiempoRepository;
 import com.example.aesparticipantes.Seguridad.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +27,7 @@ import java.util.stream.Collectors;
 @Controller
 public class ParticiparController {
 
+    private static final String FRASE_HACKER = "Esto no debería ocurrir a no ser que seas un hacker.";
     @Autowired
     CompeticionRepository competicionRepository;
 
@@ -31,6 +39,13 @@ public class ParticiparController {
 
     @Autowired
     CategoriaRepository categoriaRepository;
+
+    @Autowired
+    MezclaRepository mezclaRepository;
+
+    @Autowired
+    CacheManager cacheManager;
+
 
     @GetMapping("/participar/{nombreCompeticion}")
     public String elegirCategoria(@PathVariable("nombreCompeticion") String nombreCompeticion, Model model, Principal principal) {
@@ -61,11 +76,11 @@ public class ParticiparController {
         List<Categoria> categoriasParticipadas = tiempoRepository.getTiemposEnJornada(jornadaActiva.get(), participanteLogeado).stream()
                 .map(Tiempo::getCategoria).collect(Collectors.toList());
 
-        List<Inscripcion> categoriasInscritas = participanteLogeado.getInscripcionesParticipadasYNoParticipadasEnCompeticion(competicion, categoriasParticipadas);
+        List<Inscripcion> categoriasParticipadasYSoloInscritas = participanteLogeado.getInscripcionesParticipadasYNoParticipadasEnCompeticion(competicion, categoriasParticipadas);
 
 
 
-        model.addAttribute("inscripciones", categoriasInscritas);
+        model.addAttribute("inscripciones", categoriasParticipadasYSoloInscritas);
 
         return "elegirCategoria";
     }
@@ -76,7 +91,7 @@ public class ParticiparController {
     }
 
     @GetMapping("/participar/{nombreCompeticion}/{nombreCategoria}")
-    public String evento(@PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("nombreCompeticion") String nombreCompeticion, Model model, Principal principal) {
+    public String participar(@PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("nombreCompeticion") String nombreCompeticion, Model model, Principal principal) {
 
 
         //TODO: Código duplicado, meter en métodos de validación: con un throws custom exception con un campo para la template y otro para el mensaje
@@ -103,10 +118,18 @@ public class ParticiparController {
             }
          // FIN TODO
 
-        Categoria categoria = categoriaRepository.findByNombre(nombreCategoria); //TODO: no lo cacheo porque quiero comprobar si se queda en memoria y no hace la query
-        List<Inscripcion> categoriasInscritas = participanteLogeado.getInscripcionesParticipadasYNoParticipadasEnCompeticion(competicion);
+        Categoria categoria = categoriaRepository.findByNombre(nombreCategoria); //TODO: Cachear (hacer esta tarea después de entender el cacheo de hibernate)
 
-        Optional<Inscripcion> posibleInscripcion = categoriasInscritas.stream().filter(i -> i.getCategoria().equals(categoria)).findAny();
+        if(categoria == null){
+            return "error/404";
+        }
+
+        List<Categoria> categoriasParticipadas = tiempoRepository.getTiemposEnJornada(jornadaActiva.get(), participanteLogeado).stream()
+                .map(Tiempo::getCategoria).collect(Collectors.toList());
+
+        List<Inscripcion> categoriasParticipadasYSoloInscritas = participanteLogeado.getInscripcionesParticipadasYNoParticipadasEnCompeticion(competicion, categoriasParticipadas);
+
+        Optional<Inscripcion> posibleInscripcion = categoriasParticipadasYSoloInscritas.stream().filter(i -> i.getCategoria().equals(categoria)).findAny();
         if (!posibleInscripcion.isPresent()){
             model.addAttribute("mensaje", "No estás inscrito en esa categoría. Por favor, no intentes hacer trampas. Si crees que esto es un error, contacta a un administrador.");
             return "mensaje";
@@ -115,15 +138,93 @@ public class ParticiparController {
         Inscripcion inscripcion = posibleInscripcion.get();
 
         if (inscripcion.isParticipado()){
-            model.addAttribute("mensaje", "Ya has participado en este. Por favor, no intentes hacer trampas. Si crees que esto es un error, contacta a un administrador.");
+            model.addAttribute("mensaje", "Ya has participado en esta categoría en esta jornada. Por favor, no intentes hacer trampas. Si crees que esto es un error, contacta a un administrador.");
             return "mensaje";
         }
 
+        tiempoRepository.save(Tiempo.builder()
+                .jornada(jornadaActiva.get())
+                .participante(participanteLogeado)
+                .categoria(inscripcion.getCategoria())
+                .comienzo(new Date())
+                //TODO: https://trello.com/c/zx5rFvfH
+                .tiempo1(0)
+                .tiempo2(0)
+                .tiempo3(0)
+                .tiempo4(0)
+                .tiempo5(0)
+                .build());
 
+        List<Mezcla> mezclas = mezclaRepository.findAllByJornadaAndCategoria(jornadaActiva.get(), inscripcion.getCategoria());
 
+        model.addAttribute("categoria", categoria);
+        model.addAttribute("mezclas", mezclas);
+        model.addAttribute("participante", participanteLogeado);
 
+        return "participar";
+    }
 
-        return "mensaje";
+    @PostMapping("/participar/{nombreCompeticion}/{nombreCategoria}")
+    // Cache evict from code
+    public ResponseEntity<String> enviarTiempos(@PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("nombreCompeticion") String nombreCompeticion,
+                                                @RequestHeader("tiempo1") double tiempo1,
+                                                @RequestHeader("tiempo2") double tiempo2,
+                                                @RequestHeader("tiempo3") double tiempo3,
+                                                @RequestHeader("tiempo4") double tiempo4,
+                                                @RequestHeader("tiempo5") double tiempo5,
+                                                Model model, Principal principal) {
+
+        Participante participanteLogeado;
+        if (principal instanceof UserData) {
+            String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
+            participanteLogeado = participanteController.getParticipante(nombreParticipanteGuardado);
+            if (participanteLogeado == null) {
+                return new ResponseEntity<>("Usuario no encontrado", HttpStatus.UNAUTHORIZED);
+            }
+        } else {
+            return new ResponseEntity<>("Usuario no logeado", HttpStatus.UNAUTHORIZED);
+        }
+
+        Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
+        if (competicion == null) {
+            return  new ResponseEntity<>("Competición no encontrada. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
+        }
+
+        Optional<Jornada> jornadaActiva = competicion.getJornadaActiva();
+        if (!jornadaActiva.isPresent()) {
+            return new ResponseEntity<>("Lo sentimos, pero la jornada ha terminado mientras participabas. No hay que dejar las cosas para el último momento...", HttpStatus.FORBIDDEN);
+        }
+
+        Categoria categoria = categoriaRepository.findByNombre(nombreCategoria); //TODO: Cachear (hacer esta tarea después de entender el cacheo de hibernate)
+
+        if(categoria == null){
+            return new ResponseEntity<>("Categoría no encontrada. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
+        }
+
+        Tiempo tiempo = tiempoRepository.getByParticipanteAndCategoriaAndJornada(participanteLogeado, categoria, jornadaActiva.get());
+
+        if(tiempo == null){
+            return new ResponseEntity<>("Tiempo de inicio no encontrado. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
+        }
+
+        if (tiempo.getEnvio() != null){
+            return new ResponseEntity<>("Parece que ya has enviado el tiempo de esta categoría antes. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
+        }
+
+        tiempo.setEnvio(new Date());
+        tiempo.setTiempo1(tiempo1);
+        tiempo.setTiempo2(tiempo2);
+        tiempo.setTiempo3(tiempo3);
+        tiempo.setTiempo4(tiempo4);
+        tiempo.setTiempo5(tiempo5); //TODO FMC
+
+        tiempoRepository.save(tiempo);
+
+        cacheManager.getCache("participantes").evict(participanteLogeado.getNombre());
+        cacheManager.getCache("rankingsGlobales").evict(Evento.getEventoId(competicion, categoria));
+        cacheManager.getCache("rankingsJornada").evict(Evento.getEventoId(competicion, categoria) +"-"+jornadaActiva.get().getNumeroJornada());
+        cacheManager.getCache("posicionesParticipanteEnCompeticion").evict(tiempo.getJornada().getCompeticion().getNombre() + "-" + participanteLogeado.getNombre());
+        return new ResponseEntity<>("Los tiempos se han guardado correctamente", HttpStatus.OK);
     }
 
 }

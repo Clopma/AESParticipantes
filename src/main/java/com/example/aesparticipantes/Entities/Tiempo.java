@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
+import java.util.Date;
 
 import static com.example.aesparticipantes.Utils.AESUtils.formatTime;
 
@@ -30,6 +31,7 @@ public class Tiempo implements Comparable {
 
     @Id
     @ManyToOne
+//    @Cascade({org.hibernate.annotations.CascadeType.PERSIST})
     private Participante participante;
 
     @NotNull
@@ -51,6 +53,12 @@ public class Tiempo implements Comparable {
 
     @Column(length = 2000)
     private String explicacion;
+
+    //TODO @NotNull
+    private Date comienzo;
+
+    //Si es null, ha comenzado pero no se ha enviado el tiempo final
+    private Date envio;
 
     @Transient
     private double media;

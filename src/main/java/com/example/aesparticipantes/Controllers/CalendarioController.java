@@ -50,7 +50,7 @@ public class CalendarioController {
     @GetMapping("/calendario/playoffs/{nombreCompeticion}/{nombreCategoria}")
     public String evento(@PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("nombreCompeticion") String nombreCompeticion, Model model) {
 
-        Evento evento = eventoRepository.findByCategoriaNombreAndCompeticionNombre(nombreCategoria, nombreCompeticion);
+        Evento evento = eventoRepository.getEventoPorCategoriaYNombre(nombreCategoria, nombreCompeticion);
 
         model.addAttribute("evento", evento);
         List<Clasificado> cuartos = clasificadoRepository.getRonda(evento, Clasificado.NombreRonda.CUARTO.name());

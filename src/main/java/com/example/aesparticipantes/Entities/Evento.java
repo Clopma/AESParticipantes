@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 @Configurable
 public class Evento {
 
-
     @Id
     @ManyToOne
     private Categoria categoria;
@@ -57,14 +56,11 @@ public class Evento {
     //Ser llamado solo desde cacheable
     public List<Tiempo> getRankingJornada(int numJornada){
 
-        Jornada jornada = competicion.getJornadas().stream()
-                .filter(j -> j.getNumeroJornada() == numJornada)
-                .findFirst().get(); //TODO: Cuando aun no hay jornadas RIP
+        List<Tiempo> tiemposEnJornada = getTiempos().stream().filter(t -> t.getJornada().getNumeroJornada() == numJornada).collect(Collectors.toList()); //TODO: Quizás una query
+        AESUtils.setPosicionesEnTiempos(tiemposEnJornada);
+        tiemposEnJornada.sort(Comparator.comparingInt(Tiempo::getPosicion));
 
-        AESUtils.setPosicionesEnTiempos(jornada.getTiempos());
-        jornada.getTiempos().sort(Comparator.comparingInt(Tiempo::getPosicion));
-
-        return jornada.getTiempos();
+        return tiemposEnJornada;
 
     }
 
@@ -77,11 +73,10 @@ public class Evento {
 //            tiemposRanking.stream().filter(t -> t.getJornada().getEvento().getCompeticion().equals(competicion)).collect(Collectors.toList()); TODO: Ya son de la compecición, cierto?
 
             List<Posicion> puntuacionesTotales = tiemposRanking.stream().collect(Collectors.groupingBy(Tiempo::getParticipante))
-                            .entrySet().stream().map(m ->
-                            Posicion.builder()
-                                    .evento(this)
-                                    .tiempos(m.getValue())
-                                    .build()
+                            .values().stream().map(tiempos -> Posicion.builder()
+                            .evento(this)
+                            .tiempos(tiempos)
+                            .build()
                     ).collect(Collectors.toList());
 
             List<Posicion> puntuacionesTotalesAux = new ArrayList<>(puntuacionesTotales);
@@ -105,7 +100,7 @@ public class Evento {
                     .collect(Collectors.toList());
 
             if (noDescalificados.size() > 0) {
-                noDescalificados.subList(0, Math.min(this.getCortePlayOffs(), noDescalificados.size() - 1)) //TODO: TEST un poco mas
+                noDescalificados.subList(0, Math.min(this.getCortePlayOffs(), noDescalificados.size())) //TODO: TEST un poco mas
                         .forEach(p -> p.setClasificado(true));
             }
 
@@ -160,7 +155,7 @@ public class Evento {
                 if (aux.size() > 1) {
 
                     aux2 = puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.stream().map(Posicion::clone).collect(Collectors.toList()); //Me la guardo para que quede al menos un último Tiempo que identifique el Participante
-                    puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.forEach(p -> p.getTiempos().remove(0));
+                    puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.forEach(p -> { if(p.getTiempos().size() > 0) { p.getTiempos().remove(0); } });
 
                 } else if (aux.size() == 1) {
 
@@ -224,7 +219,11 @@ public class Evento {
     }
 
     public String getId(){
-        return getCompeticion() + "-" + getCategoria();
+        return getEventoId(getCompeticion(), getCategoria());
+    }
+
+    public static String getEventoId(Competicion competicion, Categoria categoria) {
+        return competicion.getNombre() + "-" + categoria.getNombre();
     }
 
     @Override

@@ -47,13 +47,13 @@ public class Participante implements Comparable {
     List<Inscripcion> inscripciones;
 
 
-    public List<com.example.aesparticipantes.Models.Inscripcion> getInscripcionesParticipadasYNoParticipadasEnCompeticion(Competicion competicion) {
+    public List<com.example.aesparticipantes.Models.Inscripcion> getInscripcionesParticipadasYNoParticipadasEnCompeticion(Competicion competicion, List<Categoria> categoriasParticipadas) {
        List<com.example.aesparticipantes.Models.Inscripcion> inscripciones = getInscripciones().stream().filter(i -> i.getEvento().getCompeticion().equals(competicion))
                 .map(i -> com.example.aesparticipantes.Models.Inscripcion.builder().categoria(i.getEvento().getCategoria()).build()).collect(Collectors.toList());
 
         inscripciones.forEach(p -> p.setParticipado(categoriasParticipadas.contains(p.getCategoria())));
 
-        return
+        return inscripciones;
 
     }
 

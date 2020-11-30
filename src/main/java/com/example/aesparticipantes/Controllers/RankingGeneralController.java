@@ -73,7 +73,7 @@ public class RankingGeneralController {
 
     @Cacheable(value = "eventos")
     public Evento getEvento(String nombreCategoria, String nombreCompeticion){
-        return  eventoRepository.findByCategoriaNombreAndCompeticionNombre(nombreCategoria, nombreCompeticion);
+        return  eventoRepository.getEventoPorCategoriaYNombre(nombreCategoria, nombreCompeticion);
     }
 
     @Cacheable(value = "competiciones")
@@ -89,7 +89,7 @@ public class RankingGeneralController {
     @Cacheable(value = "rankingsGlobales", key = "#evento.id")
     public List<Posicion> getRankingGlobal(Evento evento, DescalificacionRepository descalificacionRepository, ClasificadoRepository clasificadoRepository) {
 
-        evento.getTiempos().stream().collect(Collectors.groupingBy(Tiempo::getJornada)).forEach((k, v) -> AESUtils.setPosicionesEnTiempos(v));
+        evento.getTiempos().stream().collect(Collectors.groupingBy(Tiempo::getJornada)).forEach((j, ts) -> AESUtils.setPosicionesEnTiempos(ts));
         return evento.getRankingGlobal(descalificacionRepository, clasificadoRepository);
     }
 
