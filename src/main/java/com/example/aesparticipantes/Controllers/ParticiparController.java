@@ -8,6 +8,7 @@ import com.example.aesparticipantes.Repositories.MezclaRepository;
 import com.example.aesparticipantes.Repositories.TiempoRepository;
 import com.example.aesparticipantes.Seguridad.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,9 @@ public class ParticiparController {
     @Autowired
     CacheManager cacheManager;
 
+    @Value("${aesonline.enableEnvioTiempos}")
+    public boolean envioTiemposEnabled;
+
 
     @GetMapping("/participar/{nombreCompeticion}")
     public String elegirCategoria(@PathVariable("nombreCompeticion") String nombreCompeticion, Model model, Principal principal) {
@@ -61,12 +65,12 @@ public class ParticiparController {
             return noLogeado(model);
         }
 
-        Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
-        if (competicion == null){
+        Optional<Competicion> competicion = competicionRepository.findByNombre(nombreCompeticion);
+        if(!competicion.isPresent()){
             return "error/404";
         }
 
-        Optional<Jornada> jornadaActiva = competicion.getJornadaActiva();
+        Optional<Jornada> jornadaActiva = competicion.get().getJornadaActiva();
         if (!jornadaActiva.isPresent()){
             model.addAttribute("mensaje", "No hay ninguna jornada activa en este campeonato. Si crees que esto es un error, contacta a un administrador.");
             return "mensaje";
@@ -76,9 +80,7 @@ public class ParticiparController {
         List<Categoria> categoriasParticipadas = tiempoRepository.getTiemposEnJornada(jornadaActiva.get(), participanteLogeado).stream()
                 .map(Tiempo::getCategoria).collect(Collectors.toList());
 
-        List<Inscripcion> categoriasParticipadasYSoloInscritas = participanteLogeado.getInscripcionesParticipadasYNoParticipadasEnCompeticion(competicion, categoriasParticipadas);
-
-
+        List<Inscripcion> categoriasParticipadasYSoloInscritas = participanteLogeado.getInscripcionesParticipadasYNoParticipadasEnCompeticion(competicion.get(), categoriasParticipadas);
 
         model.addAttribute("inscripciones", categoriasParticipadasYSoloInscritas);
 
@@ -106,12 +108,12 @@ public class ParticiparController {
                 return noLogeado(model);
             }
 
-            Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
-            if (competicion == null) {
+            Optional<Competicion> competicion = competicionRepository.findByNombre(nombreCompeticion);
+
+            if(!competicion.isPresent()){
                 return "error/404";
             }
-
-            Optional<Jornada> jornadaActiva = competicion.getJornadaActiva();
+            Optional<Jornada> jornadaActiva = competicion.get().getJornadaActiva();
             if (!jornadaActiva.isPresent()) {
                 model.addAttribute("mensaje", "No hay ninguna jornada activa en este campeonato. Si crees que esto es un error, contacta a un administrador.");
                 return "mensaje";
@@ -127,7 +129,7 @@ public class ParticiparController {
         List<Categoria> categoriasParticipadas = tiempoRepository.getTiemposEnJornada(jornadaActiva.get(), participanteLogeado).stream()
                 .map(Tiempo::getCategoria).collect(Collectors.toList());
 
-        List<Inscripcion> categoriasParticipadasYSoloInscritas = participanteLogeado.getInscripcionesParticipadasYNoParticipadasEnCompeticion(competicion, categoriasParticipadas);
+        List<Inscripcion> categoriasParticipadasYSoloInscritas = participanteLogeado.getInscripcionesParticipadasYNoParticipadasEnCompeticion(competicion.get(), categoriasParticipadas);
 
         Optional<Inscripcion> posibleInscripcion = categoriasParticipadasYSoloInscritas.stream().filter(i -> i.getCategoria().equals(categoria)).findAny();
         if (!posibleInscripcion.isPresent()){
@@ -138,26 +140,30 @@ public class ParticiparController {
         Inscripcion inscripcion = posibleInscripcion.get();
 
         if (inscripcion.isParticipado()){
-            model.addAttribute("mensaje", "Ya has participado en esta categoría en esta jornada. Por favor, no intentes hacer trampas. Si crees que esto es un error, contacta a un administrador.");
+            model.addAttribute("mensaje", "Ya has participado en esta categoría en esta jornada. Por favor, no intentes hacer trampas. Si has refrescado por accidende o crees que esto es un error, contacta a un administrador.");
             return "mensaje";
         }
 
-        tiempoRepository.save(Tiempo.builder()
-                .jornada(jornadaActiva.get())
-                .participante(participanteLogeado)
-                .categoria(inscripcion.getCategoria())
-                .comienzo(new Date())
-                //TODO: https://trello.com/c/zx5rFvfH
-                .tiempo1(0)
-                .tiempo2(0)
-                .tiempo3(0)
-                .tiempo4(0)
-                .tiempo5(0)
-                .build());
+
+        if (envioTiemposEnabled) {
+            tiempoRepository.save(Tiempo.builder()
+                    .jornada(jornadaActiva.get())
+                    .participante(participanteLogeado)
+                    .categoria(inscripcion.getCategoria())
+                    .comienzo(new Date())
+                    //TODO: https://trello.com/c/zx5rFvfH
+                    .tiempo1(0)
+                    .tiempo2(0)
+                    .tiempo3(0)
+                    .tiempo4(0)
+                    .tiempo5(0)
+                    .build());
+        }
 
         List<Mezcla> mezclas = mezclaRepository.findAllByJornadaAndCategoria(jornadaActiva.get(), inscripcion.getCategoria());
 
         model.addAttribute("categoria", categoria);
+        model.addAttribute("competicion", competicion.get());
         model.addAttribute("mezclas", mezclas);
         model.addAttribute("participante", participanteLogeado);
 
@@ -167,12 +173,22 @@ public class ParticiparController {
     @PostMapping("/participar/{nombreCompeticion}/{nombreCategoria}")
     // Cache evict from code
     public ResponseEntity<String> enviarTiempos(@PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("nombreCompeticion") String nombreCompeticion,
-                                                @RequestHeader("tiempo1") double tiempo1,
-                                                @RequestHeader("tiempo2") double tiempo2,
-                                                @RequestHeader("tiempo3") double tiempo3,
-                                                @RequestHeader("tiempo4") double tiempo4,
-                                                @RequestHeader("tiempo5") double tiempo5,
+                                                @RequestHeader(value = "tiempo1", required = false) Double tiempo1op,
+                                                @RequestHeader(value = "tiempo2", required = false) Double tiempo2op,
+                                                @RequestHeader(value = "tiempo3", required = false) Double tiempo3op,
+                                                @RequestHeader(value = "tiempo4", required = false) Double tiempo4op,
+                                                @RequestHeader(value = "tiempo5", required = false) Double tiempo5op,
+                                                @RequestHeader(value = "solucion", required = false) String solucion,
+                                                @RequestHeader(value = "explicacion", required = false) String explicacion,
                                                 Model model, Principal principal) {
+
+
+        double tiempo1 = tiempo1op != null ? tiempo1op : 0;
+        double tiempo2 = tiempo2op != null ? tiempo2op : 0;
+        double tiempo3 = tiempo3op != null ? tiempo3op : 0;
+        double tiempo4 = tiempo4op != null ? tiempo4op : 0;
+        double tiempo5 = tiempo5op != null ? tiempo5op : 0;
+
 
         Participante participanteLogeado;
         if (principal instanceof UserData) {
@@ -185,12 +201,12 @@ public class ParticiparController {
             return new ResponseEntity<>("Usuario no logeado", HttpStatus.UNAUTHORIZED);
         }
 
-        Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
-        if (competicion == null) {
+        Optional<Competicion> competicion = competicionRepository.findByNombre(nombreCompeticion);
+        if (!competicion.isPresent()) {
             return  new ResponseEntity<>("Competición no encontrada. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
         }
 
-        Optional<Jornada> jornadaActiva = competicion.getJornadaActiva();
+        Optional<Jornada> jornadaActiva = competicion.get().getJornadaActiva();
         if (!jornadaActiva.isPresent()) {
             return new ResponseEntity<>("Lo sentimos, pero la jornada ha terminado mientras participabas. No hay que dejar las cosas para el último momento...", HttpStatus.FORBIDDEN);
         }
@@ -216,14 +232,18 @@ public class ParticiparController {
         tiempo.setTiempo2(tiempo2);
         tiempo.setTiempo3(tiempo3);
         tiempo.setTiempo4(tiempo4);
-        tiempo.setTiempo5(tiempo5); //TODO FMC
+        tiempo.setTiempo5(tiempo5);
+        tiempo.setExplicacion(explicacion);
+        tiempo.setSolucion(solucion);
 
         tiempoRepository.save(tiempo);
 
         cacheManager.getCache("participantes").evict(participanteLogeado.getNombre());
-        cacheManager.getCache("rankingsGlobales").evict(Evento.getEventoId(competicion, categoria));
-        cacheManager.getCache("rankingsJornada").evict(Evento.getEventoId(competicion, categoria) +"-"+jornadaActiva.get().getNumeroJornada());
+        cacheManager.getCache("rankingsGlobales").evict(Evento.getEventoId(competicion.get(), categoria));
+        cacheManager.getCache("rankingsJornada").evict(Evento.getEventoId(competicion.get(), categoria) +"-"+jornadaActiva.get().getNumeroJornada());
         cacheManager.getCache("posicionesParticipanteEnCompeticion").evict(tiempo.getJornada().getCompeticion().getNombre() + "-" + participanteLogeado.getNombre());
+
+
         return new ResponseEntity<>("Los tiempos se han guardado correctamente", HttpStatus.OK);
     }
 

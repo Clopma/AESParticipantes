@@ -7,14 +7,15 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CompeticionRepository extends CrudRepository<Competicion, Long> {
 
 
-    Competicion findByNombre(String nombre);
+    Optional<Competicion> findByNombre(String nombre);
 
-    @Query("select c, min(j.fechaInicio) from Competicion c join Jornada j on c = j.competicion where j.fechaInicio > current_timestamp")
+    @Query("from Competicion c join Jornada j on c = j.competicion group by c having min(j.fechaInicio) > current_timestamp")
     List<Competicion> findCompeticionesFuturas();
 
 

@@ -1,9 +1,6 @@
 package com.example.aesparticipantes.Controllers;
 
-import com.example.aesparticipantes.Entities.Clasificado;
-import com.example.aesparticipantes.Entities.Descalificacion;
-import com.example.aesparticipantes.Entities.Evento;
-import com.example.aesparticipantes.Entities.Participante;
+import com.example.aesparticipantes.Entities.*;
 import com.example.aesparticipantes.Models.Posicion;
 import com.example.aesparticipantes.Repositories.*;
 import com.example.aesparticipantes.Utils.AESUtils;
@@ -15,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -38,6 +36,9 @@ public class CalendarioController {
     @Autowired
     DescalificacionRepository descalificacionRepository;
 
+    @Autowired
+    CompeticionController competicionController;
+
     List<Integer> ordenCuartos = Arrays.asList(0, 7, 4, 3, 2, 5, 6, 1);
     List<Integer> ordenSemifinales = Arrays.asList(0, 3, 2, 1);
 
@@ -50,7 +51,14 @@ public class CalendarioController {
     @GetMapping("/calendario/playoffs/{nombreCompeticion}/{nombreCategoria}")
     public String evento(@PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("nombreCompeticion") String nombreCompeticion, Model model) {
 
-        Evento evento = eventoRepository.getEventoPorCategoriaYNombre(nombreCategoria, nombreCompeticion);
+        Optional<Competicion> competicion = competicionController.getCompeticion(nombreCompeticion);
+        Categoria categoria = categoriaRepository.findByNombre(nombreCategoria); //TODO Cachear
+
+        if(!competicion.isPresent() || categoria == null){
+            return "error/404";
+        }
+
+        Evento evento = rankingGeneralController.getEvento(categoria, competicion.get());
 
         model.addAttribute("evento", evento);
         List<Clasificado> cuartos = clasificadoRepository.getRonda(evento, Clasificado.NombreRonda.CUARTO.name());

@@ -8,7 +8,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-
+  output:
+    ansi:
+      enabled: detect
 
 wca:
   callbackUrlLogin: http://localhost:8080/loginInicio
@@ -20,11 +22,14 @@ wca:
 logging:
   level:
     org.hibernate.SQL: DEBUG
-   # org.hibernate.type: TRACE
+    org.springframework: INFO
 
 server:
   error:
     whitelabel:
       enabled: false
+
+aesonline:
+  enableEnvioTiempos: false
 
 

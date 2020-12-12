@@ -6,6 +6,8 @@ import com.example.aesparticipantes.Repositories.CategoriaRepository;
 import com.example.aesparticipantes.Repositories.ParticipanteRepository;
 import com.example.aesparticipantes.Seguridad.UserData;
 import com.example.aesparticipantes.Utils.AESUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,8 @@ public class InicioController {
 
     @Autowired
     InicioController self;
+
+    Logger logger = LoggerFactory.getLogger(InicioController.class);
 
 
     @GetMapping("/")

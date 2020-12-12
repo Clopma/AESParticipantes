@@ -1,4 +1,4 @@
-function loadBracket(nombreCategoria) {
+function loadBracket(nombreCategoria, nombreCompeticion) {
 
     httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = function () {
@@ -8,7 +8,7 @@ function loadBracket(nombreCategoria) {
             }
         }
     };
-    httpRequest.open('GET', window.location.origin + '/calendario/playoffs/Nacionline 2020/' + nombreCategoria); //TODO nombre campeonato
+    httpRequest.open('GET', window.location.origin + '/calendario/playoffs/'+ nombreCompeticion +'/' + nombreCategoria); //TODO nombre campeonato
     httpRequest.send();
 
 

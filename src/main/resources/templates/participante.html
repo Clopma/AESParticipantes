@@ -48,7 +48,7 @@
         <button th:if="${!participante.isConfirmado()}" onclick="vincular()" class="btn btn-outline-dark"><img
                 src="/img/WCAlogo.png" style="height: 50px; width: 50px;"/> ¿Eres tú? <u>Vincular</u></button>
 
-        <span th:if="${participante.isConfirmado()}" style="font-size: 20px;">
+        <span th:if="${participante.isConfirmado() && participante.getWcaId() != null}" style="font-size: 20px;">
 
         <a th:href="${participante.getLinkPerfilWCA()}"> <img src="/img/WCAlogo.png"
                                                               style="height: 30px; margin-right: 10px"/><span
@@ -70,8 +70,9 @@
             <tr>
 
                 <td rowspan="2" class="iconoStandard"><a
-                        th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}|}"><span
-                        th:text="${resultado.getKey().getNombre()}"/></a>
+                        th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}|}">
+                    <img th:src="'/img/copas/copa_' + ${resultado.getKey().getNombre()} + '.png'" style="width: 75px; margin: 10px"/>
+                    <span th:text="${resultado.getKey().getNombre()}"/></a>
                 </td>
 
                 <td th:each="posicion : ${resultado.getValue()}" style="border-bottom: 0">
@@ -98,6 +99,7 @@
                         <div th:if="${posicion.isClasificado()}" class="tooltip" style="height: 80px; width: 80px">
                             <a onclick="loadModal(this)"
                                th:data-nombreCategoria="${posicion.getEvento().getCategoria().getNombre()}"
+                               th:data-nombreCompeticion="${posicion.getEvento().getCompeticion().getNombre()}"
                                data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
                                 <img class="bouncyButton podio" th:if="${posicion.getMedalla() != null}"
                                      th:src="'/img/'+${posicion.getMedalla()+'.png'}"/>
@@ -123,12 +125,13 @@
                 <th>Competición</th>
                 <th colspan="100%">Categorías inscritas</th>
             </thead>
-            <tbody th:each="resultado: ${resultados}" th:if="${resultado.getKey().isEnCurso()}" class="alto">
+            <tbody th:each="resultado: ${resultados}" th:if="${resultado.getKey().isEnCurso() && resultado.getKey().isParticipanteInscrito(participante)}" class="alto">
             <tr>
 
                 <td rowspan="2" class="iconoStandard">
-                    <a th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}|}"><span
-                        th:text="${resultado.getKey().getNombre()}"/>
+                    <a th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}|}">
+                        <img th:src="'/img/copas/copa_' + ${resultado.getKey().getNombre()} + '.png'" style="width: 75px; margin: 10px"/>
+                        <span th:text="${resultado.getKey().getNombre()}"/>
                     </a>
                     <div th:with="jornadaActiva = ${resultado.getKey().getJornadaActiva()}">
                         <span th:if="${soyYo && jornadaActiva.isPresent()}">
@@ -161,6 +164,7 @@
                         <div th:if="${posicion.isClasificado()}" class="tooltip" style="height: 80px; width: 80px">
                             <a onclick="loadModal(this)"
                                th:data-nombreCategoria="${posicion.getEvento().getCategoria().getNombre()}"
+                               th:data-nombreCompeticion="${posicion.getEvento().getCompeticion().getNombre()}"
                                data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
                                 <img class="bouncyButton podio" th:if="${posicion.getMedalla() != null}"
                                      th:src="'/img/'+${posicion.getMedalla()+'.png'}"/>
@@ -188,7 +192,8 @@
 
             Inicio: <span class="fecha" th:text="${competicion.getInicio()}"/>
             <div style="display: flex; align-items: center">
-                <a th:href="${'/competicion/'+ competicion}">
+                <a th:href="${'/competicion/'+ competicion}" style="display: flex; align-items: center">
+                    <img th:src="'/img/copas/copa_' + ${competicion.getNombre()} + '.png'" style="width: 75px; margin: 10px"/>
                     <span th:text="${competicion.getNombre()}" style="margin-right: 10px" class="iconoStandard"/>
                 </a>
                 <div th:if="${competicion.isParticipanteInscrito(participante)}"
@@ -240,7 +245,8 @@
 
     function loadModal(activador) {
         var nombreCategoria = $(activador).attr("data-nombreCategoria");
-        loadBracket(nombreCategoria);
+        var nombreCompeticion = $(activador).attr("data-nombreCompeticion");
+        loadBracket(nombreCategoria, nombreCompeticion);
     }
 
 </script>

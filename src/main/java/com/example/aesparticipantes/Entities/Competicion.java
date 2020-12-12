@@ -21,7 +21,7 @@ public class Competicion {
     @Column(length = 25)
     private String nombre;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "competicion")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "competicion")
     private List<Evento> eventos;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "competicion") //TODO falla en participante, a veces, difícil de reprocucir. Probar con reset -> participante -> participar (debes estar logueado) -> inicio -> loguear
@@ -64,7 +64,7 @@ public class Competicion {
 
     public boolean isParticipanteInscrito(Participante p){
         if (p == null) return false;
-        return eventos.stream().anyMatch(i -> i.isParticipanteInscrito(p));
+        return eventos.stream().anyMatch(i -> i.isParticipanteInscrito(p)); //TODO: comprobar si al llamar dos veces desde el front hace dos llamadas o se cachea, por curiosidad
     }
 
     @Override

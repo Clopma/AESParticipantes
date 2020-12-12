@@ -1,4 +1,4 @@
-function initializeForParticipante(tabla, numTiempos, categoria) {
+function initializeForParticipante(tabla, numTiempos, categoria, mensajeVacio) {
 
     var t = tabla.DataTable({
         "paging": false,
@@ -17,7 +17,7 @@ function initializeForParticipante(tabla, numTiempos, categoria) {
             selector: 'td:first-child'
         },
         language: {
-            "emptyTable": "Los tiempos de esta jornada se mostrarán cuando finalice."
+            "emptyTable": mensajeVacio
         }
 
     });

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.security.Principal;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 @Controller
@@ -31,7 +32,11 @@ public class CompeticionController {
 
     @GetMapping("/competicion/{nombreCompeticion}")
     public String showForm(Model model, @PathVariable("nombreCompeticion") String nombreCompeticion, Principal principal) {
-        Competicion competicion = competicionRepository.findByNombre(nombreCompeticion); //TODO: Maybe cachear
+        Optional<Competicion> competicion = competicionRepository.findByNombre(nombreCompeticion); //TODO: Maybe cachear
+
+        if(!competicion.isPresent()){
+            return "error/404";
+        }
 
         if (principal instanceof UserData) { //TODO: Repetido en inscripción y participar: refactor
             String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
@@ -39,15 +44,20 @@ public class CompeticionController {
             model.addAttribute("participanteLogeado", yo);
         }
 
-        model.addAttribute("jornadaActiva", competicion.getJornadaActiva());
-        model.addAttribute("competicion", competicion);
-        model.addAttribute("inscripciones", self.getCategoriasInscritasPorParticipante(competicion));
+        model.addAttribute("jornadaActiva", competicion.get().getJornadaActiva());
+        model.addAttribute("competicion", competicion.get());
+        model.addAttribute("inscripciones", self.getCategoriasInscritasPorParticipante(competicion.get()));
         return "competicion";
     }
 
     @Cacheable("categoriasParticipantesMap")
     public TreeMap<Participante, Map<String, Categoria>> getCategoriasInscritasPorParticipante(Competicion competicion){
      return competicion.getCategoriasInscritasPorParticipanteMap();
+    }
+
+    @Cacheable(value = "competiciones")
+    public Optional<Competicion> getCompeticion(String nombreCompeticion){
+        return competicionRepository.findByNombre(nombreCompeticion);
     }
 
 }

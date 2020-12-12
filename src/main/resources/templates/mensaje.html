@@ -1,11 +1,16 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
 <!--    TODO: CAMBIAR -->
-    <title>Autenticación WCA</title>
+    <title>Mensaje</title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <script th:inline="javascript">
        if ([[${redirect}]]){
           window.location.href = [[${redirect}]];
+       }
+
+       function registrar() {
+           window.location += '&token=' + [[${token}]] + '&expiresIn=' + [[${expiresIn}]] ;
+
        }
     </script>
 </head>
@@ -14,8 +19,10 @@
 <body class="cubosbg">
 <div th:replace="fragments/backButton :: backButton"/>
 <div class="vertical-flex-wrapper">
-    <div class="whitePanel" style="margin-top: 300px; width: 80%">
-        <h1 th:text="${mensaje}" style="text-align: center;" />
+    <div class="whitePanel" style="margin-top: 300px; width: 80%; text-align: center;">
+        <h1 th:text="${mensaje}" />
+        <button th:if="${token != null}" onclick="registrar();" class="btn btn-outline-dark"><img
+                src="/img/WCAlogo.png" style="height: 50px; width: 50px;"/> ¿Primer campeonato online? <u>Auto registrar</u></button>
     </div>
 </div>
 </body>

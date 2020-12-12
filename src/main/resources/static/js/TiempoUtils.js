@@ -1,8 +1,11 @@
+
+
+
 function formatearFechas() {
     var elements = document.getElementsByClassName("fecha");
     for(var i=0; i<elements.length; i++) {
 
-        elements[i].innerText = new Date(elements[i].innerText).toLocaleString('es-ES');
+        elements[i].innerText = new Date(elements[i].innerText.replace(/-/g, "/")).toLocaleString('es-ES');
     }
 
 }

@@ -17,5 +17,17 @@ wca:
     clientId: _Syvq_7EhXMViil3G0nygoCBTZzpeGL95uJXkpwJgCQ
     clientSecret: JaDvrqQEUyIYShejo2ZLxqhpIqizmNowvwNb7iaHMQE
 
+aesonline:
+    enableEnvioTiempos: true
+
+logging:
+    file:
+        path: /root/log
+    level:
+        org.hibernate.SQL: error
+
+
+
+
 
 

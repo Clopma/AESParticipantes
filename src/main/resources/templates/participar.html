@@ -15,70 +15,95 @@
             <div class="bar"></div>
         </div>
 
-        <div id="carruselMezclas" class="carousel slide">
+        <div id="carruselMezclas" class="carousel slide" data-interval="false">
             <div class="carousel-inner" style="text-align: center;">
                 <div th:each="mezcla : ${mezclas}" class="carousel-item">
                     <h1 th:text="'Tiempo ' + ${mezcla.getNumTiempo()}" style="color: black"/>
-                    <img th:src="'/img/mezclas/' + ${mezcla.getImagenUrl()}" style="width: 40%"/>
+                    <img th:src="'/img/mezclas/' + ${mezcla.getImagenUrl()}" style="width: 600px"/>
                     <div class="carousel-caption d-none d-md-block" style="position: initial">
                         <h2 th:text="${mezcla.getTexto()}" style="color: black"/>
-                        <div th:id="'tiempo'+${mezcla.getNumTiempo()}" style="display: flex; width: fit-content; margin: auto; align-items: flex-end; color: black; font-size: x-large">
-                            <span class="unidad">Tu tiempo: </span>
-                            <input type="number" min="0" max="9" class="form-control minutos" placeholder="m"/><span class="unidad">:</span>
-                            <input type="number" min="0" max="59" class="form-control segundos" placeholder="s"/><span class="unidad">.</span>
-                            <input type="number" min="0" max="99" class="form-control centesimas" placeholder="cs"/>
+                        <div th:if="${!mezcla.getCategoria().getNombre().equals('FMC')}" th:id="'tiempo'+${mezcla.getNumTiempo()}" style="width: fit-content; margin: auto; align-items: flex-end; color: black; font-size: x-large">
+                            <div style="display: flex;">
+                                <span class="unidad">Tu tiempo: </span>
+                                <input type="number" min="0" max="9" class="form-control minutos" placeholder="m"/><span class="unidad">:</span>
+                                <input type="number" min="0" max="59" class="form-control segundos" placeholder="s"/><span class="unidad">.</span>
+                                <input type="number" min="0" max="99" class="form-control centesimas" placeholder="cs"/>
+                            </div>
+                            <div>
+                                <input class="dnfcb" type="checkbox" value="" id="dnf">
+                                <label for="dnf" style="margin-bottom: 0;"> DNF </label>
+                            </div>
+                        </div>
+                        <div th:if="${mezcla.getCategoria().getNombre().equals('FMC')}" th:id="'tiempo'+${mezcla.getNumTiempo()}" style="margin: auto; width: 60%;color: black; font-size: x-large">
+                                <span class="unidad">Tu solución: </span>
+                                <input id="solucion" type="textarea" class="form-control" placeholder="SOLUCIÓN"/>
+                                <span class="unidad">Explicación: </span>
+                            <textarea id="explicacion" class="form-control" rows="10" placeholder="EXPLICACION"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
-            <hr />
-            <div style="text-align: center">
-                Una vez rellenados <b>todos</b> los resultados, haz click aquí:
-                <br />
-                <button onclick="enviarTiempos()" class="btn btn-outline-primary"> Enviar tiempos </button>
-             </div>
-
-
-            <a class="carousel-control-prev clicker" onclick="$('#carruselMezclas').carousel('prev');" role="ºon" data-slide="prev">
+            <a th:if="${mezclas.size() > 1}" class="carousel-control-prev clicker" onclick="$('#carruselMezclas').carousel('prev');" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true" />
             </a>
-            <a class="carousel-control-next clicker" onclick="$('#carruselMezclas').carousel('next');" role="button" data-slide="next">
+            <a th:if="${mezclas.size() > 1}" class="carousel-control-next clicker" onclick="$('#carruselMezclas').carousel('next');" role="button" data-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true" />
             </a>
+        </div>
+        <hr />
+        <div style="text-align: center; font-size: x-large;">
+            Una vez rellenados <b>todos</b> los resultados, haz click aquí:
+            <br />
+            <button onclick="enviarTiemposAviso()" class="btn btn-outline-primary"> Enviar tiempos </button>
         </div>
     </div>
 
     <script th:inline="javascript">
 
-        $('#carruselMezclas').carousel('pause');
         $('#carruselMezclas div.carousel-inner div.carousel-item:first-child').addClass('active');
 
-        startTimer([[${categoria.getSegundosParticipar()}]], [[${categoria.getSegundosParticipar()}]], $('#progressBar'));
+        for (i = 0; i < 5; i++){
+                $("#tiempo" + i).find(".dnfcb").change((function(ii) { return function(){
+                    $("#tiempo" + ii).find(".minutos").prop('disabled', this.checked);
+                    $("#tiempo" + ii).find(".segundos").prop('disabled', this.checked);
+                    $("#tiempo" + ii).find(".centesimas").prop('disabled', this.checked);
+                };
+            })(i));
+        }
 
-        function startTimer(timeleft, timetotal, $element) {
+
+        startTimer([[${categoria.getSegundosParticipar()}]], [[${categoria.getSegundosParticipar()}]]);
+
+        function startTimer(timeleft, timetotal) {
 
             setInterval(function () {
                 timeleft--;
                 if (timeleft === 0){
-                    enviarTiempos()
-                } else {
-                    var progressBarWidth = timeleft * $element.width() / timetotal; //TODO: Esto se puede hacer también al resize, para que no espere un segundo
-                    $element.find('div').animate({width: progressBarWidth}, 500).html(Math.floor(timeleft / 60) + ":" + ((timeleft % 60) < 10 ? "0" + (timeleft % 60) : (timeleft % 60)));
+                    enviarTiempos();
+                } else if (timeleft > 0) {
+                    var interiorBarWidth = timeleft / timetotal * 100;
+                    $('#progressBar').find('div').animate({width: ($('#progressBar').width() * interiorBarWidth / 100)}, 500).html(Math.floor(timeleft / 60) + ":" + ((timeleft % 60) < 10 ? "0" + (timeleft % 60) : (timeleft % 60)));
                 }
             }, 1000);
 
         }
 
+
+        function enviarTiemposAviso() {
+
+            if(confirm("¿Estás seguro? Asegúrate de que has introducido todos los tiempos.")){
+                enviarTiempos();
+            }
+
+        }
+
         function enviarTiempos() {
-
-
-            //TODO FMC
 
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
                     alert(xhttp.responseText);
-                    window.location.href = '/participante/' + [[${participante.getNombre()}]];
+                    window.location.href = '/participante/' + [[${participante.getNombre()}]] + "/" +  [[${competicion.getNombre()}]] + "/#" +  [[${categoria.getNombre()}]];
                 } else if(this.readyState === 4 && this.status === 401) {
                     alert('Ojo, parece que durante este tiempo por algún motivo que desconozco has perdido la sesión. No te preocupes, sigue los siguientes pasos: Primero, abre la web en otra pestaña,' +
                         ' e inicia sesión en ella. Después vuelve a esta pestaña y (sin refrescar) vuelve a intentar el envío. Si el problema no se soluciona de esta forma, por favor, contacta al desarrollador.');
@@ -89,11 +114,18 @@
 
             xhttp.open("POST", "/participar/"+ [[${nombreCompeticion}]] + "/" +[[${categoria.getNombre()}]], true);
             xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xhttp.setRequestHeader("tiempo1", getTiempo( $("#tiempo" + 1)));
-            xhttp.setRequestHeader("tiempo2", getTiempo( $("#tiempo" + 2)));
-            xhttp.setRequestHeader("tiempo3", getTiempo( $("#tiempo" + 3)));
-            xhttp.setRequestHeader("tiempo4", getTiempo( $("#tiempo" + 4)));
-            xhttp.setRequestHeader("tiempo5", getTiempo( $("#tiempo" + 5)));
+
+            if( [[${categoria.getNombre()}]] === "FMC") {
+                xhttp.setRequestHeader("solucion", $("#solucion")[0].value);
+                xhttp.setRequestHeader("explicacion", $("#explicacion")[0].value);
+            } else {
+                xhttp.setRequestHeader("tiempo1", getTiempo( $("#tiempo" + 1)));
+                xhttp.setRequestHeader("tiempo2", getTiempo( $("#tiempo" + 2)));
+                xhttp.setRequestHeader("tiempo3", getTiempo( $("#tiempo" + 3)));
+                xhttp.setRequestHeader("tiempo4", getTiempo( $("#tiempo" + 4)));
+                xhttp.setRequestHeader("tiempo5", getTiempo( $("#tiempo" + 5)));
+            }
+
             xhttp.send();
 
 
@@ -102,11 +134,11 @@
 
         function getTiempo(divTiempo) {
 
-            if(!divTiempo){return 0;} //TODO: https://trello.com/c/zx5rFvfH
+            if(!divTiempo || divTiempo.children().length === 0){return 0;} //TODO: https://trello.com/c/zx5rFvfH
 
-            var minutos = divTiempo.find(".minutos")[0].value ?  divTiempo.find(".minutos")[0].value : 0;
-            var segundos = divTiempo.find(".segundos")[0].value ?  divTiempo.find(".segundos")[0].value : 0;
-            var centesimas = divTiempo.find(".centesimas")[0].value ?  divTiempo.find(".centesimas")[0].value : 0;
+            var minutos = !divTiempo.find(".minutos")[0].disabled && divTiempo.find(".minutos")[0].value ?  divTiempo.find(".minutos")[0].value : 0;
+            var segundos = !divTiempo.find(".segundos")[0].disabled && divTiempo.find(".segundos")[0].value ?  divTiempo.find(".segundos")[0].value : 0;
+            var centesimas = !divTiempo.find(".centesimas")[0].disabled && divTiempo.find(".centesimas")[0].value ? divTiempo.find(".centesimas")[0].value : 0;
 
             return +(minutos * 60) + +segundos + +(centesimas/100.0);
 

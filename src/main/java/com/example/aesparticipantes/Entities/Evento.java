@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -37,7 +34,7 @@ public class Evento {
     @ManyToOne
     private Competicion competicion;
 
-    @OneToMany(mappedBy = "evento")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "evento")
     private List<Inscripcion> inscripciones;
 
     @NotNull
@@ -56,7 +53,7 @@ public class Evento {
     //Ser llamado solo desde cacheable
     public List<Tiempo> getRankingJornada(int numJornada){
 
-        List<Tiempo> tiemposEnJornada = getTiempos().stream().filter(t -> t.getJornada().getNumeroJornada() == numJornada).collect(Collectors.toList()); //TODO: Quizás una query
+        List<Tiempo> tiemposEnJornada = getTiempos().stream().filter(t -> t.getJornada().getNumeroJornada() == numJornada && t.getJornada().isAcabada()).collect(Collectors.toList()); //TODO: Quizás una query
         AESUtils.setPosicionesEnTiempos(tiemposEnJornada);
         tiemposEnJornada.sort(Comparator.comparingInt(Tiempo::getPosicion));
 
@@ -64,15 +61,15 @@ public class Evento {
 
     }
 
+    //TODO: Rehacer, posiblemente aprovechando getRankingJornada (y entonces habrá que dejar de filtrar las jornadas acabadas ahí y directamente en el controller poner el if(noAcabada) return lista vacía)
     //Ser llamado solo desde cacheable
     public List<Posicion> getRankingGlobal(DescalificacionRepository descalificacionRepository, ClasificadoRepository clasificadoRepository) {
 
-
-
             List<Tiempo> tiemposRanking = getTiempos();
-//            tiemposRanking.stream().filter(t -> t.getJornada().getEvento().getCompeticion().equals(competicion)).collect(Collectors.toList()); TODO: Ya son de la compecición, cierto?
 
-            List<Posicion> puntuacionesTotales = tiemposRanking.stream().collect(Collectors.groupingBy(Tiempo::getParticipante))
+            List<Posicion> puntuacionesTotales = tiemposRanking.stream()
+                    //.filter(t -> t.getJornada().getFechaFin().before(new Date()))
+                    .collect(Collectors.groupingBy(Tiempo::getParticipante))
                             .values().stream().map(tiempos -> Posicion.builder()
                             .evento(this)
                             .tiempos(tiempos)
@@ -185,15 +182,14 @@ public class Evento {
                 List<Tiempo> tiemposEmpatados = new ArrayList<>();
                 puntuacionesEmpatadasPorPuntuacionesIndividuales.forEach(p -> tiemposEmpatados.addAll(p.getTiempos()));
 
-                //tiemposEmpatados.forEach(Tiempo::calcularDatos); TODO: Ya deberían estar calculados en este punto, no? Puedo eliminar?
-
-                Optional<Tiempo> mejorMedia = tiemposEmpatados.stream().reduce((acc, val) -> (acc.getMedia() > 0) && (acc.getMedia() < val.getMedia()) ? acc : val);
+                Optional<Tiempo> mejorMedia = tiemposEmpatados.stream().filter(t -> t.getJornada().isAcabada()).reduce((acc, val) -> (acc.getMedia() > 0) && (acc.getMedia() < val.getMedia()) ? acc : val);
 
                 Posicion personaConMejorMedia;
 
                 if(mejorMedia.isPresent()) {
                     personaConMejorMedia = puntuacionesEmpatadasPorPuntuacionesIndividuales.stream().filter(p -> p.getParticipante().equals(mejorMedia.get().getParticipante())).findFirst().get();
                 } else {
+                    Collections.sort(puntuacionesEmpatadasPorPuntuacionesIndividuales, Comparator.comparing(p -> p.getParticipante().getNombre()));
                     personaConMejorMedia = puntuacionesEmpatadasPorPuntuacionesIndividuales.get(0); // En este punto ya orden alfabético o lo que Dios quiera
                 }
 

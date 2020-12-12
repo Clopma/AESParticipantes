@@ -1,8 +1,8 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title th:text="${nombreCompeticion}"></title>
-    <th:block th:include="fragments/head :: genericHead"></th:block>
-    <th:block th:include="fragments/head :: datatablesHead"></th:block>
+    <title th:text="${competicion.getNombre()}"/>
+    <th:block th:include="fragments/head :: genericHead"/>
+    <th:block th:include="fragments/head :: datatablesHead"/>
     <script type="text/javascript" src="/js/ScrollUtils.js"></script>
     <script type="text/javascript" src="/js/ModalUtils.js"></script>
     <script type="text/javascript" src="/js/InscripcionUtils.js"></script>
@@ -34,9 +34,9 @@
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 80px;">
         <div style="display: flex; align-items: center; justify-content: center;">
-
+            <img th:src="'/img/copas/copa_' + ${competicion.getNombre()} + '.png'" style="width: 100px"/>
             <h1 style="font-size: 3.5em !important;"><span th:text="${nombreCompeticion}"/></h1>
-
+            <img th:src="'/img/copas/copa_' + ${competicion.getNombre()} + '.png'" style="width: 100px"/>
         </div>
     </div>
     <div class="whitePanel" style="max-width: 65%; margin-top: 65px; font-size: larger; text-align: center">
@@ -55,8 +55,9 @@
                 <div th:each="evento : ${competicion.getEventos()}" class="tooltip" style="margin: 3px">
                         <span th:data-competicion="${competicion.getNombre()}"
                               th:data-categoria="${evento.getCategoria().getNombre()}" onclick="cambiarSeleccion(this)"
-                              th:class="${'cubing-icon event-' + evento.getCategoria().getNombre() + ' clicker '+ (evento.isParticipanteInscrito(participanteLogeado) ? 'categoriaSeleccionada': 'categoriaDeseleccionada')}"
-                              style="width: 10px;"/>
+                              th:class="${'cubing-icon event-' + evento.getCategoria().getNombre() + ' clicker '+ (evento.isParticipanteInscrito(participanteLogeado) ? 'categoriaSeleccionada': 'categoriaDeseleccionada')}">
+                            <!-- ::before -->
+                        </span>
                     <span class="tooltiptext"
                           th:text="${evento.getCategoria().getNombre() + ': ' + (evento.getCortePlayOffs() == 0 ? 'No habrá play-offs': (evento.getCortePlayOffs() == 4 ? 'Habrá dos rondas de play-offs': (evento.getCortePlayOffs() == 8 ? 'Habrá tres rondas de play-offs': '')))}"/>
                 </div>
@@ -100,17 +101,48 @@
                         <h3><a class="clicker" onclick="irAWCA()">Iniciar sesión con WCA</a></h3>
                     </div>
             </span>
-            <span th:if="${participanteLogeado != null}">
+            <span th:if="${participanteLogeado != null  && competicion.isParticipanteInscrito(participanteLogeado)}">
                  Hasta entonces, tienes tiempo para <br /> <button onclick="participar()" style="font-size: xx-large" class="btn btn-outline-primary">participar</button>
             </span>
 
+            <span th:if="${participanteLogeado != null  && !competicion.isParticipanteInscrito(participanteLogeado)}">
+                 No estás inscrito en la competición, pero no te preocupes, ¡pronto habrán más!
+            </span>
+        </div>
+    </div>
+
+    <div class="whitePanel" style="margin-top: 15px; font-size: larger; text-align: center">
+        <div style="font-size: larger; text-align: center">
+            <h1>Jornadas</h1>
+        </div>
+        <div style="">
+            <table class="table dataTable centerCols" style="font-size: 20px;">
+                <thead>
+                <th>Jornada</th>
+                <th>Fecha de inicio</th>
+                <th>Fecha de finalización</th>
+                </thead>
+                <tbody>
+                <tr th:each="jornada : ${competicion.getJornadas()}">
+                    <td>
+                        <span th:text="${jornada.getNumeroJornada()}"/>
+                    </td>
+                    <td>
+                        <span class="fecha" th:text="${jornada.getFechaInicio()}" />
+                    </td>
+                    <td>
+                        <span class="fecha" th:text="${jornada.getFechaFin()}" />
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <div th:if="${competicion.isEmpezada()}" class="whitePanel" style="margin-top: 15px; font-size: larger; text-align: center">
-        <div style="margin-top: 15px; font-size: larger; text-align: center">
-            <h1>Categorías</h1>
-           Selecciona una categoría para ver el ranking:
+        <div style="font-size: larger; text-align: center">
+            <h1>Categorías y rankings</h1>
+           Estas son las categorías de la competición, puedes hacer click en una para ver el ranking general y de las jornadas:
         </div>
         <div style="display:flex; justify-content: center">
             <div th:each="evento : ${competicion.getEventos()}" style="margin: 3px">
@@ -138,7 +170,7 @@
                 <tbody style="background-color: white;">
                 <tr th:each="participante : ${competicion.getCategoriasInscritasPorParticipanteMap()}">
 
-                    <td><a th:href="'/participante/'+${participante.getKey().getNombre()}+'/' +  ${nombreCompeticion}"><span th:text="${participante.getKey().getNombre()}" /></a></td>
+                    <td><a th:href="'/participante/'+${participante.getKey().getNombre()}+'/' +  ${competicion.isEmpezada() ? competicion.getNombre() : ''}"><span th:text="${participante.getKey().getNombre()}" /></a></td>
                     <!-- No tocar las clases ni nada que afecte al recuento de categorías -->
                     <td class="insc" th:each="evento : ${competicion.getEventos()}">
                         <span th:class="${evento.getCategoria().getNombre()}" th:if="${participante.getValue().get(evento.getCategoria().getNombre()) != null}">

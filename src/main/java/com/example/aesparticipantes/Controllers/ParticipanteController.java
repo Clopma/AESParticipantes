@@ -1,6 +1,9 @@
 package com.example.aesparticipantes.Controllers;
 
-import com.example.aesparticipantes.Entities.*;
+import com.example.aesparticipantes.Entities.Competicion;
+import com.example.aesparticipantes.Entities.Evento;
+import com.example.aesparticipantes.Entities.Inscripcion;
+import com.example.aesparticipantes.Entities.Participante;
 import com.example.aesparticipantes.Models.Posicion;
 import com.example.aesparticipantes.Repositories.*;
 import com.example.aesparticipantes.Seguridad.UserData;
@@ -56,6 +59,7 @@ public class ParticipanteController {
             }
         }
 
+
         Participante participante = self.getParticipante(nombreParticipante);
         if(participante == null) {return "error/404";}
         Map<Competicion, List<Posicion>> resultados = getResultadosParticipante(participante);
@@ -70,12 +74,26 @@ public class ParticipanteController {
 
 
     @RequestMapping("/participante/{nombreParticipante}/{nombreCompeticion}")
-    public String participanteEnCompeticion(Model model, @PathVariable("nombreParticipante") String nombreParticipante, @PathVariable("nombreCompeticion") String nombreCompeticion) {
+    public String participanteEnCompeticion(Model model, @PathVariable("nombreParticipante") String nombreParticipante, @PathVariable("nombreCompeticion") String nombreCompeticion, Principal principal) {
 
+        model.addAttribute("soyYo", false);
 
-        List<Posicion> resultado = self.getPosicionesEnCompeticion(competicionRepository.findByNombre(nombreCompeticion), self.getParticipante(nombreParticipante), descalificacionRepository);
+        if (principal instanceof UserData) { //TODO: Repetido en inscripción: refactor
+            String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
+            Participante yo = self.getParticipante(nombreParticipanteGuardado);
+            if (yo != null && nombreParticipante.equals(yo.getNombre())) {
+                model.addAttribute("soyYo", true);
+            }
+        }
+
+        Optional<Competicion> competicion = competicionRepository.findByNombre(nombreCompeticion);
+        if(!competicion.isPresent()){
+            return "error/404";
+        }
+
+        List<Posicion> resultado = self.getPosicionesEnCompeticion(competicion.get(), self.getParticipante(nombreParticipante), descalificacionRepository);
         model.addAttribute("participante", nombreParticipante);
-        model.addAttribute("competicion", nombreCompeticion);
+        model.addAttribute("competicion", nombreCompeticion); //TODO: nombrecompeticion y cambiar en template
         model.addAttribute("resultado", resultado);
 
         return "participanteEnCompeticion";
@@ -98,19 +116,21 @@ public class ParticipanteController {
 
         List<Posicion> posiciones = new ArrayList<>();
 
-        List<Evento> eventosParticipado = inscripcionRepository.getInscripcionesDeParticipanteEnCompeticion(participante.getNombre(), competicion.getNombre()).stream().map(Inscripcion::getEvento)
-                .filter(e -> e.isParticipanteInscrito(participante)).collect(Collectors.toList());
+        List<Evento> eventosInscrito = participante.getInscripciones().stream().filter(i -> i.getEvento().getCompeticion().equals(competicion)).map(Inscripcion::getEvento).collect(Collectors.toList());
 
-        posiciones.forEach(p -> {
-            p.getTiempos().forEach(Tiempo::calcularDatos);
+        eventosInscrito.forEach(e -> {
+
+            Posicion posicion = rankingGeneralController.getRankingGlobal(e, descalificacionRepository, clasificadoRepository).stream()
+                    .filter(p -> p.getParticipante().equals(participante)).findFirst()
+                    .orElse(Posicion.builder().evento(e).posicionGeneral(0).build() // Aun no ha participado
+                    );
+
+            posiciones.add(posicion);
+
         });
 
-        Collections.sort(posiciones);
 
-        eventosParticipado.forEach(e -> posiciones.add(rankingGeneralController.getRankingGlobal(e, descalificacionRepository, clasificadoRepository).stream()
-                .filter(p -> p.getParticipante().equals(participante)).findFirst()
-                .orElse(Posicion.builder().evento(e).posicionGeneral(0).build() // Aun no ha participado
-                )));
+        Collections.sort(posiciones);
 
         return posiciones;
     }

@@ -1,5 +1,6 @@
 package com.example.aesparticipantes.Entities;
 
+import com.example.aesparticipantes.Seguridad.WCAGetResponse;
 import com.example.aesparticipantes.Utils.AESUtils;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
@@ -39,7 +40,7 @@ public class Participante implements Comparable {
     @Column(columnDefinition = "boolean default false")
     private boolean confirmado;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "participante")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "participante") //TODO: TERRIBLE N+1
     @Fetch(value = FetchMode.SUBSELECT)
     List<Tiempo> tiempos;
 
@@ -79,4 +80,15 @@ public class Participante implements Comparable {
     }
 
 
+    public void setWCAData(WCAGetResponse perfilWCA) {
+        setWcaId(perfilWCA.getMe().getWca_id());
+        setNombreWCA(perfilWCA.getMe().getName());
+        setFechaActualicazionWCA(perfilWCA.getMe().getUpdated_at());
+        setFechaCreacionWCA(perfilWCA.getMe().getCreated_at());
+        setGender(perfilWCA.getMe().getGender());
+        setLinkPerfilWCA(perfilWCA.getMe().getUrl());
+        setPais(perfilWCA.getMe().getCountry_iso2());
+        setUrlImagenPerfil(perfilWCA.getMe().getAvatar().getUrl());
+        setUrlImagenPerfilIcono(perfilWCA.getMe().getAvatar().getThumb_url());
+    }
 }

@@ -31,6 +31,7 @@ public class Mezcla {
     private int numTiempo;
 
     @NotNull
+    @Column(length = 1000)
     private String texto;
 
     @NotNull

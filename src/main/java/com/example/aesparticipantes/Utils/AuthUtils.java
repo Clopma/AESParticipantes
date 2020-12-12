@@ -83,9 +83,9 @@ public class AuthUtils {
     }
 
 
-    public static void crearSesion(Participante participante, WCALoginResponse wcaLoginResponse, WCAGetResponse wcaGetResponse, HttpServletRequest request, AuthProvider authManager) {
+    public static void crearSesion(Participante participante, String token, int expiresIn, WCAGetResponse wcaGetResponse, HttpServletRequest request, AuthProvider authManager) {
 
-        UserData authReq = new UserData(participante.getNombre(), wcaGetResponse.getMe().getName(), wcaLoginResponse.getAccess_token(), DateTime.now().plusSeconds(wcaLoginResponse.getExpires_in()));
+        UserData authReq = new UserData(participante.getNombre(), wcaGetResponse.getMe().getName(), token, DateTime.now().plusSeconds(expiresIn));
         Authentication auth = authManager.authenticate(authReq);
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(auth);

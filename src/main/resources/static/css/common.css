@@ -2,6 +2,7 @@
     background-image: url("../img/rubikColours.png");
     /*background-size: cover; */ /*TODO: TEST*/
     display: flex;
+    min-width: fit-content;
     font-family: 'Rajdhani', sans-serif !important;
 
 }
@@ -377,15 +378,15 @@ h3 {
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-    width: 75px !important;
-    height: 75px !important;
+    width: 150px !important;
+    height: 150px !important;
     transition: .1s;
 }
 
 .carousel-control-prev-icon:hover,
 .carousel-control-next-icon:hover {
-    width: 100px !important;
-    height: 100px !important;
+    width: 200px !important;
+    height: 200px !important;
     transition: .25s;
 }
 
@@ -400,6 +401,10 @@ h3 {
 
 .carousel-control-prev,
 .carousel-control-next {
+    top: 50% !important;
+    bottom: 50% !important;
+    /*background-color: rgba(255, 255, 255, 0.51) !important;*/
+    border-radius: 15px;
     opacity: 1 !important;
 }
 
@@ -445,4 +450,12 @@ h3 {
     font-size: large;
     width: 5em !important;
     text-align: center;
+}
+.texto_largo h1 {
+    padding-bottom: 10px;
+    padding-top: 40px;
+}
+
+.texto_largo{
+    background-color: #f6f6f6;
 }

@@ -12,7 +12,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Builder
 @Getter
@@ -21,8 +23,8 @@ import java.util.List;
 public class Posicion implements Comparable {
 
 
-    Evento evento; //TODO: Rellenar
-    List<Tiempo> tiempos; //TODO: qué me asegura que estén ordenados por jornada?
+    Evento evento;
+    List<Tiempo> tiempos;
     int posicionGeneral;
     boolean clasificado;
     String medalla;
@@ -37,12 +39,12 @@ public class Posicion implements Comparable {
 
     public Integer getPuntuacionTotal(){
         if(tiempos == null) {return 0;}
-        return tiempos.stream().mapToInt(Tiempo::getPuntosTotales).reduce(Integer::sum).orElse(0);
+        return tiempos.stream().filter(t -> t.getJornada().getFechaFin().before(new Date())).mapToInt(Tiempo::getPuntosTotales).reduce(Integer::sum).orElse(0);
     }
 
     public Participante getParticipante(){
         if(tiempos == null || tiempos.size() < 1){
-            return Participante.builder().nombre("misterio").build();
+            return Participante.builder().nombre("ZZZmisterio").build();
         } else {
             return  tiempos.get(0).getParticipante();
         }
@@ -59,13 +61,9 @@ public class Posicion implements Comparable {
 
     }
 
-    public String getPuntuacionJornada(int i) {
-
-        if (tiempos.size() - 1 >= i){
-            return tiempos.get(i).getPuntosTotales()+"";
-        } else {
-            return "-";
-        }
+    public Optional<String> getPuntuacionJornada(int numeroJornada) {
+        Optional<Tiempo> tiempo = tiempos.stream().filter(t -> t.getJornada().getNumeroJornada() == numeroJornada).findFirst();
+        return tiempo.map(value -> value.getPuntosTotales() + "");
     }
 
     @Override

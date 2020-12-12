@@ -101,8 +101,11 @@ public class Tiempo implements Comparable {
     @Transient
     private int puntosBonus;
 
+    @Transient
+    private boolean oculto = false; //TODO: qué pasa si no lo inicicializo? no es por defecto false?
+
     public int getPuntosTotales() {
-        return puntosTiempo + puntosBonus;
+            return getJornada().isAcabada() ? puntosTiempo + puntosBonus : 0;
     }
 
 

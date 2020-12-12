@@ -27,6 +27,7 @@ public class Jornada {
     private int numeroJornada;
 
     //TODO: Evita "failed to lazily initialize a collection of role: Jornada.tiempos, could not initialize proxy - no Session
+    //Es terrible por Dios
     // Ocurre al acceder al ranking de una jornada y luego ir al ránking general de su categoría, si cargas directamente el ránking general no ocurre
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "jornada")
     private List<Tiempo> tiempos;
@@ -36,6 +37,11 @@ public class Jornada {
 
     @NotNull
     private Date fechaFin;
+
+    public boolean isAcabada(){
+        return fechaFin.before(new Date());
+    }
+
 
 
 }

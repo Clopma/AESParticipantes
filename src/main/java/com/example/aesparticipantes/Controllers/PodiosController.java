@@ -12,10 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -31,9 +28,12 @@ public class PodiosController {
     @RequestMapping("/podios/{nombreCompeticion}")
     public String getPodios(Model model, @PathVariable("nombreCompeticion") String nombreCompeticion) {
 
-        Competicion competicion = competicionRepository.findByNombre(nombreCompeticion);
+        Optional<Competicion> competicion = competicionRepository.findByNombre(nombreCompeticion);
+        if(!competicion.isPresent()){
+            return "error/404";
+        }
 
-        Map<Categoria, List<ClasificadoRepository.Medalla>> podios = clasificadoRepository.getMedallas(competicion.getNombre()).stream().map(m ->
+        Map<Categoria, List<ClasificadoRepository.Medalla>> podios = clasificadoRepository.getMedallas(competicion.get().getNombre()).stream().map(m ->
 
                 ClasificadoRepository.Medalla.builder()
                         .categoria((Categoria) m[0])
@@ -45,7 +45,7 @@ public class PodiosController {
             throw new IllegalStateException(String.format("Duplicate key %s", u));
         }, LinkedHashMap::new));
 
-        model.addAttribute("nombre", competicion.getNombre());
+        model.addAttribute("nombre", competicion.get().getNombre());
         model.addAttribute("podios", podios);
 
         return "podios";
