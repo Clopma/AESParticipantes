@@ -14,7 +14,7 @@
 
         var tabla = $('#rankingJornada');
         if (tabla) {
-            initializeForParticipante(tabla, [[${evento.getCategoria().numTiempos}]], [[${evento.getCategoria().nombre}]], "Los tiempos de esta jornada se mostrarán cuando finalice.");
+            initializeForParticipante(tabla, [[${evento.getCategoria().numTiempos}]], [[${evento.getCategoria().nombre}]], "No hay resoluciones en esta jornada por el momento.");
         }
         scrollAFila();
     });
@@ -91,7 +91,14 @@
                 </a>
             </div>
 
-            <h3> <a th:onclick="'navigateToGeneral()'" class="bouncyContainer">Ir al ránking general</a></h3>
+            <h3> <a th:onclick="'navigateToGeneral()'" class="bouncyContainer">Ir al ranking general</a></h3>
+        </div>
+    </div>
+
+   <div th:if="${mezcla != null}" class="whitePanel" style="margin-top: 15px;"><!-- Será null si no se cumplen las condiciones en el backend (que sea FMC y la jornada esté acabada) -->
+        <div style="text-align: center">
+            <h1>Mezcla</h1>
+            <span style="font-size: xx-large" th:text="${mezcla.getTexto()}"/>
         </div>
     </div>
 

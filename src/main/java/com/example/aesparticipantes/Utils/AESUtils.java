@@ -126,8 +126,6 @@ public class AESUtils {
         } catch (NoSuchAlgorithmException e) {
             return "error"; //Imposible
         }
-
-
     }
 
     //Asume que se ha llamado a calcular Datos en los tiempos de la lista
@@ -140,12 +138,34 @@ public class AESUtils {
             return;
         }
 
-        double mejorResultadoJornada = tiemposJornada.get(0).getMedia();
+        double mejorMediaJornada = tiemposJornada.get(0).getMedia();
+        double mejorSingleJornada = tiemposJornada.get(0).getSingle();
+
+        String nombreCategoria = tiemposJornada.get(0).getCategoria().getNombre();
 
         for(int i = 0; i < tiemposJornada.size(); i++){
             tiemposJornada.get(i).setPosicion(i+1);
-            tiemposJornada.get(i).setPuntosTiempo(tiemposJornada.get(i).getMedia() == 0 ? 0 : (int) Math.round(mejorResultadoJornada*100/tiemposJornada.get(i).getMedia()));
-            tiemposJornada.get(i).setPuntosBonus(AESUtils.puntosEnPosicion(i+1));
+
+            if ("FMC".equals(nombreCategoria) || "BLD".equals(nombreCategoria)){
+                tiemposJornada.get(i).setPuntosTiempo(tiemposJornada.get(i).getSingle() == 0 ? 0 : (int) Math.round(mejorSingleJornada*100/tiemposJornada.get(i).getSingle()));
+                if (tiemposJornada.get(i).getSingle() != 0) {
+                    if(i > 0 && tiemposJornada.get(i).getSingle() == tiemposJornada.get(i-1).getSingle()){
+                        tiemposJornada.get(i).setPuntosBonus(tiemposJornada.get(i-1).getPuntosBonus());
+                    } else {
+                        tiemposJornada.get(i).setPuntosBonus(AESUtils.puntosEnPosicion(i + 1)); // else por defecto es 0
+                    }
+                }
+            } else {
+                tiemposJornada.get(i).setPuntosTiempo(tiemposJornada.get(i).getMedia() == 0 ? 0 : (int) Math.round(mejorMediaJornada*100/tiemposJornada.get(i).getMedia()));
+                if (tiemposJornada.get(i).getMedia() != 0) {
+                    if(i > 0 && tiemposJornada.get(i).getMedia() == tiemposJornada.get(i-1).getMedia()){
+                        tiemposJornada.get(i).setPuntosBonus(tiemposJornada.get(i-1).getPuntosBonus());
+                    } else {
+                        tiemposJornada.get(i).setPuntosBonus(AESUtils.puntosEnPosicion(i + 1)); // else por defecto es 0
+                    }
+                }
+            }
+
         }
 
 

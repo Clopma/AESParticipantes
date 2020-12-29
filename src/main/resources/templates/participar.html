@@ -19,7 +19,7 @@
             <div class="carousel-inner" style="text-align: center;">
                 <div th:each="mezcla : ${mezclas}" class="carousel-item">
                     <h1 th:text="'Tiempo ' + ${mezcla.getNumTiempo()}" style="color: black"/>
-                    <img th:src="'/img/mezclas/' + ${mezcla.getImagenUrl()}" style="width: 600px"/>
+                    <img th:src="'/img/mezclas/' + ${mezcla.getImagenUrl()}" style="height: 600px"/>
                     <div class="carousel-caption d-none d-md-block" style="position: initial">
                         <h2 th:text="${mezcla.getTexto()}" style="color: black"/>
                         <div th:if="${!mezcla.getCategoria().getNombre().equals('FMC')}" th:id="'tiempo'+${mezcla.getNumTiempo()}" style="width: fit-content; margin: auto; align-items: flex-end; color: black; font-size: x-large">
@@ -91,7 +91,7 @@
 
         function enviarTiemposAviso() {
 
-            if(confirm("¿Estás seguro? Asegúrate de que has introducido todos los tiempos.")){
+            if([[${categoria.getNombre()}]] === "FMC" || confirm("¿Estás seguro? Asegúrate de que has introducido todos los tiempos.")){
                 enviarTiempos();
             }
 
@@ -116,8 +116,8 @@
             xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
             if( [[${categoria.getNombre()}]] === "FMC") {
-                xhttp.setRequestHeader("solucion", $("#solucion")[0].value);
-                xhttp.setRequestHeader("explicacion", $("#explicacion")[0].value);
+                xhttp.setRequestHeader("solucion", btoa($("#solucion")[0].value));
+                xhttp.setRequestHeader("explicacion", btoa($("#explicacion")[0].value));
             } else {
                 xhttp.setRequestHeader("tiempo1", getTiempo( $("#tiempo" + 1)));
                 xhttp.setRequestHeader("tiempo2", getTiempo( $("#tiempo" + 2)));

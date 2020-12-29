@@ -35,6 +35,7 @@ public class Mezcla {
     private String texto;
 
     @NotNull
+//    @Column(unique = true) //TODO: Testing las repite :/
     private String imagenUrl;
 
 }

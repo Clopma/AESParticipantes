@@ -41,6 +41,7 @@ function initializeForParticipante(tabla, numTiempos, categoria, mensajeVacio) {
         t.columns(10).visible(true);
     }
 
+
 }
 
 // function initializeForCategoria(tabla) {

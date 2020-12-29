@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.security.Principal;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -214,7 +215,7 @@ public class ParticiparController {
         Categoria categoria = categoriaRepository.findByNombre(nombreCategoria); //TODO: Cachear (hacer esta tarea después de entender el cacheo de hibernate)
 
         if(categoria == null){
-            return new ResponseEntity<>("Categoría no encontrada. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Categoría no e.ncontrada. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
         }
 
         Tiempo tiempo = tiempoRepository.getByParticipanteAndCategoriaAndJornada(participanteLogeado, categoria, jornadaActiva.get());
@@ -233,8 +234,8 @@ public class ParticiparController {
         tiempo.setTiempo3(tiempo3);
         tiempo.setTiempo4(tiempo4);
         tiempo.setTiempo5(tiempo5);
-        tiempo.setExplicacion(explicacion);
-        tiempo.setSolucion(solucion);
+        tiempo.setExplicacion(explicacion == null ? null : new String(Base64.getDecoder().decode(explicacion.getBytes())));
+        tiempo.setSolucion( solucion == null ? null : new String(Base64.getDecoder().decode(solucion.getBytes())));
 
         tiempoRepository.save(tiempo);
 

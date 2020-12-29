@@ -3,9 +3,11 @@
 
 function formatearFechas() {
     var elements = document.getElementsByClassName("fecha");
-    for(var i=0; i<elements.length; i++) {
+    for(var i=0; i < elements.length; i++) {
 
-        elements[i].innerText = new Date(elements[i].innerText.replace(/-/g, "/")).toLocaleString('es-ES');
+        var dateParts = elements[i].innerText.split("-");
+        var jsDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2].substr(0,2));
+        elements[i].innerText = new Date(jsDate).toLocaleString('es-ES');
     }
 
 }

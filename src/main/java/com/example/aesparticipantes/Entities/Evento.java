@@ -40,18 +40,18 @@ public class Evento {
     @NotNull
     private Integer cortePlayOffs;
 
-    public boolean isParticipanteInscrito(Participante p){
-       return inscripciones.stream().anyMatch(i -> i.getParticipante().equals(p));
+    public boolean isParticipanteInscrito(Participante p) {
+        return inscripciones.stream().anyMatch(i -> i.getParticipante().equals(p));
     }
 
-    public List<Tiempo> getTiempos(){
+    public List<Tiempo> getTiempos() {
         List<Tiempo> tiempos = new ArrayList<>();
         competicion.getJornadas().forEach(j -> tiempos.addAll(j.getTiempos().stream().filter(t -> t.getCategoria().equals(categoria)).collect(Collectors.toList()))); // TODO: Feísimo: Hay alguna forma de mapear tiempos en esta entidad???
         return tiempos;
     }
 
     //Ser llamado solo desde cacheable
-    public List<Tiempo> getRankingJornada(int numJornada){
+    public List<Tiempo> getRankingJornada(int numJornada) {
 
         List<Tiempo> tiemposEnJornada = getTiempos().stream().filter(t -> t.getJornada().getNumeroJornada() == numJornada && t.getJornada().isAcabada()).collect(Collectors.toList()); //TODO: Quizás una query
         AESUtils.setPosicionesEnTiempos(tiemposEnJornada);
@@ -65,45 +65,45 @@ public class Evento {
     //Ser llamado solo desde cacheable
     public List<Posicion> getRankingGlobal(DescalificacionRepository descalificacionRepository, ClasificadoRepository clasificadoRepository) {
 
-            List<Tiempo> tiemposRanking = getTiempos();
+        List<Tiempo> tiemposRanking = getTiempos();
 
-            List<Posicion> puntuacionesTotales = tiemposRanking.stream()
-                    //.filter(t -> t.getJornada().getFechaFin().before(new Date()))
-                    .collect(Collectors.groupingBy(Tiempo::getParticipante))
-                            .values().stream().map(tiempos -> Posicion.builder()
-                            .evento(this)
-                            .tiempos(tiempos)
-                            .build()
-                    ).collect(Collectors.toList());
+        List<Posicion> puntuacionesTotales = tiemposRanking.stream()
+                //.filter(t -> t.getJornada().getFechaFin().before(new Date()))
+                .collect(Collectors.groupingBy(Tiempo::getParticipante))
+                .values().stream().map(tiempos -> Posicion.builder()
+                        .evento(this)
+                        .tiempos(tiempos)
+                        .build()
+                ).collect(Collectors.toList());
 
-            List<Posicion> puntuacionesTotalesAux = new ArrayList<>(puntuacionesTotales);
-
-
-            // Ordena por puntuación y si no, por puntuación desempatada
-            Comparator<Posicion> comparadorPuntosYPosiciones =  ((Comparator<Posicion>)(p1, p2) -> p2.getPuntuacionTotal().compareTo(p1.getPuntuacionTotal()))
-                    .thenComparing(p -> getPosicionDeParticipante(p.getParticipante(), puntuacionesTotalesAux));
-
-            puntuacionesTotales.sort(comparadorPuntosYPosiciones);
-
-            // Setea todas las posiciones tal y como se han ordenado
-            AtomicInteger posicion = new AtomicInteger(1);
-            puntuacionesTotales.forEach(p -> p.setPosicionGeneral(posicion.getAndIncrement()));
-
-            List<Descalificacion> descalificados = descalificacionRepository.findAllByEvento(this);
+        List<Posicion> puntuacionesTotalesAux = new ArrayList<>(puntuacionesTotales);
 
 
-            List<Posicion> noDescalificados = puntuacionesTotales.stream().filter(
-                    p -> descalificados.stream().noneMatch(d -> p.getParticipante().equals(d.getParticipante())))
-                    .collect(Collectors.toList());
+        // Ordena por puntuación y si no, por puntuación desempatada
+        Comparator<Posicion> comparadorPuntosYPosiciones = ((Comparator<Posicion>) (p1, p2) -> p2.getPuntuacionTotal().compareTo(p1.getPuntuacionTotal()))
+                .thenComparing(p -> getPosicionDeParticipante(p.getParticipante(), puntuacionesTotalesAux));
 
-            if (noDescalificados.size() > 0) {
-                noDescalificados.subList(0, Math.min(this.getCortePlayOffs(), noDescalificados.size())) //TODO: TEST un poco mas
-                        .forEach(p -> p.setClasificado(true));
-            }
+        puntuacionesTotales.sort(comparadorPuntosYPosiciones);
 
-                AESUtils.setMedallas(puntuacionesTotales, clasificadoRepository);
+        // Setea todas las posiciones tal y como se han ordenado
+        AtomicInteger posicion = new AtomicInteger(1);
+        puntuacionesTotales.forEach(p -> p.setPosicionGeneral(posicion.getAndIncrement()));
 
-             return puntuacionesTotales;
+        List<Descalificacion> descalificados = descalificacionRepository.findAllByEvento(this);
+
+
+        List<Posicion> noDescalificados = puntuacionesTotales.stream().filter(
+                p -> descalificados.stream().noneMatch(d -> p.getParticipante().equals(d.getParticipante())))
+                .collect(Collectors.toList());
+
+        if (noDescalificados.size() > 0) {
+            noDescalificados.subList(0, Math.min(this.getCortePlayOffs(), noDescalificados.size())) //TODO: TEST un poco mas
+                    .forEach(p -> p.setClasificado(true));
+        }
+
+        AESUtils.setMedallas(puntuacionesTotales, clasificadoRepository);
+
+        return puntuacionesTotales;
 
     }
 
@@ -115,7 +115,7 @@ public class Evento {
                 .get().getPuntuacionTotal();
 
         List<Posicion> puntuacionesEmpatadasOriginalmentePorPuntuacionTotal = puntuaciones.stream().map(Posicion::clone)
-                    .filter(p -> p.getPuntuacionTotal() == puntuacionADesempatar).collect(Collectors.toList());
+                .filter(p -> p.getPuntuacionTotal() == puntuacionADesempatar).collect(Collectors.toList());
 
         if (puntuacionesEmpatadasOriginalmentePorPuntuacionTotal.size() == 1) {
             return puntuaciones.indexOf(puntuaciones.stream().filter(p -> p.getParticipante().equals(participante)).findFirst().get()) + 1;
@@ -151,8 +151,11 @@ public class Evento {
 
                 if (aux.size() > 1) {
 
-                    aux2 = puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.stream().map(Posicion::clone).collect(Collectors.toList()); //Me la guardo para que quede al menos un último Tiempo que identifique el Participante
-                    puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.forEach(p -> { if(p.getTiempos().size() > 0) { p.getTiempos().remove(0); } });
+                    puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.forEach(p -> {
+                        if (p.getTiempos().size() > 0) {
+                            p.getTiempos().remove(0);
+                        }
+                    });
 
                 } else if (aux.size() == 1) {
 
@@ -161,7 +164,7 @@ public class Evento {
 
                 } else /*if (aux.size() == 0)*/ {
 
-                    puntuacionesEmpatadasPorPuntuacionesIndividuales = aux2;
+                    puntuacionesEmpatadasPorPuntuacionesIndividuales = puntuacionesEmpatadasActualmentePorPuntuacionTotal; //Todas
                     break;
 
                 }
@@ -178,24 +181,32 @@ public class Evento {
 
             } else {
 
-                //Desempatar por media
+                //Desempatar por media o single
                 List<Tiempo> tiemposEmpatados = new ArrayList<>();
                 puntuacionesEmpatadasPorPuntuacionesIndividuales.forEach(p -> tiemposEmpatados.addAll(p.getTiempos()));
 
-                Optional<Tiempo> mejorMedia = tiemposEmpatados.stream().filter(t -> t.getJornada().isAcabada()).reduce((acc, val) -> (acc.getMedia() > 0) && (acc.getMedia() < val.getMedia()) ? acc : val);
+                Optional<Tiempo> mejorTiempo = tiemposEmpatados.stream().filter(t -> t.getJornada().isAcabada() &&
+                        ((categoria.getNombre().equals("FMC") || categoria.getNombre().equals("BLD")) ? t.getSingle() > 0 : t.getMedia() > 0))
+                        .reduce((acc, val) ->
+                                (categoria.getNombre().equals("FMC") || categoria.getNombre().equals("BLD")) ?
+                                        (acc.getSingle() < val.getSingle() ? acc : val) :
+                                        (acc.getMedia() < val.getMedia() ? acc : val));
 
-                Posicion personaConMejorMedia;
 
-                if(mejorMedia.isPresent()) {
-                    personaConMejorMedia = puntuacionesEmpatadasPorPuntuacionesIndividuales.stream().filter(p -> p.getParticipante().equals(mejorMedia.get().getParticipante())).findFirst().get();
+
+                Posicion personaConMejorTiempo;
+
+                if (mejorTiempo.isPresent()) {
+                    //Si hay varios, por nombre, si no, pues debe haber 1.
+                    personaConMejorTiempo = puntuacionesEmpatadasPorPuntuacionesIndividuales.stream().filter(p -> p.getParticipante().equals(mejorTiempo.get().getParticipante())).sorted().findFirst().get();
                 } else {
                     Collections.sort(puntuacionesEmpatadasPorPuntuacionesIndividuales, Comparator.comparing(p -> p.getParticipante().getNombre()));
-                    personaConMejorMedia = puntuacionesEmpatadasPorPuntuacionesIndividuales.get(0); // En este punto ya orden alfabético o lo que Dios quiera
+                    personaConMejorTiempo = puntuacionesEmpatadasPorPuntuacionesIndividuales.get(0); // En este punto ya orden alfabético o lo que Dios quiera
                 }
 
-                personasDesempatadasEnOrden.add(personaConMejorMedia);
+                personasDesempatadasEnOrden.add(personaConMejorTiempo);
                 puntuacionesEmpatadasActualmentePorPuntuacionTotal = puntuacionesEmpatadasActualmentePorPuntuacionTotal.stream()
-                        .filter(p -> !p.getParticipante().equals(personaConMejorMedia.getParticipante()))
+                        .filter(p -> !p.getParticipante().equals(personaConMejorTiempo.getParticipante()))
                         .collect(Collectors.toList());
             }
         }
@@ -214,7 +225,7 @@ public class Evento {
         return posicionParticipanteSuperior + posicionParticipante;
     }
 
-    public String getId(){
+    public String getId() {
         return getEventoId(getCompeticion(), getCategoria());
     }
 

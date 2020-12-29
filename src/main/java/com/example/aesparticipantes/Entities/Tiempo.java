@@ -167,14 +167,42 @@ public class Tiempo implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-
         Tiempo t = (Tiempo) o;
-        if (this.getMedia() == 0){
-           if(t.getMedia() == 0) return 0;
-           return 1;
-        } else if (t.getMedia() == 0){
-            return -1;
+
+        int c = 0;
+
+        if (!this.categoria.getNombre().equals("BLD") && !this.categoria.getNombre().equals("FMC")) {
+            //Media
+            if (this.getMedia() == 0) {
+                if (t.getMedia() == 0) {
+                    c = 0;
+                } else {
+                    c = 1;
+                }
+            } else if (t.getMedia() == 0) {
+                c = -1;
+            }
+
+            if (c == 0) {
+                c = Double.compare(this.getMedia(), t.getMedia());
+            }
         }
-        return Double.compare(this.getMedia(), t.getMedia());
+
+        //Single
+        if (c == 0) {
+            if (this.getSingle() == 0) {
+                if (t.getSingle() == 0) {
+                    c = 0;
+                } else {
+                    c = 1;
+                }
+            } else if (t.getSingle() == 0) {
+                c = -1;
+            }
+            if (c == 0) {
+                c = Double.compare(this.getSingle(), t.getSingle());
+            }
+        }
+        return c;
     }
 }

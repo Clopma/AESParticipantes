@@ -2,6 +2,7 @@ package com.example.aesparticipantes.Models;
 
 
 import com.example.aesparticipantes.Entities.Evento;
+import com.example.aesparticipantes.Entities.Jornada;
 import com.example.aesparticipantes.Entities.Participante;
 import com.example.aesparticipantes.Entities.Tiempo;
 import com.example.aesparticipantes.Repositories.ClasificadoRepository;
@@ -44,7 +45,7 @@ public class Posicion implements Comparable {
 
     public Participante getParticipante(){
         if(tiempos == null || tiempos.size() < 1){
-            return Participante.builder().nombre("ZZZmisterio").build();
+            return Participante.builder().nombre("ZZZmisterio").build(); //Cuando el participante no tiene tiempos, a la hora de ordenar en el ranking, por orden alfabético que sea el últimos.
         } else {
             return  tiempos.get(0).getParticipante();
         }
@@ -64,6 +65,11 @@ public class Posicion implements Comparable {
     public Optional<String> getPuntuacionJornada(int numeroJornada) {
         Optional<Tiempo> tiempo = tiempos.stream().filter(t -> t.getJornada().getNumeroJornada() == numeroJornada).findFirst();
         return tiempo.map(value -> value.getPuntosTotales() + "");
+    }
+
+    public boolean primeraJornadaIsActiva(){
+        Optional<Jornada> jornadaActiva = getEvento().getCompeticion().getJornadaActiva();
+        return jornadaActiva.isPresent() && jornadaActiva.get().getNumeroJornada() == 1;
     }
 
     @Override

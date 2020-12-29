@@ -1,9 +1,6 @@
 package com.example.aesparticipantes.Controllers;
 
-import com.example.aesparticipantes.Entities.Categoria;
-import com.example.aesparticipantes.Entities.Competicion;
-import com.example.aesparticipantes.Entities.Evento;
-import com.example.aesparticipantes.Entities.Tiempo;
+import com.example.aesparticipantes.Entities.*;
 import com.example.aesparticipantes.Models.Posicion;
 import com.example.aesparticipantes.Repositories.*;
 import com.example.aesparticipantes.Utils.AESUtils;
@@ -28,6 +25,9 @@ public class RankingGeneralController {
     CompeticionController competicionController;
 
     @Autowired
+    JornadaRepository jornadaRepository;
+
+    @Autowired
     EventoRepository eventoRepository;
 
     @Autowired
@@ -38,6 +38,9 @@ public class RankingGeneralController {
 
     @Autowired
     ClasificadoRepository clasificadoRepository;
+
+    @Autowired
+    MezclaRepository mezclaRepository;
 
     @Autowired
     DescalificacionRepository descalificacionRepository;
@@ -84,8 +87,16 @@ public class RankingGeneralController {
 
         Evento evento = self.getEvento(categoria, competicion.get());
 
+
         List<Evento> eventosCompeticionEnOrden = self.getEventosEnOrden(competicion.get());
         model.addAttribute("evento", evento);
+        if(categoria.getNombre().equals("FMC")){
+            Jornada jornada = jornadaRepository.findByCompeticionAndNumeroJornada(competicion.get(), numeroJornada);
+            if(jornada.isAcabada()){
+                List<Mezcla> mezclas =  mezclaRepository.findAllByJornadaAndCategoria(jornada, categoria);
+                model.addAttribute("mezcla", mezclas.size() > 0 ? mezclas.get(0) : null);
+            }
+        }
         model.addAttribute("anteriorEvento", anteriorEvento(eventosCompeticionEnOrden, evento));
         model.addAttribute("siguienteEvento", siguenteEvento(eventosCompeticionEnOrden, evento));
         model.addAttribute("tiempos", self.getRankingJornada(evento, numeroJornada));

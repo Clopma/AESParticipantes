@@ -2,6 +2,7 @@
     background-image: url("../img/rubikColours.png");
     /*background-size: cover; */ /*TODO: TEST*/
     display: flex;
+    position: relative;
     min-width: fit-content;
     font-family: 'Rajdhani', sans-serif !important;
 

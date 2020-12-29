@@ -14,20 +14,9 @@
 <script>
     $(document).ready(function () {
 
-        var numberOfTables = 0;
-
-        do {
-            var tabla = $('#dataTable' + numberOfTables);
-            if (tabla) {
-                initializeForParticipante(tabla, tabla.attr("data-numTiempos"), tabla.attr("data-nombreCat"), "El participante ha registrado sus tiempos, pero estarán ocultos hasta que finalizce la jornada. La posición mostrada solo representa el orden alfabético.");
-            }
-            numberOfTables++;
-        } while (tabla.length && numberOfTables < 100)
-
-        if(numberOfTables > 98) {
-            alert('Este mensaje no debería aparecer, por favor, envíame un mensaje y infórmame, te lo agradeceré: @Klopma')
-        }
-
+        $('.tablaTiempos').each(function() {
+                initializeForParticipante($(this), $(this).attr("data-numTiempos"), $(this).attr("data-nombreCat"), "El participante ha registrado sus tiempos, pero estarán ocultos hasta que finalizce la jornada.");
+        });
 
         scrollAFila();
 
@@ -48,8 +37,8 @@
          style="margin-top: 15px; margin-left: 250px; margin-right: 250px; margin-bottom: 50px; z-index: 2; position: relative;">
 
         <!-- Relative para la posición y el anchor-->
-        <div th:if="${posicion.getPosicionGeneral() != 0 && posicion.getTiempos().size() > 1}" class="puntuacion whitePanel"> <!-- Si la posicion está calculada con una sola jornada no es relevante porque solo influye el orden alfabético -->
-            <h1  th:text="${posicion.getPosicionGeneral() + 'ª POSICIÓN'}"
+        <div th:if="${posicion.getPosicionGeneral() != 0 && !posicion.primeraJornadaIsActiva()}" class="puntuacion whitePanel"> <!-- Si la posicion está calculada con una sola jornada no es relevante porque solo influye el orden alfabético -->
+            <h1 th:text="${posicion.getPosicionGeneral() + 'ª POSICIÓN'}"
                 th:style="'font-size: '+${posicion.getTamano()}+'px !important; align-self: center'"> Posición </h1>
         </div>
         <div style="display: flex; align-items: center">
@@ -75,12 +64,12 @@
         </div>
         <div th:if="${posicion.getPosicionGeneral() == 0}">El participante está inscrito, pero no ha participado.</div>
         <table th:if="${posicion.getPosicionGeneral() != 0}"  th:data-numTiempos="${posicion.getEvento().getCategoria().getNumTiempos()}" th:data-nombreCat="${posicion.getEvento().getCategoria().getNombre()}"
-               th:id="'dataTable'+ ${iStat.index}" class="table datatable centerCols">
+               class="table datatable centerCols tablaTiempos">
             <thead>
             <tr>
                 <th>Jornada</th>
                 <th>Posición</th>
-                <th>Tiempo 1</th>
+                <th th:text="${posicion.getEvento().getCategoria().getNombre().equals('FMC') ? 'Movimientos' : 'Tiempo 1'}" />
                 <th>Tiempo 2</th>
                 <th>Tiempo 3</th>
                 <th>Tiempo 4</th>
@@ -131,13 +120,17 @@
                 <td style="font-weight: bold;" class="borderLeftColumn" th:text="${tiempo.getSingleStr()}" />
                 <td style="font-weight: bold" th:text="${tiempo.getMediaStr()}" />
                 <td th:text="${tiempo.getSolucion()}" />
-                <td th:text="${tiempo.getExplicacion()}" />
+                <td>
+                    <p th:utext="${tiempo.getExplicacion() == null ? null : #strings.escapeXml(tiempo.getExplicacion()).replaceAll('\n', '&lt;br /&gt;')}" />
+                </td>
                 <td th:if="${tiempo.getJornada().isAcabada()}" style="font-weight: bold" th:text="${tiempo.getPuntosTotales()}" />
                 <td th:if="${!tiempo.getJornada().isAcabada()}" >
                     <span class="tooltip">
-                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-clock" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
-                            <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-eye-slash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/>
+                            <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299l.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/>
+                            <path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709z"/>
+                            <path fill-rule="evenodd" d="M13.646 14.354l-12-12 .708-.708 12 12-.708.708z"/>
                         </svg>
                         <span class="tooltiptext">Este dato estará oculto hasta que finalice la jornada. Solo tú puedes ver tus tiempos de esta jornada.</span>
                     </span>

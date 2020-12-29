@@ -55,7 +55,7 @@ public class VincularController {
         Participante participante = participanteRepository.findByNombre(nombreParticipante);
 
         if(participante == null){
-            logger.error("404 al vincular: "+ nombreParticipante);
+            logger.error("404 al vincular: " + nombreParticipante);
             return "error/404";
         }
 
