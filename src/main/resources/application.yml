@@ -30,6 +30,6 @@ server:
       enabled: false
 
 aesonline:
-  enableEnvioTiempos: true
+  enableEnvioTiempos: false
 
 

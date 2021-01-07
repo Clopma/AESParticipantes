@@ -165,7 +165,7 @@ VALUES ('Adrian macias perez', 1, NULL, '2020-12-17 21:40:25.000000', '2020-12-1
         'https://www.worldcubeassociation.org/uploads/user/avatar/2015GONZ08/1566470856.jpeg',
         'https://www.worldcubeassociation.org/uploads/user/avatar/2015GONZ08/1566470856_thumb.jpeg', '2015GONZ08'),
        ('Carlos Gordillo Rizo', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-       ('Carlos López Marí', 1, NULL, '2020-12-06 02:08:06.000000', '2017-01-03 01:09:41.000000', 'm',
+       ('Carlos López Marí', 1, 'clopma@gmail.com', '2020-12-06 02:08:06.000000', '2017-01-03 01:09:41.000000', 'm',
         'https://www.worldcubeassociation.org/persons/2009MARI03', 'Carlos López Marí', 'ES',
         'https://www.worldcubeassociation.org/uploads/user/avatar/2009MARI03/1486328049.jpg',
         'https://www.worldcubeassociation.org/uploads/user/avatar/2009MARI03/1486328049_thumb.jpg', '2009MARI03'),

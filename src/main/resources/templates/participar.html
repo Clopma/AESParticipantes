@@ -2,7 +2,7 @@
 <head>
     <title th:text="'Participando en '+ ${nombreCategoria}" />
     <th:block th:include="fragments/head :: genericHead"></th:block>
-
+    <script type="text/javascript" src="/js/bundle.js"></script>
 </head>
 
 
@@ -19,7 +19,9 @@
             <div class="carousel-inner" style="text-align: center;">
                 <div th:each="mezcla : ${mezclas}" class="carousel-item">
                     <h1 th:text="'Tiempo ' + ${mezcla.getNumTiempo()}" style="color: black"/>
-                    <img th:src="'/img/mezclas/' + ${mezcla.getImagenUrl()}" style="height: 600px"/>
+
+                    <div th:data-textoMezcla="${mezcla.getTexto()}" class="dibujoMezcla" style="height: 600px"></div>
+
                     <div class="carousel-caption d-none d-md-block" style="position: initial">
                         <h2 th:text="${mezcla.getTexto()}" style="color: black"/>
                         <div th:if="${!mezcla.getCategoria().getNombre().equals('FMC')}" th:id="'tiempo'+${mezcla.getNumTiempo()}" style="width: fit-content; margin: auto; align-items: flex-end; color: black; font-size: x-large">
@@ -59,6 +61,8 @@
     </div>
 
     <script th:inline="javascript">
+
+
 
         $('#carruselMezclas div.carousel-inner div.carousel-item:first-child').addClass('active');
 
@@ -146,6 +150,14 @@
         }
 
 
+        $('.dibujoMezcla').each(function(i, obj) {
+            var textoMezcla = $(obj).attr("data-textoMezcla");
+
+
+            var threeBythree = new CubePreview().svgString('RUR');
+
+            obj.innerHTML = threeBythree;
+        });
     </script>
 </div>
 <script src="/js/html-duration-picker.min.js"></script>

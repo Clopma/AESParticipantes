@@ -464,3 +464,7 @@ h3 {
 .titulosCentrados h1{
     text-align: center;
 }
+
+.dibujoMezcla svg{
+    height: 100%;
+}
