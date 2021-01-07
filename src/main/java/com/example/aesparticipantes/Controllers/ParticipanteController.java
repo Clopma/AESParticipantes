@@ -9,9 +9,13 @@ import com.example.aesparticipantes.Repositories.*;
 import com.example.aesparticipantes.Seguridad.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
@@ -143,5 +147,25 @@ public class ParticipanteController {
     @Cacheable(value = "participantes") // Tiempos EAGER...
     public Participante getParticipante(String nombreparticipante) {
         return participanteRepository.findByNombre(nombreparticipante);
+    }
+
+    @PostMapping("/enviarEmail")
+    public ResponseEntity<String> enviarTiempos(@RequestHeader("email") String email, Principal principal) {
+
+        Participante participanteLogeado;
+        if (principal instanceof UserData) {
+            String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
+            participanteLogeado = self.getParticipante(nombreParticipanteGuardado);
+            if (participanteLogeado == null) {
+                return new ResponseEntity<>("Usuario no encontrado", HttpStatus.UNAUTHORIZED);
+            }
+        } else {
+            return new ResponseEntity<>("Usuario no logeado", HttpStatus.UNAUTHORIZED);
+        }
+
+        participanteLogeado.setEmail(email);
+        participanteRepository.save(participanteLogeado);
+        //TODO: evictear participante
+        return new ResponseEntity<>("Los tiempos se han guardado correctamente", HttpStatus.OK);
     }
 }

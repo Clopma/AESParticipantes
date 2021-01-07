@@ -1,5 +1,6 @@
 package com.example.aesparticipantes.Utils;
 
+import com.example.aesparticipantes.Entities.Categoria;
 import com.example.aesparticipantes.Entities.Clasificado;
 import com.example.aesparticipantes.Entities.Tiempo;
 import com.example.aesparticipantes.Models.Posicion;
@@ -11,8 +12,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.Collator;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,9 +66,12 @@ public class AESUtils {
         return new double[]{mejorTiempo, media, peorTiempo};
     }
 
-    public static String formatTime(double time) {
+    public static String formatTime(double time, Categoria categoria) {
 
         try {
+            if(categoria.getNombre().equals("FMC")){
+                return (int) time + "";
+            }
             String doubleAsText = String.valueOf(round(time, 2));
             int decimal = Integer.parseInt(doubleAsText.split("\\.")[0]);
             int mins = decimal / 60;
@@ -205,6 +212,11 @@ public class AESUtils {
         return hexString.toString();
     }
 
+
+    public static String dateToString(Date date){
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return   dateFormat.format(date);
+    }
 
 
 

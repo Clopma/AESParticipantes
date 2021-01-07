@@ -25,7 +25,7 @@ function initializeForParticipante(tabla, numTiempos, categoria, mensajeVacio) {
     t.columns(9).visible(false);
     t.columns(10).visible(false);
 
-    if (numTiempos < 5) {
+    if (numTiempos < 5) { //TODO: hacer con thymeleaf
         t.columns(5).visible(false);
         t.columns(6).visible(false);
         if (categoria === 'BLD'){

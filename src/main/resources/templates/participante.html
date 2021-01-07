@@ -15,7 +15,7 @@
 </head>
 
 
-<body onload="formatearFechas()" class="cubosbg">
+<body class="cubosbg">
 
 <script th:inline="javascript">
 
@@ -199,7 +199,7 @@
              th:each="competicion: ${competicionesFuturas}"
              style="background-color: white; padding: 10px; border-top: solid 1px black;">
 
-            Inicio: <span class="fecha" th:text="${competicion.getInicio()}"/>
+            Inicio: <span th:text="${competicion.getInicioStr()}"/>
             <div style="display: flex; align-items: center">
                 <a th:href="${'/competicion/'+ competicion}" style="display: flex; align-items: center">
                     <img th:src="'/img/copas/copa_' + ${competicion.getNombre()} + '.png'" style="width: 75px; margin: 10px"/>
@@ -241,6 +241,32 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="email" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="width: 30%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Estemos en contacto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="text-align: justify">
+                   El equipo de la AES Online en ocasiones necesita contactar con los participantes, por lo que se requiere un correo de contacto:<br/>
+
+                    <div style="text-align: center; margin: 10px;"><input id="email" type="email" placeholder="ejemplo@gmail.com"></input></div>
+
+                    Esta información es privada y solo tendrá acceso a ella los organizadores.<br />
+
+                    Adicionalmente, próximamente lo usaremos para avisarte cuando se publiquen los rankings de los campeonatos en los que estés participando y del comienzo de las jornadas. Estos avisos se podrán configurar en el perfil más adelante.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Ahora no</button>
+                    <button type="button" onclick="enviarEmail()" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
             if($('#proximasCompeticiones').children('#competicionProxima').length === 0){
                 document.getElementById("noHayCompeticiones").style.display = 'block';
@@ -256,6 +282,37 @@
         var nombreCategoria = $(activador).attr("data-nombreCategoria");
         var nombreCompeticion = $(activador).attr("data-nombreCompeticion");
         loadBracket(nombreCategoria, nombreCompeticion);
+    }
+
+    if([[${soyYo}]] && [[${participante.getEmail()}]] == null){
+        $('#emailModal').modal('show');
+    }
+
+    function enviarEmail() {
+        if(validateEmail($('#email')[0].value)) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    $('#emailModal').modal('hide');
+                } else if (this.readyState === 4 && this.status === 401) {
+                    alert('Problema con la sesión. ¿Estás logueado? Por favor, contacta con un administrador.');
+                } else if (this.readyState === 4) {
+                    alert('Esto es un error, por favor, contacta con el desarrollador y muéstrale lo siguente: ' + xhttp.responseText);
+                }
+            };
+
+            xhttp.open("POST", "/enviarEmail/", true);
+            xhttp.setRequestHeader("email", $('#email')[0].value);
+
+            xhttp.send();
+        } else {
+            alert('Email no válido. Si crees que es un error, contacta a un administrador.');
+        }
+    }
+
+    function validateEmail(email) {
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
     }
 
 </script>

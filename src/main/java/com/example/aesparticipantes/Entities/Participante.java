@@ -28,6 +28,9 @@ public class Participante implements Comparable {
     @Column(unique = true)
     private String wcaId;
 
+    @Column(unique = true)
+    private String email;
+
     private String linkPerfilWCA;
     private String nombreWCA;
     private String gender;

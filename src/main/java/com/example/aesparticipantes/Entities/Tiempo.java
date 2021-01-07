@@ -117,22 +117,22 @@ public class Tiempo implements Comparable {
         single = singleMediaYpeor[0];
         media = singleMediaYpeor[1];
 
-        tiempo1Str = tiempo1 == 0 ? AESUtils.DNF : formatTime(this.tiempo1);
+        tiempo1Str = tiempo1 == 0 ? AESUtils.DNF : formatTime(this.tiempo1, categoria);
 
         if (categoria.getNumTiempos() > 1) {
 
-            tiempo2Str = tiempo2 == 0 ? AESUtils.DNF : formatTime(tiempo2);
-            tiempo3Str = tiempo3 == 0 ? AESUtils.DNF : formatTime(tiempo3);
+            tiempo2Str = tiempo2 == 0 ? AESUtils.DNF : formatTime(tiempo2, categoria);
+            tiempo3Str = tiempo3 == 0 ? AESUtils.DNF : formatTime(tiempo3, categoria);
         }
 
         if (categoria.getNumTiempos() > 3) {
 
-            tiempo4Str = tiempo4 == 0 ? AESUtils.DNF : formatTime(tiempo4);
-            tiempo5Str = tiempo5 == 0 ? AESUtils.DNF : formatTime(tiempo5);
+            tiempo4Str = tiempo4 == 0 ? AESUtils.DNF : formatTime(tiempo4, categoria);
+            tiempo5Str = tiempo5 == 0 ? AESUtils.DNF : formatTime(tiempo5, categoria);
         }
 
-        singleStr = single == 0 ? AESUtils.DNF : formatTime(single);
-        mediaStr = media == 0 ? AESUtils.DNF : formatTime(media);
+        singleStr = single == 0 ? AESUtils.DNF : formatTime(single, categoria);
+        mediaStr = media == 0 ? AESUtils.DNF : formatTime(media, categoria);
 
         //Si la media no es un DNF
         if (media > 0 && categoria.getNumTiempos() == 5) {

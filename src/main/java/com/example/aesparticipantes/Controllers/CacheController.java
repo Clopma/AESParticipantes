@@ -20,7 +20,7 @@ public class CacheController {
     @Autowired
     CacheManager cacheManager;
 
-    List<String> usuariosConPermisos = Arrays.asList("Carlos López Marí"); //TODO: Cuando haya sistema de permisos, usarlo
+    List<String> usuariosConPermisos = Arrays.asList("Carlos López Marí", "Rafael Rodriguez Santana", "Julio Perugorria Lorente", "Fernando Sáez Lázaro"); //TODO: Cuando haya sistema de permisos, usarlo
 
     @RequestMapping("/limpiarCache")
     public String limpiarCache(Model model, Principal principal) {

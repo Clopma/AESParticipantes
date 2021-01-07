@@ -1,17 +1,4 @@
 
-
-
-function formatearFechas() {
-    var elements = document.getElementsByClassName("fecha");
-    for(var i=0; i < elements.length; i++) {
-
-        var dateParts = elements[i].innerText.split("-");
-        var jsDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2].substr(0,2));
-        elements[i].innerText = new Date(jsDate).toLocaleString('es-ES');
-    }
-
-}
-
 function formatTiempos(text, categoria, numTiempos, jornada) {
 
     var re = /(\d{1,2}):(\d{1,2})(,(\d{1,2}))?/g;

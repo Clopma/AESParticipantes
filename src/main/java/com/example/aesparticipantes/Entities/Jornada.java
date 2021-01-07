@@ -1,6 +1,7 @@
 package com.example.aesparticipantes.Entities;
 
 import com.example.aesparticipantes.Entities.Keys.KeyJornada;
+import com.example.aesparticipantes.Utils.AESUtils;
 import lombok.*;
 
 import javax.persistence.*;
@@ -37,6 +38,14 @@ public class Jornada {
 
     @NotNull
     private Date fechaFin;
+
+    public String getFechaInicioStr(){
+        return AESUtils.dateToString(fechaInicio);
+    }
+
+    public String getFechaFinStr(){
+        return AESUtils.dateToString(fechaFin);
+    }
 
     public boolean isAcabada(){
         return fechaFin.before(new Date());

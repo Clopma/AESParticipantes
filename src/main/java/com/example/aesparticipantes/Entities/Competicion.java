@@ -1,5 +1,6 @@
 package com.example.aesparticipantes.Entities;
 
+import com.example.aesparticipantes.Utils.AESUtils;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -22,9 +23,10 @@ public class Competicion {
     private String nombre;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "competicion")
+    @Fetch(FetchMode.SELECT)
     private List<Evento> eventos;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "competicion") //TODO falla en participante, a veces, difícil de reprocucir. Probar con reset -> participante -> participar (debes estar logueado) -> inicio -> loguear
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "competicion") //TODO 0003 falla en participante, a veces, difícil de reprocucir. Probar con reset -> participante -> participar (debes estar logueado y haber competicion en curso) -> inicio -> loguear
     @Fetch(FetchMode.SELECT)
     private List<Jornada> jornadas;
 
@@ -34,6 +36,10 @@ public class Competicion {
     public Date getInicio(){
         Optional<Jornada> primeraJornda = jornadas.stream().filter(j -> j.getNumeroJornada()==1).findFirst();
         return primeraJornda.map(Jornada::getFechaInicio).orElse(null);
+    }
+
+    public String getInicioStr(){
+        return AESUtils.dateToString(getInicio());
     }
 
     public Date getFinalizacion(){

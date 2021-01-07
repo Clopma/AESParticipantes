@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.Base64;
 import java.util.Date;
@@ -234,8 +235,8 @@ public class ParticiparController {
         tiempo.setTiempo3(tiempo3);
         tiempo.setTiempo4(tiempo4);
         tiempo.setTiempo5(tiempo5);
-        tiempo.setExplicacion(explicacion == null ? null : new String(Base64.getDecoder().decode(explicacion.getBytes())));
-        tiempo.setSolucion( solucion == null ? null : new String(Base64.getDecoder().decode(solucion.getBytes())));
+        tiempo.setExplicacion(explicacion == null ? null : new String(Base64.getDecoder().decode(explicacion.getBytes()), StandardCharsets.ISO_8859_1));
+        tiempo.setSolucion( solucion == null ? null : new String(Base64.getDecoder().decode(solucion.getBytes()), StandardCharsets.ISO_8859_1));
 
         tiempoRepository.save(tiempo);
 

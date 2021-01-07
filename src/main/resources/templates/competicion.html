@@ -24,7 +24,7 @@
 
 </script>
 
-<body class="cubosbg" onload="formatearFechas()">
+<body class="cubosbg">
 <div th:replace="fragments/backButton :: backButton"/>
 <div th:if="${competicion.isFinalizada()}" class="bouncyContainer forth">
     <a th:href="'/podios/' + ${nombreCompeticion}" class="bouncyContainer">
@@ -46,7 +46,7 @@
     <div th:if="${!competicion.isEmpezada()}" class="whitePanel" style="margin-top: 15px; font-size: larger; text-align: center">
         <div style="margin-top: 15px; font-size: larger; text-align: center">
             <h1>Inscripción</h1>
-            Esta competición comienza el <span class="fecha" th:text="${competicion.getInicio()}" />.
+            Esta competición comienza el <span th:text="${competicion.getInicioStr()}" />.
 
         </div>
         <div th:if="${participanteLogeado != null}">
@@ -89,7 +89,7 @@
             <h1>¡Hay una jornada en progreso ahora mismo!</h1>
 
 
-            La <span th:text="${jornadaActiva.get().getNumeroJornada()}" />ª jornada acabará el <span class="fecha" th:text="${jornadaActiva.get().getFechaFin()}" />.
+            La <span th:text="${jornadaActiva.get().getNumeroJornada()}" />ª jornada acabará el <span th:text="${jornadaActiva.get().getFechaFinStr()}" />.
             <span th:if="${participanteLogeado == null}">
                  Si estás inscrito, inicia sesión para participar:
                     <div style="display: flex; justify-content: center; align-items: center">
@@ -128,10 +128,10 @@
                         <span th:text="${jornada.getNumeroJornada()}"/>
                     </td>
                     <td>
-                        <span class="fecha" th:text="${jornada.getFechaInicio()}" />
+                        <span th:text="${jornada.getFechaInicioStr()}" />
                     </td>
                     <td>
-                        <span class="fecha" th:text="${jornada.getFechaFin()}" />
+                        <span th:text="${jornada.getFechaFinStr()}" />
                     </td>
                 </tr>
                 </tbody>
@@ -154,7 +154,7 @@
     </div>
 
     <div class="whitePanel" style="margin-top: 15px; font-size: larger; text-align: center; width: 90%;">
-        <h1>Participantes</h1>
+        <h1><span id="numParticipantesTotales">?</span><br />Participantes</h1>
         <div style="overflow: auto;">
             <table class="datatable table centerCols">
                 <thead>
@@ -167,7 +167,7 @@
 
                 </tr>
                 </thead>
-                <tbody style="background-color: white;">
+                <tbody id="listaParticipantesCompeticion" style="background-color: white;">
                 <tr th:each="participante : ${competicion.getCategoriasInscritasPorParticipanteMap()}">
 
                     <td><a th:href="'/participante/'+${participante.getKey().getNombre()}+'/' +  ${competicion.isEmpezada() ? competicion.getNombre() : ''}"><span th:text="${participante.getKey().getNombre()}" /></a></td>
@@ -192,6 +192,8 @@
                 $(this).find('#numParticipantes')[0].innerText = $('.insc > .'+$(this).find('#catName')[0].className).length;
 
             });
+
+            $('#numParticipantesTotales')[0].innerText = $('#listaParticipantesCompeticion')[0].children.length;
 
 
         </script>

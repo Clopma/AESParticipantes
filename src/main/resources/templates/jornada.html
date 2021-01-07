@@ -109,7 +109,7 @@
             <tr>
                 <th>Posición</th>
                 <th>Participante</th>
-                <th>Tiempo 1</th>
+                <th th:text="${nombreCategoria.equals('FMC') ? 'Movimientos' : 'Tiempo 1'}" />
                 <th>Tiempo 2</th>
                 <th>Tiempo 3</th>
                 <th>Tiempo 4</th>

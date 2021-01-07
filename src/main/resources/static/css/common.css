@@ -460,3 +460,7 @@ h3 {
 .texto_largo{
     background-color: #f6f6f6;
 }
+
+.titulosCentrados h1{
+    text-align: center;
+}
