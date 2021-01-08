@@ -1,0 +1,31 @@
+.scrambleDrawWrapper {
+    width: 50%;
+    margin: auto;
+}
+.scrambleDrawWrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 5px;
+}
+.scrambleDrawWrapper div {
+
+}
+
+.scrambleDrawWrapper div::before {
+    content: "";
+    grid-row: 1;
+    grid-column: 1;
+    padding-bottom: 100%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.face {
+    display: grid;
+    grid-gap: 5px;
+}
+
+.sticker{
+    background-image: linear-gradient( 45deg, transparent 50%, rgba(0, 0, 0, 0.5) 50%);
+    background-color: red;
+}
