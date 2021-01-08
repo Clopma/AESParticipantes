@@ -22,8 +22,8 @@
             } else {
                 $("#dropdown").addClass("open");
             }
-
         }
+
 
 
         var ignore1 = document.getElementById('listaParticipantes');
@@ -50,12 +50,20 @@
     });
 
         $(window).on('load',function(){
-           if(window.location.hash.substr(1) === 'info') $('#infoModal').modal('show');
+            var anchor = window.location.hash.substr(1);
+           if($('#tab-' + anchor).tab()[0] || anchor === 'info') {
+               $('#infoModal').modal('show');
+               $('#tab-' + anchor).tab('show');
+           }
         });
-        $(window).on('shown.bs.modal', function() {
-            $('#infoModal').modal('show');
-            location.hash = 'info';
-        });
+
+
+    $(document).on('click', '.nav-item', function () {
+        location.hash = $('#infoTabs li a.active')[0].id.replace('tab-', '');
+    });
+
+
+
         $(window).on('hidden.bs.modal', function() {
             $('#infoModal').modal('hide');
             history.pushState("", document.title, window.location.pathname
@@ -221,53 +229,70 @@
 <div class="modal-dialog modal-dialog-centered" role="document">
 <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">TUTORIALES Y REGLAMENTO</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle">INFORMACIÓN</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body texto_largo titulosCentrados">
+    <ul class="nav nav-tabs" id="infoTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="tab-tutoriales" data-toggle="tab" href="#tutoriales" role="tab" aria-controls="home" aria-selected="true">Tutoriales</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-reglamento" data-toggle="tab" href="#reglamento" role="tab" aria-controls="profile" aria-selected="false">Reglamento</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-sorteos" data-toggle="tab" href="#sorteos" role="tab" aria-controls="contact" aria-selected="false">Sorteos</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="tutoriales" role="tabpanel" aria-labelledby="tab-tutoriales">
+            <div class="modal-body texto_largo titulosCentrados">
 
-        <h1 style="font-size: 75px !important;">
-            TUTORIALES
-        </h1>
+                <h1 style="font-size: 75px !important;">
+                    TUTORIALES
+                </h1>
 
-        <div style="display: flex; justify-content: space-around">
-            <div style="text-align: center">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/lYFXbq0k4c0" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                <h2>Registro WCA</h2>
-            </div>
-            <div style="text-align: center">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/pkd_bGi7yv4" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                <h2>Registro AES Online</h2>
-            </div>
-            <div style="text-align: center">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/DbjJBB1e5K0" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                <h2>Inscripciones Campeonatos</h2>
+                <div style="display: flex; justify-content: space-around">
+                    <div style="text-align: center">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/lYFXbq0k4c0" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        <h2>Registro WCA</h2>
+                    </div>
+                    <div style="text-align: center">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/pkd_bGi7yv4" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        <h2>Registro AES Online</h2>
+                    </div>
+                    <div style="text-align: center">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/DbjJBB1e5K0" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        <h2>Inscripciones Campeonatos</h2>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-around; margin-top: 30px">
+                    <div style="text-align: center">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/A83uDYqlGxM" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        <h2>Cómo competir</h2>
+                    </div>
+                    <div style="text-align: center">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/bNHIlG979dQ" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        <h2>Subir video en oculto en youtube</h2>
+                    </div>
+                </div>
+
+
             </div>
         </div>
-        <div style="display: flex; justify-content: space-around; margin-top: 30px">
-            <div style="text-align: center">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/A83uDYqlGxM" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                <h2>Cómo competir</h2>
-            </div>
-            <div style="text-align: center">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/bNHIlG979dQ" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                <h2>Subir video en oculto en youtube</h2>
-            </div>
-        </div>
-        <div>
-            <div>
+        <div class="tab-pane fade" id="reglamento" role="tabpanel" aria-labelledby="tab-reglamento"><div>
+            <div class="modal-body texto_largo titulosCentrados">
                 <h1 style="font-size: 75px !important;">
                     REGLAMENTO
                 </h1>
@@ -370,91 +395,94 @@
                 jornada
                 no finaliza no se sumarán sus puntos.<br/>
                 Los puntos en el ranking de una jornada se basan en la siguiente fórmula:<br />
+                <div style="text-align: center">
+                    <math xmlns="http://www.w3.org/1998/Math/MathML">
+                        <mi>T</mi>
+                        <mi>u</mi>
+                        <mtext>&#xA0;</mtext>
+                        <mi>p</mi>
+                        <mi>u</mi>
+                        <mi>n</mi>
+                        <mi>t</mi>
+                        <mi>u</mi>
+                        <mi>a</mi>
+                        <mi>c</mi>
+                        <mi>i</mi>
+                        <mrow>
+                            <mo>&#xF3;</mo>
+                        </mrow>
+                        <mi>n</mi>
+                        <mo>=</mo>
+                        <mo stretchy="false">(</mo>
+                        <mrow>
+                            <mfrac>
+                                <mrow>
+                                    <mi>M</mi>
+                                    <mi>e</mi>
+                                    <mi>j</mi>
+                                    <mi>o</mi>
+                                    <mi>r</mi>
+                                    <mtext>&#xA0;</mtext>
+                                    <mi>r</mi>
+                                    <mi>e</mi>
+                                    <mi>s</mi>
+                                    <mi>u</mi>
+                                    <mi>l</mi>
+                                    <mi>t</mi>
+                                    <mi>a</mi>
+                                    <mi>d</mi>
+                                    <mi>o</mi>
+                                    <mtext>&#xA0;</mtext>
+                                    <mi>d</mi>
+                                    <mi>e</mi>
+                                    <mtext>&#xA0;</mtext>
+                                    <mi>l</mi>
+                                    <mi>a</mi>
+                                    <mtext>&#xA0;</mtext>
+                                    <mi>j</mi>
+                                    <mi>o</mi>
+                                    <mi>r</mi>
+                                    <mi>n</mi>
+                                    <mi>a</mi>
+                                    <mi>d</mi>
+                                    <mi>a</mi>
+                                </mrow>
+                                <mrow>
+                                    <mi>T</mi>
+                                    <mi>u</mi>
+                                    <mtext>&#xA0;</mtext>
+                                    <mi>r</mi>
+                                    <mi>e</mi>
+                                    <mi>s</mi>
+                                    <mi>u</mi>
+                                    <mi>l</mi>
+                                    <mi>t</mi>
+                                    <mi>a</mi>
+                                    <mi>d</mi>
+                                    <mi>o</mi>
+                                </mrow>
+                            </mfrac>
+                        </mrow>
+                        <mo>&#xB7;</mo>
+                        <mn>100</mn>
+                        <mo stretchy="false">)</mo>
+                        <mo>+</mo>
+                        <mi>B</mi>
+                        <mi>o</mi>
+                        <mi>n</mi>
+                        <mi>u</mi>
+                        <mi>s</mi>
+                        <mtext>&#xA0;</mtext>
+                        <mi>p</mi>
+                        <mi>o</mi>
+                        <mi>i</mi>
+                        <mi>n</mi>
+                        <mi>t</mi>
+                        <mi>s</mi>
+                    </math>
 
-                <math xmlns="http://www.w3.org/1998/Math/MathML">
-                    <mi>T</mi>
-                    <mi>u</mi>
-                    <mtext>&#xA0;</mtext>
-                    <mi>p</mi>
-                    <mi>u</mi>
-                    <mi>n</mi>
-                    <mi>t</mi>
-                    <mi>u</mi>
-                    <mi>a</mi>
-                    <mi>c</mi>
-                    <mi>i</mi>
-                    <mrow>
-                        <mo>&#xF3;</mo>
-                    </mrow>
-                    <mi>n</mi>
-                    <mo>=</mo>
-                    <mo stretchy="false">(</mo>
-                    <mrow>
-                        <mfrac>
-                            <mrow>
-                                <mi>M</mi>
-                                <mi>e</mi>
-                                <mi>j</mi>
-                                <mi>o</mi>
-                                <mi>r</mi>
-                                <mtext>&#xA0;</mtext>
-                                <mi>r</mi>
-                                <mi>e</mi>
-                                <mi>s</mi>
-                                <mi>u</mi>
-                                <mi>l</mi>
-                                <mi>t</mi>
-                                <mi>a</mi>
-                                <mi>d</mi>
-                                <mi>o</mi>
-                                <mtext>&#xA0;</mtext>
-                                <mi>d</mi>
-                                <mi>e</mi>
-                                <mtext>&#xA0;</mtext>
-                                <mi>l</mi>
-                                <mi>a</mi>
-                                <mtext>&#xA0;</mtext>
-                                <mi>j</mi>
-                                <mi>o</mi>
-                                <mi>r</mi>
-                                <mi>n</mi>
-                                <mi>a</mi>
-                                <mi>d</mi>
-                                <mi>a</mi>
-                            </mrow>
-                            <mrow>
-                                <mi>T</mi>
-                                <mi>u</mi>
-                                <mtext>&#xA0;</mtext>
-                                <mi>r</mi>
-                                <mi>e</mi>
-                                <mi>s</mi>
-                                <mi>u</mi>
-                                <mi>l</mi>
-                                <mi>t</mi>
-                                <mi>a</mi>
-                                <mi>d</mi>
-                                <mi>o</mi>
-                            </mrow>
-                        </mfrac>
-                    </mrow>
-                    <mo>&#xB7;</mo>
-                    <mn>100</mn>
-                    <mo stretchy="false">)</mo>
-                    <mo>+</mo>
-                    <mi>B</mi>
-                    <mi>o</mi>
-                    <mi>n</mi>
-                    <mi>u</mi>
-                    <mi>s</mi>
-                    <mtext>&#xA0;</mtext>
-                    <mi>p</mi>
-                    <mi>o</mi>
-                    <mi>i</mi>
-                    <mi>n</mi>
-                    <mi>t</mi>
-                    <mi>s</mi>
-                </math> <br />
+                </div>
+                <br />
 
                 Los bonus points se otorgan según la posición de la siguiente forma:<br/>
 
@@ -617,10 +645,13 @@
                     href="mailto:aesonline@speedcubingspain.org">aesonline@speedcubingspain.org</a><br/>
                 Problemas técnicos: <a href="mailto:contacto@carloslopezmari.com">contacto@carloslopezmari.com</a>
             </div>
-        </div>
+        </div></div>
+        <div class="tab-pane fade" id="sorteos" role="tabpanel" aria-labelledby="tab-sorteos">
+            <div class="modal-body texto_largo titulosCentrados">Como lo oyes. Sorpresas próximas.</div></div>
+
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        </div>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+    </div>
     </div>
 </div>
 
