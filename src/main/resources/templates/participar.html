@@ -149,12 +149,12 @@
             return +(minutos * 60) + +segundos + +(centesimas/100.0);
 
 
-        }
+        };
 
         $('.dibujoMezcla').each(function(i, obj) {
             var textoMezcla = $(obj).attr("data-textoMezcla");
 
-            obj.innerHTML = draw([[${categoria.getNombre()}]], textoMezcla).outerHTML;
+            obj.innerHTML = new Scramble([[${categoria.getNombre()}]]).draw().outerHTML;
         });
     </script>
 </div>

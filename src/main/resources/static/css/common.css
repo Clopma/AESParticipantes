@@ -102,6 +102,13 @@ footer.credit {
     width: 100%;
 }
 
+.simple-centrado-vertical {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
 .flexCenter {
     display: flex;
     justify-content: center;
