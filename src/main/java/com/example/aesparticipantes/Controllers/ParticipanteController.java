@@ -149,8 +149,15 @@ public class ParticipanteController {
         return participanteRepository.findByNombre(nombreparticipante);
     }
 
-    @PostMapping("/enviarEmail")
-    public ResponseEntity<String> enviarTiempos(@RequestHeader("email") String email, Principal principal) {
+    @PostMapping("/enviarAjustes")
+    public ResponseEntity<String> enviarAjustes(
+            @RequestHeader("email") String email,
+            @RequestHeader("anuncioNuevaCompeticion") Boolean anuncioNuevaCompeticion,
+            @RequestHeader("recordatorioInscripcion") Boolean recordatorioInscripcion,
+            @RequestHeader("recordatorioComienzo") Boolean recordatorioComienzo,
+            @RequestHeader("recordatorioParticipar") Boolean recordatorioParticipar,
+            @RequestHeader("recordatorioJornadas") Boolean recordatorioJornadas,
+            Principal principal) {
 
         Participante participanteLogeado;
         if (principal instanceof UserData) {
@@ -164,6 +171,11 @@ public class ParticipanteController {
         }
 
         participanteLogeado.setEmail(email);
+        participanteLogeado.setAnuncioNuevaCompeticion(anuncioNuevaCompeticion);
+        participanteLogeado.setRecordatorioInscripcion(recordatorioInscripcion);
+        participanteLogeado.setRecordatorioComienzo(recordatorioComienzo);
+        participanteLogeado.setRecordatorioParticipar(recordatorioParticipar);
+        participanteLogeado.setRecordatorioJornadas(recordatorioJornadas);
         participanteRepository.save(participanteLogeado);
         //TODO: evictear participante
         return new ResponseEntity<>("Los tiempos se han guardado correctamente", HttpStatus.OK);

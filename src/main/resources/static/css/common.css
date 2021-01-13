@@ -76,20 +76,28 @@ table.centerCols tbody.alto td {
 }
 
 .whitePanel.top {
+    display: flex;
+    align-items: center;
     border-top-right-radius: 0px;
     border-top-left-radius: 0px;
     margin-top: 0;
+
 }
 
 .mensajeSuperior {
     display: flex;
-    align-items: center;
     max-width: 80%;
     text-align: center;
+    align-items: end;
 }
 
 footer.credit {
-    width: 100%;
+    position:fixed;
+    height: 2em; line-height: 2em;
+    width: auto;
+    padding: 5px 20px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     text-align: center;
     background-color: rgba(240, 248, 255, 0.75);
 }
@@ -155,9 +163,9 @@ img.bouncyButton {
 
 }
 
-img.bouncyButton.makeSmaller {
-    height: 50%;
-    width: 50%;
+img.bouncyButton.smallShadow {
+    -webkit-filter: drop-shadow(4px 4px 4px #222);
+    filter: drop-shadow(4px 4px 4px #222);
 }
 
 .bouncyButton:not(.quieto):hover {
@@ -166,10 +174,26 @@ img.bouncyButton.makeSmaller {
     width: 80%;
 }
 
+img.bouncyButton.makeSmaller {
+    height: 50%;
+    width: 50%;
+}
+
+
 .bouncyButton:not(.quieto).makeSmaller:hover {
     animation: littleBounce 0.3s;
     height: 65%;
     width: 65%;
+}
+
+.girar {
+    transition: 0.7s;
+    width: 70%;
+}
+
+.girar:hover {
+    transform: rotate(315deg);
+    transition: 0.7s;
 }
 
 div.quieto {

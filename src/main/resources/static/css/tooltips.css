@@ -8,6 +8,7 @@
 
 /* Tooltip text */
 .tooltip .tooltiptext {
+    font-family: 'Rajdhani', sans-serif;
     visibility: hidden;
     width: 120px;
     background-color: #555;
@@ -29,6 +30,21 @@
     transition: opacity 0.3s;
 }
 
+.abajo {
+    top: 125%;
+    height: fit-content;
+    bottom: unset;
+}
+
+.tooltip .tooltiptext.light {
+    background-color: rgba(255, 255, 255, 0.75);
+    color: black;
+}
+
+.tooltip .tooltiptext.abajo.light::after {
+    border-color: transparent transparent  rgba(255, 255, 255, 0.75);
+}
+
 /* Tooltip arrow */
 .tooltip .tooltiptext::after {
     content: "";
@@ -41,8 +57,18 @@
     border-color: #555 transparent transparent transparent;
 }
 
+.tooltip .tooltiptext.abajo::after {
+    top: unset;
+    bottom: 100%;
+    left: 50%;
+    border-color: transparent transparent #555 ;
+}
+
+
+
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
 }
+

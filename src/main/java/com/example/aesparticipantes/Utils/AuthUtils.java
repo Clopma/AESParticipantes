@@ -12,7 +12,6 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.reactive.ClientHttpRequest;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -23,16 +22,11 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
 @Component
 public class AuthUtils {
 
     private static String clientSecret;
-
-
     @Value("${wca.clientSecret}")
     public void setClientSecret(String clientSecret) {
         AuthUtils.clientSecret = clientSecret;
@@ -45,6 +39,8 @@ public class AuthUtils {
     }
 
     public static ParticipanteRepository participanteRepository;
+
+
     @Autowired
     public void setParticipanteRepository(ParticipanteRepository participanteRepository) {
         AuthUtils.participanteRepository = participanteRepository;
@@ -85,12 +81,12 @@ public class AuthUtils {
 
     public static void crearSesion(Participante participante, String token, int expiresIn, WCAGetResponse wcaGetResponse, HttpServletRequest request, AuthProvider authManager) {
 
-        UserData authReq = new UserData(participante.getNombre(), wcaGetResponse.getMe().getName(), token, DateTime.now().plusSeconds(expiresIn));
-        Authentication auth = authManager.authenticate(authReq);
+        UserData auth = authManager.authenticate(new UserData(participante.getNombre(), wcaGetResponse.getMe().getName(), token, DateTime.now().plusSeconds(expiresIn)));
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(auth);
-        HttpSession session = request.getSession(true);
-        session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
+
+//        HttpSession session = request.getSession(true);
+//        session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
 
     }
 

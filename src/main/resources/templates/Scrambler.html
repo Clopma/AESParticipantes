@@ -22,59 +22,157 @@
 <div class="simple-centrado-vertical">
     <div class="whitePanel" style="width: 80%; text-align: center;">
 
+        <div style="display: flex; justify-content: center; margin-bottom: 15px">
+        <select onchange="newScramble()" class="form-control" id="puzzle" style="width: 300px; margin-right: 30px;">
+            <option>2x2x2</option>
+            <option selected="selected">3x3x3</option>
+            <option>4x4x4</option>
+            <option>5x5x5</option>
+            <option>6x6x6</option>
+            <option>7x7x7</option>
+        </select>
+        </div>
         <div id="scrambleWrapper"></div>
 
-        <div style="margin-top: 30px;  margin-bottom: 30px">
+        <div id="simples" style="margin-top: 15px;  margin-bottom: 15px">
             <button class="btn btn-primary" onclick="s.f();">F
             </button>
             <button class="btn btn-primary" onclick="s.fAnticlockwise();">F'
+            </button>
+            <button class="btn btn-primary" onclick="s.f2();">F2
             </button>
             <button class="btn btn-primary" onclick="s.u();">U
             </button>
             <button class="btn btn-primary" onclick="s.uAnticlockwise();">U'
             </button>
+            <button class="btn btn-primary" onclick="s.u2();">U2
+            </button>
             <button class="btn btn-primary" onclick="s.r();">R
             </button>
             <button class="btn btn-primary" onclick="s.rAnticlockwise();">R'
+            </button>
+            <button class="btn btn-primary" onclick="s.r2();">R2
             </button>
             <button class="btn btn-primary" onclick="s.l();">L
             </button>
             <button class="btn btn-primary" onclick="s.lAnticlockwise();">L'
             </button>
+            <button class="btn btn-primary" onclick="s.l2();">L2
+            </button>
             <button class="btn btn-primary" onclick="s.d();">D
             </button>
             <button class="btn btn-primary" onclick="s.dAnticlockwise();">D'
+            </button>
+            <button class="btn btn-primary" onclick="s.d2();">D2
             </button>
             <button class="btn btn-primary" onclick="s.b();">B
             </button>
             <button class="btn btn-primary" onclick="s.bAnticlockwise();">B'
             </button>
+            <button class="btn btn-primary" onclick="s.b2();">B2
+            </button>
         </div>
-        <div style="display: flex; justify-content: center;  margin-bottom: 30px;">
-            <select onchange="newScramble()" class="form-control" id="puzzle" style="width: 300px; margin-right: 30px;">
-                <option>2x2x2</option>
-                <option selected="selected">3x3x3</option>
-                <option>4x4x4</option>
-                <option>5x5x5</option>
-                <option>6x6x6</option>
-                <option>7x7x7</option>
-            </select>
-            <button onclick="newScramble()" class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+        <div id="dobles" style="margin-top: 15px;  margin-bottom: 15px">
+            <button class="btn btn-primary" onclick="s.fw();">Fw
+            </button>
+            <button class="btn btn-primary" onclick="s.fwAnticlockwise();">Fw'
+            </button>
+            <button class="btn btn-primary" onclick="s.fw2();">Fw2
+            </button>
+            <button class="btn btn-primary" onclick="s.uw();">Uw
+            </button>
+            <button class="btn btn-primary" onclick="s.uwAnticlockwise();">Uw'
+            </button>
+            <button class="btn btn-primary" onclick="s.uw2();">Uw2
+            </button>
+            <button class="btn btn-primary" onclick="s.rw();">Rw
+            </button>
+            <button class="btn btn-primary" onclick="s.rwAnticlockwise();">Rw'
+            </button>
+            <button class="btn btn-primary" onclick="s.rw2();">Rw2
+            </button>
+            <button class="btn btn-primary" onclick="s.lw();">Lw
+            </button>
+            <button class="btn btn-primary" onclick="s.lwAnticlockwise();">Lw'
+            </button>
+            <button class="btn btn-primary" onclick="s.lw2();">Lw2
+            </button>
+            <button class="btn btn-primary" onclick="s.dw();">Dw
+            </button>
+            <button class="btn btn-primary" onclick="s.dwAnticlockwise();">Dw'
+            </button>
+            <button class="btn btn-primary" onclick="s.dw2();">Dw2
+            </button>
+            <button class="btn btn-primary" onclick="s.bw();">Bw
+            </button>
+            <button class="btn btn-primary" onclick="s.bwAnticlockwise();">Bw'
+            </button>
+            <button class="btn btn-primary" onclick="s.bw2();">Bw2
+            </button>
+        </div>
+        <div id="triples" style="margin-top: 15px;  margin-bottom: 15px">
+            <button class="btn btn-primary" onclick="s.fw3();">3Fw
+            </button>
+            <button class="btn btn-primary" onclick="s.fwAnticlockwise3();">3Fw'
+            </button>
+            <button class="btn btn-primary" onclick="s.fw32();">3Fw2
+            </button>
+            <button class="btn btn-primary" onclick="s.uw3();">3Uw
+            </button>
+            <button class="btn btn-primary" onclick="s.uwAnticlockwise3();">3Uw'
+            </button>
+            <button class="btn btn-primary" onclick="s.uw32();">3Uw2
+            </button>
+            <button class="btn btn-primary" onclick="s.rw3();">3Rw
+            </button>
+            <button class="btn btn-primary" onclick="s.rwAnticlockwise3();">3Rw'
+            </button>
+            <button class="btn btn-primary" onclick="s.rw32();">3Rw2
+            </button>
+            <button class="btn btn-primary" onclick="s.lw3();">3Lw
+            </button>
+            <button class="btn btn-primary" onclick="s.lwAnticlockwise3();">3Lw'
+            </button>
+            <button class="btn btn-primary" onclick="s.lw32();">3Lw2
+            </button>
+            <button class="btn btn-primary" onclick="s.dw3();">3Dw
+            </button>
+            <button class="btn btn-primary" onclick="s.dwAnticlockwise3();">3Dw'
+            </button>
+            <button class="btn btn-primary" onclick="s.dw32();">3Dw2
+            </button>
+            <button class="btn btn-primary" onclick="s.bw3();">3Bw
+            </button>
+            <button class="btn btn-primary" onclick="s.bwAnticlockwise3();">3Bw'
+            </button>
+            <button class="btn btn-primary" onclick="s.bw32();">3Bw2
+            </button>
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <input placeholder="Introduce una mezcla" class="form-control" id="scramble" style="width: 300px;  margin-right: 30px;"></input>
+            <button style="margin-right: 10px" onclick="newScramble()" class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
                 <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
                 <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
             </svg></button>
-        </div>
-        <div style="display: flex; justify-content: center;">
-            <input placeholder="" class="form-control" id="scramble" style="width: 300px;  margin-right: 30px;"></input>
             <button onclick="addMovements()" class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
             </svg></button>
         </div>
         <script>
 
-            var s = new Scramble(document.getElementById('puzzle').value, document.getElementById("scrambleWrapper"), true);
+            newScramble();
 
             function newScramble() {
+
+                switch (document.getElementById('puzzle').value) {
+                    case '2x2x2':
+                    case '3x3x3': document.getElementById('dobles').style.display = 'none'; document.getElementById('triples').style.display = 'none'; break;
+                    case '4x4x4':
+                    case '5x5x5': document.getElementById('dobles').style.display = 'block'; document.getElementById('triples').style.display = 'none'; break;
+                    case '6x6x6':
+                    case '7x7x7': document.getElementById('dobles').style.display = 'block'; document.getElementById('triples').style.display = 'block'; break;
+                }
+
                 s = new Scramble(document.getElementById('puzzle').value, document.getElementById("scrambleWrapper"), true);
                 s.draw();
             }

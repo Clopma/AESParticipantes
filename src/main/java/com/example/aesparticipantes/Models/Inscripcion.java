@@ -1,6 +1,7 @@
 package com.example.aesparticipantes.Models;
 
 import com.example.aesparticipantes.Entities.Categoria;
+import com.example.aesparticipantes.Entities.Tiempo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,5 +13,6 @@ public class Inscripcion {
 
     Categoria categoria;
     boolean participado;
+    Tiempo tiempo;
 
 }

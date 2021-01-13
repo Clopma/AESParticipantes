@@ -39,7 +39,7 @@ public class InicioController {
     InicioController self;
 
     @GetMapping("/")
-    public String showForm(Model model, Principal principal) throws IOException {
+    public String inicio(Model model, Principal principal) {
 
         if(principal instanceof UserData){
 
@@ -103,6 +103,12 @@ public class InicioController {
         }
 
         return images;
+    }
+
+
+    @GetMapping("/cambios")
+    public String verCambios() {
+        return "cambios";
     }
 
 

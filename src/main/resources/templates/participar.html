@@ -21,9 +21,7 @@
             <div class="carousel-inner" style="text-align: center;">
                 <div th:each="mezcla : ${mezclas}" class="carousel-item">
                     <h1 th:text="'Tiempo ' + ${mezcla.getNumTiempo()}" style="color: black"/>
-
-                    <div th:data-textoMezcla="${mezcla.getTexto()}" class="dibujoMezcla" style="height: fit-content"></div>
-
+                    <img th:src="'/img/mezclas/' + ${mezcla.getImagenUrl()}" style="height: 600px"/>
                     <div class="carousel-caption d-none d-md-block" style="position: initial">
                         <h2 th:text="${mezcla.getTexto()}" style="color: black"/>
                         <div th:if="${!mezcla.getCategoria().getNombre().equals('FMC')}" th:id="'tiempo'+${mezcla.getNumTiempo()}" style="width: fit-content; margin: auto; align-items: flex-end; color: black; font-size: x-large">
@@ -34,7 +32,7 @@
                                 <input type="number" min="0" max="99" class="form-control centesimas" placeholder="cs"/>
                             </div>
                             <div>
-                                <input class="dnfcb" type="checkbox" value="" id="dnf">
+                                <input class="dnfcb" type="checkbox" value="" id="dnf" />
                                 <label for="dnf" style="margin-bottom: 0;"> DNF </label>
                             </div>
                         </div>
@@ -68,7 +66,7 @@
 
         $('#carruselMezclas div.carousel-inner div.carousel-item:first-child').addClass('active');
 
-        for (i = 0; i < 5; i++){
+        for (i = 1; i <= 5; i++){
                 $("#tiempo" + i).find(".dnfcb").change((function(ii) { return function(){
                     $("#tiempo" + ii).find(".minutos").prop('disabled', this.checked);
                     $("#tiempo" + ii).find(".segundos").prop('disabled', this.checked);
@@ -78,7 +76,7 @@
         }
 
 
-        startTimer([[${categoria.getSegundosParticipar()}]], [[${categoria.getSegundosParticipar()}]]);
+        startTimer([[${segundosRestantes}]] == null ? [[${categoria.getSegundosParticipar()}]] : [[${segundosRestantes}]], [[${categoria.getSegundosParticipar()}]]);
 
         function startTimer(timeleft, timetotal) {
 
@@ -111,7 +109,7 @@
                     alert(xhttp.responseText);
                     window.location.href = '/participante/' + [[${participante.getNombre()}]] + "/" +  [[${competicion.getNombre()}]] + "/#" +  [[${categoria.getNombre()}]];
                 } else if(this.readyState === 4 && this.status === 401) {
-                    alert('Ojo, parece que durante este tiempo por algún motivo que desconozco has perdido la sesión. No te preocupes, sigue los siguientes pasos: Primero, abre la web en otra pestaña,' +
+                    alert('Ojo, parece que durante este tiempo has perdido la sesión. No te preocupes, sigue los siguientes pasos: Primero, abre la web en otra pestaña,' +
                         ' e inicia sesión en ella. Después vuelve a esta pestaña y (sin refrescar) vuelve a intentar el envío. Si el problema no se soluciona de esta forma, por favor, contacta al desarrollador.');
                 } else if(this.readyState === 4){
                     alert('Esto es un error, por favor, contacta con el desarrollador y muéstrale lo siguente: '+ xhttp.responseText);
@@ -150,12 +148,6 @@
 
 
         };
-
-        $('.dibujoMezcla').each(function(i, obj) {
-            var textoMezcla = $(obj).attr("data-textoMezcla");
-
-            obj.innerHTML = new Scramble([[${categoria.getNombre()}]]).draw().outerHTML;
-        });
     </script>
 </div>
 <script src="/js/html-duration-picker.min.js"></script>

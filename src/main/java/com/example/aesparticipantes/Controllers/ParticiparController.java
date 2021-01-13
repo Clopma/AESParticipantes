@@ -1,11 +1,7 @@
 package com.example.aesparticipantes.Controllers;
 
 import com.example.aesparticipantes.Entities.*;
-import com.example.aesparticipantes.Models.Inscripcion;
-import com.example.aesparticipantes.Repositories.CategoriaRepository;
-import com.example.aesparticipantes.Repositories.CompeticionRepository;
-import com.example.aesparticipantes.Repositories.MezclaRepository;
-import com.example.aesparticipantes.Repositories.TiempoRepository;
+import com.example.aesparticipantes.Repositories.*;
 import com.example.aesparticipantes.Seguridad.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +32,9 @@ public class ParticiparController {
 
     @Autowired
     ParticipanteController participanteController;
+
+    @Autowired
+    InscripcionRepository inscripcionRepository;
 
     @Autowired
     TiempoRepository tiempoRepository;
@@ -79,10 +78,10 @@ public class ParticiparController {
         }
 
 
-        List<Categoria> categoriasParticipadas = tiempoRepository.getTiemposEnJornada(jornadaActiva.get(), participanteLogeado).stream()
+        List<Categoria> categoriasParticipadas = tiempoRepository.getTiemposEnJornada(jornadaActiva.get(), participanteLogeado).stream().filter(t -> !t.isEnCurso())
                 .map(Tiempo::getCategoria).collect(Collectors.toList());
 
-        List<Inscripcion> categoriasParticipadasYSoloInscritas = participanteLogeado.getInscripcionesParticipadasYNoParticipadasEnCompeticion(competicion.get(), categoriasParticipadas);
+        List<com.example.aesparticipantes.Models.Inscripcion> categoriasParticipadasYSoloInscritas = participanteLogeado.getInscripcionesParticipadasYNoParticipadasEnCompeticion(competicion.get(), categoriasParticipadas);
 
         model.addAttribute("inscripciones", categoriasParticipadasYSoloInscritas);
 
@@ -128,30 +127,25 @@ public class ParticiparController {
             return "error/404";
         }
 
-        List<Categoria> categoriasParticipadas = tiempoRepository.getTiemposEnJornada(jornadaActiva.get(), participanteLogeado).stream()
-                .map(Tiempo::getCategoria).collect(Collectors.toList());
+        Optional<Inscripcion> posibleInscripcion = inscripcionRepository.findByEvento_CompeticionAndEvento_CategoriaAndParticipante(competicion.get(), categoria, participanteLogeado);
+        Optional<Tiempo> posibleTiempo = tiempoRepository.getByParticipanteAndCategoriaAndJornada(participanteLogeado, categoria, jornadaActiva.get());
 
-        List<Inscripcion> categoriasParticipadasYSoloInscritas = participanteLogeado.getInscripcionesParticipadasYNoParticipadasEnCompeticion(competicion.get(), categoriasParticipadas);
-
-        Optional<Inscripcion> posibleInscripcion = categoriasParticipadasYSoloInscritas.stream().filter(i -> i.getCategoria().equals(categoria)).findAny();
         if (!posibleInscripcion.isPresent()){
             model.addAttribute("mensaje", "No estás inscrito en esa categoría. Por favor, no intentes hacer trampas. Si crees que esto es un error, contacta a un administrador.");
             return "mensaje";
         }
 
-        Inscripcion inscripcion = posibleInscripcion.get();
-
-        if (inscripcion.isParticipado()){
-            model.addAttribute("mensaje", "Ya has participado en esta categoría en esta jornada. Por favor, no intentes hacer trampas. Si has refrescado por accidende o crees que esto es un error, contacta a un administrador.");
+        if (posibleTiempo.isPresent() && !posibleTiempo.get().isEnCurso()){
+            model.addAttribute("mensaje", "Ya has participado en esta categoría en esta jornada. Si crees que esto es un error, contacta a un administrador.");
             return "mensaje";
         }
 
 
-        if (envioTiemposEnabled) {
+        if (envioTiemposEnabled && !posibleTiempo.isPresent()) {
             tiempoRepository.save(Tiempo.builder()
                     .jornada(jornadaActiva.get())
                     .participante(participanteLogeado)
-                    .categoria(inscripcion.getCategoria())
+                    .categoria(categoria)
                     .comienzo(new Date())
                     //TODO: https://trello.com/c/zx5rFvfH
                     .tiempo1(0)
@@ -162,8 +156,9 @@ public class ParticiparController {
                     .build());
         }
 
-        List<Mezcla> mezclas = mezclaRepository.findAllByJornadaAndCategoria(jornadaActiva.get(), inscripcion.getCategoria());
+        List<Mezcla> mezclas = mezclaRepository.findAllByJornadaAndCategoria(jornadaActiva.get(), categoria);
 
+        posibleTiempo.ifPresent(tiempo -> model.addAttribute("segundosRestantes", tiempo.segundosRestantes()));
         model.addAttribute("categoria", categoria);
         model.addAttribute("competicion", competicion.get());
         model.addAttribute("mezclas", mezclas);
@@ -219,12 +214,13 @@ public class ParticiparController {
             return new ResponseEntity<>("Categoría no e.ncontrada. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
         }
 
-        Tiempo tiempo = tiempoRepository.getByParticipanteAndCategoriaAndJornada(participanteLogeado, categoria, jornadaActiva.get());
+        Optional<Tiempo> posibleTiempo = tiempoRepository.getByParticipanteAndCategoriaAndJornada(participanteLogeado, categoria, jornadaActiva.get());
 
-        if(tiempo == null){
+        if(!posibleTiempo.isPresent()){
             return new ResponseEntity<>("Tiempo de inicio no encontrado. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
         }
 
+        Tiempo tiempo = posibleTiempo.get();
         if (tiempo.getEnvio() != null){
             return new ResponseEntity<>("Parece que ya has enviado el tiempo de esta categoría antes. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
         }

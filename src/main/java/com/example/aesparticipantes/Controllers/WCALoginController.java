@@ -78,7 +78,7 @@ public class WCALoginController {
             }
 
 
-            if (participante != null) { //TODO: Comprobar qué pasa cuando no está en la base de datos, debería devolver nulo
+            if (participante != null) {
                 AuthUtils.crearSesion(participante, wcaLoginResponse.getAccess_token(), wcaLoginResponse.getExpires_in(), perfilWCA, httpServletRequest, authenticationManager);
                 //TODO: If vinculado, actualizar base de datos (en segundo plano a ser posible)
                 model.addAttribute("mensaje", "Login correcto, redirigiendo");
@@ -105,12 +105,6 @@ public class WCALoginController {
         }
 
     }
-
-//    @GetMapping("/registro")
-//    public String callbackController(@RequestParam("code") String code, HttpServletRequest httpServletRequest, Model model) {
-//
-//        return "mensaje";
-//    }
 
 
 }

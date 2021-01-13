@@ -16,7 +16,6 @@
 
 
 <body class="cubosbg">
-
 <script th:inline="javascript">
 
     function vincular() {
@@ -28,6 +27,14 @@
     }
 
 </script>
+
+<div th:if="${soyYo}" class="bouncyContainer" style="position: absolute; top: 0px; right: 0;">
+    <a class="bouncyContainer" data-toggle="modal" data-target="#ajustesModal">
+        <img class="girar" src="/img/ajustes.png"/>
+    </a> <div class="tagNav" style="top: 85%"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px" th:text="AJUSTES"/></div>
+</div>
+
+
 <div th:replace="fragments/backButton :: backButton"/>
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 50px; text-align: center;">
@@ -242,27 +249,56 @@
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="email" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document" style="width: 30%">
+    <div th:if="${soyYo}" class="modal fade" id="ajustesModal" tabindex="-1" role="dialog" aria-labelledby="email" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="width: fit-content">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Estemos en contacto</h5>
+                    <h3 class="modal-title" id="exampleModalLongTitle">Ajustes</h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" style="text-align: justify">
-                   El equipo de la AES Online en ocasiones necesita contactar con los participantes, por lo que se requiere un correo de contacto:<br/>
+                <div class="modal-body" style="text-align: center">
 
-                    <div style="text-align: center; margin: 10px;"><input id="email" type="email" placeholder="ejemplo@gmail.com"></input></div>
+                    <div th:if="${participante.getEmail() == null}" class="alert alert-warning" role="alert">
+                        El equipo de la AES requiere en ocasiones contactar con los participantes, por lo que te pedimos que configures el tuyo. Este correo es completamente privado y solo será usado por los organizadores del campeonato.
+                    </div>
+                    <div th:if="${participante.getAnuncioNuevaCompeticion() == null}" class="alert alert-warning" role="alert">
+                        Por favor, tómate unos segundos para configurar las alertas que más se adapten a ti:
+                    </div>
+                    <h4>Tu correo</h4>
+                        <input th:value="${participante.getEmail()}" id="email" class="form-control" type="email" placeholder="ejemplo@gmail.com" style="width: auto; margin: auto; text-align: center;"></input>
+                    <br/>
+                    <h5>¿Cuándo te gustaría ser notificado?</h5>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" th:checked="${participante.getAnuncioNuevaCompeticion()}" id="anuncioNuevaCompeticion">
+                            <label class="form-check-label" for="anuncioNuevaCompeticion">
+                                Anuncios de nuevas competiciones
+                            </label><br />
+                            <input class="form-check-input" type="checkbox" th:checked="${participante.getRecordatorioInscripcion()}" id="recordatorioInscripcion">
+                            <label class="form-check-label" for="recordatorioInscripcion">
+                                Recordatorio de inscripción en competiciones
+                            </label><br />
+                            <input class="form-check-input" type="checkbox" th:checked="${participante.getRecordatorioComienzo()}" id="recordatorioComienzo">
+                            <label class="form-check-label" for="recordatorioComienzo">
+                                Recordatorio comienzo de competición en la que estás inscrito
+                            </label><br />
+                            <input class="form-check-input" type="checkbox" th:checked="${participante.getRecordatorioParticipar()}" id="recordatorioParticipar">
+                            <label class="form-check-label" for="recordatorioParticipar">
+                                Recordatorio de competir el último día de la jornada, si no lo has hecho ya
+                            </label><br />
+                            <input class="form-check-input" type="checkbox" th:checked="${participante.getRecordatorioJornadas()}" id="recordatorioJornadas">
+                            <label class="form-check-label" for="recordatorioJornadas">
+                                Recordatorio fin e inicio de jornadas de una competición en la que estás inscrito
+                            </label><br />
+                            <br />
+                            Nota: Por el momento algunos recordatorios no se enviarán. El envío de correos es una función actualmente en desarrollo.
+                    </div>
 
-                    Esta información es privada y solo tendrá acceso a ella los organizadores.<br />
-
-                    Adicionalmente, próximamente lo usaremos para avisarte cuando se publiquen los rankings de los campeonatos en los que estés participando y del comienzo de las jornadas. Estos avisos se podrán configurar en el perfil más adelante.
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Ahora no</button>
-                    <button type="button" onclick="enviarEmail()" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" onclick="enviarAjustesEmail()" class="btn btn-primary">Guardar</button>
                 </div>
             </div>
         </div>
@@ -284,16 +320,16 @@
         loadBracket(nombreCategoria, nombreCompeticion);
     }
 
-    if([[${soyYo}]] && [[${participante.getEmail()}]] == null){
-        $('#emailModal').modal('show');
+    if([[${soyYo}]] && ([[${participante.getEmail()}]] == null || [[${participante.getAnuncioNuevaCompeticion()}]] == null)){
+        $('#ajustesModal').modal('show');
     }
 
-    function enviarEmail() {
+    function enviarAjustesEmail() {
         if(validateEmail($('#email')[0].value)) {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
-                    $('#emailModal').modal('hide');
+                    $('#ajustesModal').modal('hide');
                 } else if (this.readyState === 4 && this.status === 401) {
                     alert('Problema con la sesión. ¿Estás logueado? Por favor, contacta con un administrador.');
                 } else if (this.readyState === 4) {
@@ -301,8 +337,13 @@
                 }
             };
 
-            xhttp.open("POST", "/enviarEmail/", true);
+            xhttp.open("POST", "/enviarAjustes/", true);
             xhttp.setRequestHeader("email", $('#email')[0].value);
+            xhttp.setRequestHeader("anuncioNuevaCompeticion", $('#anuncioNuevaCompeticion')[0].checked);
+            xhttp.setRequestHeader("recordatorioInscripcion", $('#recordatorioInscripcion')[0].checked);
+            xhttp.setRequestHeader("recordatorioComienzo", $('#recordatorioComienzo')[0].checked);
+            xhttp.setRequestHeader("recordatorioParticipar", $('#recordatorioParticipar')[0].checked);
+            xhttp.setRequestHeader("recordatorioJornadas", $('#recordatorioJornadas')[0].checked);
 
             xhttp.send();
         } else {

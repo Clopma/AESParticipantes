@@ -12,16 +12,18 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class Security extends WebSecurityConfigurerAdapter {
 
+
+
     @Autowired
     private AuthProvider authProvider;
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(authProvider);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().permitAll().and().csrf().disable();
+        http.authorizeRequests().anyRequest().permitAll().and().csrf().and().rememberMe().key("secret").disable();
     }
 }

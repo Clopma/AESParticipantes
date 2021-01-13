@@ -1,0 +1,43 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Cambios</title>
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+</head>
+
+
+<body class="cubosbg">
+<div th:replace="fragments/backButton :: backButton"/>
+<div class="vertical-flex-wrapper">
+    <div class="whitePanel" style="margin-top: 300px; width: 80%;">
+
+        <hr style="margin-top: 50px" />
+        <h1>13/1/2021</h1>
+        <h2>v1.0.3</h2>
+        <ul>
+            <li>Se está automatizando el sistema de mezclas. Para ello, he desarrollado una librería que convierte el texto de una mezcla a un dibujo.
+                Actualmente funciona en NxN aunque espero ampliarlo a todas las categorías. Puedes probar el funcionamiento <a href="/scrambler">aquí</a>.</li>
+        </ul>
+
+        <hr style="margin-top: 50px" />
+        <h1>12/1/2021</h1>
+        <h2>v1.0.2</h2>
+        <ul>
+            <li>Ahora refrescar la página al participar no mostrará el mensaje de "ya has participado". En cambio, reanudará la cuenta atrás por donde corresponda.
+                Esto no influye en la forma de participar, en el video se debe seguir mostrando una participación ininterrumpida.</li>
+            <li>Se ha creado esta página de cambios donde se registrarán los cambios y mejoras de ahora en adelante.</li>
+            <li>Ahora la pantalla de información se carga al instante en inicio al compartir un link que la abra (<a href="/#tutoriales">tutoriales</a>, <a href="/#reglamento">reglamento</a>, <a href="/#sorteos">sorteos</a> y <a href="/#contacto">contacto</a>).</li>
+            <li>Añadida pestaña de contacto en información.</li>
+        </ul>
+
+        <hr style="margin-top: 50px" />
+        <h1>11/1/2021</h1>
+        <h2>v1.0.1</h2>
+        <ul>
+            <li>Se ha añadido al perfil un apartado de ajustes. Podrás verlo en tu perfil con la sesión iniciada. Por ahora las opciones disponibles son la configuración del correo y de las alertas que se deseen recibir. Hay 5 tipos de notificaciones que se pueden seleccionar de forma personalizada.</li>
+            <li>Se ha añaido a información el apartado <a href="/#sorteos">sorteos</a>.</li>
+            <li>Se ha arreglado un bug en el que la casilla de DNF no funcionaba en la quinta mezcla.</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

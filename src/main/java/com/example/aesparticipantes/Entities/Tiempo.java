@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 import static com.example.aesparticipantes.Utils.AESUtils.formatTime;
@@ -204,5 +205,20 @@ public class Tiempo implements Comparable {
             }
         }
         return c;
+    }
+
+    public boolean isEnCurso() {
+
+        return getEnvio() == null && segundosRestantes() > 0;
+
+    }
+
+    public int segundosRestantes() {
+
+        Calendar envioMaximo = Calendar.getInstance();
+        envioMaximo.setTime(getComienzo());
+        envioMaximo.add(Calendar.SECOND, getCategoria().getSegundosParticipar());
+
+        return ((int) (envioMaximo.getTimeInMillis() - Calendar.getInstance().getTimeInMillis()))/1000;
     }
 }

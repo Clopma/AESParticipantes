@@ -31,6 +31,21 @@ public class Participante implements Comparable {
     @Column(unique = true)
     private String email;
 
+    @Column
+    private Boolean anuncioNuevaCompeticion;
+
+    @Column
+    private Boolean recordatorioComienzo;
+
+    @Column
+    private Boolean recordatorioJornadas;
+
+    @Column
+    private Boolean recordatorioInscripcion;
+
+    @Column
+    private Boolean recordatorioParticipar;
+
     private String linkPerfilWCA;
     private String nombreWCA;
     private String gender;
@@ -40,7 +55,7 @@ public class Participante implements Comparable {
     private String urlImagenPerfil;
     private String urlImagenPerfilIcono;
 
-    @Column(columnDefinition = "boolean default false")
+    @Column(columnDefinition = "boolean default false") //TODO: necesario?
     private boolean confirmado;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "participante") //TODO: TERRIBLE N+1
@@ -52,10 +67,14 @@ public class Participante implements Comparable {
 
 
     public List<com.example.aesparticipantes.Models.Inscripcion> getInscripcionesParticipadasYNoParticipadasEnCompeticion(Competicion competicion, List<Categoria> categoriasParticipadas) {
+
+        //TODO: Un poco raro este Model, ahora podemos usar un inscripción y un tiempo
        List<com.example.aesparticipantes.Models.Inscripcion> inscripciones = getInscripciones().stream().filter(i -> i.getEvento().getCompeticion().equals(competicion))
                 .map(i -> com.example.aesparticipantes.Models.Inscripcion.builder().categoria(i.getEvento().getCategoria()).build()).collect(Collectors.toList());
 
-        inscripciones.forEach(p -> p.setParticipado(categoriasParticipadas.contains(p.getCategoria())));
+        inscripciones.forEach(i -> {
+            i.setParticipado(categoriasParticipadas.contains(i.getCategoria()));
+        });
 
         return inscripciones;
 

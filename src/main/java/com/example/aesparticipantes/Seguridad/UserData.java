@@ -3,7 +3,7 @@ package com.example.aesparticipantes.Seguridad;
 import org.joda.time.DateTime;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 
 public class UserData extends AbstractAuthenticationToken {
@@ -15,7 +15,7 @@ public class UserData extends AbstractAuthenticationToken {
     private DateTime expirationTime;
 
     public UserData(String participante, String wcaNombre, String wcaTemporalTokenm, DateTime expirationTime){
-        super(Arrays.asList());
+        super(Collections.emptyList());
         this.authenticatedUser = participante;
         this.wcaNombre = wcaNombre;
         this.wcaTemporalToken = wcaTemporalTokenm;
