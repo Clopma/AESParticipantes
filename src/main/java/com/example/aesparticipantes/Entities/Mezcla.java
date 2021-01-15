@@ -20,11 +20,11 @@ import javax.validation.constraints.NotNull;
 public class Mezcla {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Categoria categoria;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Jornada jornada;
 
     @Id

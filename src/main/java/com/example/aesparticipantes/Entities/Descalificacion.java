@@ -14,11 +14,11 @@ import javax.persistence.*;
 public class Descalificacion {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Evento evento;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Participante participante;
 
 

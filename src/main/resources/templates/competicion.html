@@ -3,6 +3,11 @@
     <title th:text="${competicion.getNombre()}"/>
     <th:block th:include="fragments/head :: genericHead"/>
     <th:block th:include="fragments/head :: datatablesHead"/>
+
+    <meta property="og:title" th:content="${nombreCompeticion}" />
+    <meta property="og:description"  th:content="'Toda la información, inscripciones, jornadas, categorías y más de la competición ' + ${nombreCompeticion} + '.'"/>
+    <meta property="og:image" th:content="'https://aesonline.speedcubingspain.org/img/copas/copa_' + ${competicion.getNombre()} + '.png'" />
+
     <script type="text/javascript" src="/js/ScrollUtils.js"></script>
     <script type="text/javascript" src="/js/ModalUtils.js"></script>
     <script type="text/javascript" src="/js/InscripcionUtils.js"></script>
@@ -39,18 +44,30 @@
             <img th:src="'/img/copas/copa_' + ${competicion.getNombre()} + '.png'" style="width: 100px"/>
         </div>
     </div>
-    <div class="whitePanel" style="max-width: 65%; margin-top: 65px; font-size: larger; text-align: center">
+    <div class="whitePanel" style="max-width: 65%; margin-top: 40px; font-size: larger; text-align: center">
         <span th:text="${competicion.getDescripcion()}"/>
     </div>
-
-    <div th:if="${!competicion.isEmpezada()}" class="whitePanel" style="margin-top: 15px; font-size: larger; text-align: center">
+    <div th:if="${temporada != null}" class="whitePanel" style="max-width: 65%; margin-top: 10px; font-size: larger; text-align: center">
+        <h1>Temporada</h1>
+        ¡Esta competición pertenece a la <a th:href="'/temporada/' + ${temporada.getNombre()}" th:text="'Temporada ' + ${temporada.getNombre()}"/>!<br />
+         Participa para avanzar en las divisiones, los primeros clasificados de la temporada pasarán a playoffs.
+    </div>
+    <div th:if="${competicion.getSorteosCompeticion().size() > 0}" class="whitePanel" style="max-width: 65%; margin-top: 10px; font-size: larger; text-align: center">
+        <h1>Sorteos</h1>
+        <div th:each="sorteo : ${competicion.getSorteosCompeticion()}">
+            <a th:href="${sorteo.getSorteo().getLink()}"><img th:src="'/img/' + ${sorteo.getSorteo().getImagen()}" style="width: 50px"/></a>
+            <span th:utext="${sorteo.getSorteo().getDescripcion()}"/>
+            <a th:href="${sorteo.getSorteo().getLink()}"><img th:src="'/img/' + ${sorteo.getSorteo().getImagen()}" style="width: 50px"/></a>
+        </div>
+    </div>
+    <div class="whitePanel" style="margin-top: 15px; font-size: larger; text-align: center">
         <div style="margin-top: 15px; font-size: larger; text-align: center">
             <h1>Inscripción</h1>
             Esta competición comienza el <span th:text="${competicion.getInicioStr()}" />.
 
         </div>
         <div th:if="${participanteLogeado != null}">
-            Hasta entonces puedes modificar las categorías en las que estás inscrito:
+            La fecha límite de inscripción es <span th:text="${competicion.getFechaLimiteInscripcionesStr()}" />.
             <div style="display:flex; justify-content: center">
                 <div th:each="evento : ${competicion.getEventos()}" class="tooltip" style="margin: 3px">
                         <span th:data-competicion="${competicion.getNombre()}"
@@ -71,8 +88,8 @@
                 <span class="tooltiptext">Selecciona las categorías en las que quieras participar</span>
             </div>
         </div>
-        <div th:if="${participanteLogeado == null}">
-            Para inscribirte debes estar logueado:
+        <div th:if="${participanteLogeado == null && competicion.inscripcionesEstanAbiertas()}">
+            ¡Estás a tiempo de inscribirte! Para ello, inicia sesión:
             <div style="display: flex; justify-content: center; align-items: center">
                 <div class="bouncyContainer backward" style="width: 50px; height: 50px">
                     <a class="bouncyContainer">
@@ -89,7 +106,7 @@
             <h1>¡Hay una jornada en progreso ahora mismo!</h1>
 
 
-            La <span th:text="${jornadaActiva.get().getNumeroJornada()}" />ª jornada acabará el <span th:text="${jornadaActiva.get().getFechaFinStr()}" />.
+            <span th:if="${participanteLogeado == null ||  competicion.isParticipanteInscrito(participanteLogeado)}">La <span th:text="${jornadaActiva.get().getNumeroJornada()}" />ª jornada acabará el <span th:text="${jornadaActiva.get().getFechaFinStr()}" />.</span>
             <span th:if="${participanteLogeado == null}">
                  Si estás inscrito, inicia sesión para participar:
                     <div style="display: flex; justify-content: center; align-items: center">
@@ -100,13 +117,17 @@
                         </div>
                         <h3><a class="clicker" onclick="irAWCA()">Iniciar sesión con WCA</a></h3>
                     </div>
+<!--                TODO: 00004 -->
             </span>
             <span th:if="${participanteLogeado != null  && competicion.isParticipanteInscrito(participanteLogeado)}">
                  Hasta entonces, tienes tiempo para <br /> <button onclick="participar()" style="font-size: xx-large" class="btn btn-outline-primary">participar</button>
             </span>
 
-            <span th:if="${participanteLogeado != null  && !competicion.isParticipanteInscrito(participanteLogeado)}">
+            <span th:if="${participanteLogeado != null  && !competicion.isParticipanteInscrito(participanteLogeado) && !competicion.inscripcionesEstanAbiertas()}">
                  No estás inscrito en la competición, pero no te preocupes, ¡pronto habrán más!
+            </span>
+            <span th:if="${participanteLogeado != null  && !competicion.isParticipanteInscrito(participanteLogeado) && competicion.inscripcionesEstanAbiertas()}">
+                ¡Aún estás a tiempo de inscribirte y participar ahora mismo!
             </span>
         </div>
     </div>

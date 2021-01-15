@@ -7,7 +7,7 @@ spring:
     password: karateka123
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
   output:
     ansi:
       enabled: detect
@@ -28,12 +28,13 @@ logging:
 server:
   servlet:
     session:
-      timeout: 10m
+      cookie:
+        max-age: 365d
+      timeout: 15d
   error:
     whitelabel:
       enabled: false
 
-aesonline:
-  enableEnvioTiempos: true
+
 
 

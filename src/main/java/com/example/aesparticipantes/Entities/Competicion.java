@@ -2,10 +2,9 @@ package com.example.aesparticipantes.Entities;
 
 import com.example.aesparticipantes.Utils.AESUtils;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,16 +21,44 @@ public class Competicion {
     @Column(length = 25)
     private String nombre;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "competicion")
-    @Fetch(FetchMode.SELECT)
-    private List<Evento> eventos;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Temporada temporada;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "competicion") //TODO 0003 falla en participante, a veces, difícil de reprocucir. Probar con reset -> participante -> participar (debes estar logueado y haber competicion en curso) -> inicio -> loguear
-    @Fetch(FetchMode.SELECT)
-    private List<Jornada> jornadas;
+    @OneToMany(mappedBy = "competicion")
+    @org.hibernate.annotations.OrderBy(clause = "categoria asc")
+    private Set<Evento> eventos;
+
+    @OneToMany(mappedBy = "competicion")
+    @org.hibernate.annotations.OrderBy(clause = "numeroJornada asc")
+    private Set<Jornada> jornadas;
+
+    @org.hibernate.annotations.OrderBy(clause = "orden asc")
+    @OneToMany(mappedBy = "competicion")
+    private List<SorteoCompeticion> sorteosCompeticion;
 
     @Column(length = 1000)
     private String descripcion;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
+    private Date limiteInscripciones;
+
+
+    public Optional<Jornada> getJornada(int numeroJornada){
+        return getJornadas().stream().filter(j -> j.getNumeroJornada() == numeroJornada).findAny();
+    }
+
+    public Jornada getUltimaJornada(){
+        return getJornadas().stream().reduce((acc, val) -> acc.getNumeroJornada() > val.getNumeroJornada() ? acc : val).get();
+    }
+
+    public Jornada getPrimeraJornada(){
+        return getJornadas().stream().filter(j -> j.getNumeroJornada() == 1).findAny().get();
+    }
+
+    public String getFechaLimiteInscripcionesStr(){
+        return AESUtils.dateToString(limiteInscripciones);
+    }
 
     public Date getInicio(){
         Optional<Jornada> primeraJornda = jornadas.stream().filter(j -> j.getNumeroJornada()==1).findFirst();
@@ -43,8 +70,7 @@ public class Competicion {
     }
 
     public Date getFinalizacion(){
-        Optional<Jornada> ultimaJornada = jornadas.stream().reduce((acc, val) -> acc.getFechaFin().after(val.getFechaFin()) ? acc : val); //Get jornada con fechaFin más lejana
-        return ultimaJornada.map(Jornada::getFechaFin).orElse(null);
+        return  getUltimaJornada().getFechaFin();
     }
 
     public boolean isFinalizada(){
@@ -67,7 +93,7 @@ public class Competicion {
                 Map.Entry::getKey, m -> m.getValue().stream().collect(Collectors.toMap(i -> i.getEvento().getCategoria().getNombre(), i -> i.getEvento().getCategoria())))));
     }
 
-
+    // desde la vista
     public boolean isParticipanteInscrito(Participante p){
         if (p == null) return false;
         return eventos.stream().anyMatch(i -> i.isParticipanteInscrito(p)); //TODO: comprobar si al llamar dos veces desde el front hace dos llamadas o se cachea, por curiosidad
@@ -95,5 +121,9 @@ public class Competicion {
 
     public Optional<Jornada> getJornadaActiva() {
         return getJornadas().stream().filter(j -> j.getFechaInicio().before(new Date()) && j.getFechaFin().after(new Date())).findFirst();
+    }
+
+    public boolean inscripcionesEstanAbiertas() {
+        return getLimiteInscripciones().after(new Date());
     }
 }

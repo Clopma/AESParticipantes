@@ -16,11 +16,11 @@ import javax.persistence.*;
 public class Clasificado {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Evento evento;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Participante participante;
 
     @Id

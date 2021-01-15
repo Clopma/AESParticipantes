@@ -4,7 +4,6 @@ import com.example.aesparticipantes.Entities.Categoria;
 import com.example.aesparticipantes.Entities.Clasificado;
 import com.example.aesparticipantes.Entities.Tiempo;
 import com.example.aesparticipantes.Models.Posicion;
-import com.example.aesparticipantes.Repositories.ClasificadoRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -14,17 +13,16 @@ import java.security.NoSuchAlgorithmException;
 import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AESUtils {
 
+    public static final int POSICION_NO_PARTICIPADOS = Integer.MAX_VALUE;
     public static final String MENSAJE_ERROR = "Ha habido un error con la autenticación WCA, por favor, contacta un administrador y enséñale este mensaje: ";
 
     public static Collator COLLATOR = Collator.getInstance();
+
 
     public enum TiposUsuarios {
         NV, // NO VINCULADO
@@ -63,7 +61,7 @@ public class AESUtils {
             }
         }
 
-        return new double[]{mejorTiempo, media, peorTiempo};
+        return new double[]{Math.floor(mejorTiempo * 100)/100, Math.floor(media * 100)/100, peorTiempo};
     }
 
     public static String formatTime(double time, Categoria categoria) {
@@ -72,7 +70,7 @@ public class AESUtils {
             if(categoria.getNombre().equals("FMC")){
                 return (int) time + "";
             }
-            String doubleAsText = String.valueOf(round(time, 2));
+            String doubleAsText = String.valueOf(round(time, 2)); //TODO supuestamente al calcular el single y la media (justo arriba) ya se quedan con dos decimales, comprobar que se puede quitar esto y queda todo igual
             int decimal = Integer.parseInt(doubleAsText.split("\\.")[0]);
             int mins = decimal / 60;
             int secs = decimal % 60;
@@ -118,8 +116,16 @@ public class AESUtils {
         return null;
     }
 
-    public static void setMedallas(List<Posicion> posiciones, ClasificadoRepository clasificadoRepository) {
-        posiciones.stream().filter(Posicion::isClasificado).collect(Collectors.toList()).forEach(p -> p.setMedalla(clasificadoRepository));
+    public static void setMedallas(List<Posicion> posiciones, List<Clasificado> clasificados) {
+        posiciones.stream().filter(Posicion::isClasificado).collect(Collectors.toList()).forEach(p -> {
+            p.setMedalla(
+                    AESUtils.getPosicionFinal(
+                            clasificados.stream().filter(c -> c.getParticipante().equals(p.getParticipante())
+                            && c.getEvento().equals(p.getEvento())
+                            && c.getRonda().contains("MEDALLA_"))
+                                    .map(c -> Clasificado.NombreRonda.valueOf(c.getRonda())).collect(Collectors.toList())));
+
+        });
     }
 
 
@@ -153,10 +159,11 @@ public class AESUtils {
         for(int i = 0; i < tiemposJornada.size(); i++){
             tiemposJornada.get(i).setPosicion(i+1);
 
+            //TODO no repetir y usar un ternario en cada single/media
             if ("FMC".equals(nombreCategoria) || "BLD".equals(nombreCategoria)){
                 tiemposJornada.get(i).setPuntosTiempo(tiemposJornada.get(i).getSingle() == 0 ? 0 : (int) Math.round(mejorSingleJornada*100/tiemposJornada.get(i).getSingle()));
                 if (tiemposJornada.get(i).getSingle() != 0) {
-                    if(i > 0 && tiemposJornada.get(i).getSingle() == tiemposJornada.get(i-1).getSingle()){
+                    if(i > 0 && tiemposJornada.get(i).getPosicion() == tiemposJornada.get(i-1).getPosicion()){
                         tiemposJornada.get(i).setPuntosBonus(tiemposJornada.get(i-1).getPuntosBonus());
                     } else {
                         tiemposJornada.get(i).setPuntosBonus(AESUtils.puntosEnPosicion(i + 1)); // else por defecto es 0
@@ -165,7 +172,7 @@ public class AESUtils {
             } else {
                 tiemposJornada.get(i).setPuntosTiempo(tiemposJornada.get(i).getMedia() == 0 ? 0 : (int) Math.round(mejorMediaJornada*100/tiemposJornada.get(i).getMedia()));
                 if (tiemposJornada.get(i).getMedia() != 0) {
-                    if(i > 0 && tiemposJornada.get(i).getMedia() == tiemposJornada.get(i-1).getMedia()){
+                    if(i > 0 && tiemposJornada.get(i).getPosicion() == tiemposJornada.get(i-1).getPosicion()){
                         tiemposJornada.get(i).setPuntosBonus(tiemposJornada.get(i-1).getPuntosBonus());
                     } else {
                         tiemposJornada.get(i).setPuntosBonus(AESUtils.puntosEnPosicion(i + 1)); // else por defecto es 0
@@ -219,7 +226,22 @@ public class AESUtils {
     }
 
 
+    public static <T> Optional<T> anteriorElemento(List<T> elements, T element){
+        int actualIndex = elements.indexOf(element);
+        return actualIndex > 0 ? Optional.of(elements.get(actualIndex - 1)) : Optional.empty();
+    }
 
+    public static  <T> Optional<T> siguienteElemento(List<T> elements, T element) {
+        int actualIndex = elements.indexOf(element);
+        return actualIndex < elements.size() - 1 ? Optional.of(elements.get(actualIndex + 1)) : Optional.empty();
+    }
 
+    public static  <T> Optional<T> anteriorElemento(Set<T> elements, T element) {
+        return anteriorElemento(new ArrayList<>(elements), element);
+    }
+
+    public static  <T> Optional<T> siguienteElemento(Set<T> elements, T element) {
+        return siguienteElemento(new ArrayList<>(elements), element);
+    }
 
 }

@@ -19,11 +19,11 @@ import java.util.Date;
 public class Inscripcion {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Evento evento;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Participante participante;
 
     //TODO ¿Se puede linkar mediante jpa de alguna forma Tiempo aquí?

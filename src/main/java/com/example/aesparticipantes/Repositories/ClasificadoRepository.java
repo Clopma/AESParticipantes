@@ -11,6 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface ClasificadoRepository extends CrudRepository<Clasificado, Long> {
@@ -25,6 +26,11 @@ public interface ClasificadoRepository extends CrudRepository<Clasificado, Long>
 
     @Query("select c.ronda from Clasificado c where c.participante = ?1 and c.evento = ?2 and c.ronda like 'MEDALLA_%'")
     List<Clasificado.NombreRonda> getRondasParticipante(Participante nombreParticipante, Evento evento);
+
+
+    List<Clasificado> findAllByEventoIn(Set<Evento> eventos);
+
+    List<Clasificado> findAllByEvento(Evento eventos);
 
 
     @Builder

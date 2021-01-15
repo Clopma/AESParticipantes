@@ -3,42 +3,39 @@
     <title>AES Online</title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <link rel="stylesheet" href="css/dropdown.css"/>
+    <link rel="stylesheet" href="/css/tooltips.css"/>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-
 </head>
 <script th:inline="javascript">
 
-    $(document).ready(function () {
-        $("#selectorParticipantes").on("keyup", function () {
-            var value = $(this).val().toLowerCase();
-            $(".dropdown-menu li").filter(function () {
-                $(this).toggle($(this).text().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(value) > -1)
+        $(document).ready(function () {
+            $("#selectorParticipantes").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".dropdown-menu li").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(value) > -1)
+                });
             });
-        });
 
-        document.getElementById("botonSeleccionar").onclick = function () {
-            if ($("#dropdown").hasClass("open")) {
-                $("#dropdown").removeClass("open");
-            } else {
-                $("#dropdown").addClass("open");
-            }
-        }
-
-
-
-        var ignore1 = document.getElementById('listaParticipantes');
-        var ignore2 = document.getElementById('botonSeleccionar');
-        document.addEventListener('click', function (event) {
-            var isClickInsideElement = ignore1.contains(event.target) || ignore2.contains(event.target);
-            if (!isClickInsideElement) {
+            document.getElementById("botonSeleccionar").onclick = function () {
                 if ($("#dropdown").hasClass("open")) {
                     $("#dropdown").removeClass("open");
+                } else {
+                    $("#dropdown").addClass("open");
                 }
-            }
+            };
+
+            var ignore1 = document.getElementById('listaParticipantes');
+            var ignore2 = document.getElementById('botonSeleccionar');
+            document.addEventListener('click', function (event) {
+                var isClickInsideElement = ignore1.contains(event.target) || ignore2.contains(event.target);
+                if (!isClickInsideElement) {
+                    if ($("#dropdown").hasClass("open")) {
+                        $("#dropdown").removeClass("open");
+                    }
+                }
+            });
         });
-    });
 
     $(document).keypress(function (e) {
         if (e.key === "Enter") {
@@ -51,43 +48,30 @@
         document.getElementById("selectorParticipantes").focus();
     });
 
-        $(window).on('load',function(){
-            var anchor = window.location.hash.substr(1);
-           if($('#tab-' + anchor).tab()[0] || anchor === 'info') {
-               $('#infoModal').modal('show');
-               $('#tab-' + anchor).tab('show');
-           }
-        });
+    function showInfoModalAnchored(cambiarAnchor) {
 
+        var anchor = cambiarAnchor ?? window.location.hash.substr(1);
+        window.location.hash = anchor;
+        if($('#tab-' + anchor).tab()[0] || anchor === 'info') {
+            $('#infoModal').modal('show');
+            $('#tab-' + anchor).tab('show');
+        }
+    }
 
     $(document).on('click', '.nav-item', function () {
         location.hash = $('#infoTabs li a.active')[0].id.replace('tab-', '');
     });
 
 
+    // $(window).on('show.bs.modal', function() {
+    //     location.hash = $('#infoTabs li a.active')[0].id.replace('tab-', '');
+    // });
 
-        $(window).on('hidden.bs.modal', function() {
-            $('#infoModal').modal('hide');
-            history.pushState("", document.title, window.location.pathname
-                + window.location.search);
-        });
-
-    // function irACategoria() {
-    //
-    //     var s = document.getElementById("selectorCategoria");
-    //
-    //     if (s && s.selectedIndex !== -1) {
-    //         var destino = window.location + 'ranking/Nacionline 2020/' + s.options[s.selectedIndex].value; //TODO
-    //
-    //
-    //         var r = document.getElementById("selectorRanking");
-    //         if (r.value > 0) {
-    //             destino += "/jornada/" + r.options[r.selectedIndex].value
-    //         }
-    //
-    //         window.location = destino;
-    //     }
-    // }
+    $(window).on('hidden.bs.modal', function() {
+        $('#infoModal').modal('hide');
+        history.pushState("", document.title, window.location.pathname
+            + window.location.search);
+    });
 
     function irAWCA() {
         window.location = "https://www.worldcubeassociation.org/oauth/authorize?client_id=" + [[${@environment.getProperty('wca.clientId')}]] +
@@ -96,51 +80,67 @@
 
 </script>
 <body class="cubosbg" style="position: relative;">
-<div class="bouncyContainer" style="position: absolute; top: 0px; right: 0">
-    <a class="bouncyContainer" data-toggle="modal" data-target="#infoModal">
-        <img class="bouncyButton" src="/img/interrogante.png"/>
-    </a> <div class="tagNav" style="top: 85%"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px" th:text="INFORMACIÓN"/></div>
+
+<div style="position: absolute; top: 0; right: 50px; width: 11%; display: inline-block; padding-bottom: 11%; height: 0">
+    <div class="bouncyContainer" style="width: 100%; height: 100%; position:absolute;">
+        <a onclick="showInfoModalAnchored('reglamento')" class="bouncyContainer">
+            <img class="bouncyButton" src="/img/interrogante.png"/>
+        </a> <div class="tagNav" style="top: 90%"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px" th:text="INFORMACIÓN"/></div>
+    </div>
 </div>
 <div class="vertical-flex-wrapper">
-
-    <div th:if="${'N'.equals(tipoUsuario)}" class="whitePanel top mensajeSuperior">
-
-        <div class="bouncyContainer backward" style="width: 120px; height: 120px">
-            <a class="bouncyContainer">
-                <img onclick="irAWCA()" class="bouncyButton" src="/img/WCAlogo.png"/>
-            </a>
+    <div class="mensajeSuperior" style="margin-left: auto; margin-right: auto">
+        <div th:if="${'N'.equals(tipoUsuario)}" class="whitePanel top">
+            <div class="bouncyContainer backward" style="width: 120px; height: 120px">
+                <a class="bouncyContainer">
+                    <img onclick="irAWCA()" class="bouncyButton" src="/img/WCAlogo.png"/>
+                </a>
+            </div>
+            <h1><a class="clicker" onclick="irAWCA()">Iniciar sesión con WCA</a></h1>
         </div>
-        <h1><a class="clicker" onclick="irAWCA()">Iniciar sesión con WCA</a></h1>
+        <div th:if="${'C'.equals(tipoUsuario)}" class="whitePanel top">
+            <h3>Bienvenido, <a th:href="@{|/participante/${nombreParticipante}|}" th:text="${nombreParticipante}" style="font-weight: bold;"> desconocido (reemplazado) </a>.</h3>
+
+        </div>
+
+
+        <div th:if="${'NV'.equals(tipoUsuario)}"  class="whitePanel top">
+
+            <h3>Bienvenido, <span style="font-weight: bold" th:text="${nombreWca}"> desconocido (reemplazado) </span>, no conocemos cuál es tu perfil. Si has participado en
+                alguna competición en esta web anteriormente, por favor, busca tu perfil y vincula tu cuenta, así estarás
+                listo para inscribirte a competiciones. En caso contrario, cierra y vuelve a iniciar sesión para poder crear un nuevo perfil.</h3>
+        </div>
+
+        <div th:if="${'NC'.equals(tipoUsuario)}"  class="whitePanel top">
+            <h3>Bienvenido, <span style="font-weight: bold;"  th:text="${nombreWca}"> desconocido (reemplazado) </span>, creemos que tu perfil puede ser
+                <a th:href="@{|/participante/${nombreParticipante}|}">este</a>. Si es correcto, puedes vincularlo y estarás listo para inscribirte a competiciones.</h3>
+        </div>
+
+
+        <div th:if="${!'N'.equals(tipoUsuario)}" class="whitePanel top" style="padding: 0">
+
+            <div class="tooltip">
+                <div class="bouncyContainer backward">
+                    <a href="/logout" class="bouncyContainer">
+                        <img class="bouncyButton smallShadow" src="/img/logout.png"/>
+                    </a>
+                </div>
+                <span class="tooltiptext light abajo">Cerrar sesión</span>
+            </div>
+        </div>
+
     </div>
-
-
-    <div th:if="${'C'.equals(tipoUsuario)}" class="whitePanel top mensajeSuperior">
-        <h3>Bienvenido, <a th:href="@{|/participante/${nombreParticipante}|}" th:text="${nombreParticipante}" style="font-weight: bold;"> desconocido (reemplazado) </a>.</h3>
-    </div>
-
-
-    <div th:if="${'NV'.equals(tipoUsuario)}"  class="whitePanel top mensajeSuperior">
-
-        <h3>Bienvenido, <span style="font-weight: bold" th:text="${nombreWca}"> desconocido (reemplazado) </span>, no conocemos cuál es tu perfil. Si has participado en
-            alguna competición en esta web anteriormente, por favor, busca tu perfil y vincula tu cuenta, así estarás
-            listo para inscribirte a competiciones. En caso contrario, cierra y vuelve a iniciar sesión para poder crear un nuevo perfil.</h3>
-    </div>
-
-    <div th:if="${'NC'.equals(tipoUsuario)}"  class="whitePanel top mensajeSuperior">
-        <h3>Bienvenido, <span style="font-weight: bold;"  th:text="${nombreWca}"> desconocido (reemplazado) </span>, creemos que tu perfil puede ser
-            <a th:href="@{|/participante/${nombreParticipante}|}">este</a>. Si es correcto, puedes vincularlo y estarás listo para inscribirte a competiciones.</h3>
-    </div>
-
     <div class="login-content">
 
         <div class="whitePanel left" style="margin-left: 0px;">
-            <img src="/img/copas/copa.png" class="sombra" width="175px"/>
-            <h1>COMPETICIONES</h1>
+            <img src="/img/copas/copa.png" class="sombra" width="150px"/>
+            <h2>COMPETICIONES</h2>
+
             <p style="font-size: large">Haz click en una competición para ver toda la información:</p>
 
             <div style="display: flex; justify-content: space-around">
                 <div>
-                    <div class="bouncyContainer podio" style="width: 170px; height: 170px;">
+                    <div class="bouncyContainer podio" style="width: 150px; height: 150px; margin: auto">
                         <a href="/competicion/Nacionline%202020" class="bouncyContainer">
                             <img class="bouncyButton podio" src="/img/copas/copa_Nacionline%202020.png"/>
                         </a>
@@ -148,7 +148,7 @@
                     <h4>Nacionline 2020</h4>
                 </div>
                 <div>
-                    <div class="bouncyContainer podio" style="width: 170px; height: 170px;">
+                    <div class="bouncyContainer podio" style="width: 150px; height: 150px; margin: auto">
                         <a href="/competicion/Navidades%20Online" class="bouncyContainer">
                             <img class="bouncyButton podio" src="/img/copas/copa_Navidades%20Online.png"/>
                         </a>
@@ -158,51 +158,111 @@
             </div>
             <div style="display: flex; justify-content: space-around">
                 <div>
-                    <div class="bouncyContainer podio" style="width: 170px; height: 170px;">
-                        <a href="/competicion/Enero%20Online" class="bouncyContainer">
-                            <img class="bouncyButton podio" src="/img/copas/copa_Enero%20Online.png"/>
+                    <div class="bouncyContainer podio" style="width: 150px; height: 150px; margin: auto">
+                        <a href="/competicion/San%20Valentín%20Online" class="bouncyContainer">
+                            <img class="bouncyButton podio" src="/img/copas/copa_San%20Valentin%20Online.png"/>
                         </a>
                     </div>
-                    <h4>Enero Online</h4>
+                    <h4>San Valentín Online</h4>
                 </div>
             </div>
 
-<!--            <div style="width: 100%">-->
-
-<!--                <div style="display: flex; justify-content: center; align-items: center; padding-bottom: 10px">-->
-<!--                    <h3 style="padding-right: 10px"> Categoría:</h3>-->
-
-<!--                    <select class="form-control form-control-lg miSelect" id="selectorCategoria">-->
-<!--                        <option th:each="categoria: ${categorias}" th:text="${categoria.nombre}"/>-->
-<!--                    </select>-->
-<!--                </div>-->
-<!--                <div style="display: flex; justify-content: center; align-items: center">-->
-<!--                    <h3 style="padding-right: 10px">Ranking:</h3>-->
-<!--                    <select class="form-control form-control-lg miSelect" id="selectorRanking">-->
-<!--                        <option value="0">Ranking general</option>-->
-<!--                        <option th:each="jornada, iStat :  ${#numbers.sequence(0, numJornadas - 1)}"-->
-<!--                                th:text="'Jornada ' + ${iStat.index + 1}"-->
-<!--                                th:value="${iStat.index+1}"/>-->
-<!--                    </select>-->
-<!--                </div>-->
-<!--                <script>-->
-<!--                    document.getElementById("selectorCategoria").selectedIndex = -1;-->
-<!--                    document.getElementById("selectorRanking").selectedIndex = -1;-->
-<!--                </script>-->
-<!--                <div class="bouncyContainer forward" style="margin: auto">-->
-<!--                    <a onclick="irACategoria()" class="bouncyContainer" style="cursor: pointer">-->
-<!--                        <img class="bouncyButton forward" src="/img/forwardbutton.png"/>-->
-<!--                    </a>-->
-<!--                </div>-->
+        </div>
+        <div class="anchoEnMovil" style="display: flex; flex-direction: column; height: 100%; max-width: 50%; justify-content: space-around; padding-bottom: 4em">
+<!--            <div class="whitePanel desaparecerHorizontal" style="width: min-content; height: 35%; max-width: 95%; margin: auto">-->
+<!--                <a href="https://www.speedcubingspain.org/"><img src="/img/aes_logo.png" style="height: calc(100% - 6em);"/></a>-->
+<!--                <h1 style="width: max-content; margin: auto">AES Online</h1>-->
+<!--                <h3 style="width: max-content; margin: auto">Web de campeonatos</h3>-->
 <!--            </div>-->
+            <div class="whitePanel"  style="width: fit-content; margin: auto; max-width: 95%;">
+                <h1>LIGA</h1>
+                <h4>Participando en los campeonatos mensuales entrarás en las <b>divisiones de la Liga</b>, ¡los primeros clasificados de la primera división se clasificarán a los playoffs!</h4>
+                <h4>Actualmente se celebra la <a href="/temporada/Primavera%202021">Temporada de Primavera 2021</a>, que consta de los siguientes campeonatos:</h4>
+                <div style="display: flex; justify-content: center; background-image: url('/img/primavera.png'); background-position: center;
+                background-size: cover; border-radius: 20px; margin-top: 10px; margin-bottom: 10px; align-items: center; padding: 10px">
+                    <div class="copaInicio">
+                        <div class="bouncyContainer podio">
+                            <div>
+                                <a href="/competicion/Enero%20Online" class="bouncyContainer">
+                                    <img class="bouncyButton quieto podio" src="/img/copas/copa_Enero%20Online.png"/>
+                                </a>
+                            </div>
+                        </div>
+                        <h4>Enero Online</h4>
+                    </div>
+                    <img src="/img/forwardbutton.png" style="width: 60px; height: 60px; margin: auto 0;"/>
+                    <div class="copaInicio">
+                        <div class="bouncyContainer podio">
+                            <a href="/competicion/Febrero%20Online" class="bouncyContainer">
+                                <img class="bouncyButton quieto podio" src="/img/copas/copa_Febrero%20Online.png"/>
+                            </a>
+                        </div>
+                        <h4>Febrero Online</h4>
+                    </div>
+                    <img src="/img/forwardbutton.png" style="width: 60px; height: 60px; margin: auto 0;"/>
+                    <div class="copaInicio">
+                        <div class="bouncyContainer podio">
+                            <a href="/competicion/Primavera%20Online" class="bouncyContainer">
+                                <img class="bouncyButton quieto podio" src="/img/copas/copa_Primavera%20Online.png"/>
+                            </a>
+                        </div>
+                        <h4>Primavera Online</h4>
+                    </div>
+                    <img src="/img/forwardbutton.png" style="width: 60px; height: 60px; margin: auto 0;"/>
+                    <div class="copaInicio">
+                        <div class="bouncyContainer podio">
+                            <a href="https://www.twitch.tv/aespeedcubing" class="bouncyContainer">
+                                <img class="bouncyButton quieto podio" src="/img/twitch-logo.png"/>
+                            </a>
+                        </div>
+                        <h4>Playoffs Primavera</h4>
+                    </div>
+                </div>
+                <h4>Cuando acabe esta temporada, ¡reiniciamos las divisiones y comenzamos nueva temporada!, ya puedes inscribirte a la <a href="/temporada/Verano%202021">Temporada de Verano 2021</a>, que constará de los siguientes campeonatos:</h4>
+                <div style="display: flex; justify-content: center; background-image: url('/img/verano.png'); background-position: center;
+                background-size: cover; border-radius: 20px; margin-top: 10px; margin-bottom: 10px; align-items: center; padding: 10px">
+                    <div class="copaInicio">
+                        <div class="bouncyContainer podio">
+                            <div>
+                            <a href="/competicion/Abril%20Online" class="bouncyContainer">
+                                <img class="bouncyButton quieto podio" src="/img/copas/copa_Abril%20Online.png"/>
+                            </a>
+                            </div>
+                        </div>
+                        <h4>Abril Online</h4>
+                    </div>
+                    <img src="/img/forwardbutton.png" style="width: 60px; height: 60px; margin: auto 0;"/>
+                    <div class="copaInicio">
+                        <div class="bouncyContainer podio">
+                            <a href="/competicion/Mayo%20Online" class="bouncyContainer">
+                                <img class="bouncyButton quieto podio" src="/img/copas/copa_Mayo%20Online.png"/>
+                            </a>
+                        </div>
+                        <h4>Mayo Online</h4>
+                    </div>
+                    <img src="/img/forwardbutton.png" style="width: 60px; height: 60px; margin: auto 0;"/>
+                    <div class="copaInicio">
+                        <div class="bouncyContainer podio">
+                            <a href="/competicion/Verano%20Online" class="bouncyContainer">
+                                <img class="bouncyButton quieto podio" src="/img/copas/copa_Verano%20Online.png"/>
+                            </a>
+                        </div>
+                        <h4>Verano Online</h4>
+                    </div>
+                    <img src="/img/forwardbutton.png" style="width: 60px; height: 60px; margin: auto 0;"/>
+                    <div class="copaInicio">
+                        <div class="bouncyContainer podio">
+                            <a href="https://www.twitch.tv/aespeedcubing" class="bouncyContainer">
+                                <img class="bouncyButton quieto podio" src="/img/twitch-logo.png"/>
+                            </a>
+                        </div>
+                        <h4>Playoffs Verano</h4>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="whitePanel">
-            <img src="/img/aes_logo.png" width="300px"/>
-            <h1>Web de competiciones online</h1>
-        </div>
-
         <div class="whitePanel right" style="margin-right: 0px">
-            <img src="/img/userIcon.png" width="200px;" class="sombra"/>
+            <img src="/img/userIcon.png" width="150px;" class="sombra"/>
             <h2>PARTICIPANTES</h2>
 
             <p style="font-size: large">Busca el perfil de un participante para ver sus competiciones y tiempos:</p>
@@ -219,446 +279,653 @@
                                placeholder="Busca..."/>
                         <li id="participante" th:each="participante : ${participantes}">
                             <a th:href="@{|/participante/${participante}|}" th:text="${participante}"/>
-                        </li> <!-- TODO -->
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-    <footer th:replace="fragments/footer :: creditFooter"/>
+    <footer  th:replace="fragments/footer :: creditFooter"/>
+    <footer class = "credit desaparecerHorizontal" style="bottom: 0; right: 10px;">
+        <span> v1.1.2 <a href="/cambios">Ver cambios</a>
+        </span>
+    </footer>
 </div>
 
 
 <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
      aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered" role="document">
-<div class="modal-content">
-    <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">INFORMACIÓN</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <ul class="nav nav-tabs" id="infoTabs" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="tab-tutoriales" data-toggle="tab" href="#tutoriales" role="tab" aria-controls="home" aria-selected="true">Tutoriales</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="tab-reglamento" data-toggle="tab" href="#reglamento" role="tab" aria-controls="profile" aria-selected="false">Reglamento</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="tab-sorteos" data-toggle="tab" href="#sorteos" role="tab" aria-controls="contact" aria-selected="false">Sorteos</a>
-        </li>
-    </ul>
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="tutoriales" role="tabpanel" aria-labelledby="tab-tutoriales">
-            <div class="modal-body texto_largo titulosCentrados">
-
-                <h1 style="font-size: 75px !important;">
-                    TUTORIALES
-                </h1>
-
-                <div style="display: flex; justify-content: space-around">
-                    <div style="text-align: center">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/lYFXbq0k4c0" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen></iframe>
-                        <h2>Registro WCA</h2>
-                    </div>
-                    <div style="text-align: center">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/pkd_bGi7yv4" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen></iframe>
-                        <h2>Registro AES Online</h2>
-                    </div>
-                    <div style="text-align: center">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/DbjJBB1e5K0" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen></iframe>
-                        <h2>Inscripciones Campeonatos</h2>
-                    </div>
-                </div>
-                <div style="display: flex; justify-content: space-around; margin-top: 30px">
-                    <div style="text-align: center">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/A83uDYqlGxM" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen></iframe>
-                        <h2>Cómo competir</h2>
-                    </div>
-                    <div style="text-align: center">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/bNHIlG979dQ" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen></iframe>
-                        <h2>Subir video en oculto en youtube</h2>
-                    </div>
-                </div>
-
-
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="width: max-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">INFORMACIÓN</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-        </div>
-        <div class="tab-pane fade" id="reglamento" role="tabpanel" aria-labelledby="tab-reglamento"><div>
-            <div class="modal-body texto_largo titulosCentrados">
-                <h1 style="font-size: 75px !important;">
-                    REGLAMENTO
-                </h1>
-                <h1>
-                    USUARIO
-                </h1>
-                Lo que primero debes saber es que para competir en AES Online deberás usar tu usuario de la WCA,
-                para
-                ello, puedes hacer login en la página de inicio y serás redirigido a la web de la WCA. Aquí debéis
-                hacer
-                login con vuestro usuario de la WCA.
-                Si no tienes usuario en la WCA, puedes registrarte ahí mismo. Una vez logeado y autorizado el
-                perfil:
+            <ul class="nav nav-tabs" id="infoTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="tab-tutoriales" data-toggle="tab" href="#tutoriales" role="tab"
+                       aria-selected="true">Tutoriales</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab-reglamento" data-toggle="tab" href="#reglamento" role="tab"
+                       aria-selected="false">Reglamento</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab-liga" data-toggle="tab" href="#liga" role="tab"
+                       aria-selected="false">Liga</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab-sorteos" data-toggle="tab" href="#sorteos" role="tab"
+                       aria-selected="false">Sorteos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab-contacto" data-toggle="tab" href="#contacto" role="tab"
+                       aria-selected="false">Contacto</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="tutoriales" role="tabpanel" aria-labelledby="tab-tutoriales">
+                    <div class="modal-body texto_largo titulosCentrados">
 
-                <ul>
-                    <li> Si has participado en el Nacionline, es probable que se vincule automáticamente tu cuenta
-                        de la
-                        WCA con tu perfil ya existente, si no fuese así, se te pedirá que busques tu perfil y hagas
-                        click en vincular.
-                    </li>
-                    <li> Si no participaste en el Nacionline, tras hacer login se te pedirá que confirmes crear un
-                        nuevo
-                        perfil automáticamente.
-                    </li>
+                        <h1 style="font-size: 75px !important;">
+                            TUTORIALES
+                        </h1>
 
-                </ul>
-
-                <h1>COMPETICIONES</h1>
-                Se hará una competición mensualmente, además de competiciones especiales en fechas señaladas.<br/>
-                En cada competición habrán diferentes categorías oficiales para participar.<br/>
-                Las competiciones tienen dos etapas: jornadas y playoffs. Algunas categorías en algunas
-                competiciones
-                pueden no tener playoffs.<br/>
-
-                <h1>INSCRIPCIONES</h1>
-                Antes de que comience una competición, puedes inscribirte tanto en la página de la misma como en tu
-                perfil. Para ello, deberás estar logeado.<br/>
-                Al inscribirte, debes seleccionar las categorías en las que deseas participar. Puedes modificar tus
-                inscripciones hasta que la competición comience.<br/>
-
-                <h1>JORNADAS</h1>
-                Una jornada es un periodo en el que puedes participar, en el que tendrás una oportunidad para hacer
-                tus
-                resoluciones de cada categoría en la que estés inscrito.<br/>
-                Al finalizar la jornada, se revelan todos los tiempos y se asignan puntos según el ranking de esa
-                jornada. Estos puntos se otorgan según la formula que verás a continuación.<br/>
-                Estos puntos son importantes para avanzar en el ranking general de la competición, que determina la
-                posición final y quiénes se clasifican para los playoffs.<br/>
-                Cada competición puede tener un número distinto de jornadas.<br/>
-
-                <h1>PARTICIPAR</h1>
-                Durante cada jornada, habrás de participar en las categorías en las que estés inscrito.<br/>
-                Cada categoría tendrá un tiempo límite para realizar las resoluciones, antes del cual deberás enviar
-                los
-                resultados.<br/>
-                Recuerda que eres responsable de introducirlos bien, tanto los tiempos normales, como los DNF. Los
-                <i>+2</i> se deberán mostrar a la cámara, y deberás introducir el resultado con los dos segundos
-                extra
-                sumados.
-                Al acabar el temporizador, si no has enviado los tiempos, se autoenviarán los que hayas
-                introducido.<br/>
-                Ten en cuenta que si comienzas tus resoluciones al límite de la finalización de la jornada no podrás
-                usar todo el tiempo del temporizador, y deberás enviarlos igualmente antes de que finalice la
-                jornada.<br/>
-                <br/>
-                Para competir deberéis usar un cronómetro Speed Stacks Stackmat timer®(G2, G3 o G4) para realizar
-                las
-                resoluciones, respetando en todo momento las penalizaciones de la WCA propias de las competiciones
-                oficiales (véase el ​Reglamento de la WCA).<br/>
-                En caso de no tener ningún Speed Stacks Stackmat timer, se podrá permitir el uso de teclado, siempre
-                y
-                cuando consideremos que no se está realizando ninguna ventaja, caso en el cual se podrá optar por la
-                descalificación.<br/>
-                <br/>
-                <b>MUY IMPORTANTE:</b><br/>
-                A la hora de competir en una jornada, es necesario grabarse (excepto en FMC) y guardar los vídeos
-                por si
-                hicieran falta para comprobar o corregir algún tiempo.<br/>
-                Se le podrá pedir un video al participante por motivos varios, entre ellos, confirmar la
-                clasificación a
-                playoffs.<br/>
-                En caso de pedir algún video y no disponerlo, se tomará dicho tiempo como DNF.<br/>
-                <br/>
-                <b>CÓMO GRABARSE:</b><br/>
-                Una vez le demos a participar, ANTES de seleccionar una categoría, comenzar a grabar y mostrar la
-                pantalla.<br/>
-                Una vez dentro de la pantalla donde se muestran las mezclas, realizar las resoluciones con la cámara
-                enfoncando tu resolución.<br/>
-                Tras cada resolución se deberá mostrar el tiempo a la cámara.<br/>
-                Finalmente, se grabará como se le da a enviar los tiempos.<br/>
+                        <div style="display: flex; justify-content: space-around">
+                            <div style="text-align: center; margin-right: 10px;">
+                                <iframe width="560" height="315" src="https://www.youtube.com/embed/lYFXbq0k4c0"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen></iframe>
+                                <h2>Registro WCA</h2>
+                            </div>
+                            <div style="text-align: center; margin-right: 10px;">
+                                <iframe width="560" height="315" src="https://www.youtube.com/embed/pkd_bGi7yv4"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen></iframe>
+                                <h2>Registro AES Online</h2>
+                            </div>
+                            <div style="text-align: center">
+                                <iframe width="560" height="315" src="https://www.youtube.com/embed/DbjJBB1e5K0"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen></iframe>
+                                <h2>Inscripciones Campeonatos</h2>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-around; margin-top: 30px">
+                            <div style="text-align: center; margin-right: 10px;">
+                                <iframe width="560" height="315" src="https://www.youtube.com/embed/A83uDYqlGxM"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen></iframe>
+                                <h2>Cómo competir</h2>
+                            </div>
+                            <div style="text-align: center; margin-right: 10px;">
+                                <iframe width="560" height="315" src="https://www.youtube.com/embed/bNHIlG979dQ"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen></iframe>
+                                <h2>Subir video en oculto en youtube</h2>
+                            </div>
+                            <div style="text-align: center">
+                                <iframe width="560" height="315" src="https://www.youtube.com/embed/z_aYWQxhO9o"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen></iframe>
+                                <h2>Cómo mezclar los cubos</h2>
+                            </div>
+                        </div>
 
 
-                <h1>PUNTUACIÓN</h1>
-                Los ganadores de la competición se determinan con los playoffs, en el caso de no haber, mediante la
-                puntuación en el ranking general.<br/>
-                Los clasificados a los playoffs serán los primeros participantes del ranking general. Dependiendo de
-                la
-                competición y de la categoría podrán ser los 4 u 8 primeros.<br/>
-                Los puntos en el ranking general es la suma de los puntos de todas las jornadas. Hasta que una
-                jornada
-                no finaliza no se sumarán sus puntos.<br/>
-                Los puntos en el ranking de una jornada se basan en la siguiente fórmula:<br />
-                <div style="text-align: center">
-                    <math xmlns="http://www.w3.org/1998/Math/MathML">
-                        <mi>T</mi>
-                        <mi>u</mi>
-                        <mtext>&#xA0;</mtext>
-                        <mi>p</mi>
-                        <mi>u</mi>
-                        <mi>n</mi>
-                        <mi>t</mi>
-                        <mi>u</mi>
-                        <mi>a</mi>
-                        <mi>c</mi>
-                        <mi>i</mi>
-                        <mrow>
-                            <mo>&#xF3;</mo>
-                        </mrow>
-                        <mi>n</mi>
-                        <mo>=</mo>
-                        <mo stretchy="false">(</mo>
-                        <mrow>
-                            <mfrac>
-                                <mrow>
-                                    <mi>M</mi>
-                                    <mi>e</mi>
-                                    <mi>j</mi>
-                                    <mi>o</mi>
-                                    <mi>r</mi>
-                                    <mtext>&#xA0;</mtext>
-                                    <mi>r</mi>
-                                    <mi>e</mi>
-                                    <mi>s</mi>
-                                    <mi>u</mi>
-                                    <mi>l</mi>
-                                    <mi>t</mi>
-                                    <mi>a</mi>
-                                    <mi>d</mi>
-                                    <mi>o</mi>
-                                    <mtext>&#xA0;</mtext>
-                                    <mi>d</mi>
-                                    <mi>e</mi>
-                                    <mtext>&#xA0;</mtext>
-                                    <mi>l</mi>
-                                    <mi>a</mi>
-                                    <mtext>&#xA0;</mtext>
-                                    <mi>j</mi>
-                                    <mi>o</mi>
-                                    <mi>r</mi>
-                                    <mi>n</mi>
-                                    <mi>a</mi>
-                                    <mi>d</mi>
-                                    <mi>a</mi>
-                                </mrow>
-                                <mrow>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="reglamento" role="tabpanel" aria-labelledby="tab-reglamento">
+                    <div>
+                        <div class="modal-body texto_largo titulosCentrados">
+                            <h1 style="font-size: 75px !important;">
+                                REGLAMENTO
+                            </h1>
+                            <h1>
+                                USUARIO
+                            </h1>
+                            Lo primero que debes saber es que para competir en AES Online deberás usar tu usuario de la
+                            WCA,
+                            para
+                            ello, puedes hacer login en la página de inicio y serás redirigido a la web de la WCA. Aquí
+                            debéis
+                            hacer
+                            login con vuestro usuario de la WCA. Si no tienes usuario en la WCA, puedes registrarte ahí
+                            mismo.
+                            Una
+                            vez iniciada la sesión y autorizado el perfil:
+
+                            <ul>
+                                <li>Si has participado en el Nacionline, es probable que se vincule automáticamente tu
+                                    cuenta de
+                                    la WCA con tu perfil ya existente, si no fuese así, se te pedirá que busques tu
+                                    perfil y
+                                    hagas click en vincular.
+                                </li>
+                                <li>Si no participaste en el Nacionline, tras hacer login se te pedirá que confirmes
+                                    crear un
+                                    nuevo perfil automáticamente.
+                                </li>
+                                <li>Se te pedirá un correo para que podamos ponernos en contacto contigo cuando sea
+                                    necesario.
+                                </li>
+                            </ul>
+                            En caso de duda, puedes mirar un vídeo explicativo en la pestaña <a onclick="showInfoModalAnchored('tutoriales')" class="clicker">Tutoriales</a>.
+
+                            <h1>COMPETICIONES</h1>
+                            Se hará una competición mensualmente, además de competiciones especiales en fechas
+                            señaladas.<br/>
+                            Las competiciones pueden formar o no parte de la <a onclick="showInfoModalAnchored('liga')" class="clicker">Liga</a>.
+                            Independientemente de ello, cada competición tiene sus resultados individuales y puedes inscribirte en cualquiera de ellas sin tener en cuenta este aspecto.<br />
+                            En cada competición habrá diferentes categorías oficiales para participar.<br/>
+                            En las competiciones mensuales se realizarán <a onclick="showInfoModalAnchored('sorteos')" class="clicker">sorteos</a> para los participantes.
+                            <br/>
+
+                            <h1>INSCRIPCIONES</h1>
+                            Antes de que comience una competición, puedes inscribirte tanto en la página de la misma
+                            como en tu
+                            perfil. Para ello, deberás haber iniciado sesión.
+                            Al inscribirte, debes seleccionar las categorías en las que deseas participar. Puedes
+                            modificar tus
+                            inscripciones hasta que la competición comience. También podrás cancelar tu inscripción
+                            desapuntándote de todas las categorías.
+                            Será necesario saber mezclar los puzzles en los que se inscriba.
+                            En caso de duda en alguno de los aspectos comentados, puedes mirar un vídeo explicativo en
+                            Tutoriales.
+
+                            <h1>JORNADAS</h1>
+                            Una jornada es un periodo en el que puedes participar, tendrás una oportunidad para hacer
+                            tus resoluciones de cada categoría en la que estés inscrito.<br />
+                            Al finalizar la jornada, se revelan todos los tiempos y se asignan puntos según el ranking
+                            de esa jornada. Estos puntos se otorgan según la fórmula descrita más adelante y son
+                            imprescindibles para avanzar en el ranking general de la competición, que determinán los podios de la competición.
+                            Cada competición puede tener un número distinto de jornadas.<br />
+
+                            Las jornadas de campeonatos que pertenezcan a la <a onclick="showInfoModalAnchored('liga')" class="clicker">Liga</a> determinan la evolución de los participantes en las divisiones. <a onclick="showInfoModalAnchored('liga')" class="clicker">Más información</a>.
+
+
+                            <h1>PARTICIPACIÓN</h1>
+                            Durante cada jornada, deberás participar en las categorías en las que estés inscrito.<br/>
+                            No participar en una jornada no prohíbe participar en las siguientes, sin embargo tiene repercusiones en las <a onclick="showInfoModalAnchored('liga')" class="clicker"> divisiones</a> de la Liga.<br/>
+                            Cada categoría tendrá un tiempo límite para realizar las resoluciones, antes del cual
+                            deberás enviar
+                            los
+                            resultados. Dicho tiempo límite es bastante holgado, para que pueda participar todo el
+                            mundo.<br/>
+                            Recuerda que eres responsable de introducirlos bien, tanto los tiempos normales, como los
+                            tiempos
+                            con
+                            alguna penalización (siguiendo el Reglamento de la WCA).<br/>
+                            Para los casos en los que sea DNF, habrá un
+                            clickeable que se deberá marcar. En caso de ser una penalización de +2 segundos, deberás
+                            introducir
+                            el
+                            resultado con los dos segundos extra sumados. Ante cualquier posición del cubo que fuese
+                            dudosa, se
+                            deberá acercar la cámara y mostrar el cubo SIN TOCARLO.<br/>
+                            Al acabar el temporizador, si no has enviado los tiempos, se autoenviarán los que hayas
+                            introducido.
+                            Ten en cuenta que si comienzas tus resoluciones al límite de la finalización de la jornada
+                            no podrás
+                            usar todo el tiempo del temporizador, y deberás enviarlos igualmente antes de que finalice
+                            la
+                            jornada.<br/>
+                            Para competir deberéis usar un cronómetro Speed Stacks Stackmat timer®(G2, G3 o G4) para
+                            realizar
+                            las
+                            resoluciones, respetando en todo momento las penalizaciones de la WCA propias de las
+                            competiciones
+                            oficiales (véase el ​Reglamento de la WCA).<br/>
+                            En caso de no tener ningún Speed Stacks Stackmat timer, se podrá permitir el uso de teclado,
+                            siempre
+                            y
+                            cuando consideremos que no se está realizando ninguna ventaja, caso en el cual se podrá
+                            optar por la
+                            descalificación.
+                            En caso de
+                            duda, pregunta en alguno de nuestros <a onclick="showInfoModalAnchored('contacto')" class="clicker">contactos</a>.<br/>
+
+                            <br/>
+                            <br/>
+                            <b>MUY IMPORTANTE:</b><br/>
+                            A la hora de competir en una jornada, es OBLIGATORIO grabarse (excepto en FMC) y guardar los
+                            vídeos por si hicieran falta para comprobar o corregir algún tiempo.
+                            Se le podrá pedir un video al participante por motivos varios, entre ellos, confirmar la
+                            clasificación a playoffs o posible podio.<br/>
+                            Los participantes que opten a podio y/o playoffs deberán enviar los videos de la categoría antes de 48h tras la finalización de la última jornada.<br/>
+                            En caso de pedir algún video y no disponerlo, se tomarán los tiempos de dicha categoría en
+                            dicha jornada como DNF.<br/>
+                            En la categoría de BLD es necesario que el ángulo de la cámara enfoque al competidor y se pueda verificar que no esta mirando el cubo bajo ningún concepto.
+                            En caso de que un competidor nos envíe un video en el cual no se le aprecia correctamente, será considerado como DNF.
+                            <br/>
+                            <br/>
+                            <b>CÓMO GRABARSE:</b><br/>
+                            Una vez le demos a participar, ANTES de seleccionar una categoría, comenzar a grabar y
+                            mostrar la
+                            pantalla.<br />
+                            Una vez dentro de la pantalla donde se muestran las mezclas, realizar las resoluciones con la cámara enfocando tu resolución.<br />
+                            Tras cada resolución se deberá mostrar el tiempo a la cámara. En caso de Clock, enseñar ambas caras para verificar que está resuelto.<br />
+                            Finalmente, se grabarán los tiempos introducidos y cómo se le da a enviar.<br />
+
+                            Ante cualquier duda respecto a este apartado, se puede ver el vídeo de “Cómo Participar” en la
+                            pestaña <a onclick="showInfoModalAnchored('tutoriales')" class="clicker">tutoriales</a> .
+
+
+                            <h1>PUNTUACIÓN</h1>
+                            Los ganadores de la competición se determinan mediante la puntuación en el ranking general.<br />
+                            Los puntos en el ranking general son la suma de los puntos de todas las jornadas. Nota: Hasta que una jornada no finaliza no se suman sus puntos.<br />
+                            Los puntos en el ranking de una jornada se basan en la siguiente fórmula:<br />
+
+                            <div style="text-align: center">
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
                                     <mi>T</mi>
                                     <mi>u</mi>
                                     <mtext>&#xA0;</mtext>
-                                    <mi>r</mi>
-                                    <mi>e</mi>
-                                    <mi>s</mi>
+                                    <mi>p</mi>
                                     <mi>u</mi>
-                                    <mi>l</mi>
+                                    <mi>n</mi>
                                     <mi>t</mi>
+                                    <mi>u</mi>
                                     <mi>a</mi>
-                                    <mi>d</mi>
+                                    <mi>c</mi>
+                                    <mi>i</mi>
+                                    <mrow>
+                                        <mo>&#xF3;</mo>
+                                    </mrow>
+                                    <mi>n</mi>
+                                    <mo>=</mo>
+                                    <mo stretchy="false">(</mo>
+                                    <mrow>
+                                        <mfrac>
+                                            <mrow>
+                                                <mi>M</mi>
+                                                <mi>e</mi>
+                                                <mi>j</mi>
+                                                <mi>o</mi>
+                                                <mi>r</mi>
+                                                <mtext>&#xA0;</mtext>
+                                                <mi>r</mi>
+                                                <mi>e</mi>
+                                                <mi>s</mi>
+                                                <mi>u</mi>
+                                                <mi>l</mi>
+                                                <mi>t</mi>
+                                                <mi>a</mi>
+                                                <mi>d</mi>
+                                                <mi>o</mi>
+                                                <mtext>&#xA0;</mtext>
+                                                <mi>d</mi>
+                                                <mi>e</mi>
+                                                <mtext>&#xA0;</mtext>
+                                                <mi>l</mi>
+                                                <mi>a</mi>
+                                                <mtext>&#xA0;</mtext>
+                                                <mi>j</mi>
+                                                <mi>o</mi>
+                                                <mi>r</mi>
+                                                <mi>n</mi>
+                                                <mi>a</mi>
+                                                <mi>d</mi>
+                                                <mi>a</mi>
+                                            </mrow>
+                                            <mrow>
+                                                <mi>T</mi>
+                                                <mi>u</mi>
+                                                <mtext>&#xA0;</mtext>
+                                                <mi>r</mi>
+                                                <mi>e</mi>
+                                                <mi>s</mi>
+                                                <mi>u</mi>
+                                                <mi>l</mi>
+                                                <mi>t</mi>
+                                                <mi>a</mi>
+                                                <mi>d</mi>
+                                                <mi>o</mi>
+                                            </mrow>
+                                        </mfrac>
+                                    </mrow>
+                                    <mo>&#xB7;</mo>
+                                    <mn>100</mn>
+                                    <mo stretchy="false">)</mo>
+                                    <mo>+</mo>
+                                    <mi>B</mi>
                                     <mi>o</mi>
-                                </mrow>
-                            </mfrac>
-                        </mrow>
-                        <mo>&#xB7;</mo>
-                        <mn>100</mn>
-                        <mo stretchy="false">)</mo>
-                        <mo>+</mo>
-                        <mi>B</mi>
-                        <mi>o</mi>
-                        <mi>n</mi>
-                        <mi>u</mi>
-                        <mi>s</mi>
-                        <mtext>&#xA0;</mtext>
-                        <mi>p</mi>
-                        <mi>o</mi>
-                        <mi>i</mi>
-                        <mi>n</mi>
-                        <mi>t</mi>
-                        <mi>s</mi>
-                    </math>
+                                    <mi>n</mi>
+                                    <mi>u</mi>
+                                    <mi>s</mi>
+                                    <mtext>&#xA0;</mtext>
+                                    <mi>p</mi>
+                                    <mi>o</mi>
+                                    <mi>i</mi>
+                                    <mi>n</mi>
+                                    <mi>t</mi>
+                                    <mi>s</mi>
+                                </math>
 
+                            </div>
+                            <br/>
+
+                            Los bonus points se otorgan según la posición de la siguiente forma:<br/>
+
+                            <div style="display:flex; justify-content: center">
+                                <table class="centerCols" style="font-size: 20px;">
+                                    <thead>
+                                    <th style="padding-right: 20px">Posición</th>
+                                    <th>Bonus points</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            1ª
+                                        </td>
+                                        <td>
+                                            25
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            2ª
+                                        </td>
+                                        <td>
+                                            19
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            3ª
+                                        </td>
+                                        <td>
+                                            15
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            4ª
+                                        </td>
+                                        <td>
+                                            12
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            5ª
+                                        </td>
+                                        <td>
+                                            10
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            6ª
+                                        </td>
+                                        <td>
+                                            8
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            7ª
+                                        </td>
+                                        <td>
+                                            6
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            8ª
+                                        </td>
+                                        <td>
+                                            5
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            9ª
+                                        </td>
+                                        <td>
+                                            4
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            10ª
+                                        </td>
+                                        <td>
+                                            3
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            11ª
+                                        </td>
+                                        <td>
+                                            2
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            12ª
+                                        </td>
+                                        <td>
+                                            1
+                                        </td>
+                                    </tr>
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            No se otorgarán Bonus Points a los resultados con promedio DNF.
+
+                            <h1>DESEMPATES</h1>
+                            Si en el ranking general dos competidores tienen la misma puntuación, el desempate se hará
+                            siguiendo
+                            este orden:<br/>
+                            <ul>
+                                <li> Mayor puntuación obtenida en cualquiera de las jornadas. Si fuese la misma, la
+                                    segunda
+                                    mejor, y así sucesivamente.
+                                </li>
+                                <li> Mejor media (o single en el caso de BLD y FMC).</li>
+
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <br />
+                <div class="tab-pane fade" id="liga" role="tabpanel" aria-labelledby="tab-liga">
+                    <div class="modal-body texto_largo titulosCentrados">
+                        <h1>LIGA AES</h1>
 
-                Los bonus points se otorgan según la posición de la siguiente forma:<br/>
+                        La Liga AES es el modo de alcanzar los <b>playoffs</b>, y optar a ser el vencedor de la <b>temporada</b>.<br />
 
-                <div style="display:flex; justify-content: center">
-                    <table class="centerCols" style="font-size: 20px;">
-                        <thead>
-                        <th style="padding-right: 20px">Posición</th>
-                        <th>Bonus points</th>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>
-                                1ª
-                            </td>
-                            <td>
-                                25
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                2ª
-                            </td>
-                            <td>
-                                19
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                3ª
-                            </td>
-                            <td>
-                                15
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                4ª
-                            </td>
-                            <td>
-                                12
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                5ª
-                            </td>
-                            <td>
-                                10
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                6ª
-                            </td>
-                            <td>
-                                8
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                7ª
-                            </td>
-                            <td>
-                                6
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                8ª
-                            </td>
-                            <td>
-                                5
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                9ª
-                            </td>
-                            <td>
-                                4
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                10ª
-                            </td>
-                            <td>
-                                3
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                11ª
-                            </td>
-                            <td>
-                                2
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                12ª
-                            </td>
-                            <td>
-                                1
-                            </td>
-                        </tr>
+                        Para participar en las temporadas, debes participar en los campeonatos que las compongan, siendo estos los <b>competiciones mensuales</b>, siendo el último de ellos la <b>competición estacional</b>.<br />
+                        En la página de cada temporada encontrarás la información sobre los competiciones que la componen.<br />
+                        Habitualmente una temporada estará conformada por tres competiciones mensuales consecutivos, dos de ellas con el nombre del mes, y la última con el nombre de la estación:
+
+                        <div style="display: flex; justify-content: center">
+                            <div>
+                                <img src="/img/copas/copa_Enero%20Online.png" style="width: 170px; height: 170px; margin: auto"/>
+                                <h4>Enero Online</h4>
+                            </div>
+                            <img src="/img/forwardbutton.png" style="width: 60px; height: 60px; margin: auto 15px;"/>
+                            <div>
+                                <img src="/img/copas/copa_Febrero%20Online.png" style="width: 170px; height: 170px; margin: auto"/>
+                                <h4>Febrero Online</h4>
+                            </div>
+                            <img src="/img/forwardbutton.png" style="width: 60px; height: 60px; margin: auto 15px;"/>
+                            <div>
+                                <img src="/img/copas/copa_Primavera%20Online.png" style="width: 170px; height: 170px; margin: auto"/>
+                                <h4>Primavera Online</h4>
+                            </div>
+                        </div>
+
+                        Al participar en estas competiciones, avanzarás en las divisiones, <b>jornada tras jornada</b> de la siguiente manera:
+
+                        Al finalizar la primera jornada de la temporada, se organizará a los participantes en <b>divisiones</b>, usando la posición en el ranking.<br />
+
+                        <div class="alert alert-info" style="width: max-content; margin: 10px auto">
+                            El tamaño de las divisiones es el siguiente: <br />
+                            <ul>
+                                <li>La primera división tiene 12 posiciones excepto en las categorías pequeñas*, que tienen 8 posiciones.</li>
+                                <li>La segunda y tercera división tienen 12 posiciones en todas las categorías.</li>
+                                <li>El resto de divisiones tiene 15 posiciones en todas las categorías.</li>
+                            </ul>
+                        </div>
+
+                        En la información de la temporada se muestra qué categorías entran en las divisiones (y por tanto tendrán playoffs) y cuántos
+                        clasificados habrá en cada una de ellas.<br />
+                        Actualmente las siguientes categorías entran en las divisiones: 2x2x2, 3x3x3, 4x4x4, OH, BLD, Pyraminx, Skewb y Square-1 (y clock a partir de la Temporada de Verano).<br />
+                        <br />
+                        Conforme avancen las siguientes jornadas, los participantes ascenderán y descenderán de división como se describe más adelante.<br />
+
+                        Al final de la última jornada, <b>los participantes en las primeras </b>8<b> posiciones</b> (4 en el caso de las categorías pequeñas*) de la primera división, pasarán a los <b>playoffs</b>.<br />
+
+                        <small>*las categorías pequeñas actualmente son: 4x4x4, OH, BLD, Square-1 y Clock</small><br />
 
 
-                        </tbody>
-                    </table>
+                        <br />
+                        Los movimientos en las divisiones funcionan de la siguiente forma:<br />
+                        Una vez acabada una jornada, los participantes de una división <b>se ordenan según su posición</b> en el ránking de esa jornada, compitiendo así entre ellos por las posiciones en la división.<br />
+                        Una vez ordenados, los participantes en las 4 mejores posiciones ascienden de división, y los participantes en las 4 peores posiciones descienden.<br />
+                        <small>Nota: No participar en una jornada conlleva el último puesto de la división, incluso por debajo de los nuevos participantes que se incorporen a la temporada en esa jornada.</small><br />
+
+                        Toda esta información está más detallada y con ejemplos en este video:<br />
+                        <br />
+                        <div style="text-align: center; margin-right: 10px;">
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/ocKi6cgXy1g"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
+                        </div>
+                        <br />
+                        <h1>PLAYOFFS</h1>
+                        Al finalizar la temporada, los clasificados a los playoffs competirán entre sí, en rondas cara a cara.<br />
+                        Por cada batalla obtendrán una puntuación, y quién llegue a un determinado número de puntos ganará y pasará a
+                        la siguiente ronda.<br />
+                        Cada ronda clasificatoria se dividirá en varias batallas. Cada batalla consistirá en 5
+                        resoluciones, con las cuales obtendrás puntuación de la siguiente manera:<br />
+
+                        <ul>
+                            <li>Habiendo hecho el mejor single de la batalla: 1 Punto.</li>
+                            <li>Habiendo hecho la mejor media: 2 Puntos.</li>
+                            <li>Si ganas todos los tiempos: 1 Punto.</li>
+                        </ul>
+                        Se aplican las siguientes excepciones:
+                        <ul>
+                            <li>Para la categoría de 3x3x3 Blindfolded se realizarán batallas a un solo tiempo,
+                                donde el
+                                ganador
+                                conseguirá un punto, y en caso de empate, cada competidor obtendrá 0,5 puntos.
+                            </li>
+                            <li>Para 3x3x3 Fewest Moves, se mandarán tres mezclas, dónde el ganador se determinará a
+                                través
+                                de
+                                Mo3.
+                            </li>
+                        </ul>
+
+                        Los playoffs habitualmente serán retransmitidos por el canal de <a
+                            href="https://www.twitch.tv/aespeedcubing">Twitch de la AES</a>, por lo que será
+                        necesario
+                        disponer
+                        de video para competir.
+                    </div>
                 </div>
+                <div class="tab-pane fade" id="sorteos" role="tabpanel" aria-labelledby="tab-sorteos">
+                    <div class="modal-body texto_largo titulosCentrados">
+                        <div style="text-align: center"><img src="img/logo-kubekings.png" style="width: 175px; height: 175px"/><img src="/img/logo-maskecubos.png" style="width: 175px; height: 175px"/><br/></div>
+                        <h1 style="font-size: 75px !important;">
+                            SORTEOS
+                        </h1>
+                        En todas las competiciones mensuales se realizarán sorteos para los participantes que cumplan
+                        los
+                        requisitos del mismo. Los sorteos podrán variar según la competición. Los sorteos serán visibles
+                        en la
+                        página principal de cada competición.
+                        Los sorteos se realizarán tras finalizar la última jornada (antes de los playoffs en caso de
+                        haber).
+                        Se subirá un video al canal de Youtube de la <a
+                            href="https://www.youtube.com/channel/UCryvWN5_nrvi9af0EPxEY5g">AES</a> realizando el sorteo
+                        y se
+                        contactará con los ganadores a través del correo pidiéndoles los datos necesarios.
 
-                <h1>DESEMPATES</h1>
-                Si en el ranking general dos competidores tienen la misma puntuación, el desempate se hará siguiendo
-                este orden:<br/>
-                <ul>
-                    <li> Mayor puntuación obtenida en cualquiera de las jornadas. Si fuese la misma, la segunda
-                        mejor, y
-                        así sucesivamente.
-                    </li>
-                    <li> Mejor media (o single en el caso de BLD y FMC).</li>
+                        <h1>PREMIOS</h1>
+                        <ul>
+                            <li>
+                                BONO DE 10€ EN <a href="https://kubekings.com/">KUBEKINGS</a> PARA CUALQUIER
+                                PARTICIPANTE.
+                            </li>
+                            <li>
+                                BONO DE 10€ EN <a href="https://MasKeCubos.com/es">MASKECUBOS</a> PARA CUALQUIER
+                                PARTICIPANTE.
+                            </li>
+                            <li>
+                                BONO DE 30€ EN <a href="https://kubekings.com/">KUBEKINGS</a> PARA CUALQUIER
+                                PARTICIPANTE SOCIO DE LA AES.
+                            </li>
+                            <li>
+                                BONO DE 30€ EN <a href="https://MasKeCubos.com/es">MASKECUBOS</a> PARA CUALQUIER
+                                PARTICIPANTE SOCIO DE LA AES.
+                            </li>
+                        </ul>
 
-                </ul>
+                        Si no eres socio, <a href="https://www.speedcubingspain.org/association/adhesion">aquí</a>
+                        puedes
+                        hacerte <b>socio AES</b>.
 
-                <h1>PLAYOFFS</h1>
-                En la información de la competición se muestra qué categorías tienen playoffs y cuántos clasificados
-                habrá en cada una.<br/>
-                Los clasificados en las jornadas competirán entre sí, en rondas cara a cara. Por cada batalla
-                obtendrán
-                una puntuación y el que llegue a un determinado número de puntos ganará y pasará a la siguiente
-                ronda.<br/>
+                        <h1>REQUISITOS</h1>
 
-                Cada ronda clasificatoria se dividirá en varias batallas. Cada batalla consistirá en 5 resoluciones,
-                con
-                las cuales obtendrás puntuación de la siguiente manera:
-                <ul>
-                    <li>Habiendo hecho el mejor single de la batalla: 1 Punto.</li>
-                    <li>Habiendo hecho la mejor media: 2 Puntos.</li>
-                    <li>Si ganas todos los tiempos: 1 Punto.</li>
-                </ul>
-                Se aplican las siguientes excepciones:
-                <ul>
-                    <li>Para la categoría de 3x3x3 Blindfolded se realizarán batallas a un solo tiempo, donde el
-                        ganador
-                        conseguirá un punto, y en caso de empate, cada competidor obtendrá 0,5 puntos.
-                    </li>
-                    <li>Para 3x3x3 Fewest Moves, se mandarán tres mezclas, dónde el ganador se determinará a través
-                        de
-                        Mo3.
-                    </li>
-                </ul>
-
-                Los playoffs habitualmente serán retransmitidos por el canal de <a
-                    href="https://www.twitch.tv/aespeedcubing">Twitch de la AES</a>, por lo que será necesario
-                disponer
-                de video para competir.
-
-                <h1>CONTACTO</h1>
-                Organización: <a
-                    href="mailto:aesonline@speedcubingspain.org">aesonline@speedcubingspain.org</a><br/>
-                Problemas técnicos: <a href="mailto:contacto@carloslopezmari.com">contacto@carloslopezmari.com</a>
+                        <ol>
+                            <li>
+                                Vivir en territorio español (islas incluidas).
+                            </li>
+                            <li>
+                                Haber participado en todas las Jornadas de dicha competición en, al menos, una
+                                categoria.
+                            </li>
+                            <li>
+                                Tener los videos acreditativos de dichas participaciones (en caso de ser el ganador se
+                                pedirá,
+                                al menos, un vídeo de cada jornada).
+                            </li>
+                            <li>
+                                Haber registrado tu correo en la AES Online.
+                            </li>
+                            <li>
+                                Para los premios que sea necesario ser socio de la AES, se deberá ser socio en vigor en
+                                la fecha
+                                de realización del sorteo.
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="contacto" role="tabpanel" aria-labelledby="tab-contacto">
+                    <div class="modal-body texto_largo titulosCentrados">
+                        <h1>CONTACTO</h1>
+                        <div style="text-align: center">
+                        Organización: <a
+                            href="mailto:aesonline@speedcubingspain.org">aesonline@speedcubingspain.org</a><br/>
+                        Problemas y feedback técnico: <a href="mailto:contacto@carloslopezmari.com">contacto@carloslopezmari.com</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
             </div>
-        </div></div>
-        <div class="tab-pane fade" id="sorteos" role="tabpanel" aria-labelledby="tab-sorteos">
-            <div class="modal-body texto_largo titulosCentrados">Como lo oyes. Sorpresas próximas.</div></div>
-
-        <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-    </div>
+        </div>
     </div>
 </div>
+<script>showInfoModalAnchored()</script>
 
 </body>
 </html>

@@ -12,7 +12,6 @@ public class AuthProvider implements AuthenticationProvider {
     @Override
     public UserData authenticate(Authentication authentication)
             throws AuthenticationException {
-
        return (UserData) authentication;
 
     }

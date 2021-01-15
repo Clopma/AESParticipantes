@@ -31,7 +31,7 @@ public class CacheController {
             return "mensaje";
         }
 
-        model.addAttribute("mensaje", "No tienes permiso para limpiar la caché. Quizás no estés logueado.");
+        model.addAttribute("mensaje", "No tienes permiso para limpiar la caché. Quizás no hayas iniciado sesión.");
         return "mensaje";
     }
 

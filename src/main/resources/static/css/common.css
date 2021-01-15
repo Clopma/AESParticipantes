@@ -1,13 +1,13 @@
 .cubosbg {
     background-image: url("../img/rubikColours.png");
     /*background-size: cover; */ /*TODO: TEST*/
-    display: flex;
+    /*display: flex;*/
+    width: 100%;
     position: relative;
     min-width: fit-content;
     font-family: 'Rajdhani', sans-serif !important;
 
 }
-
 .modal-content {
     overflow: overlay;
     width: -moz-fit-content !important;
@@ -48,12 +48,18 @@ table.centerCols tbody.alto td {
 }
 
 .login-content {
+    /*width: 100%; TODO Hipótesis: Chrome 88 tiene un bug que hace que este width coja más de lo que realmente es el 100%, en un futuro se podrá descomentar sin que ocurra nada */
     height: 100%;
-    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     text-align: center;
+}
+
+@-moz-document url-prefix() {
+    .login-content {
+       width: 100%;
+    }
 }
 
 .whitePanel {
@@ -63,17 +69,24 @@ table.centerCols tbody.alto td {
     border-radius: 20px;
 }
 
-.whitePanel.left {
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-    margin-left: 0;
+@media (min-width: 1000px) {
+
+    .whitePanel.left {
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+        margin-left: 0;
+        flex-shrink: 1;
+    }
+
+    .whitePanel.right {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+        margin-right: 0;
+        flex-shrink: 1;
+    }
+
 }
 
-.whitePanel.right {
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-    margin-right: 0;
-}
 
 .whitePanel.top {
     display: flex;
@@ -92,7 +105,7 @@ table.centerCols tbody.alto td {
 }
 
 footer.credit {
-    position:fixed;
+    position: absolute;
     height: 2em; line-height: 2em;
     width: auto;
     padding: 5px 20px;
@@ -106,7 +119,6 @@ footer.credit {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /*height: 100%; !* TODO: Si algo se jode, quitar esto y ponerlo donde el whitepanel llegue hasta el suelo, por ejemplo en participar*!*/
     width: 100%;
 }
 
@@ -144,9 +156,12 @@ a.bouncyContainer {
     z-index: 2;
 }
 
-a {
+a, .colorAzul {
     color: #007bff !important;
+}
 
+.colorAzul {
+    cursor: default;
 }
 
 a:hover {
@@ -155,7 +170,7 @@ a:hover {
 }
 
 img.bouncyButton {
-    transition: 0.3s;
+    transition: .05s;
     height: 65%;
     width: 65%;
     -webkit-filter: drop-shadow(7px 7px 7px #222);
@@ -169,9 +184,10 @@ img.bouncyButton.smallShadow {
 }
 
 .bouncyButton:not(.quieto):hover {
-    animation: bounce 0.3s;
-    height: 80%;
-    width: 80%;
+    transition: width .075s, height .075s, transform .225s .075s;
+    width: 110%;
+    height: 110%;
+    transform: scale(.8);
 }
 
 img.bouncyButton.makeSmaller {
@@ -181,7 +197,6 @@ img.bouncyButton.makeSmaller {
 
 
 .bouncyButton:not(.quieto).makeSmaller:hover {
-    animation: littleBounce 0.3s;
     height: 65%;
     width: 65%;
 }
@@ -202,33 +217,6 @@ div.quieto {
 
 div.quieto a {
     cursor: inherit !important;
-}
-
-@keyframes bounce {
-
-    25% {
-        height: 100%;
-        width: 100%;
-    }
-    100% {
-        height: 80%;
-        width: 80%;
-    }
-
-}
-
-@keyframes littleBounce {
-
-    25% {
-        height: 80%;
-        width: 80%;
-    }
-    100% {
-        height: 65%;
-        width: 65%;
-    }
-
-
 }
 
 .back {
@@ -355,6 +343,14 @@ h2 {
 
 h3 {
     font-size: 25px !important;
+}
+
+h4 {
+    font-size: 20px !important;
+}
+
+h5 {
+    font-size: 15px !important;
 }
 
 .invisible {
@@ -499,3 +495,36 @@ h3 {
 .dibujoMezcla svg{
     height: 100%;
 }
+
+
+@media (max-width: 1000px) {
+
+    .desaparecerHorizontal{
+        display: none;
+    }
+
+    .login-content{
+        height: auto;
+        flex-direction: column;
+    }
+
+    .anchoEnMovil{
+        width: 100%;
+        max-width: 95% !important;
+        padding-bottom: 0!important;
+    }
+
+
+}
+
+.copaInicio {
+    width: fit-content;
+    flex: 1 1 0;
+}
+
+.copaInicio div {
+    flex: 1;
+    width: auto;
+    height: auto;
+}
+

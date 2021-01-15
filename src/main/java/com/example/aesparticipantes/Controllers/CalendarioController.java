@@ -51,14 +51,15 @@ public class CalendarioController {
     @GetMapping("/calendario/playoffs/{nombreCompeticion}/{nombreCategoria}")
     public String evento(@PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("nombreCompeticion") String nombreCompeticion, Model model) {
 
-        Optional<Competicion> competicion = competicionController.getCompeticion(nombreCompeticion);
-        Categoria categoria = categoriaRepository.findByNombre(nombreCategoria); //TODO Cachear
+        Optional<Competicion> competicion = competicionRepository.findByNombre(nombreCompeticion);
+        Optional<Categoria> categoria = categoriaRepository.findByNombre(nombreCategoria); //TODO Cachear
 
-        if(!competicion.isPresent() || categoria == null){
+        if(!competicion.isPresent() || !categoria.isPresent()){
+            model.addAttribute("mensaje", "No hay ninguna competición llamada "+ nombreCompeticion +".");
             return "error/404";
         }
 
-        Evento evento = rankingGeneralController.getEvento(categoria, competicion.get());
+        Evento evento = eventoRepository.findByCategoriaAndCompeticion(categoria.get(), competicion.get());
 
         model.addAttribute("evento", evento);
         List<Clasificado> cuartos = clasificadoRepository.getRonda(evento, Clasificado.NombreRonda.CUARTO.name());
@@ -71,13 +72,13 @@ public class CalendarioController {
 
 
         if(evento.getCortePlayOffs() == 8){
-            cuartosClasi = iniciarBracket(rankingGeneralController.getRankingGlobal(evento, descalificacionRepository, clasificadoRepository), descalificacionRepository.findAllByEvento(evento), 8, semis, cuartos);
+            cuartosClasi = iniciarBracket(rankingGeneralController.getRankingGlobal(evento, descalificacionRepository.findAllByEvento(evento), clasificadoRepository.findAllByEvento(evento)), descalificacionRepository.findAllByEvento(evento), 8, semis, cuartos);
             semisClasi = rellenarBracket(semis, 4, evento, finales, Arrays.asList(cuartosClasi));
             model.addAttribute("listaCuartos", cuartosClasi);
             model.addAttribute("listaSemis", semisClasi);
             model.addAttribute("listaFinal", rellenarBracket(finales, 2, evento, ganador, Arrays.asList(semisClasi)));
         } else if (evento.getCortePlayOffs() == 4) {
-            semisClasi = iniciarBracket(rankingGeneralController.getRankingGlobal(evento, descalificacionRepository, clasificadoRepository), descalificacionRepository.findAllByEvento(evento), 4, finales, semis);
+            semisClasi = iniciarBracket(rankingGeneralController.getRankingGlobal(evento, descalificacionRepository.findAllByEvento(evento), clasificadoRepository.findAllByEvento(evento)), descalificacionRepository.findAllByEvento(evento), 4, finales, semis);
             model.addAttribute("listaSemis", semisClasi);
             model.addAttribute("listaFinal", rellenarBracket(finales, 2, evento, ganador, Arrays.asList(semisClasi)));
         }

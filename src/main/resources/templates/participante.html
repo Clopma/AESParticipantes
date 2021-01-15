@@ -3,13 +3,20 @@
     <title th:text="${nombreParticipante}"></title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
+
+
+    <meta property="og:title" th:content="${nombreParticipante}" />
+    <meta property="og:description"  th:content="'En el perfil de ' + ${nombreParticipante} + ' puedes ver todos sus sus resultados, competiciones y más.'"/>
+    <meta property="og:image" th:content="${participante.getUrlImagenPerfil()}" />
+
+
     <script type="text/javascript" src="/js/ModalUtils.js"></script>
     <script type="text/javascript" src="/js/TiempoUtils.js"></script>
-    <script type="text/javascript" src="/js/InscripcionUtils.js"></script>
     <link rel="stylesheet" href="/css/evento.css"/>
     <link rel="stylesheet" href="/css/cubing-icons.css"/>
     <link rel="stylesheet" href="/css/tooltips.css"/>
     <link rel="stylesheet" href="/css/flags/flags.css"/>
+
 
 
 </head>
@@ -23,7 +30,7 @@
     }
 
     function participar(button) {
-        window.location.href = '/participar/' + $(button).attr("data-competicion");
+        window.location.href = '/participar/' + $(button).attr("data-competicionParticipar");
     }
 
 </script>
@@ -75,11 +82,11 @@
             </thead>
             <tbody th:each="resultado: ${resultados}" th:if="${resultado.getKey().isFinalizada()}" class="alto">
             <tr>
-
-                <td rowspan="2" class="iconoStandard"><a
-                        th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}|}">
-                    <img th:src="'/img/copas/copa_' + ${resultado.getKey().getNombre()} + '.png'" style="width: 75px; margin: 10px"/>
-                    <span th:text="${resultado.getKey().getNombre()}"/></a>
+                <td rowspan="2" class="iconoStandard">
+                <a th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}|}">
+                    <div><img th:src="'/img/copas/copa_' + ${resultado.getKey().getNombre()} + '.png'" style="width: 75px; margin: 10px"/></div>
+                    <div><span th:text="${resultado.getKey().getNombre()}"/></div>
+                </a>
                 </td>
 
                 <td th:each="posicion : ${resultado.getValue()}" style="border-bottom: 0">
@@ -127,73 +134,106 @@
             Competiciones en curso
         </h1>
 
-        <table class="table dataTable centerCols" style="font-size: 20px;">
+        <table class="table dataTable centerCols" style="font-size: 20px; border-collapse: collapse">
             <thead>
                 <th>Competición</th>
                 <th colspan="100%">Categorías inscritas</th>
             </thead>
-            <tbody th:each="resultado: ${resultados}" th:if="${resultado.getKey().isEnCurso() && resultado.getKey().isParticipanteInscrito(participante)}" class="alto">
-            <tr>
+            <tbody th:each="resultado: ${resultados}" th:if="${resultado.getKey().isEnCurso() && resultado.getKey().isParticipanteInscrito(participante)}" class="alto" style="border-bottom: 3px solid #c6c6c6">
+                <tr>
+                    <td rowspan="2" class="iconoStandard">
+                        <a th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}|}">
+                            <div><img th:src="'/img/copas/copa_' + ${resultado.getKey().getNombre()} + '.png'" style="width: 75px; margin: 10px"/></div>
+                            <div><span th:text="${resultado.getKey().getNombre()}"/></div>
+                        </a>
+                        <div th:with="jornadaActiva = ${resultado.getKey().getJornadaActiva()}">
+                            <span th:if="${soyYo && jornadaActiva.isPresent()}">
+                                <button onclick="participar(this)" th:data-competicionParticipar="${resultado.getKey().getNombre()}" style="font-size: x-large" class="btn btn-outline-primary" th:text="${'Participar en la jornada ' + jornadaActiva.get().getNumeroJornada()}" />
+                            </span>
+                        </div>
+                    </td>
 
-                <td rowspan="2" class="iconoStandard">
-                    <a th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}|}">
-                        <img th:src="'/img/copas/copa_' + ${resultado.getKey().getNombre()} + '.png'" style="width: 75px; margin: 10px"/>
-                        <span th:text="${resultado.getKey().getNombre()}"/>
-                    </a>
-                    <div th:with="jornadaActiva = ${resultado.getKey().getJornadaActiva()}">
-                        <span th:if="${soyYo && jornadaActiva.isPresent()}">
-                            <button onclick="participar(this)" th:data-competicion="${resultado.getKey().getNombre()}" style="font-size: x-large" class="btn btn-outline-primary" th:text="${'Participar en la jornada ' + jornadaActiva.get().getNumeroJornada()}" />
-                        </span>
-                    </div>
-                </td>
+                    <td th:each="posicion : ${resultado.getValue()}" style="border-bottom: 0">
 
-                <td th:each="posicion : ${resultado.getValue()}" style="border-bottom: 0">
+                        <div class="tooltip"><a
+                                th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}/#${posicion.getEvento().getCategoria().getNombre()}|}"><span
+                                th:class="'cubing-icon event-' + ${posicion.getEvento().getCategoria().getNombre()}"/></a>
+                            <span class="tooltiptext">Ver todos los tiempos</span>
+                        </div>
 
-                    <div class="tooltip"><a
-                            th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}/#${posicion.getEvento().getCategoria().getNombre()}|}"><span
-                            th:class="'cubing-icon event-' + ${posicion.getEvento().getCategoria().getNombre()}"/></a>
-                        <span class="tooltiptext">Ver todos los tiempos</span>
-                    </div>
-
-                </td>
-            </tr>
-            <tr>
-                <td th:each="posicion : ${resultado.getValue()}">
-                    <div style="display: flex; align-items: center; justify-content: center">
+                    </td>
+                </tr>
+                <tr>
+                    <td th:each="posicion : ${resultado.getValue()}">
+                        <div style="display: flex; align-items: center; justify-content: center">
+                            <div class="tooltip">
+                                <a th:href="@{|/ranking/${resultado.getKey().getNombre()}/${posicion.getEvento().getCategoria().getNombre()}/#${nombreParticipante}|}">
+                                    <span th:if="${!posicion.primeraJornadaIsActiva()}" class="iconoStandard" th:text="${posicion.getPosicionGeneral() == 0 ? '-' : posicion.getPosicionGeneral()+'º'}"/>
+                                    <span th:if="${posicion.primeraJornadaIsActiva()}">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-eye-slash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/>
+                                        <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299l.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/>
+                                        <path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709z"/>
+                                        <path fill-rule="evenodd" d="M13.646 14.354l-12-12 .708-.708 12 12-.708.708z"/>
+                                    </svg>
+                                    </span>
+                                </a>
+                                <span th:if="${posicion.getPosicionGeneral() != 0 && !posicion.primeraJornadaIsActiva()}" class="tooltiptext">Posición en el ranking (con <span style="font-weight: bold" th:text="${posicion.getPuntuacionTotal()}"/> puntos)</span>
+                                <span th:if="${posicion.getPosicionGeneral() == 0 && !posicion.primeraJornadaIsActiva()}" class="tooltiptext">Está inscrito, pero aun no ha participado en esta categoría.</span>
+                                <span th:if="${posicion.primeraJornadaIsActiva()}" class="tooltiptext">Cuando acabe la primera jornada, se mostrará la posición en el ranking.</span>
+                            </div>
+                            <span th:if="${posicion.getTiempos() != null && posicion.getTiempos().size() > 1 && posicion.isClasificado()}" class="iconoStandard">&rarr;</span>
+                            <div th:if="${posicion.getTiempos() != null && posicion.getTiempos().size() > 1 && posicion.isClasificado()}" class="tooltip" style="height: 80px; width: 80px">
+                                <a onclick="loadModal(this)"
+                                   th:data-nombreCategoria="${posicion.getEvento().getCategoria().getNombre()}"
+                                   th:data-nombreCompeticion="${posicion.getEvento().getCompeticion().getNombre()}"
+                                   data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
+                                    <img class="bouncyButton podio" th:if="${posicion.getMedalla() != null}"
+                                         th:src="'/img/'+${posicion.getMedalla()+'.png'}"/>
+                                    <img class="bouncyButton podio" th:if="${posicion.getMedalla() == null}"
+                                         src="/img/bracket.png"/>
+                                </a>
+                                <span class="tooltiptext">Posición en playoffs</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${resultado.getKey().inscripcionesEstanAbiertas()}" style="border-bottom: solid 1px black">
+                    <td colspan="100%">Las inscripciones a <span th:text="${resultado.getKey().getNombre()}"/> siguen abiertas y aun puedes editarlas:
+                        <div style="display:flex; justify-content: center">
+                            <div th:each="evento : ${resultado.getKey().getEventos()}">
+                                <span th:data-competicion="${resultado.getKey().getNombre()}" th:data-categoria="${evento.getCategoria().getNombre()}" onclick="cambiarSeleccion(this)"
+                                    th:class="${'cubing-icon event-' + evento.getCategoria().getNombre() + (soyYo ?' clicker ': ' ')+ (evento.isParticipanteInscrito(participante) ? 'categoriaSeleccionada': (soyYo ? 'categoriaDeseleccionada': 'categoriaOculta'))}"
+                                    style="width: 10px;"/>
+                            </div>
+                        </div>
                         <div class="tooltip">
-                            <a th:href="@{|/ranking/${resultado.getKey().getNombre()}/${posicion.getEvento().getCategoria().getNombre()}/#${nombreParticipante}|}">
-                                <span th:if="${!posicion.primeraJornadaIsActiva()}" class="iconoStandard" th:text="${posicion.getPosicionGeneral() == 0 ? '-' : posicion.getPosicionGeneral()+'º'}"/>
-                                <span th:if="${posicion.primeraJornadaIsActiva()}">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-eye-slash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/>
-                                    <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299l.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/>
-                                    <path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709z"/>
-                                    <path fill-rule="evenodd" d="M13.646 14.354l-12-12 .708-.708 12 12-.708.708z"/>
+                            <button onclick="inscribirse(this)"
+                                    th:data-competicion="${resultado.getKey().getNombre()}" class="btn btn-outline-primary"
+                                    style="height: min-content" disabled>
+                                <svg style="vertical-align: middle" width="1em" height="1em" viewBox="0 0 16 16"
+                                     class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd"
+                                          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                                 </svg>
-                                </span>
-                            </a>
-                            <span th:if="${posicion.getPosicionGeneral() != 0 && !posicion.primeraJornadaIsActiva()}" class="tooltiptext">Posición en el ranking (con <span style="font-weight: bold" th:text="${posicion.getPuntuacionTotal()}"/> puntos)</span>
-                            <span th:if="${posicion.getPosicionGeneral() == 0 && !posicion.primeraJornadaIsActiva()}" class="tooltiptext">Está inscrito, pero aun no ha participado en esta categoría.</span>
-                            <span th:if="${posicion.primeraJornadaIsActiva()}" class="tooltiptext">Cuando acabe la primera jornada, se mostrará la posición en el ranking.</span>
+                                <span> Editar inscripción </span>
+                            </button>
+                            <span class="tooltiptext">Selecciona las categorías en las que quieras participar</span>
                         </div>
-                        <span th:if="${posicion.getTiempos() != null && posicion.getTiempos().size() > 1 && posicion.isClasificado()}" class="iconoStandard">&rarr;</span>
-                        <div th:if="${posicion.getTiempos() != null && posicion.getTiempos().size() > 1 && posicion.isClasificado()}" class="tooltip" style="height: 80px; width: 80px">
-                            <a onclick="loadModal(this)"
-                               th:data-nombreCategoria="${posicion.getEvento().getCategoria().getNombre()}"
-                               th:data-nombreCompeticion="${posicion.getEvento().getCompeticion().getNombre()}"
-                               data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
-                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() != null}"
-                                     th:src="'/img/'+${posicion.getMedalla()+'.png'}"/>
-                                <img class="bouncyButton podio" th:if="${posicion.getMedalla() == null}"
-                                     src="/img/bracket.png"/>
-                            </a>
-                            <span class="tooltiptext">Posición en playoffs</span>
-                        </div>
-                    </div>
-                </td>
-            </tr>
+                    </td>
+                </tr>
             </tbody>
         </table>
+
+        <div id="competicionActualNoInscrito"
+             th:if="${soyYo && competicion.isEnCurso() && !competicion.isParticipanteInscrito(participante) && competicion.inscripcionesEstanAbiertas()}"
+             th:each="competicion: ${competicionesPresentes}"
+             style="background-color: white; padding: 10px; border-top: solid 1px black;">
+            <th:block th:include="fragments/fichaCompeticion :: fichaCompeticion" />
+        </div>
+
+
     </div>
 
     <div id="proximasCompeticiones" class="whitePanel" style="margin-top: 50px;">
@@ -205,47 +245,7 @@
              th:if="${soyYo || competicion.isParticipanteInscrito(participante)}"
              th:each="competicion: ${competicionesFuturas}"
              style="background-color: white; padding: 10px; border-top: solid 1px black;">
-
-            Inicio: <span th:text="${competicion.getInicioStr()}"/>
-            <div style="display: flex; align-items: center">
-                <a th:href="${'/competicion/'+ competicion}" style="display: flex; align-items: center">
-                    <img th:src="'/img/copas/copa_' + ${competicion.getNombre()} + '.png'" style="width: 75px; margin: 10px"/>
-                    <span th:text="${competicion.getNombre()}" style="margin-right: 10px" class="iconoStandard"/>
-                </a>
-                <div th:if="${competicion.isParticipanteInscrito(participante)}"
-                     style="font-size: 20px; margin-right: 10px">
-                    <svg style="vertical-align: middle" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check"
-                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                              d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
-                    </svg>
-                    Inscrito
-                </div>
-                <div class="tooltip">
-                    <button th:if="${soyYo}" onclick="inscribirse(this)"
-                            th:data-competicion="${competicion.getNombre()}" class="btn btn-outline-primary"
-                            style="height: min-content" disabled>
-                        <svg style="vertical-align: middle" width="1em" height="1em" viewBox="0 0 16 16"
-                             class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                            <path fill-rule="evenodd"
-                                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                        </svg>
-                        <span th:text="${competicion.isParticipanteInscrito(participante) ? 'Editar inscripción' : 'Inscríbete'}"/>
-                    </button>
-                    <span class="tooltiptext">Selecciona las categorías en las que quieras participar</span>
-                </div>
-            </div>
-            <div style="display:flex; justify-content: center">
-                <div th:each="evento : ${competicion.getEventos()}" class="tooltip">
-                    <span th:data-competicion="${competicion.getNombre()}"
-                          th:data-categoria="${evento.getCategoria().getNombre()}" onclick="cambiarSeleccion(this)"
-                          th:class="${'cubing-icon event-' + evento.getCategoria().getNombre() + (soyYo ?' clicker ': ' ')+ (evento.isParticipanteInscrito(participante) ? 'categoriaSeleccionada': (soyYo ? 'categoriaDeseleccionada': 'categoriaOculta'))}"
-                          style="width: 10px;"/>
-                    <span class="tooltiptext"
-                          th:text="${evento.getCategoria().getNombre() + ': ' + (evento.getCortePlayOffs() == 0 ? 'No habrá play-offs': (evento.getCortePlayOffs() == 4 ? 'Habrá dos rondas de play-offs': (evento.getCortePlayOffs() == 8 ? 'Habrá tres rondas de play-offs': '')))}"/>
-                </div>
-            </div>
+            <th:block th:include="fragments/fichaCompeticion :: fichaCompeticion" />
         </div>
     </div>
     <!-- Modal -->
@@ -271,30 +271,29 @@
                     <br/>
                     <h5>¿Cuándo te gustaría ser notificado?</h5>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" th:checked="${participante.getAnuncioNuevaCompeticion()}" id="anuncioNuevaCompeticion">
+                            <input class="form-check-input" type="checkbox" th:checked="${(participante.getAnuncioNuevaCompeticion() == null || participante.getAnuncioNuevaCompeticion()) ? true : false}" id="anuncioNuevaCompeticion"/>
                             <label class="form-check-label" for="anuncioNuevaCompeticion">
                                 Anuncios de nuevas competiciones
                             </label><br />
-                            <input class="form-check-input" type="checkbox" th:checked="${participante.getRecordatorioInscripcion()}" id="recordatorioInscripcion">
+                            <input class="form-check-input" type="checkbox" th:checked="${(participante.getRecordatorioInscripcion() == null || participante.getRecordatorioInscripcion()) ? true : false}" id="recordatorioInscripcion"/>
                             <label class="form-check-label" for="recordatorioInscripcion">
                                 Recordatorio de inscripción en competiciones
                             </label><br />
-                            <input class="form-check-input" type="checkbox" th:checked="${participante.getRecordatorioComienzo()}" id="recordatorioComienzo">
+                            <input class="form-check-input" type="checkbox" th:checked="${(participante.getRecordatorioComienzo() == null || participante.getRecordatorioComienzo()) ? true : false}" id="recordatorioComienzo"/>
                             <label class="form-check-label" for="recordatorioComienzo">
                                 Recordatorio comienzo de competición en la que estás inscrito
                             </label><br />
-                            <input class="form-check-input" type="checkbox" th:checked="${participante.getRecordatorioParticipar()}" id="recordatorioParticipar">
+                            <input class="form-check-input" type="checkbox" th:checked="${(participante.getRecordatorioParticipar() == null || participante.getRecordatorioParticipar()) ? true : false}" id="recordatorioParticipar"/>
                             <label class="form-check-label" for="recordatorioParticipar">
                                 Recordatorio de competir el último día de la jornada, si no lo has hecho ya
                             </label><br />
-                            <input class="form-check-input" type="checkbox" th:checked="${participante.getRecordatorioJornadas()}" id="recordatorioJornadas">
+                            <input class="form-check-input" type="checkbox" th:checked="${(participante.getRecordatorioJornadas() == null || participante.getRecordatorioJornadas()) ? true : false}" id="recordatorioJornadas"/>
                             <label class="form-check-label" for="recordatorioJornadas">
                                 Recordatorio fin e inicio de jornadas de una competición en la que estás inscrito
                             </label><br />
                             <br />
                             Nota: Por el momento algunos recordatorios no se enviarán. El envío de correos es una función actualmente en desarrollo.
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -331,7 +330,7 @@
                 if (this.readyState === 4 && this.status === 200) {
                     $('#ajustesModal').modal('hide');
                 } else if (this.readyState === 4 && this.status === 401) {
-                    alert('Problema con la sesión. ¿Estás logueado? Por favor, contacta con un administrador.');
+                    alert('Problema con la sesión. ¿Has iniciado sesión? Por favor, contacta con un administrador.');
                 } else if (this.readyState === 4) {
                     alert('Esto es un error, por favor, contacta con el desarrollador y muéstrale lo siguente: ' + xhttp.responseText);
                 }

@@ -19,11 +19,13 @@
 
         <div id="carruselMezclas" class="carousel slide" data-interval="false">
             <div class="carousel-inner" style="text-align: center;">
-                <div th:each="mezcla : ${mezclas}" class="carousel-item">
+                <div th:id="mezcla + ${iStat.count}" th:each="mezcla, iStat : ${mezclas}" class="carousel-item">
                     <h1 th:text="'Tiempo ' + ${mezcla.getNumTiempo()}" style="color: black"/>
-                    <img th:src="'/img/mezclas/' + ${mezcla.getImagenUrl()}" style="height: 600px"/>
+                    <div th:id="${'scrambleWrapper' +  mezcla.getNumTiempo()}">
+                        <img th:src="'/img/mezclas/' + ${mezcla.getImagenUrl()}" style="height: 600px"/>
+                    </div>
                     <div class="carousel-caption d-none d-md-block" style="position: initial">
-                        <h2 th:text="${mezcla.getTexto()}" style="color: black"/>
+                        <h2 th:id="${'textoMezcla' +  mezcla.getNumTiempo()}" th:text="${mezcla.getTexto()}" style="color: black"/>
                         <div th:if="${!mezcla.getCategoria().getNombre().equals('FMC')}" th:id="'tiempo'+${mezcla.getNumTiempo()}" style="width: fit-content; margin: auto; align-items: flex-end; color: black; font-size: x-large">
                             <div style="display: flex;">
                                 <span class="unidad">Tu tiempo: </span>
@@ -62,17 +64,25 @@
 
     <script th:inline="javascript">
 
-
-
         $('#carruselMezclas div.carousel-inner div.carousel-item:first-child').addClass('active');
 
-        for (i = 1; i <= 5; i++){
+        var i = 1;
+        while(document.getElementById("mezcla" + i)) {
+
+            if(['2x2x2', '3x3x3', '4x4x4', '5x5x5', '6x6x6', '7x7x7', 'OH', 'BLD', 'FMC'].includes([[${categoria.getNombre()}]])){
+                var puzzle = ["OH", "BLD", "FMC"].includes([[${categoria.getNombre()}]]) ? '3x3x3' : [[${categoria.getNombre()}]];
+                new Scramble(puzzle, document.getElementById("scrambleWrapper" + i), true, ['#00FF00', '#FFFFFF', '#FF0000', '#0000FF', '#FFFF00', '#FF8000']).scramble(document.getElementById("textoMezcla" + i).innerText);
+
+            }
+
                 $("#tiempo" + i).find(".dnfcb").change((function(ii) { return function(){
                     $("#tiempo" + ii).find(".minutos").prop('disabled', this.checked);
                     $("#tiempo" + ii).find(".segundos").prop('disabled', this.checked);
                     $("#tiempo" + ii).find(".centesimas").prop('disabled', this.checked);
                 };
             })(i));
+
+            i++;
         }
 
 
@@ -95,7 +105,7 @@
 
         function enviarTiemposAviso() {
 
-            if([[${categoria.getNombre()}]] === "FMC" || confirm("¿Estás seguro? Asegúrate de que has introducido todos los tiempos.")){
+            if([[${categoria.getNombre()}]] === "FMC" || confirm("¿Estás seguro? Asegúrate antes de enviarlos de que los has introducido todos y has grabado la pantalla para confirmarlo.")){
                 enviarTiempos();
             }
 

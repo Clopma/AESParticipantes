@@ -5,8 +5,6 @@ import com.example.aesparticipantes.Entities.Evento;
 import com.example.aesparticipantes.Entities.Jornada;
 import com.example.aesparticipantes.Entities.Participante;
 import com.example.aesparticipantes.Entities.Tiempo;
-import com.example.aesparticipantes.Repositories.ClasificadoRepository;
-import com.example.aesparticipantes.Utils.AESUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,9 +28,6 @@ public class Posicion implements Comparable {
     boolean clasificado;
     String medalla;
 
-    public void setMedalla(ClasificadoRepository clasificadoRepository){
-        medalla = AESUtils.getPosicionFinal(clasificadoRepository.getRondasParticipante(getParticipante(), getEvento()));
-    }
 
     public double getTamano(){
         return  50.0/Math.pow(posicionGeneral, 0.3) + 10;

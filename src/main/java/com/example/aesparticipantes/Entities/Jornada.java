@@ -3,11 +3,13 @@ package com.example.aesparticipantes.Entities;
 import com.example.aesparticipantes.Entities.Keys.KeyJornada;
 import com.example.aesparticipantes.Utils.AESUtils;
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 @Table(name = "Jornadas")
@@ -18,20 +20,18 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class Jornada {
+public class Jornada implements Comparable{
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Competicion competicion;
 
     @Id
     private int numeroJornada;
 
-    //TODO: Evita "failed to lazily initialize a collection of role: Jornada.tiempos, could not initialize proxy - no Session
-    //Es terrible por Dios
-    // Ocurre al acceder al ranking de una jornada y luego ir al ranking general de su categoría, si cargas directamente el ranking general no ocurre
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "jornada")
-    private List<Tiempo> tiempos;
+    @LazyCollection(LazyCollectionOption.FALSE) //TODO quitar?
+    @OneToMany(mappedBy = "jornada")
+    private Set<Tiempo> tiempos;
 
     @NotNull
     private Date fechaInicio;
@@ -52,5 +52,8 @@ public class Jornada {
     }
 
 
-
+    @Override
+    public int compareTo(Object o) {
+        return getNumeroJornada() - ((Jornada) o).getNumeroJornada();
+    }
 }

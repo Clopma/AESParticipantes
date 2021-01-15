@@ -1,6 +1,7 @@
 package com.example.aesparticipantes.Controllers;
 
 import com.example.aesparticipantes.Entities.*;
+import com.example.aesparticipantes.Repositories.CategoriaRepository;
 import com.example.aesparticipantes.Repositories.CompeticionRepository;
 import com.example.aesparticipantes.Repositories.InscripcionRepository;
 import com.example.aesparticipantes.Repositories.ParticipanteRepository;
@@ -37,6 +38,9 @@ public class InscripcionController {
     CompeticionRepository competicionRepository;
 
     @Autowired
+    CategoriaRepository categoriaRepository;
+
+    @Autowired
     InscripcionController self;
 
     Logger logger = LoggerFactory.getLogger(InscripcionController.class);
@@ -48,26 +52,36 @@ public class InscripcionController {
 
         if (principal instanceof UserData) {
             String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
-            Participante yo = participanteRepository.findByNombre(nombreParticipanteGuardado); //TODO: Es posible no cargar todos los tiempos de cada evento? En debug tarda, mala señal?
+            Participante yo = participanteRepository.findByNombre(nombreParticipanteGuardado); //TODO: Es posible no cargar todos los tiempos de cada evento?
             Optional<Competicion> competicion = competicionRepository.findByNombre(nombreCompeticion);
 
             if(!competicion.isPresent()){
-                logger.error("Inscripción falloda,  la competición no existe: " + nombreCompeticion);
-                return new ResponseEntity<>("Esta competición no existe. Esto debe de ser un error.", HttpStatus.NOT_FOUND);
+                String error = "Inscripción fallida, la competición no existe: " + nombreCompeticion;
+                logger.error(error);
+                return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
             }
 
-            if(competicion.get().isEmpezada()){
-                logger.error("Inscripción falloda,  competición ya comenzada: " + nombreCompeticion);
-                return new ResponseEntity<>("No puedes inscribirte en una competición que ya ha comenzado, a no ser que hayas abierto esta página antes de que comenzara pero pulsado el botón después, " +
-                        "ha ocurrido un error, por favor, comunícaselo al desarrollador.", HttpStatus.UNAUTHORIZED);
+            if(!competicion.get().inscripcionesEstanAbiertas()){
+                String error = "La fecha de inscripción de "+nombreCompeticion+" ya ha pasado. A no ser que haya finalizado entre que cargaras la página y confirmaras la inscripción, " +
+                        "entonces es un error, por favor, comunícaselo al desarrollador.";
+                logger.error(error);
+                return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
             }
 
             if (yo == null) {
-                logger.error("Usuario no logueado intentando inscribirse a " +categorias.toString());
-                return new ResponseEntity<>("Usuario incorrecto. Warning.", HttpStatus.UNAUTHORIZED);
+                String error = "Parece que has perdido la sesión, vuelve a iniciar sesión para inscribirte.";
+                logger.error(error);
+                return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
             } else {
 
                 List<Inscripcion> inscripcionesACampeonato = inscripcionRepository.getInscripcionesDeParticipanteEnCompeticion(yo.getNombre(), competicion.get().getNombre());
+                List<Categoria> categoriasParticipadas = categoriaRepository.getCategoriasParticipadas(competicion.get(), yo);
+
+               if (!categoriasParticipadas.stream().allMatch(c -> categorias.contains(c.getNombre()))){
+                   String error = "No puedes desinscribirte de una categoría en la que ya has participado.";
+                   logger.error(error + " " + yo.getNombre());
+                   return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+               }
 
                 List<Inscripcion> nuevasInscripciones = categorias.stream()
                         .map(c -> Inscripcion.builder()

@@ -3,8 +3,6 @@ package com.example.aesparticipantes.Entities;
 
 import com.example.aesparticipantes.Entities.Keys.KeyEvento;
 import com.example.aesparticipantes.Models.Posicion;
-import com.example.aesparticipantes.Repositories.ClasificadoRepository;
-import com.example.aesparticipantes.Repositories.DescalificacionRepository;
 import com.example.aesparticipantes.Utils.AESUtils;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -24,18 +22,24 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Configurable
-public class Evento {
+public class Evento implements Comparable{
 
     @Id
-    @ManyToOne
+    @ManyToOne()
     private Categoria categoria;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) //TODO: quizás estaría mejor sin lazy
     private Competicion competicion;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "evento")
-    private List<Inscripcion> inscripciones;
+    @OneToMany(mappedBy = "evento")
+    private Set<Inscripcion> inscripciones;
+
+    @OneToMany(mappedBy = "evento")
+    private List<Descalificacion> descalificaciones;
+
+    @OneToMany(mappedBy = "evento")
+    private List<Clasificado> clasificados;
 
     @NotNull
     private Integer cortePlayOffs;
@@ -63,7 +67,7 @@ public class Evento {
 
     //TODO: Rehacer, posiblemente aprovechando getRankingJornada (y entonces habrá que dejar de filtrar las jornadas acabadas ahí y directamente en el controller poner el if(noAcabada) return lista vacía)
     //Ser llamado solo desde cacheable
-    public List<Posicion> getRankingGlobal(DescalificacionRepository descalificacionRepository, ClasificadoRepository clasificadoRepository) {
+    public List<Posicion> getRankingGlobal(List<Descalificacion> descalificados, List<Clasificado> clasificados) {
 
         List<Tiempo> tiemposRanking = getTiempos();
 
@@ -89,11 +93,9 @@ public class Evento {
         AtomicInteger posicion = new AtomicInteger(1);
         puntuacionesTotales.forEach(p -> p.setPosicionGeneral(posicion.getAndIncrement()));
 
-        List<Descalificacion> descalificados = descalificacionRepository.findAllByEvento(this);
-
 
         List<Posicion> noDescalificados = puntuacionesTotales.stream().filter(
-                p -> descalificados.stream().noneMatch(d -> p.getParticipante().equals(d.getParticipante())))
+                p -> descalificados.stream().filter(d -> d.getEvento().equals(this)).noneMatch(d -> p.getParticipante().equals(d.getParticipante())))
                 .collect(Collectors.toList());
 
         if (noDescalificados.size() > 0) {
@@ -101,7 +103,7 @@ public class Evento {
                     .forEach(p -> p.setClasificado(true));
         }
 
-        AESUtils.setMedallas(puntuacionesTotales, clasificadoRepository);
+        AESUtils.setMedallas(puntuacionesTotales, clasificados);
 
         return puntuacionesTotales;
 
@@ -251,6 +253,10 @@ public class Evento {
     }
 
 
+    @Override
+    public int compareTo(Object o) {
+        return getCategoria().getOrden() - ((Evento) o).getCategoria().getOrden();
+    }
 }
 
 

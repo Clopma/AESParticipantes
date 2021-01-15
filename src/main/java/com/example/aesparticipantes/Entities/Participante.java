@@ -3,12 +3,11 @@ package com.example.aesparticipantes.Entities;
 import com.example.aesparticipantes.Seguridad.WCAGetResponse;
 import com.example.aesparticipantes.Utils.AESUtils;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Table(name = "Participantes")
@@ -58,17 +57,18 @@ public class Participante implements Comparable {
     @Column(columnDefinition = "boolean default false") //TODO: necesario?
     private boolean confirmado;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "participante") //TODO: TERRIBLE N+1
-    @Fetch(value = FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "participante")
     List<Tiempo> tiempos;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "participante")
-    List<Inscripcion> inscripciones;
+    @org.hibernate.annotations.OrderBy(clause = "categoria asc")
+    @OneToMany(mappedBy = "participante")
+    Set<Inscripcion> inscripciones;
 
 
     public List<com.example.aesparticipantes.Models.Inscripcion> getInscripcionesParticipadasYNoParticipadasEnCompeticion(Competicion competicion, List<Categoria> categoriasParticipadas) {
 
         //TODO: Un poco raro este Model, ahora podemos usar un inscripción y un tiempo
+        //TODO: Además creo que hay un N+1
        List<com.example.aesparticipantes.Models.Inscripcion> inscripciones = getInscripciones().stream().filter(i -> i.getEvento().getCompeticion().equals(competicion))
                 .map(i -> com.example.aesparticipantes.Models.Inscripcion.builder().categoria(i.getEvento().getCategoria()).build()).collect(Collectors.toList());
 

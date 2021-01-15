@@ -23,16 +23,15 @@ import static com.example.aesparticipantes.Utils.AESUtils.formatTime;
 public class Tiempo implements Comparable {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Jornada jornada;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Categoria categoria;
 
     @Id
-    @ManyToOne
-//    @Cascade({org.hibernate.annotations.CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY)
     private Participante participante;
 
     @NotNull
@@ -108,8 +107,6 @@ public class Tiempo implements Comparable {
     public int getPuntosTotales() {
             return getJornada().isAcabada() ? puntosTiempo + puntosBonus : 0;
     }
-
-
 
     public void calcularDatos() {
         
@@ -219,6 +216,6 @@ public class Tiempo implements Comparable {
         envioMaximo.setTime(getComienzo());
         envioMaximo.add(Calendar.SECOND, getCategoria().getSegundosParticipar());
 
-        return ((int) (envioMaximo.getTimeInMillis() - Calendar.getInstance().getTimeInMillis()))/1000;
+        return (int) ((envioMaximo.getTimeInMillis()/1000) - (Calendar.getInstance().getTimeInMillis()/1000));
     }
 }

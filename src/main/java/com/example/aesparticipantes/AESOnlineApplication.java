@@ -32,9 +32,6 @@ public class AESOnlineApplication {
     @PostConstruct
     public void test() {
 
-//        Competicion competicion = competicionRepository.findByNombre("Nacionline 2020");
-//        Evento evento = eventoRepository.getEventoPorCategoriaYNombre("3x3x3", "Nacionline 2020");
-//        int a = evento.getCompeticion().getJornadas().size; //DEBERIA SER 5
 
     }
 

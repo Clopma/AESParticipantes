@@ -1,0 +1,152 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title th:text="${nombreCategoria} + ' en ' +${nombreCompeticion}"></title>
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+    <th:block th:include="fragments/head :: datatablesHead"></th:block>
+
+    <link rel="stylesheet" href="/css/evento.css" />
+    <script type="text/javascript" src="/js/ScrollUtils.js"></script>
+    <script type="text/javascript" src="/js/ModalUtils.js"></script>
+    <link rel="stylesheet" href="/css/tooltips.css"/>
+
+
+
+</head>
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+        scrollAFila();
+    });
+
+
+    function navigateCategoryWithAnchor(a) {
+
+        if($(a).attr("data-desiredCategory")){
+            window.location.href = window.location.href.replace(/\/([^\/]*)(\/?(#.*)?)$/, '/' + $(a).attr("data-desiredCategory")+"$2");
+        }
+    }
+
+</script>
+
+<body class="cubosbg">
+<div class="bouncyContainer back">
+    <a href="/" class="bouncyContainer">
+        <img class="bouncyButton" src="/img/backbutton.png"/>
+    </a> <div class="tagNav"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px"/>INICIO</div>
+</div>
+<div class="vertical-flex-wrapper">
+    <div class="whitePanel" style="margin-top: 15px;">
+
+        <h1 style="text-align: center">
+            Temporada de <br />
+            <a th:href="${'/temporada/'+ nombreTemporada}"><span th:text="${nombreTemporada}"/></a>
+            <hr />
+        </h1>
+        <div>
+            <h1>
+                <a th:href="${'/ranking/'+nombreCompeticion+'/'+nombreCategoria+ '/jornada/'+actualEvento.getJornada().getNumeroJornada()}">
+                    <span th:text="${'Jornada ' + actualEvento.getJornada().getNumeroJornada()}"/>
+                </a>
+                <span> del </span>
+                <a th:href="${'/competicion/' + nombreCompeticion}">
+                    <span th:text="${actualEvento.getJornada().getCompeticion().getNombre()}"></span>
+                </a>
+            </h1>
+        </div>
+        <hr />
+        <div style="display: flex; align-items: center; justify-content: center">
+            <div class="bouncyContainer backward" th:classappend="${anteriorClasificacion.isPresent() ? ' ' : 'quieto' }">
+                <a th:onclick="'navigateCategoryWithAnchor(this)'" th:data-desiredCategory="${anteriorClasificacion.isPresent() ? anteriorClasificacion.get().getCategoria().getNombre() : ''}" class="bouncyContainer">
+                    <img class="bouncyButton backward" th:classappend="${anteriorClasificacion.isPresent() ? ' ' : 'quieto' }" src="/img/backbutton.png"/>
+                </a>
+            </div>
+            <h1 th:text="${nombreCategoria}"/>
+            <div class="bouncyContainer forward" th:classappend="${siguienteClasificacion.isPresent() ? ' ' : 'quieto' }">
+                <a th:onclick="'navigateCategoryWithAnchor(this)'" th:data-desiredCategory="${siguienteClasificacion.isPresent() ? siguienteClasificacion.get().getCategoria().getNombre() : ''}" class="bouncyContainer">
+                    <img class="bouncyButton forward" th:classappend="${siguienteClasificacion.isPresent() ? ' ' : 'quieto' }" src="/img/forwardbutton.png"/>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="whitePanel" style="margin-top: 15px;">
+        <div style="text-align: center">
+            Estas son las jornadas de la temporada <b><span th:text="${nombreTemporada}" /></b> que afectan a las divisiones (¡asegúrate de participar en todas!):
+        </div>
+        <div style="text-align: center">
+            <span th:each="timelinepoint, iStat : ${timeline}" >
+                <a th:if="${timelinepoint.getJornada().isAcabada() && !(timelinepoint.getJornada().getNumeroJornada() == numeroJornada && timelinepoint.getJornada().getCompeticion().getNombre() == nombreCompeticion)}" th:href="${ '/temporada/' + nombreTemporada + '/competicion/' + timelinepoint.getJornada().getCompeticion().getNombre() +'/jornada/' + timelinepoint.getJornada().getNumeroJornada() + '/categoria/' + nombreCategoria}">
+                    <span th:text="${'Jornada ' + timelinepoint.getJornada().getNumeroJornada() + ' del ' + timelinepoint.getJornada().getCompeticion().getNombre()}"/>
+                </a>
+                <span th:if="${timelinepoint.getJornada().isAcabada() && (timelinepoint.getJornada().getNumeroJornada() == numeroJornada && timelinepoint.getJornada().getCompeticion().getNombre() == nombreCompeticion)}"
+                            th:text="${'Jornada ' + timelinepoint.getJornada().getNumeroJornada() + ' del ' + timelinepoint.getJornada().getCompeticion().getNombre()}" class="colorAzul" style="font-weight: bolder" />
+                <span th:if="${!timelinepoint.getJornada().isAcabada()}" th:text="${'Jornada ' + timelinepoint.getJornada().getNumeroJornada() + ' del ' + timelinepoint.getJornada().getCompeticion().getNombre()}" />
+                <img th:if="${timeline.size() != iStat.count}" src="/img/forwardbutton.png" style="width: 30px; margin-left: 15px; margin-right: 15px"/>
+            </span>
+        </div>
+    </div>
+
+    <div th:if="${!anteriorEvento.isPresent()}" class="whitePanel"  style="margin-top: 15px; text-align: center; max-width: 50%">
+        Esta es la primera jornada de la temporada, por lo que no hay ascensos ni descensos. Las siguientes divisiones se han generado en base al ranking de la jornada y en las próximas jornadas los competidores
+        de una misma división competirán entre ellos por los puestos dentro de la misma, que determinarán los ascensos y descensos.
+    </div>
+        <div class="whitePanel" th:each="division, iStatDiv : ${divisionJornada[0].getDivisiones()}"
+             style="margin: 15px 250px 50px; z-index: 2; text-align: center; width: max-content">
+            <img th:src="'/img/divisiones/' + ${iStatDiv.count} + 'division.png'" style="margin-bottom: 15px"/>
+            <div style="display: flex; align-items: center">
+                <div id="fase0" style="width: 100%; align-self: flex-end">
+                    <h2 th:if="${anteriorEvento.isPresent()}">Ranking jornada por división</h2>
+                    <table id="dataTableRanking" class="datatable table centerCols">
+            <!--            <thead>-->
+            <!--            <tr>-->
+            <!--                <th>Nombre </th>-->
+            <!--            </tr>-->
+            <!--            </thead>-->
+                        <tbody>
+                        <tr th:each="participante, iStat: ${division.getParticipantes()}">
+                            <td>
+                                <span th:text="${iStat.count}" />
+                            </td>
+                            <td>
+                                <img th:if="${participante.isAsciende()}" src="/img/ascenso.png" style="width: 30px" class="flechaAscenso"/>
+                                <img th:if="${participante.isDesciende()}" src="/img/descenso.png" style="width: 30px;"/>
+                            </td>
+                            <td>
+                                <a th:text="${participante.getNombre()}" th:href="'/participante/'+${participante.getNombre()}"/>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <img th:if="${anteriorEvento.isPresent()}" src="/img/forwardbutton.png" style="width: 100px; height: 100px; margin-left: 20px; margin-right: 20px"/>
+                <div id="fase1" th:if="${anteriorEvento.isPresent()}" style="width: 100%; align-self: flex-end">
+                    <h2>Nueva división</h2>
+                    <table id="dataTableRanking" class="datatable table centerCols">
+                        <!--            <thead>-->
+                        <!--            <tr>-->
+                        <!--                <th>Nombre </th>-->
+                        <!--            </tr>-->
+                        <!--            </thead>-->
+                        <tbody>
+                        <tr th:each="participante, iStat: ${divisionJornada[1].getDivisiones().get(iStatDiv.count - 1).getParticipantes()}" th:id="${participante.getNombre()}">
+                            <td>
+                                <span th:text="${iStat.count}" />
+                            </td>
+                            <td>
+                                <img th:if="${participante.isDesciende()}" src="/img/descenso.png" style="width: 30px" />
+                                <img th:if="${participante.isAsciende()}" src="/img/ascenso.png" style="width: 30px;"/>
+                            </td>
+                            <td>
+                                <a th:text="${participante.getNombre()}" th:href="'/participante/'+${participante.getNombre()}"/>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>
+</body>
+</html>

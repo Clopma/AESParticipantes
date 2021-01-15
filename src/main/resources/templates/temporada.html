@@ -1,0 +1,71 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+<!--    TODO: CAMBIAR -->
+    <title>Mensaje</title>
+    <th:block th:include="fragments/head :: genericHead"></th:block>
+    <link rel="stylesheet" href="/css/cubing-icons.css"/>
+
+
+</head>
+
+
+<body class="cubosbg">
+<div th:replace="fragments/backButton :: backButton"/>
+<div class="vertical-flex-wrapper">
+    <div class="whitePanel" style="margin-top: 75px; max-width: 40%; text-align: center">
+        <h1 th:text="'Temporada de ' + ${nombreTemporada}"/>
+    </div>
+    <div class="whitePanel" style="margin-top: 75px; width: 80%; text-align: center;">
+        <div>
+            <h2>La Temporada <span th:text="${nombreTemporada}"/> está formada por las siguientes jornadas:</h2>
+            <h3>En cada una de ellas, los participantes compiten con el resto de integrantes de su división por los primeros puestos.</h3>
+            <br />
+            <table class="datatable table centerCols" style="width: auto; margin: auto; background-color: white;">
+                <tbody>
+                    <tr>
+                        <td>
+                            Categoría:
+                        </td>
+                        <td th:each="clasificacion : ${clasificaciones}">
+                            <span th:class="${'cubing-icon event-' + clasificacion.getCategoria().getNombre()}" style="width: 10px;"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Clasificados a playoffs:
+                        </td>
+                        <td th:each="clasificacion : ${clasificaciones}">
+                            <span th:text="${clasificacion.getTamanoDivisiones() - 4}"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+            <h3>Puedes hacer click en cualquiera de las categorías para ver el estado de las clasificaciones tal cual estaba en ese momento.</h3>
+
+            <h5>Toda la información sobre el funcionamiento de las divisiones está en <a href="/#liga">este link</a>.</h5>
+            <br />
+            <div th:each="timelinepoint, iStat : ${timeline}" >
+                <div>
+                    <h3 th:text="${'Jornada ' + timelinepoint.getJornada().getNumeroJornada() + ' del ' + timelinepoint.getJornada().getCompeticion().getNombre()}" />
+                </div>
+                <div style="display: flex; justify-content: center">
+                    <div th:if="${timelinepoint.getJornada().isAcabada()}" th:each="clasificacion : ${clasificaciones}">
+                        <a th:href="${ '/temporada/' + nombreTemporada + '/competicion/' + timelinepoint.getJornada().getCompeticion().getNombre() +'/jornada/' + timelinepoint.getJornada().getNumeroJornada() + '/categoria/' + clasificacion.getCategoria().getNombre()}">
+                            <span th:class="${'cubing-icon event-' + clasificacion.getCategoria().getNombre() + ' clicker'}" style="width: 10px;"/>
+                        </a>
+                    </div>
+                    <div th:if="${!timelinepoint.getJornada().isAcabada()}">
+                        Cuando finalice esta temporada podrás ver el estado de las divisiones.
+                    </div>
+                </div>
+                <img th:if="${timeline.size() != iStat.count}" src="/img/forwardbutton.png" style="width: 35px; margin: 10px 0; transform: rotate(90deg)"/>
+            </div>
+            <img src="/img/forwardbutton.png" style="width: 75px; margin: 10px 0; transform: rotate(90deg)"/>
+            <h2 th:text="'Playoffs de la Temporada ' + ${nombreTemporada}"/>
+            <h3>Se retransmitirán en el <a href="https://www.twitch.tv/aespeedcubing">Twitch de la AES</a>.</h3>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -12,7 +12,6 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.reactive.ClientHttpRequest;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -81,9 +80,7 @@ public class AuthUtils {
 
     public static void crearSesion(Participante participante, String token, int expiresIn, WCAGetResponse wcaGetResponse, HttpServletRequest request, AuthProvider authManager) {
 
-        UserData auth = authManager.authenticate(new UserData(participante.getNombre(), wcaGetResponse.getMe().getName(), token, DateTime.now().plusSeconds(expiresIn)));
-        SecurityContext sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(auth);
+        SecurityContextHolder.getContext().setAuthentication(authManager.authenticate(new UserData(participante.getNombre(), wcaGetResponse.getMe().getName(), token, DateTime.now().plusSeconds(expiresIn))));
 
 //        HttpSession session = request.getSession(true);
 //        session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);

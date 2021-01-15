@@ -1,21 +1,29 @@
-var yellow = '#dbb223';
-var blue = '#1a5395';
-var red = '#bb3035';
-var white = '#ffffff';
-var green = '#1f6d39';
-var orange = '#dd601d';
-
-var facesData = [
-    {name: 'f', x: 2, y: 2, initialColour: green},
-    {name: 'l', x: 1, y: 2, initialColour: orange},
-    {name: 'u', x: 2, y: 1, initialColour: white},
-    {name: 'r', x: 3, y: 2, initialColour: red},
-    {name: 'b', x: 4, y: 2, initialColour: blue},
-    {name: 'd', x: 2, y: 3, initialColour: yellow}];
-
 class Scramble {
+    yellow = '#dbb223';
+    blue = '#1a5395';
+    red = '#bb3035';
+    white = '#ffffff';
+    green = '#1f6d39';
+    orange = '#dd601d';
 
-    constructor(puzzle, div, autorefresh) {
+    constructor(puzzle, div, autorefresh, colours) {
+        if(colours){
+         this.green = colours[0];
+         this.white = colours[1];
+         this.red = colours[2];
+         this.blue = colours[3];
+         this.yellow = colours[4];
+         this.orange = colours[5];
+        }
+
+        this.facesData = [
+            {name: 'f', x: 2, y: 2, initialColour: this.green},
+            {name: 'l', x: 1, y: 2, initialColour: this.orange},
+            {name: 'u', x: 2, y: 1, initialColour: this.white},
+            {name: 'r', x: 3, y: 2, initialColour: this.red},
+            {name: 'b', x: 4, y: 2, initialColour: this.blue},
+            {name: 'd', x: 2, y: 3, initialColour: this.yellow}];
+
         this.autorefresh = autorefresh;
         this.container = div;
         this.cleanWrapper();
@@ -35,10 +43,10 @@ class Scramble {
 
     draw(){
         this.cleanWrapper();
-        for (var i = 0; i < facesData.length; i++) {
+        for (var i = 0; i < this.facesData.length; i++) {
             var face = document.createElement('div');
-            face.style.gridColumn = facesData[i].x;
-            face.style.gridRow = facesData[i].y;
+            face.style.gridColumn = this.facesData[i].x;
+            face.style.gridRow = this.facesData[i].y;
             face.className = 'face';
             face.style.gridTemplateColumns = this.size;
             face.style.gridTemplateRows = this.size;
@@ -49,7 +57,7 @@ class Scramble {
                     sticker.className = "sticker";
                     sticker.style.gridRow = xx + 1;
                     sticker.style.gridColumn = yy + 1;
-                    sticker.style.backgroundColor = this.state.faces.find(o => o.face === facesData[i].name).grid[xx][yy];
+                    sticker.style.backgroundColor = this.state.faces.find(o => o.face === this.facesData[i].name).grid[xx][yy];
                     face.appendChild(sticker);
                 }
             }
@@ -59,12 +67,12 @@ class Scramble {
     }
 
     createBaseTable() {
-        for (var i = 0; i < facesData.length; i++) {
-            var faceStatus = {face: facesData[i].name, grid: [...Array(this.size)].map(e => Array(this.size))};
+        for (var i = 0; i < this.facesData.length; i++) {
+            var faceStatus = {face: this.facesData[i].name, grid: [...Array(this.size)].map(e => Array(this.size))};
             this.state.faces.push(faceStatus);
             for (var xx = 0; xx < this.size; xx++) {
                 for (var yy = 0; yy < this.size; yy++) {
-                    faceStatus.grid[xx][yy] = facesData[i].initialColour;
+                    faceStatus.grid[xx][yy] = this.facesData[i].initialColour;
                 }
             }
         }

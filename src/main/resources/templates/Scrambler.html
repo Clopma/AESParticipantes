@@ -21,17 +21,28 @@
 <div th:replace="fragments/backButton :: backButton"/>
 <div class="simple-centrado-vertical">
     <div class="whitePanel" style="width: 80%; text-align: center;">
-
         <div style="display: flex; justify-content: center; margin-bottom: 15px">
-        <select onchange="newScramble()" class="form-control" id="puzzle" style="width: 300px; margin-right: 30px;">
-            <option>2x2x2</option>
-            <option selected="selected">3x3x3</option>
-            <option>4x4x4</option>
-            <option>5x5x5</option>
-            <option>6x6x6</option>
-            <option>7x7x7</option>
-        </select>
+            <select onchange="newScramble()" class="form-control" id="puzzle" style="width: 300px; margin-right: 30px;">
+                <option>2x2x2</option>
+                <option selected="selected">3x3x3</option>
+                <option>4x4x4</option>
+                <option>5x5x5</option>
+                <option>6x6x6</option>
+                <option>7x7x7</option>
+            </select>
         </div>
+        <label for="front">Front:</label>
+        <input type="color" id="colourPickerF" value="#1f6d39" style="margin-right: 10px;" />
+        <label for="front">Top:</label>
+        <input type="color" id="colourPickerT" value="#ffffff" style="margin-right: 10px;" />
+        <label for="front">Right:</label>
+        <input type="color" id="colourPickerR" value="#bb3035" style="margin-right: 10px;" />
+        <label for="front">Back:</label>
+        <input type="color" id="colourPickerB" value="#1a5395" style="margin-right: 10px;" />
+        <label for="front">Down:</label>
+        <input type="color" id="colourPickerD" value="#dbb223" style="margin-right: 10px;" />
+        <label for="front">Left:</label>
+        <input type="color" id="colourPickerL" value="#dd601d" style="margin-right: 10px;" />
         <div id="scrambleWrapper"></div>
 
         <div id="simples" style="margin-top: 15px;  margin-bottom: 15px">
@@ -172,9 +183,17 @@
                     case '6x6x6':
                     case '7x7x7': document.getElementById('dobles').style.display = 'block'; document.getElementById('triples').style.display = 'block'; break;
                 }
+                colours = [
+                    $('#colourPickerF')[0].value,
+                    $('#colourPickerT')[0].value,
+                    $('#colourPickerR')[0].value,
+                    $('#colourPickerB')[0].value,
+                    $('#colourPickerD')[0].value,
+                    $('#colourPickerL')[0].value,
 
-                s = new Scramble(document.getElementById('puzzle').value, document.getElementById("scrambleWrapper"), true);
-                s.draw();
+                ];
+
+                s = new Scramble(document.getElementById('puzzle').value, document.getElementById("scrambleWrapper"), true, colours);
             }
 
             function addMovements() {
