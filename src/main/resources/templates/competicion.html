@@ -48,8 +48,21 @@
         <span th:text="${competicion.getDescripcion()}"/>
     </div>
     <div th:if="${temporada != null}" class="whitePanel" style="max-width: 65%; margin-top: 10px; font-size: larger; text-align: center">
-        <h1>Temporada</h1>
-        ¡Esta competición pertenece a la <a th:href="'/temporada/' + ${temporada.getNombre()}" th:text="'Temporada ' + ${temporada.getNombre()}"/>!<br />
+        Esta competición pertenece a la
+        <div style="display: flex; align-items: center; justify-content: center">
+            <div class="bouncyContainer backward" style="width: 130px; height: 130px">
+                <a th:href="'/temporada/' + ${temporada.getNombre()}" class="bouncyContainer">
+                    <img class="bouncyButton backward" src="/img/corona.png"/>
+                </a>
+            </div>
+            <a th:href="'/temporada/' + ${temporada.getNombre()}"> <h1 th:text="'Temporada ' + ${temporada.getNombre()}"/></a>
+            <div class="bouncyContainer forward" style="width: 130px; height: 130px">
+                <a th:href="'/temporada/' + ${temporada.getNombre()}" class="bouncyContainer">
+                    <img class="bouncyButton forward" src="/img/corona.png"/>
+                </a>
+            </div>
+        </div>
+
          Participa para avanzar en las divisiones, los primeros clasificados de la temporada pasarán a playoffs.
     </div>
     <div th:if="${competicion.getSorteosCompeticion().size() > 0}" class="whitePanel" style="max-width: 65%; margin-top: 10px; font-size: larger; text-align: center">

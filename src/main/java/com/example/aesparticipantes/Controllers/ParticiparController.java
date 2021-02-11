@@ -1,6 +1,7 @@
 package com.example.aesparticipantes.Controllers;
 
 import com.example.aesparticipantes.Entities.*;
+import com.example.aesparticipantes.Models.InscripcionModel;
 import com.example.aesparticipantes.Repositories.*;
 import com.example.aesparticipantes.Seguridad.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 public class ParticiparController {
@@ -76,11 +76,10 @@ public class ParticiparController {
             return "mensaje";
         }
 
+        List<Inscripcion> inscripciones = inscripcionRepository.getInscripcionesDeParticipanteEnCompeticion(participanteLogeado.getNombre(), competicion.get().getNombre());
+        List<Tiempo> tiemposParticipadosEnJornada = tiempoRepository.getTiemposEnJornada(jornadaActiva.get(), participanteLogeado);
 
-        List<Categoria> categoriasParticipadas = tiempoRepository.getTiemposEnJornada(jornadaActiva.get(), participanteLogeado).stream().filter(t -> !t.isEnCurso())
-                .map(Tiempo::getCategoria).collect(Collectors.toList());
-
-        List<com.example.aesparticipantes.Models.Inscripcion> categoriasParticipadasYSoloInscritas = participanteLogeado.getInscripcionesParticipadasYNoParticipadasEnCompeticion(competicion.get(), categoriasParticipadas);
+        List<InscripcionModel> categoriasParticipadasYSoloInscritas = participanteLogeado.getInscripcionesParticipadasYNoParticipadasEnCompeticion(competicion.get(), inscripciones, tiemposParticipadosEnJornada);
 
         model.addAttribute("inscripciones", categoriasParticipadasYSoloInscritas);
 
@@ -211,7 +210,7 @@ public class ParticiparController {
         Optional<Categoria> categoria = categoriaRepository.findByNombre(nombreCategoria); //TODO: Cachear (hacer esta tarea después de entender el cacheo de hibernate)
 
         if(!categoria.isPresent()){
-            return new ResponseEntity<>("Categoría no e.ncontrada. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Categoría no encontrada. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
         }
 
         Optional<Tiempo> posibleTiempo = tiempoRepository.getByParticipanteAndCategoriaAndJornada(participanteLogeado, categoria.get(), jornadaActiva.get());

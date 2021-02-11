@@ -5,13 +5,10 @@
 .scrambleDrawWrapper {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-gap: 15px;
-}
-.scrambleDrawWrapper div {
-
+    grid-gap: 15px; /*TODO: DEPENDIENDO DE SIZE*/
 }
 
-.scrambleDrawWrapper div::before {
+.scrambleDrawWrapper .face::before,  .scrambleDrawWrapper .sticker::before{
     content: "";
     grid-row: 1;
     grid-column: 1;

@@ -1,6 +1,11 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <script type="text/javascript" src="/js/PuzzleDrawer.js"></script>
+    <script type="text/javascript" src="/js/Scrambler/Scrambler.js"></script>
+    <script type="text/javascript" src="/js/Scrambler/NxN.js"></script>
+    <script type="text/javascript" src="/js/Scrambler/Skewb.js"></script>
+    <script type="text/javascript" src="/js/Scrambler/CanvasUtils.js"></script>
+
+
     <link rel="stylesheet" href="/css/PuzzleDrawer.css"/>
     <title>Scrambler</title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
@@ -22,19 +27,20 @@
 <div class="simple-centrado-vertical">
     <div class="whitePanel" style="width: 80%; text-align: center;">
         <div style="display: flex; justify-content: center; margin-bottom: 15px">
-            <select onchange="newScramble()" class="form-control" id="puzzle" style="width: 300px; margin-right: 30px;">
+            <select onchange="newScramble(); showHideButtons(); changeAnchor();" class="form-control" id="puzzle" style="width: 300px; margin-right: 30px;">
                 <option>2x2x2</option>
                 <option selected="selected">3x3x3</option>
                 <option>4x4x4</option>
                 <option>5x5x5</option>
                 <option>6x6x6</option>
                 <option>7x7x7</option>
+                <option>Skewb</option>
             </select>
         </div>
         <label for="front">Front:</label>
         <input type="color" id="colourPickerF" value="#1f6d39" style="margin-right: 10px;" />
-        <label for="front">Top:</label>
-        <input type="color" id="colourPickerT" value="#ffffff" style="margin-right: 10px;" />
+        <label for="front">Up:</label>
+        <input type="color" id="colourPickerU" value="#ffffff" style="margin-right: 10px;" />
         <label for="front">Right:</label>
         <input type="color" id="colourPickerR" value="#bb3035" style="margin-right: 10px;" />
         <label for="front">Back:</label>
@@ -46,117 +52,117 @@
         <div id="scrambleWrapper"></div>
 
         <div id="simples" style="margin-top: 15px;  margin-bottom: 15px">
-            <button class="btn btn-primary" onclick="s.f();">F
+            <button class="btn btn-primary front" onclick="s.f();">F
             </button>
-            <button class="btn btn-primary" onclick="s.fAnticlockwise();">F'
+            <button class="btn btn-primary front" onclick="s.fAnticlockwise();">F'
             </button>
-            <button class="btn btn-primary" onclick="s.f2();">F2
+            <button class="btn btn-primary double front" onclick="s.f2();">F2
             </button>
             <button class="btn btn-primary" onclick="s.u();">U
             </button>
             <button class="btn btn-primary" onclick="s.uAnticlockwise();">U'
             </button>
-            <button class="btn btn-primary" onclick="s.u2();">U2
+            <button class="btn btn-primary double" onclick="s.u2();">U2
             </button>
             <button class="btn btn-primary" onclick="s.r();">R
             </button>
             <button class="btn btn-primary" onclick="s.rAnticlockwise();">R'
             </button>
-            <button class="btn btn-primary" onclick="s.r2();">R2
+            <button class="btn btn-primary double" onclick="s.r2();">R2
             </button>
             <button class="btn btn-primary" onclick="s.l();">L
             </button>
             <button class="btn btn-primary" onclick="s.lAnticlockwise();">L'
             </button>
-            <button class="btn btn-primary" onclick="s.l2();">L2
+            <button class="btn btn-primary double" onclick="s.l2();">L2
             </button>
-            <button class="btn btn-primary" onclick="s.d();">D
+            <button class="btn btn-primary down" onclick="s.d();">D
             </button>
-            <button class="btn btn-primary" onclick="s.dAnticlockwise();">D'
+            <button class="btn btn-primary down" onclick="s.dAnticlockwise();">D'
             </button>
-            <button class="btn btn-primary" onclick="s.d2();">D2
+            <button class="btn btn-primary double down" onclick="s.d2();">D2
             </button>
             <button class="btn btn-primary" onclick="s.b();">B
             </button>
             <button class="btn btn-primary" onclick="s.bAnticlockwise();">B'
             </button>
-            <button class="btn btn-primary" onclick="s.b2();">B2
+            <button class="btn btn-primary double" onclick="s.b2();">B2
             </button>
         </div>
         <div id="dobles" style="margin-top: 15px;  margin-bottom: 15px">
-            <button class="btn btn-primary" onclick="s.fw();">Fw
+            <button class="btn btn-primary front" onclick="s.fw();">Fw
             </button>
-            <button class="btn btn-primary" onclick="s.fwAnticlockwise();">Fw'
+            <button class="btn btn-primary front" onclick="s.fwAnticlockwise();">Fw'
             </button>
-            <button class="btn btn-primary" onclick="s.fw2();">Fw2
+            <button class="btn btn-primary double front" onclick="s.fw2();">Fw2
             </button>
             <button class="btn btn-primary" onclick="s.uw();">Uw
             </button>
             <button class="btn btn-primary" onclick="s.uwAnticlockwise();">Uw'
             </button>
-            <button class="btn btn-primary" onclick="s.uw2();">Uw2
+            <button class="btn btn-primary double" onclick="s.uw2();">Uw2
             </button>
             <button class="btn btn-primary" onclick="s.rw();">Rw
             </button>
             <button class="btn btn-primary" onclick="s.rwAnticlockwise();">Rw'
             </button>
-            <button class="btn btn-primary" onclick="s.rw2();">Rw2
+            <button class="btn btn-primary double" onclick="s.rw2();">Rw2
             </button>
             <button class="btn btn-primary" onclick="s.lw();">Lw
             </button>
             <button class="btn btn-primary" onclick="s.lwAnticlockwise();">Lw'
             </button>
-            <button class="btn btn-primary" onclick="s.lw2();">Lw2
+            <button class="btn btn-primary double" onclick="s.lw2();">Lw2
             </button>
-            <button class="btn btn-primary" onclick="s.dw();">Dw
+            <button class="btn btn-primary down" onclick="s.dw();">Dw
             </button>
-            <button class="btn btn-primary" onclick="s.dwAnticlockwise();">Dw'
+            <button class="btn btn-primary down" onclick="s.dwAnticlockwise();">Dw'
             </button>
-            <button class="btn btn-primary" onclick="s.dw2();">Dw2
+            <button class="btn btn-primary double down" onclick="s.dw2();">Dw2
             </button>
             <button class="btn btn-primary" onclick="s.bw();">Bw
             </button>
             <button class="btn btn-primary" onclick="s.bwAnticlockwise();">Bw'
             </button>
-            <button class="btn btn-primary" onclick="s.bw2();">Bw2
+            <button class="btn btn-primary double" onclick="s.bw2();">Bw2
             </button>
         </div>
         <div id="triples" style="margin-top: 15px;  margin-bottom: 15px">
-            <button class="btn btn-primary" onclick="s.fw3();">3Fw
+            <button class="btn btn-primary front" onclick="s.fw3();">3Fw
             </button>
-            <button class="btn btn-primary" onclick="s.fwAnticlockwise3();">3Fw'
+            <button class="btn btn-primary front" onclick="s.fwAnticlockwise3();">3Fw'
             </button>
-            <button class="btn btn-primary" onclick="s.fw32();">3Fw2
+            <button class="btn btn-primary double front" onclick="s.fw32();">3Fw2
             </button>
             <button class="btn btn-primary" onclick="s.uw3();">3Uw
             </button>
             <button class="btn btn-primary" onclick="s.uwAnticlockwise3();">3Uw'
             </button>
-            <button class="btn btn-primary" onclick="s.uw32();">3Uw2
+            <button class="btn btn-primary double" onclick="s.uw32();">3Uw2
             </button>
             <button class="btn btn-primary" onclick="s.rw3();">3Rw
             </button>
             <button class="btn btn-primary" onclick="s.rwAnticlockwise3();">3Rw'
             </button>
-            <button class="btn btn-primary" onclick="s.rw32();">3Rw2
+            <button class="btn btn-primary double" onclick="s.rw32();">3Rw2
             </button>
             <button class="btn btn-primary" onclick="s.lw3();">3Lw
             </button>
             <button class="btn btn-primary" onclick="s.lwAnticlockwise3();">3Lw'
             </button>
-            <button class="btn btn-primary" onclick="s.lw32();">3Lw2
+            <button class="btn btn-primary double" onclick="s.lw32();">3Lw2
             </button>
-            <button class="btn btn-primary" onclick="s.dw3();">3Dw
+            <button class="btn btn-primary down" onclick="s.dw3();">3Dw
             </button>
-            <button class="btn btn-primary" onclick="s.dwAnticlockwise3();">3Dw'
+            <button class="btn btn-primary down" onclick="s.dwAnticlockwise3();">3Dw'
             </button>
-            <button class="btn btn-primary" onclick="s.dw32();">3Dw2
+            <button class="btn btn-primary double down" onclick="s.dw32();">3Dw2
             </button>
             <button class="btn btn-primary" onclick="s.bw3();">3Bw
             </button>
             <button class="btn btn-primary" onclick="s.bwAnticlockwise3();">3Bw'
             </button>
-            <button class="btn btn-primary" onclick="s.bw32();">3Bw2
+            <button class="btn btn-primary double" onclick="s.bw32();">3Bw2
             </button>
         </div>
         <div style="display: flex; justify-content: center;">
@@ -171,34 +177,50 @@
         </div>
         <script>
 
+            if (window.location.hash.substr(1)){
+                document.getElementById('puzzle').value = window.location.hash.substr(1);
+            }
             newScramble();
 
             function newScramble() {
 
-                switch (document.getElementById('puzzle').value) {
-                    case '2x2x2':
-                    case '3x3x3': document.getElementById('dobles').style.display = 'none'; document.getElementById('triples').style.display = 'none'; break;
-                    case '4x4x4':
-                    case '5x5x5': document.getElementById('dobles').style.display = 'block'; document.getElementById('triples').style.display = 'none'; break;
-                    case '6x6x6':
-                    case '7x7x7': document.getElementById('dobles').style.display = 'block'; document.getElementById('triples').style.display = 'block'; break;
-                }
                 colours = [
                     $('#colourPickerF')[0].value,
-                    $('#colourPickerT')[0].value,
-                    $('#colourPickerR')[0].value,
+                    $('#colourPickerU')[0].value,
+                    $('#colourPickerL')[0].value,
                     $('#colourPickerB')[0].value,
                     $('#colourPickerD')[0].value,
-                    $('#colourPickerL')[0].value,
-
+                    $('#colourPickerR')[0].value,
                 ];
 
-                s = new Scramble(document.getElementById('puzzle').value, document.getElementById("scrambleWrapper"), true, colours);
+                s = new Scrambler(document.getElementById('puzzle').value, document.getElementById("scrambleWrapper"), true, colours);
             }
 
             function addMovements() {
                 s.scramble(document.getElementById('scramble').value);
                 document.getElementById('scramble').value = '';
+            }
+
+            function enableType(cssClass, enable) {
+                $( "." + cssClass ).each(function() {
+                    this.style.display = enable ? 'inline-block' : 'none';
+                });
+            }
+
+            function showHideButtons() {
+                switch (document.getElementById('puzzle').value) {
+                    case '2x2x2':
+                    case '3x3x3': document.getElementById('dobles').style.display = 'none'; document.getElementById('triples').style.display = 'none'; enableType('double', true); enableType('front', true);  enableType('down', true); break;
+                    case '4x4x4':
+                    case '5x5x5': document.getElementById('dobles').style.display = 'block'; document.getElementById('triples').style.display = 'none'; enableType('double', true); enableType('front', true);  enableType('down', true); break;
+                    case '6x6x6':
+                    case '7x7x7': document.getElementById('dobles').style.display = 'block'; document.getElementById('triples').style.display = 'block'; enableType('double', true); enableType('front', true);  enableType('down', true); break;
+                    case 'Skewb': document.getElementById('dobles').style.display = 'none'; document.getElementById('triples').style.display = 'none'; enableType('double', false);  enableType('front', false);  enableType('down', false); break;
+                }
+            }
+
+            function changeAnchor() {
+                location.hash = document.getElementById('puzzle').value;
             }
         </script>
     </div>

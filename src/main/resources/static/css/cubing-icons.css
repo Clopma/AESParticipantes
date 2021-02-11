@@ -10,6 +10,7 @@
   vertical-align: middle;
 }
 
+
 .cubing-icon:before {
   display: inline-block;
   font-family: "cubing-icons";
@@ -21,6 +22,11 @@
   vertical-align: -15%;
   font-size: 40px;
 }
+
+.cubing-icon.big:before{
+  font-size: 80px;
+}
+
 
 .cubing-icon-lg {
   font-size: 1.3333333333333333em;

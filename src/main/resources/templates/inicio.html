@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="css/dropdown.css"/>
     <link rel="stylesheet" href="/css/tooltips.css"/>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script type="text/javascript" src="/js/Chrome.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <script th:inline="javascript">
@@ -83,9 +84,10 @@
 
 <div style="position: absolute; top: 0; right: 50px; width: 11%; display: inline-block; padding-bottom: 11%; height: 0">
     <div class="bouncyContainer" style="width: 100%; height: 100%; position:absolute;">
+        <div class="tagNav" style="top: 90%"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px" th:text="INFORMACIÓN"/></div>
         <a onclick="showInfoModalAnchored('reglamento')" class="bouncyContainer">
             <img class="bouncyButton" src="/img/interrogante.png"/>
-        </a> <div class="tagNav" style="top: 90%"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px" th:text="INFORMACIÓN"/></div>
+        </a>
     </div>
 </div>
 <div class="vertical-flex-wrapper">
@@ -175,7 +177,19 @@
 <!--                <h3 style="width: max-content; margin: auto">Web de campeonatos</h3>-->
 <!--            </div>-->
             <div class="whitePanel"  style="width: fit-content; margin: auto; max-width: 95%;">
-                <h1>LIGA</h1>
+                <div style="display: flex; justify-content: center; align-items: center">
+                    <div class="bouncyContainer backward">
+                        <a href="https://www.speedcubingspain.org" class="bouncyContainer">
+                            <img class="bouncyButton backward" src="/img/aes_logo.png"/>
+                        </a>
+                    </div>
+                    <h1>LIGA AES</h1>
+                    <div class="bouncyContainer forward">
+                        <a href="https://www.speedcubingspain.org" class="bouncyContainer">
+                            <img class="bouncyButton forward" src="/img/aes_logo.png"/>
+                        </a>
+                    </div>
+                </div>
                 <h4>Participando en los campeonatos mensuales entrarás en las <b>divisiones de la Liga</b>, ¡los primeros clasificados de la primera división se clasificarán a los playoffs!</h4>
                 <h4>Actualmente se celebra la <a href="/temporada/Primavera%202021">Temporada de Primavera 2021</a>, que consta de los siguientes campeonatos:</h4>
                 <div style="display: flex; justify-content: center; background-image: url('/img/primavera.png'); background-position: center;
@@ -261,33 +275,45 @@
                 </div>
             </div>
         </div>
-        <div class="whitePanel right" style="margin-right: 0px">
-            <img src="/img/userIcon.png" width="150px;" class="sombra"/>
-            <h2>PARTICIPANTES</h2>
+        <div style="display: flex; flex-direction: column">
+            <div class="whitePanel right" style="margin-right: 0px">
+                <div class="bouncyContainer podio" style="width: 175px; height: 175px; margin: auto">
+                    <a href="/temporada/Primavera%202021/competicion/Febrero%20Online/jornada/1/categoria/3x3x3" class="bouncyContainer"><!-- TODO: 0001 Hacer dinámico, pero que esté cacheado -->
+                        <img class="bouncyButton podio" src="/img/corona.png"/>
+                    </a>
+                </div>
+            <a href="/temporada/Primavera%202021/competicion/Febrero%20Online/jornada/1/categoria/3x3x3"><h3>DIVISIONES</h3></a>
+            <p style="font-size: large">Echa un ojo al estado actual de las divisiones en la Temporada de Primavera.</p>
 
-            <p style="font-size: large">Busca el perfil de un participante para ver sus competiciones y tiempos:</p>
+        </div>
+            <div class="whitePanel right" style="margin-right: 0px">
+                <img src="/img/userIcon.png" width="125px;" class="sombra"/>
+                <h3>PARTICIPANTES</h3>
 
-            <div class="container" style="width: min-content">
-                <div id="dropdown" class="dropdown">
-                    <button id="botonSeleccionar" class="btn btn-primary dropdown-toggle" type="button"
-                            data-toggle="dropdown">
-                        Seleccionar participante
-                        <!--                        <span class="caret"></span>-->
-                    </button>
-                    <ul id="listaParticipantes" class="dropdown-menu">
-                        <input id="selectorParticipantes" autocomplete="off" class="form-control" type="text"
-                               placeholder="Busca..."/>
-                        <li id="participante" th:each="participante : ${participantes}">
-                            <a th:href="@{|/participante/${participante}|}" th:text="${participante}"/>
-                        </li>
-                    </ul>
+                <p style="font-size: large">Busca el perfil de un participante para ver sus competiciones y tiempos:</p>
+
+                <div class="container" style="width: min-content">
+                    <div id="dropdown" class="dropdown">
+                        <button id="botonSeleccionar" class="btn btn-primary dropdown-toggle" type="button"
+                                data-toggle="dropdown">
+                            Seleccionar participante
+                            <!--                        <span class="caret"></span>-->
+                        </button>
+                        <ul id="listaParticipantes" class="dropdown-menu">
+                            <input id="selectorParticipantes" autocomplete="off" class="form-control" type="text"
+                                   placeholder="Busca..."/>
+                            <li id="participante" th:each="participante : ${participantes}">
+                                <a th:href="@{|/participante/${participante}|}" th:text="${participante}"/>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <footer  th:replace="fragments/footer :: creditFooter"/>
     <footer class = "credit desaparecerHorizontal" style="bottom: 0; right: 10px;">
-        <span> v1.1.2 <a href="/cambios">Ver cambios</a>
+        <span> v1.1.3 <a href="/cambios">Ver cambios</a>
         </span>
     </footer>
 </div>

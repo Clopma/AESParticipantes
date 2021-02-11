@@ -1,5 +1,6 @@
 package com.example.aesparticipantes.Entities;
 
+import com.example.aesparticipantes.Models.InscripcionModel;
 import com.example.aesparticipantes.Seguridad.WCAGetResponse;
 import com.example.aesparticipantes.Utils.AESUtils;
 import lombok.*;
@@ -7,6 +8,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -65,18 +67,19 @@ public class Participante implements Comparable {
     Set<Inscripcion> inscripciones;
 
 
-    public List<com.example.aesparticipantes.Models.Inscripcion> getInscripcionesParticipadasYNoParticipadasEnCompeticion(Competicion competicion, List<Categoria> categoriasParticipadas) {
+    public List<InscripcionModel> getInscripcionesParticipadasYNoParticipadasEnCompeticion(Competicion competicion, List<Inscripcion> inscripciones, List<Tiempo> tiemposParticipadosEnJornada) {
 
-        //TODO: Un poco raro este Model, ahora podemos usar un inscripción y un tiempo
-        //TODO: Además creo que hay un N+1
-       List<com.example.aesparticipantes.Models.Inscripcion> inscripciones = getInscripciones().stream().filter(i -> i.getEvento().getCompeticion().equals(competicion))
-                .map(i -> com.example.aesparticipantes.Models.Inscripcion.builder().categoria(i.getEvento().getCategoria()).build()).collect(Collectors.toList());
+        return inscripciones.stream().map(i -> {
 
-        inscripciones.forEach(i -> {
-            i.setParticipado(categoriasParticipadas.contains(i.getCategoria()));
-        });
+           Optional<Tiempo> tiempo = tiemposParticipadosEnJornada.stream().filter(t -> t.getCategoria().equals(i.getEvento().getCategoria())).findAny();
 
-        return inscripciones;
+           return InscripcionModel.builder()
+                   .nombreCategoria(i.getEvento().getCategoria().getNombre())
+                   .comenzado(tiempo.isPresent())
+                   .finalizado(tiempo.isPresent() && !tiempo.get().isEnCurso())
+                   .build();
+       })
+               .collect(Collectors.toList());
 
     }
 

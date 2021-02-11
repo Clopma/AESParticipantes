@@ -1,8 +1,12 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
     <title th:text="'Participando en '+ ${nombreCategoria}" />
-    <th:block th:include="fragments/head :: genericHead"></th:block>
-    <script type="text/javascript" src="/js/PuzzleDrawer.js"></script>
+    <th:block th:include="fragments/head :: genericHead"></th:block>yh
+    <script type="text/javascript" src="/js/Scrambler/Scrambler.js"></script>
+    <script type="text/javascript" src="/js/Scrambler/NxN.js"></script>
+    <script type="text/javascript" src="/js/Scrambler/Skewb.js"></script>
+    <script type="text/javascript" src="/js/Scrambler/CanvasUtils.js"></script>
+
     <link rel="stylesheet" href="/css/PuzzleDrawer.css"/>
 
 </head>
@@ -69,16 +73,16 @@
         var i = 1;
         while(document.getElementById("mezcla" + i)) {
 
-            if(['2x2x2', '3x3x3', '4x4x4', '5x5x5', '6x6x6', '7x7x7', 'OH', 'BLD', 'FMC'].includes([[${categoria.getNombre()}]])){
+            if(['2x2x2', '3x3x3', '4x4x4', '5x5x5', '6x6x6', '7x7x7', 'OH', 'BLD', 'FMC', 'Skewb'].includes([[${categoria.getNombre()}]])){
                 var puzzle = ["OH", "BLD", "FMC"].includes([[${categoria.getNombre()}]]) ? '3x3x3' : [[${categoria.getNombre()}]];
-                new Scramble(puzzle, document.getElementById("scrambleWrapper" + i), true, ['#00FF00', '#FFFFFF', '#FF0000', '#0000FF', '#FFFF00', '#FF8000']).scramble(document.getElementById("textoMezcla" + i).innerText);
-
+                new Scrambler(puzzle, document.getElementById("scrambleWrapper" + i), true, ['#00FF00', '#FFFFFF', '#FF8000', '#0000FF', '#FFFF00', '#FF0000']).scramble(document.getElementById("textoMezcla" + i).innerText);
             }
 
                 $("#tiempo" + i).find(".dnfcb").change((function(ii) { return function(){
-                    $("#tiempo" + ii).find(".minutos").prop('disabled', this.checked);
-                    $("#tiempo" + ii).find(".segundos").prop('disabled', this.checked);
-                    $("#tiempo" + ii).find(".centesimas").prop('disabled', this.checked);
+                    var tiempo = $("#tiempo" + ii);
+                    tiempo.find(".minutos").prop('disabled', this.checked);
+                    tiempo.find(".segundos").prop('disabled', this.checked);
+                    tiempo.find(".centesimas").prop('disabled', this.checked);
                 };
             })(i));
 

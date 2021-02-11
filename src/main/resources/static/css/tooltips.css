@@ -30,6 +30,10 @@
     transition: opacity 0.3s;
 }
 
+.tooltip .tooltiptext.big {
+    font-size: large;
+}
+
 .abajo {
     top: 125%;
     height: fit-content;
