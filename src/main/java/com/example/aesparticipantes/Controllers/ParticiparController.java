@@ -4,6 +4,7 @@ import com.example.aesparticipantes.Entities.*;
 import com.example.aesparticipantes.Models.InscripcionModel;
 import com.example.aesparticipantes.Repositories.*;
 import com.example.aesparticipantes.Seguridad.UserData;
+import com.example.aesparticipantes.Utils.AESUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
@@ -169,21 +170,21 @@ public class ParticiparController {
     @PostMapping("/participar/{nombreCompeticion}/{nombreCategoria}")
     // Cache evict from code
     public ResponseEntity<String> enviarTiempos(@PathVariable("nombreCategoria") String nombreCategoria, @PathVariable("nombreCompeticion") String nombreCompeticion,
-                                                @RequestHeader(value = "tiempo1", required = false) Double tiempo1op,
-                                                @RequestHeader(value = "tiempo2", required = false) Double tiempo2op,
-                                                @RequestHeader(value = "tiempo3", required = false) Double tiempo3op,
-                                                @RequestHeader(value = "tiempo4", required = false) Double tiempo4op,
-                                                @RequestHeader(value = "tiempo5", required = false) Double tiempo5op,
+                                                @RequestHeader(value = "tiempo1", required = false) String tiempo1op,
+                                                @RequestHeader(value = "tiempo2", required = false) String tiempo2op,
+                                                @RequestHeader(value = "tiempo3", required = false) String tiempo3op,
+                                                @RequestHeader(value = "tiempo4", required = false) String tiempo4op,
+                                                @RequestHeader(value = "tiempo5", required = false) String tiempo5op,
                                                 @RequestHeader(value = "solucion", required = false) String solucion,
                                                 @RequestHeader(value = "explicacion", required = false) String explicacion,
                                                 Model model, Principal principal) {
 
 
-        double tiempo1 = tiempo1op != null ? tiempo1op : 0;
-        double tiempo2 = tiempo2op != null ? tiempo2op : 0;
-        double tiempo3 = tiempo3op != null ? tiempo3op : 0;
-        double tiempo4 = tiempo4op != null ? tiempo4op : 0;
-        double tiempo5 = tiempo5op != null ? tiempo5op : 0;
+        double tiempo1 = tiempo1op != null ? AESUtils.truncarTiempoIntroducido(tiempo1op) : 0;
+        double tiempo2 = tiempo2op != null ? AESUtils.truncarTiempoIntroducido(tiempo2op) : 0;
+        double tiempo3 = tiempo3op != null ? AESUtils.truncarTiempoIntroducido(tiempo3op) : 0;
+        double tiempo4 = tiempo4op != null ? AESUtils.truncarTiempoIntroducido(tiempo4op) : 0;
+        double tiempo5 = tiempo5op != null ? AESUtils.truncarTiempoIntroducido(tiempo5op) : 0;
 
 
         Participante participanteLogeado;
@@ -225,11 +226,11 @@ public class ParticiparController {
         }
 
         tiempo.setEnvio(new Date());
-        tiempo.setTiempo1(Math.floor(tiempo1 * 100)/100);
-        tiempo.setTiempo2(Math.floor(tiempo2 * 100)/100);
-        tiempo.setTiempo3(Math.floor(tiempo3 * 100)/100);
-        tiempo.setTiempo4(Math.floor(tiempo4 * 100)/100);
-        tiempo.setTiempo5(Math.floor(tiempo5 * 100)/100);
+        tiempo.setTiempo1(tiempo1);
+        tiempo.setTiempo2(tiempo2);
+        tiempo.setTiempo3(tiempo3);
+        tiempo.setTiempo4(tiempo4);
+        tiempo.setTiempo5(tiempo5);
         tiempo.setExplicacion(explicacion == null ? null : new String(Base64.getDecoder().decode(explicacion.getBytes()), StandardCharsets.ISO_8859_1));
         tiempo.setSolucion( solucion == null ? null : new String(Base64.getDecoder().decode(solucion.getBytes()), StandardCharsets.ISO_8859_1));
 

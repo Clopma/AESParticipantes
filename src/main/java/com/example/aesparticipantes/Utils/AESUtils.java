@@ -23,7 +23,6 @@ public class AESUtils {
 
     public static Collator COLLATOR = Collator.getInstance();
 
-
     public enum TiposUsuarios {
         NV, // NO VINCULADO
         NC, // NO CONFIRMADO
@@ -61,7 +60,7 @@ public class AESUtils {
             }
         }
 
-        return new double[]{Math.floor(mejorTiempo * 100)/100, Math.floor(media * 100)/100, peorTiempo};
+        return new double[]{mejorTiempo, (double) Math.round(media * 100)/100, peorTiempo};
     }
 
     public static String formatTime(double time, Categoria categoria) {
@@ -98,7 +97,7 @@ public class AESUtils {
 
     public static String getPosicionFinal(List<Clasificado.NombreRonda> clasificaciones) {
 
-        if (clasificaciones.size() > 0) {
+        if (!clasificaciones.isEmpty()) {
             List<Clasificado.NombreRonda> order = Arrays.asList(Clasificado.NombreRonda.MEDALLA_BRONCE, Clasificado.NombreRonda.MEDALLA_PLATA, Clasificado.NombreRonda.MEDALLA_ORO);
 
             Clasificado.NombreRonda max = clasificaciones.get(0);
@@ -128,6 +127,9 @@ public class AESUtils {
         });
     }
 
+    public static double truncarTiempoIntroducido(String tiempo) {
+        return new BigDecimal(tiempo).setScale(2, BigDecimal.ROUND_FLOOR).doubleValue();
+    }
 
     public static String getHash(String str){
         MessageDigest digest = null;

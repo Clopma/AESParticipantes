@@ -138,7 +138,6 @@ public class Evento implements Comparable{
             puntuacionesEmpatadasActualmentePorPuntuacionTotalConJornadasOrdenadas.forEach(p -> p.getTiempos().sort(Comparator.comparingInt(Tiempo::getPuntosTotales).reversed()));
 
             List<Posicion> puntuacionesEmpatadasPorPuntuacionesIndividuales = new ArrayList<>();
-            List<Posicion> aux2 = new ArrayList<>();
             int j = 0; //por seguridad
             while (j < 1000) {
                 j++; //TODO: logs

@@ -38,7 +38,8 @@ public class PodiosController {
                 ClasificadoRepository.Medalla.builder()
                         .categoria((Categoria) m[0])
                         .participante((Participante) m[1])
-                        .ronda((String) m[2]).build()
+                        .ronda((String) m[2])
+                        .build()
         ).collect(Collectors.groupingBy(ClasificadoRepository.Medalla::getCategoria, LinkedHashMap::new, Collectors.toList()));
 
         podios = podios.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> ordenarMedallas(e.getValue()), (u, v) -> {
@@ -54,9 +55,9 @@ public class PodiosController {
     private List<ClasificadoRepository.Medalla> ordenarMedallas(List<ClasificadoRepository.Medalla> l) {
 
         List<ClasificadoRepository.Medalla> medallasOrdenadas = new ArrayList<>();
-        medallasOrdenadas.add(l.stream().filter(m -> m.getRonda().equals(Clasificado.NombreRonda.MEDALLA_ORO.name())).findFirst().orElse(ClasificadoRepository.Medalla.builder().participante(Participante.builder().nombre("-").build()).build()));
-        medallasOrdenadas.add(l.stream().filter(m -> m.getRonda().equals(Clasificado.NombreRonda.MEDALLA_PLATA.name())).findFirst().orElse(ClasificadoRepository.Medalla.builder().participante(Participante.builder().nombre("-").build()).build()));
-        medallasOrdenadas.add(l.stream().filter(m -> m.getRonda().equals(Clasificado.NombreRonda.MEDALLA_BRONCE.name())).findFirst().orElse(ClasificadoRepository.Medalla.builder().participante(Participante.builder().nombre("-").build()).build()));
+        medallasOrdenadas.addAll(l.stream().filter(m -> m.getRonda().equals(Clasificado.NombreRonda.MEDALLA_ORO.name())).collect(Collectors.toList()));
+        medallasOrdenadas.addAll(l.stream().filter(m -> m.getRonda().equals(Clasificado.NombreRonda.MEDALLA_PLATA.name())).collect(Collectors.toList()));
+        medallasOrdenadas.addAll(l.stream().filter(m -> m.getRonda().equals(Clasificado.NombreRonda.MEDALLA_BRONCE.name())).collect(Collectors.toList()));
 
         return medallasOrdenadas;
     }

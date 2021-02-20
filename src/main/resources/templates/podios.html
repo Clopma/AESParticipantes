@@ -25,28 +25,18 @@
              style="margin-top: 20px; margin-left: 20px; margin-right: 20px; margin-bottom: 20px; z-index: 2; text-align: center;">
 
 
-            <h1 th:text="${podio.getKey().getNombre()}"></h1>
+            <h1 th:text="${podio.getKey().getNombre()}"/>
 
             <div style="align-items: center">
 
-                <div style=" text-align: left" th:with="nombreParticipante  = ${podio.getValue().get(0).getParticipante().getNombre()}">
-                    <img src="/img/MEDALLA_ORO.png" style="width: 50px; margin-right: 10px;  "/>
+                <div th:each="posicion : ${podio.getValue()}" style=" text-align: left" th:with="nombreParticipante  = ${posicion.getParticipante().getNombre()}">
+                    <img th:src="'/img/'+${posicion.getRonda()}+'.png'" style="width: 50px; margin-right: 10px;  "/>
                     <a th:href="'/participante/'+${nombreParticipante}+'/'+ ${nombreCompeticion} +'#'+${podio.getKey().getNombre()}" th:style="${nombreParticipante.equals('-')} ? 'pointer-events: none' : '' ">
                     <span style="font-weight: bolder" th:text="${nombreParticipante}"> </span>
                     </a>
                 </div>
-                <div style=" text-align: left" th:with="nombreParticipante  = ${podio.getValue().get(1).getParticipante().getNombre()}">
-                    <img src="/img/MEDALLA_PLATA.png" style="width: 50px; margin-right: 10px;  "/>
-                    <a th:href="'/participante/'+${nombreParticipante}+'/'+ ${nombreCompeticion} +'#'+${podio.getKey().getNombre()}" th:style="${nombreParticipante.equals('-')} ? 'pointer-events: none' : '' ">
-                        <span style="font-weight: bolder" th:text="${nombreParticipante}"> </span>
-                    </a>
-                </div>
-                <div style=" text-align: left" th:with="nombreParticipante  = ${podio.getValue().get(2).getParticipante().getNombre()}">
-                    <img src="/img/MEDALLA_BRONCE.png" style="width: 50px; margin-right: 10px;  "/>
-                    <a th:href="'/participante/'+${nombreParticipante}+'/'+ ${nombreCompeticion} +'#'+${podio.getKey().getNombre()}" th:style="${nombreParticipante.equals('-')} ? 'pointer-events: none' : '' ">
-                        <span style="font-weight: bolder" th:text="${nombreParticipante}"> </span>
-                    </a>
-                </div>
+
+
             </div>
         </div>
     </div>

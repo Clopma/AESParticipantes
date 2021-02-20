@@ -31,8 +31,6 @@ public class AESOnlineApplication {
 
     @PostConstruct
     public void test() {
-
-
     }
 
 }

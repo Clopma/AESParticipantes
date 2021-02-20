@@ -73,7 +73,7 @@
             <a th:href="${sorteo.getSorteo().getLink()}"><img th:src="'/img/' + ${sorteo.getSorteo().getImagen()}" style="width: 50px"/></a>
         </div>
     </div>
-    <div class="whitePanel" style="margin-top: 15px; font-size: larger; text-align: center">
+    <div th:if="${competicion.inscripcionesEstanAbiertas()}" class="whitePanel" style="margin-top: 15px; font-size: larger; text-align: center">
         <div style="margin-top: 15px; font-size: larger; text-align: center">
             <h1>Inscripción</h1>
             Esta competición comienza el <span th:text="${competicion.getInicioStr()}" />.
