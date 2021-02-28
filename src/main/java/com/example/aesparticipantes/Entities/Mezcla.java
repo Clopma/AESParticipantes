@@ -5,7 +5,6 @@ import com.example.aesparticipantes.Entities.Keys.KeyMezcla;
 import com.example.aesparticipantes.Utils.AESUtils;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -39,9 +38,6 @@ public class Mezcla {
     @NotNull
 //    @Column(unique = true) //TODO: Testing las repite :/
     private String imagenUrl;
-
-    @Value("${aes.rsa-key}")
-    private String secretKey;
 
     public String getImagenUrl() {
        return AESUtils.getHash(imagenUrl)+".png";

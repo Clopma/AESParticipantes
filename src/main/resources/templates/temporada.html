@@ -54,7 +54,8 @@
     <div style="width: 80%; display: flex; justify-content: center">
             <div style="width: 50%; text-align: center" class="whitePanel">
                 <h2>Horario playoffs</h2>
-                <th:block th:include="fragments/calendario :: calendario"></th:block>
+                <th:block th:if="${dias.size() > 0}" th:include="fragments/calendario :: calendario" />
+                <span th:if="${dias.size() == 0}">Los horarios se publicarán semanas antes del final de la temporada.</span>
             </div>
             <div style="width: 50%; text-align: center;" class="whitePanel">
                 <h2>Puedes hacer click en cualquiera de las categorías para ver el estado de las clasificaciones tal
