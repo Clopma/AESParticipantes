@@ -15,7 +15,7 @@ public interface CompeticionRepository extends CrudRepository<Competicion, Long>
 
     Optional<Competicion> findByNombre(String nombre);
 
-    @Query("from Competicion c join Jornada j on c = j.competicion group by c having min(j.fechaInicio) > current_timestamp")
+    @Query("from Competicion c join Jornada j on c = j.competicion group by c having min(j.fechaInicio) > current_timestamp order by c.limiteInscripciones")
     List<Competicion> findCompeticionesFuturas();
 
     @Query("from Competicion c join Jornada j on c = j.competicion group by c having min(j.fechaInicio) < current_timestamp and c.limiteInscripciones > current_timestamp")

@@ -1,8 +1,13 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title th:text="${nombreCategoria} + ' en ' +${nombreCompeticion}"></title>
+    <title th:text="${nombreCategoria} + ' en Temporada de ' +${nombreTemporada}"></title>
     <th:block th:include="fragments/head :: genericHead"></th:block>
     <th:block th:include="fragments/head :: datatablesHead"></th:block>
+
+
+    <meta property="og:title" th:content="${nombreCategoria} + ' en Temporada de ' +${nombreTemporada}" />
+    <meta property="og:description"  th:content="${'Echa un ojo al estado de las divisiones de la Temporada de ' + nombreTemporada +' en la jornada ' + numeroJornada + ' del ' + nombreCompeticion + '.'}"/>
+    <meta property="og:image" content="https://aesonline.speedcubingspain.org/img/corona.png" />
 
     <link rel="stylesheet" href="/css/evento.css" />
     <script type="text/javascript" src="/js/ScrollUtils.js"></script>

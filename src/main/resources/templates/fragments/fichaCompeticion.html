@@ -5,7 +5,7 @@
         <script type="text/javascript" src="/js/InscripcionUtils.js"></script>
         Inicio: <span th:text="${competicion.getInicioStr()}"/><br/>
         Fin inscripciones: <span th:text="${competicion.getFechaLimiteInscripcionesStr()}"/>
-        <div style="display: flex; align-items: center; justify-content: center">
+        <div style="display: flex; align-items: center">
 
             <a th:href="${'/competicion/'+ competicion}" style="display: flex; align-items: center">
                 <div><img th:src="'/img/copas/copa_' + ${competicion.getNombre()} + '.png'" style="width: 75px; margin: 10px"/></div>

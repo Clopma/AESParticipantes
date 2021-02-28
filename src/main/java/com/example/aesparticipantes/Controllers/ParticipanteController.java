@@ -73,7 +73,7 @@ public class ParticipanteController {
         List<Clasificado> clasificados = clasificadoRepository.findAllByEventoIn(participante.get().getInscripciones().stream().map(Inscripcion::getEvento).collect(Collectors.toSet()));
         List<Descalificacion> descalificados = descalificacionRepository.findAllByEventoIn(participante.get().getInscripciones().stream().map(Inscripcion::getEvento).collect(Collectors.toSet()));
 
-        Map<Competicion, List<Posicion>> resultadosCompeticionesInscritas = getResultadosParticipante(participante.get(), clasificados, descalificados);
+        LinkedHashMap<Competicion, List<Posicion>> resultadosCompeticionesInscritas = getResultadosParticipante(participante.get(), clasificados, descalificados);
         List<Competicion> competicionesFuturas = competicionRepository.findCompeticionesFuturas();
         List<Competicion> competicionesPresentes = competicionRepository.findCompeticionesPresentesConInscripcionesAbiertas();
 
@@ -119,13 +119,14 @@ public class ParticipanteController {
     }
 
 
-    // Recoje los datos cacheados por getPosicionesEnCompeticion TODO: Pensarse si cachear dos veces aunque ya se cachee getPosicionEnParticipante
-    public Map<Competicion, List<Posicion>> getResultadosParticipante(Participante participante, List<Clasificado> clasificados, List<Descalificacion> descalificados) {
+    public LinkedHashMap<Competicion, List<Posicion>> getResultadosParticipante(Participante participante, List<Clasificado> clasificados, List<Descalificacion> descalificados) {
 
-        Map<Competicion, List<Posicion>> resultados = new HashMap<>();
+        LinkedHashMap<Competicion, List<Posicion>> resultados = new LinkedHashMap<>();
 
         Set<Competicion> competicionesInscritas = participante.getInscripciones().stream().collect(Collectors.groupingBy(i -> i.getEvento().getCompeticion())).keySet();
-        competicionesInscritas.forEach(competicion -> resultados.put(competicion, self.getPosicionesEnCompeticion(competicion, participante, descalificados, clasificados)));
+        List<Competicion> competicionesInscritasOrdenadas = new ArrayList<>(competicionesInscritas);
+        Collections.sort(competicionesInscritasOrdenadas);
+        competicionesInscritasOrdenadas.forEach(competicion -> resultados.put(competicion, self.getPosicionesEnCompeticion(competicion, participante, descalificados, clasificados)));
         return resultados;
 
     }

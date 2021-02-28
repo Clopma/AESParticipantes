@@ -9,6 +9,7 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
@@ -58,6 +59,14 @@ public class TimelinePointDivisiones {
     public static TimelinePointDivisiones getPrimero(Temporada temporada){
         Competicion competicion = new ArrayList<>(temporada.getCompeticiones()).get(0);
         return new TimelinePointDivisiones(temporada, competicion.getPrimeraJornada());
+    }
+
+    public static TimelinePointDivisiones getUltimaAcabada(Temporada temporada){
+        List<TimelinePointDivisiones> acabadas = getTimelineCompleta(temporada).stream().filter(t -> t.getJornada().isAcabada()).collect(Collectors.toList());
+
+        //TODO isPresent throw exception?
+        return acabadas.stream().filter(t -> t.getJornada().isActiva()).findAny()
+                .orElse(acabadas.stream().reduce((acc, val) -> acc.getJornada().getFechaInicio().after(val.getJornada().getFechaInicio()) ? acc : val).get());
     }
 
     public static List<TimelinePointDivisiones> getTimelineCompleta(Temporada temporada) {

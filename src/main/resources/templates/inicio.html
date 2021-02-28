@@ -162,7 +162,7 @@
                 <div>
                     <div class="bouncyContainer podio" style="width: 150px; height: 150px; margin: auto">
                         <a href="/competicion/San%20Valentín%20Online" class="bouncyContainer">
-                            <img class="bouncyButton podio" src="/img/copas/copa_San%20Valentin%20Online.png"/>
+                            <img class="bouncyButton podio" src="/img/copas/copa_San%20Valentín%20Online.png"/>
                         </a>
                     </div>
                     <h4>San Valentín Online</h4>
@@ -286,11 +286,11 @@
         <div style="display: flex; flex-direction: column">
             <div class="whitePanel right" style="margin-right: 0px">
                 <div class="bouncyContainer podio" style="width: 175px; height: 175px; margin: auto">
-                    <a href="/temporada/Primavera%202021/competicion/Febrero%20Online/jornada/2/categoria/3x3x3" class="bouncyContainer"><!-- TODO: 0001 Hacer dinámico, pero que esté cacheado -->
+                    <a th:href="${'/temporada/'+ temporadaActual + '/competicion/'+ jornadaActual.getCompeticion().getNombre() +'/jornada/'+ jornadaActual.getNumeroJornada() +'/categoria/3x3x3'}" class="bouncyContainer">
                         <img class="bouncyButton podio" src="/img/corona.png"/>
                     </a>
                 </div>
-            <a href="/temporada/Primavera%202021/competicion/Febrero%20Online/jornada/1/categoria/3x3x3"><h3>DIVISIONES</h3></a>
+                <a th:href="${'/temporada/'+ temporadaActual + '/competicion/'+ jornadaActual.getCompeticion().getNombre() +'/jornada/'+ jornadaActual.getNumeroJornada() +'/categoria/3x3x3'}" class="bouncyContainer"><h3>DIVISIONES</h3></a>
             <p style="font-size: large">Echa un ojo al estado actual de las divisiones en la Temporada de Primavera.</p>
 
         </div>
@@ -321,7 +321,7 @@
     </div>
     <footer  th:replace="fragments/footer :: creditFooter"/>
     <footer class = "credit desaparecerHorizontal" style="bottom: 0; right: 10px;">
-        <span> v1.1.6 <a href="/cambios">Ver cambios</a>
+        <span> v1.1.7 <a href="/cambios">Ver cambios</a>
         </span>
     </footer>
 </div>

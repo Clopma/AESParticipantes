@@ -8,13 +8,29 @@
 <body class="cubosbg">
 <div th:replace="fragments/backButton :: backButton"/>
 <div class="vertical-flex-wrapper">
-    <div class="whitePanel" style="margin-top: 300px; width: 80%;">
+    <div class="whitePanel" style="margin-top: 80px; text-align: center">
+        <h1>Notas del desarrollo</h1>
+        <h3>Aquí puedes informarte de los últimos cambios que se aplican a la web.</h3>
+        <h3><a href="/#contacto">Sugerencias</a></h3>
+    </div>
+    <div class="whitePanel" style="margin-top: 100px; width: 80%;">
 
         <hr style="margin-top: 50px" />
-        <h1>19/02/2021</h1>
+        <h1>22/02/2021</h1>
+        <h2>v1.1.7</h2>
+        <ul>
+            <li>Los empates en los rankings de jornada ahora se visualizan y calculan correctamente (ambos participantes comparten la posición más elevada y sus puntos). Puedes ver un ejemplo en <a href="/ranking/San%20Valentín%20Online/FMC/jornada/1">FMC del San Valentín Online</a>.</li>
+        </ul>
+
+        <hr style="margin-top: 50px" />
+        <h1>21/02/2021</h1>
         <h2>v1.1.6</h2>
         <ul>
             <li>Ahora la página de podios es flexible para mostrar un posible empate, como ha ocurrido en <a href="/podios/San%20Valentín%20Online/"> FMC del San Valentín Online</a>.</li>
+            <li>Corregido el comportamiento al introducir uno o más de dos decimales en centésimas.</li>
+            <li>Ya son muchos campeonatos en el perfil, por lo que las competiciones completadas y futuras ahora aparecen ordenadas cronológicamente (más cercanas primero).</li>
+            <li>Añadidos metadatos para redes sociales a las páginas de las divisiones.</li>
+            <li>Correcciones y cambios estéticaos varios.</li>
         </ul>
 
 
@@ -22,7 +38,7 @@
         <h1>16/02/2021</h1>
         <h2>v1.1.5</h2>
         <ul>
-            <li>Añadida nueva competición especial: Pi Online. <img src="img/copas/copa_Pi%20Online.png  ........mnmmmmm" style="width: 50px" /></li>
+            <li>Añadida nueva competición especial: Pi Online. <img src="img/copas/copa_Pi%20Online.png" style="width: 50px" /></li>
             <li>Se ha vuelto a las imágenes de mezclas de Skewb original, para mantener exactamente la estética original de los campeonatos presenciales.</li>
             <li>Arreglo de errores varios. Entre ellos, uno que causaba tiempos con una centésima más de la introducida. Si crees que has sufrido este error, ponte en contacto con organización para corregirlo.</li>
         </ul>

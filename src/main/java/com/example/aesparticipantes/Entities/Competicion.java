@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Competicion {
+public class Competicion implements Comparable {
 
     @Id
     @Column(length = 25)
@@ -125,5 +125,10 @@ public class Competicion {
 
     public boolean inscripcionesEstanAbiertas() {
         return getLimiteInscripciones().after(new Date());
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return ((Competicion) o).getLimiteInscripciones().compareTo(this.getLimiteInscripciones());
     }
 }

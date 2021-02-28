@@ -29,5 +29,4 @@ public class Temporada {
     @OneToMany(mappedBy = "temporada")
     List<Clasificacion> clasificaciones;
 
-
 }

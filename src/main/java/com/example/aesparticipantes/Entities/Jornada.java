@@ -51,6 +51,13 @@ public class Jornada implements Comparable{
         return fechaFin.before(new Date());
     }
 
+    public boolean isEmpezada(){
+        return fechaInicio.before(new Date());
+    }
+
+    public boolean isActiva(){
+        return !isAcabada() && isEmpezada();
+    }
 
     @Override
     public int compareTo(Object o) {

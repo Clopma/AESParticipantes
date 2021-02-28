@@ -162,11 +162,13 @@ public class AESUtils {
             tiemposJornada.get(i).setPosicion(i+1);
 
             //TODO no repetir y usar un ternario en cada single/media
+            //TODO quizá esta lógica pueda fusionarse con la del comparator de tiempos para asignar directamente la posición en caso de empate
             if ("FMC".equals(nombreCategoria) || "BLD".equals(nombreCategoria)){
                 tiemposJornada.get(i).setPuntosTiempo(tiemposJornada.get(i).getSingle() == 0 ? 0 : (int) Math.round(mejorSingleJornada*100/tiemposJornada.get(i).getSingle()));
                 if (tiemposJornada.get(i).getSingle() != 0) {
-                    if(i > 0 && tiemposJornada.get(i).getPosicion() == tiemposJornada.get(i-1).getPosicion()){
+                    if(i > 0 && tiemposJornada.get(i).getSingle() == tiemposJornada.get(i-1).getSingle()){
                         tiemposJornada.get(i).setPuntosBonus(tiemposJornada.get(i-1).getPuntosBonus());
+                        tiemposJornada.get(i).setPosicion(i);
                     } else {
                         tiemposJornada.get(i).setPuntosBonus(AESUtils.puntosEnPosicion(i + 1)); // else por defecto es 0
                     }
@@ -174,8 +176,10 @@ public class AESUtils {
             } else {
                 tiemposJornada.get(i).setPuntosTiempo(tiemposJornada.get(i).getMedia() == 0 ? 0 : (int) Math.round(mejorMediaJornada*100/tiemposJornada.get(i).getMedia()));
                 if (tiemposJornada.get(i).getMedia() != 0) {
-                    if(i > 0 && tiemposJornada.get(i).getPosicion() == tiemposJornada.get(i-1).getPosicion()){
+                    if(i > 0 && tiemposJornada.get(i).getMedia() == tiemposJornada.get(i-1).getMedia()
+                    && tiemposJornada.get(i).getSingle() == tiemposJornada.get(i-1).getSingle()){
                         tiemposJornada.get(i).setPuntosBonus(tiemposJornada.get(i-1).getPuntosBonus());
+                        tiemposJornada.get(i).setPosicion(i);
                     } else {
                         tiemposJornada.get(i).setPuntosBonus(AESUtils.puntosEnPosicion(i + 1)); // else por defecto es 0
                     }

@@ -1,9 +1,11 @@
 package com.example.aesparticipantes.Controllers;
 
 import com.example.aesparticipantes.Entities.Participante;
+import com.example.aesparticipantes.Models.TimelinePointDivisiones;
 import com.example.aesparticipantes.Repositories.CategoriaRepository;
 import com.example.aesparticipantes.Repositories.EventoRepository;
 import com.example.aesparticipantes.Repositories.ParticipanteRepository;
+import com.example.aesparticipantes.Repositories.TemporadaRepository;
 import com.example.aesparticipantes.Seguridad.UserData;
 import com.example.aesparticipantes.Utils.AESUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class InicioController {
     @Autowired
     EventoRepository eventoRepository;
 
+    @Autowired
+    TemporadaRepository temporadaRepository;
+
     @GetMapping("/")
     public String inicio(Model model, Principal principal) {
 
@@ -60,6 +65,10 @@ public class InicioController {
 
         }
 
+        TimelinePointDivisiones timeline = TimelinePointDivisiones.getUltimaAcabada(temporadaRepository.findByNombre("Primavera 2021").get()); //TODO: Hacer , cachear, usar modelos y no entidades...
+
+        model.addAttribute("temporadaActual", timeline.getTemporada());
+        model.addAttribute("jornadaActual", timeline.getJornada());
         model.addAttribute("participantes", self.getParticipantes()); //TODO: Ponerte a ti mismo primero quizás...
         model.addAttribute("categorias", categoriaRepository.findAllByOrderByOrden());
         model.addAttribute("numJornadas", 5);

@@ -32,6 +32,4 @@ public class Inscripcion {
     @NotNull
     private Date fechaInscripcion;
 
-
-
 }

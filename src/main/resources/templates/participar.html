@@ -156,7 +156,7 @@
 
             var minutos = !divTiempo.find(".minutos")[0].disabled && divTiempo.find(".minutos")[0].value ? divTiempo.find(".minutos")[0].value : 0;
             var segundos = !divTiempo.find(".segundos")[0].disabled && divTiempo.find(".segundos")[0].value ?  divTiempo.find(".segundos")[0].value : 0;
-            var centesimas = !divTiempo.find(".centesimas")[0].disabled && divTiempo.find(".centesimas")[0].value ? ((divTiempo.find(".centesimas")[0].value) + "").substr(0, 2) : 0;
+            var centesimas = !divTiempo.find(".centesimas")[0].disabled && divTiempo.find(".centesimas")[0].value ? ((divTiempo.find(".centesimas")[0].value) + "").substr(0, 2).padEnd(2, "0") : 0;
 
             return +(minutos * 60) + +segundos + +(centesimas/100.0);
 
