@@ -52,7 +52,7 @@ public class InscripcionController {
 
         if (principal instanceof UserData) {
             String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
-            Participante yo = participanteRepository.findByNombre(nombreParticipanteGuardado); //TODO: Es posible no cargar todos los tiempos de cada evento?
+            Optional<Participante> yo = participanteRepository.findByNombre(nombreParticipanteGuardado); //TODO: Es posible no cargar todos los tiempos de cada evento?
             Optional<Competicion> competicion = competicionRepository.findByNombre(nombreCompeticion);
 
             if(!competicion.isPresent()){
@@ -68,18 +68,18 @@ public class InscripcionController {
                 return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
             }
 
-            if (yo == null) {
+            if (!yo.isPresent()) {
                 String error = "Parece que has perdido la sesión, vuelve a iniciar sesión para inscribirte.";
                 logger.error(error);
                 return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
             } else {
 
-                List<Inscripcion> inscripcionesACampeonato = inscripcionRepository.getInscripcionesDeParticipanteEnCompeticion(yo.getNombre(), competicion.get().getNombre());
-                List<Categoria> categoriasParticipadas = categoriaRepository.getCategoriasParticipadas(competicion.get(), yo);
+                List<Inscripcion> inscripcionesACampeonato = inscripcionRepository.getInscripcionesDeParticipanteEnCompeticion(yo.get().getNombre(), competicion.get().getNombre());
+                List<Categoria> categoriasParticipadas = categoriaRepository.getCategoriasParticipadas(competicion.get(), yo.get());
 
                if (!categoriasParticipadas.stream().allMatch(c -> categorias.contains(c.getNombre()))){
                    String error = "No puedes desinscribirte de una categoría en la que ya has participado.";
-                   logger.error(error + " " + yo.getNombre());
+                   logger.error(error + " " + yo.get().getNombre());
                    return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
                }
 
@@ -88,7 +88,7 @@ public class InscripcionController {
                         .evento(Evento.builder()
                                 .categoria(Categoria.builder().nombre(c).build())
                                 .competicion(competicion.get()).build())
-                        .participante(yo)
+                        .participante(yo.get())
                         .fechaInscripcion(new Date())
                         .build()
                 ).collect(Collectors.toList()); //TODO: Controlar que una categoría no exista
@@ -97,23 +97,23 @@ public class InscripcionController {
                 inscripcionRepository.saveAll(nuevasInscripciones);
                 
                 self.evictFuturasCompeticiones();
-                self.evictParticipante(yo.getNombre());
+                self.evictParticipante(yo.get().getNombre());
 
 
                 if(inscripcionesACampeonato.size() == 0){
                     if(nuevasInscripciones.size() == 0){
-                        logger.warn("No te has inscrito a ninguna categoría: " + categorias.toString() + " " + yo.getNombre());
+                        logger.warn("No te has inscrito a ninguna categoría: " + categorias.toString() + " " + yo.get().getNombre());
                         return new ResponseEntity<>("No te has inscrito a ninguna categoría, ¡anímate y selecciona al menos una! ", HttpStatus.OK);
                     } else {
-                        logger.info("Participante inscrito." + categorias.toString() + " " + yo.getNombre());
+                        logger.info("Participante inscrito." + categorias.toString() + " " + yo.get().getNombre());
                         return new ResponseEntity<>("Te has inscrito a la competición, ¡mucha suerte!", HttpStatus.OK);
                     }
                 } else {
                     if(nuevasInscripciones.size() == 0){
-                        logger.warn("Participante desinscrito." + categorias.toString() + " " + yo.getNombre());
+                        logger.warn("Participante desinscrito." + categorias.toString() + " " + yo.get().getNombre());
                         return new ResponseEntity<>("Ya no estás inscrito a este campeonato. ¡Nos vemos a la próxima!", HttpStatus.OK);
                     } else {
-                        logger.info("Un participante ha cambiado sus inscripciones: " + categorias.toString() + " " + yo.getNombre());
+                        logger.info("Un participante ha cambiado sus inscripciones: " + categorias.toString() + " " + yo.get().getNombre());
                         return new ResponseEntity<>("Los cambios se han guardado, ¡a por todas!", HttpStatus.OK);
                     }
 

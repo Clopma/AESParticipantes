@@ -2,6 +2,9 @@
 <head>
 
     <th:block th:include="fragments/head :: genericHead"></th:block>
+    <meta property="og:title" th:content="'Temporada de ' +${nombreTemporada}" />
+    <meta property="og:description"  th:content="${'Toda la información sobre la Temporada de ' + nombreTemporada +'.'}"/>
+    <meta property="og:image" content="https://aesonline.speedcubingspain.org/img/corona.png" />
     <title th:text="${'Temporada ' + nombreTemporada}"/>
     <link rel="stylesheet" href="/css/cubing-icons.css"/>
     <link rel="stylesheet" href="/css/calendario.css"/>

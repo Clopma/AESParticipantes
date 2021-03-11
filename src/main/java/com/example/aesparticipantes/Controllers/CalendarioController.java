@@ -128,11 +128,11 @@ public class CalendarioController {
     private Clasificado[] iniciarBracket(List<Posicion> rankingCategoria, List<Descalificacion> descalificados, int numClasificados, List<Clasificado> siguienteRonda, List<Clasificado> rondaActual)  {
 
         List<Clasificado>  clasificados = rankingCategoria.stream().filter(p -> descalificados.stream()
-                .noneMatch(d -> p.getParticipante().equals(d.getParticipante())))
+                .noneMatch(d -> p.getNombreParticipante().equals(d.getParticipante().getNombre())))
                 .map(p -> Clasificado.builder()
-                        .participante(Participante.builder().nombre(p.getParticipante().getNombre()).build())
-                        .victoria(siguienteRonda.stream().anyMatch(s -> s.getParticipante().getNombre().equals(p.getParticipante().getNombre())))
-                        .puntuacion(rondaActual.stream().filter(a -> a.getParticipante().getNombre().equals(p.getParticipante().getNombre())).findFirst().orElse(Clasificado.builder().build()).getPuntuacion())
+                        .participante(Participante.builder().nombre(p.getNombreParticipante()).build())
+                        .victoria(siguienteRonda.stream().anyMatch(s -> s.getParticipante().getNombre().equals(p.getNombreParticipante())))
+                        .puntuacion(rondaActual.stream().filter(a -> a.getParticipante().getNombre().equals(p.getNombreParticipante())).findFirst().orElse(Clasificado.builder().build()).getPuntuacion())
                 .build())
                 .collect(Collectors.toList())
                 .subList(0, numClasificados);

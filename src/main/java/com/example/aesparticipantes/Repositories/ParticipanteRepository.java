@@ -15,7 +15,7 @@ public interface ParticipanteRepository extends CrudRepository<Participante, Lon
     @Query("select p.nombre from Participante p order by p.nombre")
     List<String> getNombres();
 
-    Participante findByWcaId(String wcaId);
+    Optional<Participante> findByWcaId(String wcaId);
 
     // inscripciones y jornadas son dos bags relacionadas por lo que no causarán producto cartesiano con los Sets
     // https://stackoverflow.com/questions/4334970/hibernate-throws-multiplebagfetchexception-cannot-simultaneously-fetch-multipl/51055523?stw=2#comment116263441_51055523
@@ -27,6 +27,6 @@ public interface ParticipanteRepository extends CrudRepository<Participante, Lon
 
 
 
-    Participante findByNombre(String nombre);
+    Optional<Participante> findByNombre(String nombre);
 
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class InicioController {
@@ -46,15 +47,15 @@ public class InicioController {
         if (principal instanceof UserData) {
 
             String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
-            Participante participante = participanteRepository.findByNombre(nombreParticipanteGuardado);
+            Optional<Participante> participante = participanteRepository.findByNombre(nombreParticipanteGuardado);
             model.addAttribute("nombreWca", ((UserData) principal).getWcaName());
 
-            if (participante == null) {
+            if (!participante.isPresent()) {
                 model.addAttribute("tipoUsuario", AESUtils.TiposUsuarios.NV.name());
             } else {
 
                 model.addAttribute("nombreParticipante", nombreParticipanteGuardado);
-                if (participante.isConfirmado()) {
+                if (participante.get().isConfirmado()) {
                     model.addAttribute("tipoUsuario", AESUtils.TiposUsuarios.C.name());
                 } else {
                     model.addAttribute("tipoUsuario", AESUtils.TiposUsuarios.NC.name());

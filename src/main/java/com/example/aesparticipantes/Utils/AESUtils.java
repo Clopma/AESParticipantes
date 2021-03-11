@@ -119,8 +119,9 @@ public class AESUtils {
         posiciones.stream().filter(Posicion::isClasificado).collect(Collectors.toList()).forEach(p -> {
             p.setMedalla(
                     AESUtils.getPosicionFinal(
-                            clasificados.stream().filter(c -> c.getParticipante().equals(p.getParticipante())
-                            && c.getEvento().equals(p.getEvento())
+                            clasificados.stream().filter(c -> c.getParticipante().getNombre().equals(p.getNombreParticipante())
+                            && c.getEvento().getCategoria().getNombre().equals(p.getNombreCategoria())
+                            && c.getEvento().getCompeticion().getNombre().equals(p.getNombreCompeticion())
                             && c.getRonda().contains("MEDALLA_"))
                                     .map(c -> Clasificado.NombreRonda.valueOf(c.getRonda())).collect(Collectors.toList())));
 

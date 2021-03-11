@@ -41,7 +41,7 @@ public class CompeticionController {
 
         if (principal instanceof UserData) { //TODO: Repetido en inscripción y participar: refactor
             String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
-            Participante yo = participanteRepository.findByNombre(nombreParticipanteGuardado);
+            Participante yo = participanteRepository.findByNombre(nombreParticipanteGuardado).get();
             model.addAttribute("participanteLogeado", yo);
         }
 

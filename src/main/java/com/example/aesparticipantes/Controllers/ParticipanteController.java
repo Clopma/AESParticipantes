@@ -57,14 +57,14 @@ public class ParticipanteController {
 
         if (principal instanceof UserData) { //TODO: Repetido en inscripción: refactor
             String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
-            Participante yo = participanteRepository.findByNombre(nombreParticipanteGuardado);
-            if (yo != null && nombreParticipante.equals(yo.getNombre())) {
+            Optional<Participante> yo = participanteRepository.findByNombre(nombreParticipanteGuardado);
+            if (yo.isPresent() && nombreParticipante.equals(yo.get().getNombre())) {
                 model.addAttribute("soyYo", true);
             }
         }
 
+        Optional<Participante> participante = participanteRepository.findByNombre(nombreParticipante);
 
-        Optional<Participante> participante = participanteRepository.findByNombreParaPerfil(nombreParticipante);
         if(!participante.isPresent()){
             model.addAttribute("mensaje", "No hay ningún participante llamado "+ nombreParticipante +".");
             return "error/404";
@@ -98,8 +98,8 @@ public class ParticipanteController {
 
         if (principal instanceof UserData) { //TODO: Repetido en inscripción: refactor
             String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
-            Participante yo = participanteRepository.findByNombre(nombreParticipanteGuardado);
-            if (yo != null && nombreParticipante.equals(yo.getNombre())) {
+            Optional<Participante> yo = participanteRepository.findByNombre(nombreParticipanteGuardado);
+            if (yo.isPresent() && nombreParticipante.equals(yo.get().getNombre())) {
                 model.addAttribute("soyYo", true);
             }
         }
@@ -110,9 +110,9 @@ public class ParticipanteController {
             return "error/404";
         }
 
-        List<Posicion> resultado = self.getPosicionesEnCompeticion(competicion.get(), participanteRepository.findByNombre(nombreParticipante), descalificacionRepository.findAllByEventoIn(competicion.get().getEventos()), clasificadoRepository.findAllByEventoIn(competicion.get().getEventos()));
-        model.addAttribute("participante", nombreParticipante);
-        model.addAttribute("competicion", nombreCompeticion); //TODO: nombrecompeticion y cambiar en template
+        List<Posicion> resultado = self.getPosicionesEnCompeticion(competicion.get(), participanteRepository.findByNombre(nombreParticipante).get(), descalificacionRepository.findAllByEventoIn(competicion.get().getEventos()), clasificadoRepository.findAllByEventoIn(competicion.get().getEventos()));
+        model.addAttribute("participante", nombreParticipante);//TODO: nombrecompeticion y cambiar en template
+        model.addAttribute("competicion", nombreCompeticion); //TODO: same here
         model.addAttribute("resultado", resultado);
 
         return "participanteEnCompeticion";
@@ -141,8 +141,9 @@ public class ParticipanteController {
         eventosInscrito.forEach(e -> {
 
             Posicion posicion = rankingGeneralController.getRankingGlobal(e, descalificados, clasificados).stream()
-                    .filter(p -> p.getParticipante().equals(participante)).findFirst()
-                    .orElse(Posicion.builder().evento(e).posicionGeneral(0).build() // Aun no ha participado
+                    .filter(p -> p.getNombreParticipante().equals(participante.getNombre())).findFirst()
+                    .orElse(Posicion.builder().categoria(e.getCategoria()).nombreCompeticion(e.getCompeticion().getNombre())
+                            .posicionGeneral(0).build() // Aun no ha participado
                     );
 
             posiciones.add(posicion);
@@ -164,7 +165,7 @@ public class ParticipanteController {
             @RequestHeader("recordatorioJornadas") Boolean recordatorioJornadas,
             Principal principal) {
 
-        Participante participanteLogeado;
+        Optional<Participante> participanteLogeado;
         if (principal instanceof UserData) {
             String nombreParticipanteGuardado = ((UserData) principal).getPrincipal();
             participanteLogeado = participanteRepository.findByNombre(nombreParticipanteGuardado);
@@ -175,13 +176,13 @@ public class ParticipanteController {
             return new ResponseEntity<>("Usuario no logeado", HttpStatus.UNAUTHORIZED);
         }
 
-        participanteLogeado.setEmail(email);
-        participanteLogeado.setAnuncioNuevaCompeticion(anuncioNuevaCompeticion);
-        participanteLogeado.setRecordatorioInscripcion(recordatorioInscripcion);
-        participanteLogeado.setRecordatorioComienzo(recordatorioComienzo);
-        participanteLogeado.setRecordatorioParticipar(recordatorioParticipar);
-        participanteLogeado.setRecordatorioJornadas(recordatorioJornadas);
-        participanteRepository.save(participanteLogeado);
+        participanteLogeado.get().setEmail(email);
+        participanteLogeado.get().setAnuncioNuevaCompeticion(anuncioNuevaCompeticion);
+        participanteLogeado.get().setRecordatorioInscripcion(recordatorioInscripcion);
+        participanteLogeado.get().setRecordatorioComienzo(recordatorioComienzo);
+        participanteLogeado.get().setRecordatorioParticipar(recordatorioParticipar);
+        participanteLogeado.get().setRecordatorioJornadas(recordatorioJornadas);
+        participanteRepository.save(participanteLogeado.get());
         //TODO: evictear participante
         return new ResponseEntity<>("Los tiempos se han guardado correctamente", HttpStatus.OK);
     }

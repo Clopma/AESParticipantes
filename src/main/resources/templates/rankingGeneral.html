@@ -78,7 +78,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="posicion, iStat: ${posiciones}" th:id="${posicion.getParticipante().getNombre()}"
+            <tr th:each="posicion, iStat: ${posiciones}" th:id="${posicion.getNombreParticipante()}"
                 th:data-posicion="${posicion.posicionGeneral}" style="position: relative;"
                 th:classappend="${(posicion.clasificado ? 'clasificado': '')
                  + ' ' + ((iStat.index + 1 <= largoClasificacion && !posicion.clasificado) ? 'descalificado': '')
@@ -95,11 +95,11 @@
 
                 <td th:text="${posicion.getPosicionGeneral()}">posición</td>
 
-                <td><a th:text="${posicion.getParticipante().getNombre()}" th:href="'/participante/'+${posicion.getParticipante().getNombre()}+'/' +  ${nombreCompeticion} + '#'+${nombreCategoria}">nombre</a></td>
+                <td><a th:text="${posicion.getNombreParticipante()}" th:href="'/participante/'+${posicion.getNombreParticipante()}+'/' +  ${nombreCompeticion} + '#'+${nombreCategoria}">nombre</a></td>
 
                 <td th:with="puntuacion= ${posicion.getPuntuacionJornada(jornada.getNumeroJornada())}" th:each="jornada : ${evento.getCompeticion().getJornadas()}" th:classappend="${jornada.getNumeroJornada() == 0 ? 'borderLeftColumn': ''}">
                     <div th:if="${jornada.isAcabada()}" class="tooltip">
-                        <a th:href="'/ranking/'+${nombreCompeticion}+'/' +  ${nombreCategoria} + '/jornada/'+(${jornada.getNumeroJornada()})+'#'+${posicion.getParticipante().getNombre()}"
+                        <a th:href="'/ranking/'+${nombreCompeticion}+'/' +  ${nombreCategoria} + '/jornada/'+(${jornada.getNumeroJornada()})+'#'+${posicion.getNombreParticipante()}"
                            th:text="${puntuacion.isPresent() ? puntuacion.get() : '-'}"/>
 <!--                        TODO: reemplazar guión por icono -->
                         <span class="tooltiptext">Ver tiempos en esta jornada</span>

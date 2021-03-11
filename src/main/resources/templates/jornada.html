@@ -95,11 +95,36 @@
         </div>
     </div>
 
-   <div th:if="${mezcla != null}" class="whitePanel" style="margin-top: 15px;"><!-- Será null si no se cumplen las condiciones en el backend (que sea FMC y la jornada esté acabada) -->
-        <div style="text-align: center">
-            <h1>Mezcla</h1>
-            <span style="font-size: xx-large" th:text="${mezcla.getTexto()}"/>
-        </div>
+   <div th:if="${mezclas != null}" class="whitePanel" style="margin-top: 15px; max-width: 70%; display: flex; align-items: center;"><!-- Será null si no se cumplen las condiciones en el backend (que la jornada esté acabada) -->
+
+       <div class="bouncyContainer backward">
+           <a class="bouncyContainer">
+               <img class="bouncyButton backward" src="/img/backbutton.png"
+                    onclick="$('#carruselMezclas').carousel('prev');" role="button" data-slide="prev"/>
+           </a>
+       </div>
+       <div id="carruselMezclas" class="carousel slide" data-interval="false">
+           <div class="carousel-inner" style="text-align: center;">
+               <div th:id="mezcla + ${iStat.count}" th:each="mezcla, iStat : ${mezclas}" class="carousel-item">
+                   <div style="text-align: center">
+                       <h1 th:text="'Mezcla ' + ${mezcla.getNumTiempo()}"/>
+                       <span th:style="${(
+            nombreCategoria.equals('4x4x4') ||
+            nombreCategoria.equals('5x5x5') ||
+            nombreCategoria.equals('6x6x6') ||
+            nombreCategoria.equals('7x7x7') ||
+            nombreCategoria.equals('Megaminx')) ? 'font-size: large;' : 'font-size: xx-large;'}" th:text="${mezcla.getTexto()}"/>
+                   </div>
+               </div>
+           </div>
+       </div>
+       <div class="bouncyContainer forward">
+           <a class="bouncyContainer">
+               <img class="bouncyButton forward" src="/img/forwardbutton.png"
+                    onclick="$('#carruselMezclas').carousel('next');" role="button" data-slide="next"/>
+           </a>
+       </div>
+
     </div>
 
     <div class="whitePanel"
@@ -142,4 +167,7 @@
     </div>
 </div>
 </body>
+<script>
+    $('#carruselMezclas div.carousel-inner div.carousel-item:first-child').addClass('active');
+</script>
 </html>

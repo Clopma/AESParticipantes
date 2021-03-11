@@ -92,8 +92,8 @@
                 <td th:each="posicion : ${resultado.getValue()}" style="border-bottom: 0">
 
                     <div class="tooltip"><a
-                            th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}/#${posicion.getEvento().getCategoria().getNombre()}|}"><span
-                            th:class="'cubing-icon event-' + ${posicion.getEvento().getCategoria().getNombre()}"/></a>
+                            th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}/#${posicion.getNombreCategoria()}|}"><span
+                            th:class="'cubing-icon event-' + ${posicion.getNombreCategoria()}"/></a>
                         <span class="tooltiptext">Ver todos los tiempos</span>
                     </div>
 
@@ -103,7 +103,7 @@
                 <td th:each="posicion : ${resultado.getValue()}">
                     <div style="display: flex; align-items: center; justify-content: center">
                         <div class="tooltip">
-                            <a th:href="@{|/ranking/${resultado.getKey().getNombre()}/${posicion.getEvento().getCategoria().getNombre()}/#${nombreParticipante}|}">
+                            <a th:href="@{|/ranking/${resultado.getKey().getNombre()}/${posicion.getNombreCategoria()}/#${nombreParticipante}|}">
                                 <span class="iconoStandard" th:text="${posicion.getPosicionGeneral() == 0 ? '-' : posicion.getPosicionGeneral()+'º'}"/>
                             </a>
                             <span th:if=" ${posicion.getPosicionGeneral() != 0}" class="tooltiptext">Posición en el ranking (con <span style="font-weight: bold" th:text="${posicion.getPuntuacionTotal()}"/> puntos)</span>
@@ -112,8 +112,8 @@
                         <span th:if="${posicion.isClasificado()}" class="iconoStandard">&rarr;</span>
                         <div th:if="${posicion.isClasificado()}" class="tooltip" style="height: 80px; width: 80px">
                             <a onclick="loadModal(this)"
-                               th:data-nombreCategoria="${posicion.getEvento().getCategoria().getNombre()}"
-                               th:data-nombreCompeticion="${posicion.getEvento().getCompeticion().getNombre()}"
+                               th:data-nombreCategoria="${posicion.getNombreCategoria()}"
+                               th:data-nombreCompeticion="${posicion.getNombreCompeticion()}"
                                data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
                                 <img class="bouncyButton podio" th:if="${posicion.getMedalla() != null}"
                                      th:src="'/img/'+${posicion.getMedalla()+'.png'}"/>
@@ -156,8 +156,8 @@
                     <td th:each="posicion : ${resultado.getValue()}" style="border-bottom: 0">
 
                         <div class="tooltip"><a
-                                th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}/#${posicion.getEvento().getCategoria().getNombre()}|}"><span
-                                th:class="'cubing-icon event-' + ${posicion.getEvento().getCategoria().getNombre()}"/></a>
+                                th:href="@{|/participante/${nombreParticipante}/${resultado.getKey().getNombre()}/#${posicion.getNombreCategoria()}|}"><span
+                                th:class="'cubing-icon event-' + ${posicion.getNombreCategoria()}"/></a>
                             <span class="tooltiptext">Ver todos los tiempos</span>
                         </div>
 
@@ -167,9 +167,9 @@
                     <td th:each="posicion : ${resultado.getValue()}">
                         <div style="display: flex; align-items: center; justify-content: center">
                             <div class="tooltip">
-                                <a th:href="@{|/ranking/${resultado.getKey().getNombre()}/${posicion.getEvento().getCategoria().getNombre()}/#${nombreParticipante}|}">
-                                    <span th:if="${!posicion.primeraJornadaIsActiva()}" class="iconoStandard" th:text="${posicion.getPosicionGeneral() == 0 ? '-' : posicion.getPosicionGeneral()+'º'}"/>
-                                    <span th:if="${posicion.primeraJornadaIsActiva()}">
+                                <a th:href="@{|/ranking/${resultado.getKey().getNombre()}/${posicion.getNombreCategoria()}/#${nombreParticipante}|}">
+                                    <span th:if="${!posicion.isPrimeraJornadaIsActiva()}" class="iconoStandard" th:text="${posicion.getPosicionGeneral() == 0 ? '-' : posicion.getPosicionGeneral()+'º'}"/>
+                                    <span th:if="${posicion.isPrimeraJornadaIsActiva()}">
                                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-eye-slash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/>
                                         <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299l.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/>
@@ -178,15 +178,15 @@
                                     </svg>
                                     </span>
                                 </a>
-                                <span th:if="${posicion.getPosicionGeneral() != 0 && !posicion.primeraJornadaIsActiva()}" class="tooltiptext">Posición en el ranking (con <span style="font-weight: bold" th:text="${posicion.getPuntuacionTotal()}"/> puntos)</span>
-                                <span th:if="${posicion.getPosicionGeneral() == 0 && !posicion.primeraJornadaIsActiva()}" class="tooltiptext">Está inscrito, pero aun no ha participado en esta categoría.</span>
-                                <span th:if="${posicion.primeraJornadaIsActiva()}" class="tooltiptext">Cuando acabe la primera jornada, se mostrará la posición en el ranking.</span>
+                                <span th:if="${posicion.getPosicionGeneral() != 0 && !posicion.isPrimeraJornadaIsActiva()}" class="tooltiptext">Posición en el ranking (con <span style="font-weight: bold" th:text="${posicion.getPuntuacionTotal()}"/> puntos)</span>
+                                <span th:if="${posicion.getPosicionGeneral() == 0 && !posicion.isPrimeraJornadaIsActiva()}" class="tooltiptext">Está inscrito, pero aun no ha participado en esta categoría.</span>
+                                <span th:if="${posicion.isPrimeraJornadaIsActiva()}" class="tooltiptext">Cuando acabe la primera jornada, se mostrará la posición en el ranking.</span>
                             </div>
                             <span th:if="${posicion.getTiempos() != null && posicion.getTiempos().size() > 1 && posicion.isClasificado()}" class="iconoStandard">&rarr;</span>
                             <div th:if="${posicion.getTiempos() != null && posicion.getTiempos().size() > 1 && posicion.isClasificado()}" class="tooltip" style="height: 80px; width: 80px">
                                 <a onclick="loadModal(this)"
-                                   th:data-nombreCategoria="${posicion.getEvento().getCategoria().getNombre()}"
-                                   th:data-nombreCompeticion="${posicion.getEvento().getCompeticion().getNombre()}"
+                                   th:data-nombreCategoria="${posicion.getNombreCategoria()}"
+                                   th:data-nombreCompeticion="${posicion.getNombreCompeticion()}"
                                    data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
                                     <img class="bouncyButton podio" th:if="${posicion.getMedalla() != null}"
                                          th:src="'/img/'+${posicion.getMedalla()+'.png'}"/>

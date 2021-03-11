@@ -6,6 +6,7 @@
     <script type="text/javascript" src="/js/Scrambler/NxN.js"></script>
     <script type="text/javascript" src="/js/Scrambler/Skewb.js"></script>
     <script type="text/javascript" src="/js/Scrambler/CanvasUtils.js"></script>
+    <script type="text/javascript" src="/js/Base64.js"></script>
 
     <link rel="stylesheet" href="/css/PuzzleDrawer.css"/>
 
@@ -134,8 +135,8 @@
             xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
             if( [[${categoria.getNombre()}]] === "FMC") {
-                xhttp.setRequestHeader("solucion", btoa($("#solucion")[0].value));
-                xhttp.setRequestHeader("explicacion", btoa($("#explicacion")[0].value));
+                xhttp.setRequestHeader("solucion", Base64.encode($("#solucion")[0].value));;
+                xhttp.setRequestHeader("explicacion", Base64.encode($("#explicacion")[0].value));
             } else {
                 xhttp.setRequestHeader("tiempo1", getTiempo( $("#tiempo" + 1)));
                 xhttp.setRequestHeader("tiempo2", getTiempo( $("#tiempo" + 2)));

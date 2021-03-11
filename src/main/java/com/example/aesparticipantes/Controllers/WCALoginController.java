@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 
 @Controller
@@ -66,10 +67,10 @@ public class WCALoginController {
             //TODO: handle refresh dentro del método get token, throw con 400
             WCALoginResponse wcaLoginResponse = AuthUtils.getWCAToken(code, callbackUrlLogin);
             WCAGetResponse perfilWCA = AuthUtils.getWCAUser(wcaLoginResponse.getAccess_token());
-            Participante participante;
+            Optional<Participante> participante;
             if (perfilWCA.getMe().getWca_id() != null) {
                 participante = participanteRepository.findByWcaId(perfilWCA.getMe().getWca_id());
-                if (participante == null) { //Puede ser que se creara el usuario con wca id null y luego obtuviera id, entonces estará guardado sin id pero el nombre debería matchear
+                if (!participante.isPresent()) { //Puede ser que se creara el usuario con wca id null y luego obtuviera id, entonces estará guardado sin id pero el nombre debería matchear
                     logger.info("Usuario no encontrado por id: "+ perfilWCA.getMe().getName());
                     participante = participanteRepository.findByNombre(perfilWCA.getMe().getName());
                 }
@@ -78,11 +79,11 @@ public class WCALoginController {
             }
 
 
-            if (participante != null) {
-                AuthUtils.crearSesion(participante, wcaLoginResponse.getAccess_token(), wcaLoginResponse.getExpires_in(), perfilWCA, httpServletRequest, authenticationManager);
+            if (participante.isPresent()) {
+                AuthUtils.crearSesion(participante.get(), wcaLoginResponse.getAccess_token(), wcaLoginResponse.getExpires_in(), perfilWCA, httpServletRequest, authenticationManager);
                 //TODO: If vinculado, actualizar base de datos (en segundo plano a ser posible)
                 model.addAttribute("mensaje", "Login correcto, redirigiendo");
-                model.addAttribute("redirect", "/participante/" + participante.getNombre());
+                model.addAttribute("redirect", "/participante/" + participante.get().getNombre());
 
                 logger.info("Inicio de sesión: "+ perfilWCA.getMe().getName());
                 return "mensaje";

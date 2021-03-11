@@ -3,6 +3,8 @@ package com.example.aesparticipantes.Utils;
 import com.example.aesparticipantes.Controllers.CacheController;
 import com.example.aesparticipantes.Entities.Jornada;
 import com.example.aesparticipantes.Repositories.JornadaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +36,8 @@ public class PublicarTiemposScheduler implements SchedulingConfigurer {
     @Autowired
     CacheController cacheController;
 
+    Logger logger = LoggerFactory.getLogger(PublicarTiemposScheduler.class);
+
     @Bean(destroyMethod = "shutdown")
     public Executor taskExecutor() {
         return Executors.newScheduledThreadPool(100);
@@ -47,9 +51,8 @@ public class PublicarTiemposScheduler implements SchedulingConfigurer {
         taskRegistrar.addTriggerTask(
                 () -> {
                         cacheController.limpiar();
-                        System.out.println("Caché limpia desde job"); //TODO: log
+                        logger.info("Caché limpiada desde job");
                     // Descartado, pero funcionaba: mejor limpiarla toda, por prevención de dejarme algunas cachés, y de paso limpieza de memoria
-
 
                     // jornadaAPublicar.get().getCompeticion().getEventos().forEach(e -> {
                     //     cacheManager.getCache("rankingsGlobales").evict(Evento.getEventoId(e.getCompeticion(), e.getCategoria()));
@@ -69,11 +72,9 @@ public class PublicarTiemposScheduler implements SchedulingConfigurer {
                     } else {
                         Jornada jornada = jornadasPorFinalizar.get(0);
                         jornadaAPublicar.set(jornada);
-                        return jornada.getFechaFin(); //TODO: log
-                        //TEST
-//                        Calendar nextExecutionTime = Calendar.getInstance();
-//                        nextExecutionTime.add(Calendar.SECOND, 5);
-//                        return nextExecutionTime.getTime();
+                        logger.info(String.format("Próxima ejecución de limpieza de caché programada para: %s", jornada.getFechaFin()));
+                        return jornada.getFechaFin();
+
                     }
 
                 }

@@ -5,6 +5,7 @@ import com.example.aesparticipantes.Models.Posicion;
 import com.example.aesparticipantes.Repositories.*;
 import com.example.aesparticipantes.Utils.AESUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -93,13 +94,11 @@ public class RankingGeneralController {
 
         Set<Evento> eventosCompeticionEnOrden = competicion.get().getEventos();
         model.addAttribute("evento", evento);
-        if(categoria.get().getNombre().equals("FMC")){
             Jornada jornada = jornadaRepository.findByCompeticionAndNumeroJornada(competicion.get(), numeroJornada);
             if(jornada.isAcabada()){
-                List<Mezcla> mezclas =  mezclaRepository.findAllByJornadaAndCategoria(jornada, categoria.get());
-                model.addAttribute("mezcla", mezclas.size() > 0 ? mezclas.get(0) : null);
+                List<Mezcla> mezclas = mezclaRepository.findAllByJornadaAndCategoria(jornada, categoria.get());
+                model.addAttribute("mezclas", mezclas.isEmpty() ? null : mezclas);
             }
-        }
         model.addAttribute("anteriorEvento", AESUtils.anteriorElemento(eventosCompeticionEnOrden, evento));
         model.addAttribute("siguienteEvento", AESUtils.siguienteElemento(eventosCompeticionEnOrden, evento));
         model.addAttribute("tiempos", self.getRankingJornada(evento, numeroJornada));
@@ -108,9 +107,8 @@ public class RankingGeneralController {
         return "jornada";
     }
 
-    //@Cacheable(value = "rankingsGlobales", key = "#evento.id")
+    @Cacheable(value = "rankingsGlobales", key = "#evento.id")
     public List<Posicion> getRankingGlobal(Evento evento, List<Descalificacion> descalificados, List<Clasificado> clasificados) {
-
         evento.getTiempos().stream().collect(Collectors.groupingBy(Tiempo::getJornada)).forEach((j, ts) -> AESUtils.setPosicionesEnTiempos(ts));
         return evento.getRankingGlobal(descalificados, clasificados);
     }

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
+import java.util.Optional;
 
 
 @Controller
@@ -52,7 +53,7 @@ public class VincularController {
     public String vincularController(@PathVariable("nombreParticipante") String nombreParticipante,
                                      HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest, Model model, Principal principal) {
 
-        Participante participante = participanteRepository.findByNombre(nombreParticipante);
+        Participante participante = participanteRepository.findByNombre(nombreParticipante).get();
 
         if(participante == null){
             logger.error("404 al vincular: " + nombreParticipante);
@@ -82,7 +83,7 @@ public class VincularController {
 
         String callbackUrl = callbackUrlSoloValidar + "?participante=" + nombreParticipanteEncoded;
         String nombreParticipante = new String(Base64.decode(nombreParticipanteEncoded.getBytes()));
-        return self.vincular(participanteRepository.findByNombre(nombreParticipante), model, AuthUtils.getWCAToken(code, callbackUrl), httpServletResponse, httpServletRequest);
+        return self.vincular(participanteRepository.findByNombre(nombreParticipante).get(), model, AuthUtils.getWCAToken(code, callbackUrl), httpServletResponse, httpServletRequest);
 
 
     }
@@ -99,13 +100,13 @@ public class VincularController {
         } else {
             try {
                 WCAGetResponse perfilWCA = AuthUtils.getWCAUser(wcaLoginResponse.getAccess_token());
-                Participante participantePotencial = null;
+                Optional<Participante> participantePotencial = Optional.empty();
 
                 if (perfilWCA.getMe().getWca_id() != null) {
                      participantePotencial = participanteRepository.findByWcaId(perfilWCA.getMe().getWca_id());
                 }
 
-                    if (participantePotencial == null || participantePotencial.equals(participante)) {
+                    if (!participantePotencial.isPresent() || participantePotencial.equals(participante)) {
 
                         participante.setWCAData(perfilWCA);
                         participante.setConfirmado(true);
@@ -120,7 +121,7 @@ public class VincularController {
                     } else {
                         model.addAttribute("mensaje", "Vinculación incorrecta: Hay otro usuario potencialmente vinculado a esta cuenta. " +
                                 "Por favor, contacta con un administrador para aclarar la autoría del perfil.");
-                        logger.error("Vinculación incorrecta: Se ha intentado vincular a "+ participante.getNombre() + " pero no coincide con el potencial: "+ participantePotencial);
+                        logger.error("Vinculación incorrecta: Se ha intentado vincular a "+ participante.getNombre() + " pero no coincide con el potencial: "+ participantePotencial.get().getNombre());
                         return "mensaje";
 
                     }

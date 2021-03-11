@@ -1,7 +1,9 @@
 package com.example.aesparticipantes.Entities;
 
+import com.example.aesparticipantes.Entities.Comparators.EventoComparator;
 import com.example.aesparticipantes.Utils.AESUtils;
 import lombok.*;
+import org.hibernate.annotations.SortComparator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -25,15 +27,15 @@ public class Competicion implements Comparable {
     private Temporada temporada;
 
     @OneToMany(mappedBy = "competicion")
-    @org.hibernate.annotations.OrderBy(clause = "categoria asc")
+    @SortComparator(EventoComparator.class)
     private Set<Evento> eventos;
 
     @OneToMany(mappedBy = "competicion")
     @org.hibernate.annotations.OrderBy(clause = "numeroJornada asc")
     private Set<Jornada> jornadas;
 
-    @org.hibernate.annotations.OrderBy(clause = "orden asc")
     @OneToMany(mappedBy = "competicion")
+    @org.hibernate.annotations.OrderBy(clause = "orden asc")
     private List<SorteoCompeticion> sorteosCompeticion;
 
     @Column(length = 1000)
