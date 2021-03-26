@@ -127,7 +127,7 @@
                     alert('Ojo, parece que durante este tiempo has perdido la sesión. No te preocupes, sigue los siguientes pasos: Primero, abre la web en otra pestaña,' +
                         ' e inicia sesión en ella. Después vuelve a esta pestaña y (sin refrescar) vuelve a intentar el envío. Si el problema no se soluciona de esta forma, por favor, contacta al desarrollador.');
                 } else if(this.readyState === 4){
-                    alert('Esto es un error, por favor, contacta con el desarrollador y muéstrale lo siguente: '+ xhttp.responseText);
+                    alert('Esto es un error, por favor, contacta con el desarrollador y muéstrale lo siguente: ' + this.status + ' ' + xhttp.responseText);
                 }
             };
 
@@ -159,7 +159,9 @@
             var segundos = !divTiempo.find(".segundos")[0].disabled && divTiempo.find(".segundos")[0].value ?  divTiempo.find(".segundos")[0].value : 0;
             var centesimas = !divTiempo.find(".centesimas")[0].disabled && divTiempo.find(".centesimas")[0].value ? ((divTiempo.find(".centesimas")[0].value) + "").substr(0, 2).padEnd(2, "0") : 0;
 
-            return +(minutos * 60) + +segundos + +(centesimas/100.0);
+
+
+            return parseFloat(+(minutos * 60) + +segundos + +(centesimas/100.0)).toPrecision(9);
 
 
         };

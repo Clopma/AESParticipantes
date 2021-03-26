@@ -23,15 +23,15 @@ import static com.example.aesparticipantes.Utils.AESUtils.formatTime;
 public class Tiempo implements Comparable {
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     private Jornada jornada;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     private Categoria categoria;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     private Participante participante;
 
     @NotNull

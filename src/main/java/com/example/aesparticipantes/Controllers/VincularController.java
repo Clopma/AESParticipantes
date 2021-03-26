@@ -53,15 +53,15 @@ public class VincularController {
     public String vincularController(@PathVariable("nombreParticipante") String nombreParticipante,
                                      HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest, Model model, Principal principal) {
 
-        Participante participante = participanteRepository.findByNombre(nombreParticipante).get();
+        Optional<Participante> participante = participanteRepository.findByNombre(nombreParticipante);
 
-        if(participante == null){
+        if(!participante.isPresent()){
             logger.error("404 al vincular: " + nombreParticipante);
             return "error/404";
         }
 
         if (principal instanceof UserData && ((UserData) principal).getCredentials() != null ) {
-            return self.vincular(participante, model, WCALoginResponse.builder().access_token(((UserData) principal).getCredentials()).build(), httpServletResponse, httpServletRequest);
+            return self.vincular(participante.get(), model, WCALoginResponse.builder().access_token(((UserData) principal).getCredentials()).build(), httpServletResponse, httpServletRequest);
         } else {
 
         model.addAttribute("mensaje", "Vinculando...");

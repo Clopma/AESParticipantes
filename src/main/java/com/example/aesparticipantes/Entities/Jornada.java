@@ -23,7 +23,7 @@ import java.util.Set;
 public class Jornada implements Comparable{
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     private Competicion competicion;
 
     @Id

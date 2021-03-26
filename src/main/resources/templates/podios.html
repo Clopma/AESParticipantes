@@ -9,14 +9,14 @@
 
 <body class="cubosbg">
 <div class="bouncyContainer back">
-    <a th:href="'/competicion/' + ${nombreCompeticion}" class="bouncyContainer">
+    <a th:href="'/competicion/' + ${nombre}" class="bouncyContainer">
         <img class="bouncyButton" src="/img/backbutton.png"/>
-    </a> <div class="tagNav"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px" th:text="${nombreCompeticion}"/></div>
+    </a> <div class="tagNav"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px" th:text="${nombre}"/></div>
 </div>
 
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 15px; margin-bottom: 175px">
-        <h1> Podios de <a th:text="${nombre}" th:href="'/competicion/' + ${nombreCompeticion}"/></h1>
+        <h1> Podios de <a th:text="${nombre}" th:href="${isCompeticion ? '/competicion/' : '/temporada/'} + ${nombre}"/></h1>
     </div>
 
     <div style="display: flex; flex-wrap: wrap; justify-content: center; width: 90%;">
@@ -31,7 +31,7 @@
 
                 <div th:each="posicion : ${podio.getValue()}" style=" text-align: left" th:with="nombreParticipante  = ${posicion.getParticipante().getNombre()}">
                     <img th:src="'/img/'+${posicion.getRonda()}+'.png'" style="width: 50px; margin-right: 10px;  "/>
-                    <a th:href="'/participante/'+${nombreParticipante}+'/'+ ${nombreCompeticion} +'#'+${podio.getKey().getNombre()}" th:style="${nombreParticipante.equals('-')} ? 'pointer-events: none' : '' ">
+                    <a th:href="'/participante/'+${nombreParticipante}+'/'+ ${nombre} +'#'+${podio.getKey().getNombre()}" th:style="${nombreParticipante.equals('-')} ? 'pointer-events: none' : '' ">
                     <span style="font-weight: bolder" th:text="${nombreParticipante}"> </span>
                     </a>
                 </div>

@@ -23,7 +23,7 @@ public class Competicion implements Comparable {
     @Column(length = 25)
     private String nombre;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     private Temporada temporada;
 
     @OneToMany(mappedBy = "competicion")

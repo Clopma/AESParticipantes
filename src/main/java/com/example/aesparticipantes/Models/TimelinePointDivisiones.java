@@ -1,8 +1,7 @@
 package com.example.aesparticipantes.Models;
 
-import com.example.aesparticipantes.Entities.Competicion;
-import com.example.aesparticipantes.Entities.Jornada;
-import com.example.aesparticipantes.Entities.Temporada;
+import com.example.aesparticipantes.Controllers.DivisionController;
+import com.example.aesparticipantes.Entities.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,8 +16,6 @@ public class TimelinePointDivisiones {
 
     Temporada temporada;
     Jornada jornada;
-
-
 
     public Optional<TimelinePointDivisiones> getAnterior(){
         Optional<Jornada> jornadaAnterior = jornada.getCompeticion().getJornada(jornada.getNumeroJornada() -1);
@@ -63,10 +60,9 @@ public class TimelinePointDivisiones {
 
     public static TimelinePointDivisiones getUltimaAcabada(Temporada temporada){
         List<TimelinePointDivisiones> acabadas = getTimelineCompleta(temporada).stream().filter(t -> t.getJornada().isAcabada()).collect(Collectors.toList());
-
-        //TODO isPresent throw exception?
         return acabadas.stream().filter(t -> t.getJornada().isActiva()).findAny()
-                .orElse(acabadas.stream().reduce((acc, val) -> acc.getJornada().getFechaInicio().after(val.getJornada().getFechaInicio()) ? acc : val).get());
+                .orElse(acabadas.stream().reduce((acc, val) -> acc.getJornada().getFechaInicio().after(val.getJornada().getFechaInicio()) ? acc : val)
+                        .orElseThrow(() -> new RuntimeException("Error: No se ha encontrado el último timelinePoint de la temporada " + temporada.getNombre() + ". Esto no debería ocurrir.")));
     }
 
     public static List<TimelinePointDivisiones> getTimelineCompleta(Temporada temporada) {
@@ -80,5 +76,23 @@ public class TimelinePointDivisiones {
             timelineCompleta.add(i.get());
         }
         return timelineCompleta;
+    }
+
+    public int[] getDivisionYPosicionParticipante(Participante participante, Categoria categoria, DivisionController divisionController) {
+
+        DivisionesEnJornada fase1 = divisionController.getVistaDivision(this, Evento.builder().categoria(categoria).competicion(jornada.getCompeticion()).build())[1];
+
+        for(int i = 0; i < fase1.getDivisiones().size(); i++){
+            DivisionJornada divisionJornada = fase1.getDivisiones().get(i);
+            for(int j = 0; j < divisionJornada.getParticipantes().size(); j++){
+               if(divisionJornada.getParticipantes().get(j).getNombre().equals(participante.getNombre())){
+                  return new int[]{i +1, j+1};
+               }
+            }
+        }
+
+        //No lo ha encontrado en la división a pesar de que tiene un tiempo en ella (ya que si no, no hay que llamar a este método),
+        //con lo cual quiere decir que ese tiempo era de la última jornada, y no está incluído en la división
+        return new int[]{0, 0};
     }
 }

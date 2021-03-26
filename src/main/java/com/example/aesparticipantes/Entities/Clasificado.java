@@ -1,29 +1,34 @@
 package com.example.aesparticipantes.Entities;
 
-import com.example.aesparticipantes.Entities.Keys.KeyClasificado;
 import lombok.*;
 
 import javax.persistence.*;
 
-@Table(name = "Clasificados")
+@Table(name = "Clasificados", uniqueConstraints= {
+        @UniqueConstraint(columnNames = {"participante_nombre", "evento_categoria_nombre", "evento_competicion_nombre", "ronda"}),
+        @UniqueConstraint(columnNames = {"participante_nombre", "clasificacion_temporada_nombre", "clasificacion_categoria_nombre", "ronda"})
+})
 @Entity
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(KeyClasificado.class)
 public class Clasificado {
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(columnDefinition = "integer auto_increment")
+    int id;
+
+    @ManyToOne()
     private Evento evento;
 
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
+    private Clasificacion clasificacion;
+
+    @ManyToOne()
     private Participante participante;
 
-    @Id
     @Column(length = 25)
     private String ronda;
 

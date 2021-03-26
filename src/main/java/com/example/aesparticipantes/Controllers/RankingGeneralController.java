@@ -59,19 +59,21 @@ public class RankingGeneralController {
             return "error/404";
         }
 
-        Evento evento = eventoRepository.findByCategoriaAndCompeticion(categoria.get(), competicion.get());
-        evento.getClasificados();
-        evento.getDescalificaciones();
+        Optional<Evento> evento = eventoRepository.findByCategoriaAndCompeticion(categoria.get(), competicion.get());
 
-        List<Posicion> posiciones = self.getRankingGlobal(evento, descalificacionRepository.findAllByEvento(evento), clasificadoRepository.findAllByEvento(evento));
+        if(!evento.isPresent()){
+            model.addAttribute("mensaje", "El evento compuesto por "+ nombreCompeticion +" y " + nombreCategoria + " no existe.");
+        }
+
+        List<Posicion> posiciones = self.getRankingGlobal(evento.get(), descalificacionRepository.findAllByEvento(evento.get()), clasificadoRepository.findAllByEvento(evento.get()));
 
         Set<Evento> eventosCompeticionEnOrden = competicion.get().getEventos();
 
-        model.addAttribute("evento", evento);
-        model.addAttribute("anteriorEvento", AESUtils.anteriorElemento(eventosCompeticionEnOrden, evento));
-        model.addAttribute("siguienteEvento", AESUtils.siguienteElemento(eventosCompeticionEnOrden, evento));
+        model.addAttribute("evento", evento.get());
+        model.addAttribute("anteriorEvento", AESUtils.anteriorElemento(eventosCompeticionEnOrden, evento.get()));
+        model.addAttribute("siguienteEvento", AESUtils.siguienteElemento(eventosCompeticionEnOrden, evento.get()));
         model.addAttribute("posiciones", posiciones);
-        model.addAttribute("largoClasificacion", getLargoClasificacion(posiciones, evento.getCortePlayOffs()));
+        model.addAttribute("largoClasificacion", getLargoClasificacion(posiciones, evento.get().getCortePlayOffs()));
         model.addAttribute("eventos", eventosCompeticionEnOrden);
 
         return "rankingGeneral";
@@ -89,20 +91,23 @@ public class RankingGeneralController {
             return "error/404";
         }
 
-        Evento evento = eventoRepository.findByCategoriaAndCompeticion(categoria.get(), competicion.get());
+        Optional<Evento> evento = eventoRepository.findByCategoriaAndCompeticion(categoria.get(), competicion.get());
 
+        if(!evento.isPresent()){
+            model.addAttribute("mensaje", "El evento compuesto por "+ nombreCompeticion +" y " + nombreCategoria + " no existe.");
+        }
 
         Set<Evento> eventosCompeticionEnOrden = competicion.get().getEventos();
-        model.addAttribute("evento", evento);
+        model.addAttribute("evento", evento.get());
             Jornada jornada = jornadaRepository.findByCompeticionAndNumeroJornada(competicion.get(), numeroJornada);
             if(jornada.isAcabada()){
                 List<Mezcla> mezclas = mezclaRepository.findAllByJornadaAndCategoria(jornada, categoria.get());
                 model.addAttribute("mezclas", mezclas.isEmpty() ? null : mezclas);
             }
-        model.addAttribute("anteriorEvento", AESUtils.anteriorElemento(eventosCompeticionEnOrden, evento));
-        model.addAttribute("siguienteEvento", AESUtils.siguienteElemento(eventosCompeticionEnOrden, evento));
-        model.addAttribute("tiempos", self.getRankingJornada(evento, numeroJornada));
-        model.addAttribute("numJornadas", evento.getCompeticion().getJornadas().size());
+        model.addAttribute("anteriorEvento", AESUtils.anteriorElemento(eventosCompeticionEnOrden, evento.get()));
+        model.addAttribute("siguienteEvento", AESUtils.siguienteElemento(eventosCompeticionEnOrden,  evento.get()));
+        model.addAttribute("tiempos", self.getRankingJornada( evento.get(), numeroJornada));
+        model.addAttribute("numJornadas",  evento.get().getCompeticion().getJornadas().size());
 
         return "jornada";
     }

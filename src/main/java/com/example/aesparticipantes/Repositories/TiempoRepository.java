@@ -4,6 +4,7 @@ import com.example.aesparticipantes.Entities.Categoria;
 import com.example.aesparticipantes.Entities.Jornada;
 import com.example.aesparticipantes.Entities.Participante;
 import com.example.aesparticipantes.Entities.Tiempo;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,10 @@ public interface TiempoRepository extends CrudRepository<Tiempo, Long> {
 
     @Query("from Tiempo t where t.jornada = ?1 and t.participante = ?2")
     List<Tiempo> getTiemposEnJornada(Jornada jornada, Participante participante);
+
+    @EntityGraph(attributePaths = {"jornada.competicion.temporada"}, type = EntityGraph.EntityGraphType.LOAD) // Nota 002
+    @Query("from Tiempo t where t.participante = ?1")
+    List<Tiempo> getTiemposParticipante(Participante participante);
 
 
     Optional<Tiempo> getByParticipanteAndCategoriaAndJornada(Participante p, Categoria c, Jornada j);

@@ -1,15 +1,14 @@
 package com.example.aesparticipantes.Entities;
 
 import com.example.aesparticipantes.Models.InscripcionModel;
+import com.example.aesparticipantes.Repositories.TiempoRepository;
 import com.example.aesparticipantes.Seguridad.WCAGetResponse;
 import com.example.aesparticipantes.Utils.AESUtils;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Table(name = "Participantes")
@@ -19,6 +18,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Configurable
 public class Participante implements Comparable {
 
 
@@ -56,8 +56,8 @@ public class Participante implements Comparable {
     private String urlImagenPerfil;
     private String urlImagenPerfilIcono;
 
-    @Column(columnDefinition = "boolean default false") //TODO: necesario?
     private boolean confirmado;
+    private boolean baneado;
 
     @OneToMany(mappedBy = "participante")
     List<Tiempo> tiempos;
@@ -65,7 +65,6 @@ public class Participante implements Comparable {
     @org.hibernate.annotations.OrderBy(clause = "categoria asc")
     @OneToMany(mappedBy = "participante")
     Set<Inscripcion> inscripciones;
-
 
     public List<InscripcionModel> getInscripcionesParticipadasYNoParticipadasEnCompeticion(Competicion competicion, List<Inscripcion> inscripciones, List<Tiempo> tiemposParticipadosEnJornada) {
 
@@ -81,6 +80,20 @@ public class Participante implements Comparable {
        })
                .collect(Collectors.toList());
 
+    }
+
+    public Map<Temporada, List<Categoria>> getTemporadas(TiempoRepository tiempoRepository){
+        //Lo siento, Carlos del futuro, por haber hecho esto en una linea.
+        Map<Temporada, List<Categoria>> mapa = new HashMap<>();
+
+        tiempoRepository.getTiemposParticipante(this) //Se obtienen tiempos del participante y todas las entidades que se van a usar (Nota 002)
+                .stream().collect(Collectors.groupingBy(t -> t.getJornada().getCompeticion())).entrySet()// obtenemos un Map<Competicion, List<Tiempo>>
+                .stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().stream().map(Tiempo::getCategoria).collect(Collectors.toList()))) //Map<Competicion, List<Categoria>>
+                .forEach((c, lcat) -> {if(mapa.get(c.getTemporada()) == null) { mapa.put(c.getTemporada(), lcat);} else { mapa.get(c.getTemporada()).addAll(lcat);}}); // Las metemos en un map
+
+        mapa.remove(null); //Eliminamos la temporada null que contiene los datos de los tiempos en competiciones que no tenían temporada
+        mapa.keySet().stream().forEach(k -> mapa.put(k, mapa.get(k).stream().distinct().collect(Collectors.toList()))); //Eliminamos duplicadas
+        return mapa;
     }
 
     @Override

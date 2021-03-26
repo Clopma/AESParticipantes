@@ -70,6 +70,46 @@
         </span>
     </div>
 
+    <div th:if="${participante.isBaneado()}" class="whitePanel" style="background-color: rgba(214,149,153,0.91)">
+        <span>
+            <img src="/img/alerta.png" style="width: 30px; height: 30px"/>
+            <b> Este usuario está baneado por el incumplimiento grave e intencionado de las normas de participación.</b></span>
+            <img src="/img/alerta.png" style="width: 30px; height: 30px"/>
+    </div>
+
+    <div th:if="${!temporadas.isEmpty()}" class="whitePanel" style="margin-top: 50px;">
+        <h1 style="text-align: center; padding-bottom: 30px">
+            <div th:each="temporada : ${temporadas}">
+                <span>Temporada de </span><a th:href="${'/temporada/'+ temporada.getKey()}"><span th:text="${temporada.getKey()}"/></a>
+            <table class="table dataTable centerCols" style="font-size: 20px;">
+                <tbody class="alto">
+                <tr>
+                    <td th:each="posicion : ${temporada.getValue()}" style="border-bottom: 0">
+                       <span th:class="'cubing-icon event-' + ${posicion.getCategoria()}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:each="posicion : ${temporada.getValue()}" style="border-bottom: 0">
+                        <span th:if="${posicion.getPosicionEnDivision()} > 0">
+                            <img th:src="'/img/divisiones/' + ${posicion.getDivision()} + 'division.png'" style="width: 75px; height: 75px; margin-bottom: 15px"/>
+                            <br />
+                            <h3>DIVISIÓN</h3>
+                            <span th:text="'(' + ${posicion.getPosicionEnDivision()} + 'ª posición)'"/>
+                        </span>
+                        <span th:if="${posicion.getPosicionEnDivision()} == 0">
+                            <h4>PENDIENTE DE CLASIFICACIÓN</h4>
+                            <h5>Ha participado tan solo en una jornada que aun no ha finalizado</h5>
+                        </span>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+            </div>
+        </h1>
+    </div>
+
+
     <div class="whitePanel" style="margin-top: 50px;">
         <h1 style="text-align: center; padding-bottom: 30px">
             Competiciones completadas
@@ -316,7 +356,7 @@
     function loadModal(activador) {
         var nombreCategoria = $(activador).attr("data-nombreCategoria");
         var nombreCompeticion = $(activador).attr("data-nombreCompeticion");
-        loadBracket(nombreCategoria, nombreCompeticion);
+        loadBracket(nombreCategoria, nombreCompeticion, "cuerpoModal", true);
     }
 
     if([[${soyYo}]] && ([[${participante.getEmail()}]] == null || [[${participante.getAnuncioNuevaCompeticion()}]] == null)){

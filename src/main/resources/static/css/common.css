@@ -105,7 +105,7 @@ table.centerCols tbody.alto td {
 }
 
 footer.credit {
-    position: absolute;
+    position: fixed;
     height: 2em; line-height: 2em;
     width: auto;
     padding: 5px 20px;
@@ -186,7 +186,7 @@ img.bouncyButton.smallShadow {
 }
 
 .bouncyButton:not(.quieto):hover {
-    transition: width .075s, height .075s, transform .225s .075s;
+    transition: width .1s, height .1s, transform .2s .1s;
     width: 110%;
     height: 110%;
     transform: scale(.8);

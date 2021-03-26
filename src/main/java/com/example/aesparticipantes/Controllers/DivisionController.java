@@ -13,6 +13,7 @@ import com.example.aesparticipantes.Utils.AESUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -109,7 +110,8 @@ public class DivisionController {
         return "rankingDivisiones";
     }
 
-//    @Cacheable(value = "vistaDivisionEnJornada", key = "#temporada.nombre + #evento.competicion.nombre + #jornada.numeroJornada + #evento.categoria.nombre")
+    @Cacheable(value = "vistaDivisionEnJornada", key = "#timelinePointDivisiones.temporada.nombre + #timelinePointDivisiones.jornada.numeroJornada + #evento.competicion.nombre + #evento.categoria.nombre")
+    // Devuelve un array con dos posiciones: fase 0 y 1 respectivamente
     public DivisionesEnJornada[] getVistaDivision(TimelinePointDivisiones timelinePointDivisiones, Evento evento){
 
 
@@ -150,7 +152,7 @@ public class DivisionController {
                                     Tiempo.builder().posicion(AESUtils.POSICION_NO_PARTICIPADOS).build())
                                 .getPosicion()));
 
-                fase0.getDivisiones().add(new DivisionJornada(estadoJornadaAnteriorFase1.getDivisiones().get(i).getParticipantes(), false));
+                fase0.getDivisiones().add(new DivisionJornada(estadoJornadaAnteriorFase1.getDivisiones().get(i).getParticipantes(), false).clone());
 
             }
 
@@ -226,7 +228,7 @@ public class DivisionController {
         if(numDivision > 0){ return 12; }
         //numDivision == 1
 
-        //Siempre debería estar present ya que el evento que le pases debe haberse sacado en función de las categorías de la jornada (Notas 001-A y 001-B)
+        //Siempre debería estar present ya que el evento que le pases debe haberse sacado en función de las categorías de la jornada (Notas 001-A, 001-B y 001-C)
         return temporada.getClasificaciones().stream().filter(c -> c.getCategoria().equals(categoria)).findAny().get().getTamanoDivisiones();
     }
 }

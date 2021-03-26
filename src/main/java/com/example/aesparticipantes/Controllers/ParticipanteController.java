@@ -2,6 +2,8 @@ package com.example.aesparticipantes.Controllers;
 
 import com.example.aesparticipantes.Entities.*;
 import com.example.aesparticipantes.Models.Posicion;
+import com.example.aesparticipantes.Models.PosicionTemporada;
+import com.example.aesparticipantes.Models.TimelinePointDivisiones;
 import com.example.aesparticipantes.Repositories.*;
 import com.example.aesparticipantes.Seguridad.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,10 @@ public class ParticipanteController {
     @Autowired
     TiempoRepository tiempoRepository;
 
+    @Autowired
+    DivisionController divisionController;
+
+
     @RequestMapping("/participante/{nombreParticipante}")
     public String perfilParticipante(Model model, @PathVariable("nombreParticipante") String nombreParticipante, Principal principal) {
 
@@ -65,8 +71,8 @@ public class ParticipanteController {
 
         Optional<Participante> participante = participanteRepository.findByNombre(nombreParticipante);
 
-        if(!participante.isPresent()){
-            model.addAttribute("mensaje", "No hay ningún participante llamado "+ nombreParticipante +".");
+        if (!participante.isPresent()) {
+            model.addAttribute("mensaje", "No hay ningún participante llamado " + nombreParticipante + ".");
             return "error/404";
         }
 
@@ -77,18 +83,31 @@ public class ParticipanteController {
         List<Competicion> competicionesFuturas = competicionRepository.findCompeticionesFuturas();
         List<Competicion> competicionesPresentes = competicionRepository.findCompeticionesPresentesConInscripcionesAbiertas();
 
-
         eventoRepository.findAllByCompeticionIn(competicionesFuturas);// Previene n + 1 //TODO: cambiar por entity graph
         eventoRepository.findAllByCompeticionIn(competicionesPresentes);// Previene n + 1 //TODO: cambiar por entity graph
-
 
         model.addAttribute("competicionesFuturas", competicionesFuturas);
         model.addAttribute("competicionesPresentes", competicionesPresentes);
         model.addAttribute("resultados", resultadosCompeticionesInscritas);
         model.addAttribute("participante", participante.get());
-
-
+        model.addAttribute("temporadas", getPosicionesEnTemporadas(participante.get()));
         return "participante";
+    }
+
+    public Map<String, List<PosicionTemporada>> getPosicionesEnTemporadas(Participante participante) {
+        return participante.getTemporadas(tiempoRepository).entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey().getNombre(), e -> {
+                    TimelinePointDivisiones timelineActualTemporadaActual = TimelinePointDivisiones.getUltimaAcabada(e.getKey());
+                    return e.getValue().stream().filter(c -> timelineActualTemporadaActual.getTemporada().getClasificaciones().stream().anyMatch(cl -> cl.getCategoria().equals(c))/*001-C*/).map(c -> {
+                                int[] divisionYPosicion = timelineActualTemporadaActual.getDivisionYPosicionParticipante(participante, c, divisionController);
+                                return PosicionTemporada.builder()
+                                        .categoria(c.getNombre())
+                                        .division(divisionYPosicion[0])
+                                        .posicionEnDivision(divisionYPosicion[1])
+                                        .build();
+                            }
+                    ).collect(Collectors.toList());
+                }));
     }
 
     @RequestMapping("/participante/{nombreParticipante}/{nombreCompeticion}")
@@ -105,8 +124,8 @@ public class ParticipanteController {
         }
 
         Optional<Competicion> competicion = competicionRepository.findByNombre(nombreCompeticion);
-        if(!competicion.isPresent()){
-            model.addAttribute("mensaje", "No hay ninguna competición llamada "+ nombreCompeticion +".");
+        if (!competicion.isPresent()) {
+            model.addAttribute("mensaje", "No hay ninguna competición llamada " + nombreCompeticion + ".");
             return "error/404";
         }
 

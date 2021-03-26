@@ -16,7 +16,7 @@ function inscribirse(button) {
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
+        if (this.readyState === 4 && (this.status === 200 || this.status === 401)) {
             alert(xhttp.responseText);
             location.reload();
         } else if(this.readyState === 4) {

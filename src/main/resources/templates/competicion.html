@@ -89,7 +89,7 @@
                             <!-- ::before -->
                         </span>
                     <span class="tooltiptext"
-                          th:text="${evento.getCategoria().getNombre() + ': ' + (evento.getCortePlayOffs() == 0 ? 'No habrá play-offs': (evento.getCortePlayOffs() == 4 ? 'Habrá dos rondas de play-offs': (evento.getCortePlayOffs() == 8 ? 'Habrá tres rondas de play-offs': '')))}"/>
+                          th:text="${evento.getCategoria().getNombre() + ': ' + (evento.getCortePlayOffs() == 0 ? 'No habrá playoffs': (evento.getCortePlayOffs() == 4 ? 'Habrá dos rondas de playoffs': (evento.getCortePlayOffs() == 8 ? 'Habrá tres rondas de playoffs': '')))}"/>
                 </div>
             </div>
             <div class="tooltip">

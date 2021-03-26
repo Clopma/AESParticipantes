@@ -24,9 +24,28 @@ public class Temporada {
 
     @org.hibernate.annotations.OrderBy(clause = "jornadas")
     @OneToMany(mappedBy = "temporada")
-    Set<Competicion> competiciones;
+    Set<Competicion> competiciones; //TODO: list?
 
     @OneToMany(mappedBy = "temporada")
     List<Clasificacion> clasificaciones;
+
+
+
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof Temporada)) {
+            return false;
+        }
+
+        Temporada t = (Temporada) o;
+
+        return t.getNombre().equals(this.getNombre());
+    }
 
 }

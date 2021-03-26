@@ -6,6 +6,7 @@
     <meta property="og:description"  th:content="${'Toda la información sobre la Temporada de ' + nombreTemporada +'.'}"/>
     <meta property="og:image" content="https://aesonline.speedcubingspain.org/img/corona.png" />
     <title th:text="${'Temporada ' + nombreTemporada}"/>
+    <script type="text/javascript" src="/js/ModalUtils.js"></script>
     <link rel="stylesheet" href="/css/cubing-icons.css"/>
     <link rel="stylesheet" href="/css/calendario.css"/>
 </head>
@@ -13,6 +14,11 @@
 
 <body class="cubosbg">
 <div th:replace="fragments/backButton :: backButton"/>
+<div th:if="${timeline.get(timeline.size()-1).getJornada().isAcabada()}" class="bouncyContainer forth">
+    <a th:href="'/podios/' + ${nombreTemporada}" class="bouncyContainer">
+        <img class="bouncyButton makeSmaller" src="/img/podiologo.png"/>
+    </a> <div class="tagNav"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px">PODIOS</h2></div>
+</div>
 <div class="vertical-flex-wrapper">
     <div class="whitePanel" style="margin-top: 75px; max-width: 40%; text-align: center">
         <div style="display: flex; align-items: center; justify-content: center">
@@ -76,19 +82,60 @@
                                       style="width: 10px;"/>
                             </a>
                         </div>
-                        <div th:if="${!timelinepoint.getJornada().isAcabada()}">
+                        <h4 th:if="${!timelinepoint.getJornada().isAcabada()}">
                             Cuando finalice esta temporada podrás ver el estado de las divisiones.
-                        </div>
+                        </h4>
                     </div>
                     <img th:if="${timeline.size() != iStat.count}" src="/img/forwardbutton.png"
                          style="width: 35px; margin: 10px 0; transform: rotate(90deg)"/>
                 </div>
                 <img src="/img/forwardbutton.png" style="width: 75px; margin: 10px 0; transform: rotate(90deg)"/>
                 <h2 th:text="'Playoffs de la Temporada ' + ${nombreTemporada}"/>
+                <div th:if="${timeline.get(timeline.size()-1).getJornada().isAcabada()}">
+                    <h3>Puedes ver los brackets de los playoffs eligiendo una categoría:</h3>
+                    <br/>
+                    <div style="display: flex; justify-content: center">
+                        <div th:each="clasificacion : ${clasificaciones}">
+                            <a onclick="loadModal(this)" th:data-nombreCategoria="${clasificacion.getCategoria().getNombre()}" th:data-nombreTemporada="${nombreTemporada}"
+                               data-toggle="modal" data-target="#playOffsModal">
+                                    <span th:class="${'cubing-icon event-' + clasificacion.getCategoria().getNombre() + ' clicker'}"
+                                          style="width: 10px;"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${!timeline.get(timeline.size()-1).getJornada().isAcabada()}">
+                    <h3>Podrás ver aquí los brackets de los playoffs cuando finalice la última jornada de la temporada.</h3>
+                </div>
+                <br/>
                 <h3>Se retransmitirán en el <a href="https://www.twitch.tv/aespeedcubing">Twitch de la AES</a>.</h3>
                 <br/>
             </div>
         </div>
 </div>
+
+<div class="modal fade" id="playOffsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #eaeaea">
+            <div class="modal-header">
+                <h2 th:text="${'PlayOffs '}" class="modal-title" id="exampleModalLabel">(título)</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="cuerpoModal" class="fixedBracket"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    function loadModal(activador) {
+        var nombreCategoria = $(activador).attr("data-nombreCategoria");
+        var nombreTemporada = $(activador).attr("data-nombreTemporada");
+        loadBracket(nombreCategoria, nombreTemporada, "cuerpoModal", false);
+    }
+</script>
 </body>
 </html>

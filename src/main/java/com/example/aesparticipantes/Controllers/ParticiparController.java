@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.Base64;
@@ -179,11 +180,11 @@ public class ParticiparController {
                                                 @RequestHeader(value = "explicacion", required = false) String explicacion, Principal principal) {
 
 
-        double tiempo1 = tiempo1op != null ? AESUtils.truncarTiempoIntroducido(tiempo1op) : 0;
-        double tiempo2 = tiempo2op != null ? AESUtils.truncarTiempoIntroducido(tiempo2op) : 0;
-        double tiempo3 = tiempo3op != null ? AESUtils.truncarTiempoIntroducido(tiempo3op) : 0;
-        double tiempo4 = tiempo4op != null ? AESUtils.truncarTiempoIntroducido(tiempo4op) : 0;
-        double tiempo5 = tiempo5op != null ? AESUtils.truncarTiempoIntroducido(tiempo5op) : 0;
+        BigDecimal tiempo1 = tiempo1op != null ? AESUtils.truncarTiempoIntroducido(tiempo1op) : BigDecimal.ZERO;
+        BigDecimal tiempo2 = tiempo2op != null ? AESUtils.truncarTiempoIntroducido(tiempo2op) : BigDecimal.ZERO;
+        BigDecimal tiempo3 = tiempo3op != null ? AESUtils.truncarTiempoIntroducido(tiempo3op) : BigDecimal.ZERO;
+        BigDecimal tiempo4 = tiempo4op != null ? AESUtils.truncarTiempoIntroducido(tiempo4op) : BigDecimal.ZERO;
+        BigDecimal tiempo5 = tiempo5op != null ? AESUtils.truncarTiempoIntroducido(tiempo5op) : BigDecimal.ZERO;
 
 
         Optional<Participante> participanteLogeado;
@@ -207,7 +208,7 @@ public class ParticiparController {
             return new ResponseEntity<>("Lo sentimos, pero la jornada ha terminado mientras participabas. No hay que dejar las cosas para el último momento...", HttpStatus.FORBIDDEN);
         }
 
-        Optional<Categoria> categoria = categoriaRepository.findByNombre(nombreCategoria); //TODO: Cachear (hacer esta tarea después de entender el cacheo de hibernate)
+        Optional<Categoria> categoria = categoriaRepository.findByNombre(nombreCategoria);
 
         if(!categoria.isPresent()){
             return new ResponseEntity<>("Categoría no encontrada. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
@@ -225,11 +226,11 @@ public class ParticiparController {
         }
 
         tiempo.setEnvio(new Date());
-        tiempo.setTiempo1(tiempo1);
-        tiempo.setTiempo2(tiempo2);
-        tiempo.setTiempo3(tiempo3);
-        tiempo.setTiempo4(tiempo4);
-        tiempo.setTiempo5(tiempo5);
+        tiempo.setTiempo1(tiempo1.doubleValue());
+        tiempo.setTiempo2(tiempo2.doubleValue());
+        tiempo.setTiempo3(tiempo3.doubleValue());
+        tiempo.setTiempo4(tiempo4.doubleValue());
+        tiempo.setTiempo5(tiempo5.doubleValue());
         tiempo.setExplicacion(explicacion == null ? null : new String(Base64.getDecoder().decode(explicacion.getBytes()), StandardCharsets.UTF_8));
         tiempo.setSolucion(solucion == null ? null : new String(Base64.getDecoder().decode(solucion.getBytes()), StandardCharsets.UTF_8));
 

@@ -26,11 +26,11 @@ import java.util.stream.Collectors;
 public class Evento implements Comparable{
 
     @Id
-    @ManyToOne(fetch = FetchType.EAGER) // Competición get Eventos usa .getCategoria() para ordenar
+    @ManyToOne()
     private Categoria categoria;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY) //TODO: quizás estaría mejor sin lazy
+    @ManyToOne()
     private Competicion competicion;
 
     @OneToMany(mappedBy = "evento")

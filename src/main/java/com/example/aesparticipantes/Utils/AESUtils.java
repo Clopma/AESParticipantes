@@ -128,12 +128,12 @@ public class AESUtils {
         });
     }
 
-    public static double truncarTiempoIntroducido(String tiempo) {
-        return new BigDecimal(tiempo).setScale(2, BigDecimal.ROUND_FLOOR).doubleValue();
+    public static BigDecimal truncarTiempoIntroducido(String tiempo) {
+        return new BigDecimal(tiempo).setScale(2, BigDecimal.ROUND_FLOOR);
     }
 
     public static String getHash(String str){
-        MessageDigest digest = null;
+        MessageDigest digest;
         try {
             digest = MessageDigest.getInstance("SHA-256");
             byte[] encodedhash = digest.digest(

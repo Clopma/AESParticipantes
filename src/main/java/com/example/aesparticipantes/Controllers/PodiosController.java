@@ -1,11 +1,9 @@
 package com.example.aesparticipantes.Controllers;
 
-import com.example.aesparticipantes.Entities.Categoria;
-import com.example.aesparticipantes.Entities.Clasificado;
-import com.example.aesparticipantes.Entities.Competicion;
-import com.example.aesparticipantes.Entities.Participante;
+import com.example.aesparticipantes.Entities.*;
 import com.example.aesparticipantes.Repositories.ClasificadoRepository;
 import com.example.aesparticipantes.Repositories.CompeticionRepository;
+import com.example.aesparticipantes.Repositories.TemporadaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,15 +23,26 @@ public class PodiosController {
     @Autowired
     CompeticionRepository competicionRepository;
 
-    @RequestMapping("/podios/{nombreCompeticion}")
-    public String getPodios(Model model, @PathVariable("nombreCompeticion") String nombreCompeticion) {
+    @Autowired
+    TemporadaRepository temporadaRepository;
 
-        Optional<Competicion> competicion = competicionRepository.findByNombre(nombreCompeticion);
-        if(!competicion.isPresent()){
+
+    @RequestMapping("/podios/{nombre}")
+    public String getPodios(Model model, @PathVariable("nombre") String nombre) {
+
+        Optional<Competicion> competicion = competicionRepository.findByNombre(nombre);
+        Optional<Temporada> temporada = temporadaRepository.findByNombre(nombre);
+
+        if(!competicion.isPresent() && !temporada.isPresent()){
+            //TODO: Añadir mensaje y log
             return "error/404";
         }
 
-        Map<Categoria, List<ClasificadoRepository.Medalla>> podios = clasificadoRepository.getMedallas(competicion.get().getNombre()).stream().map(m ->
+        List<Object[]> medallas = competicion.isPresent() ?
+                clasificadoRepository.getMedallasCompeticion(competicion.get().getNombre()) :
+                clasificadoRepository.getMedallasTemporada(temporada.get().getNombre());
+
+        Map<Categoria, List<ClasificadoRepository.Medalla>> podios = medallas.stream().map(m ->
 
                 ClasificadoRepository.Medalla.builder()
                         .categoria((Categoria) m[0])
@@ -46,11 +55,13 @@ public class PodiosController {
             throw new IllegalStateException(String.format("Duplicate key %s", u));
         }, LinkedHashMap::new));
 
-        model.addAttribute("nombre", competicion.get().getNombre());
+        model.addAttribute("isCompeticion", competicion.isPresent());
+        model.addAttribute("nombre", competicion.isPresent() ? competicion.get().getNombre() : temporada.get().getNombre());
         model.addAttribute("podios", podios);
 
         return "podios";
     }
+
 
     private List<ClasificadoRepository.Medalla> ordenarMedallas(List<ClasificadoRepository.Medalla> l) {
 

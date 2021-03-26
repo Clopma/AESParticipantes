@@ -7,7 +7,7 @@ spring:
         password: n_nslp0nssAA22q3aq1!
     jpa:
         hibernate:
-            ddl-auto: none
+            ddl-auto: update
     resources:
         static-locations: classpath:/static/
 

@@ -51,10 +51,10 @@
                     <img class="bouncyButton podio" src="/img/podiologo.png"/>
                 </a>
             </div>
-            <a th:if="${posicion.isClasificado()}" href="#" onclick="loadModal(this)" th:data-nombreCategoria="${posicion.getNombreCategoria()}" data-toggle="modal" data-target="#playOffsModal">
+            <a th:if="${posicion.isClasificado()}" href="#" onclick="loadModal(this)" th:data-nombreCategoria="${posicion.getNombreCategoria()}" th:data-nombreCompeticion="${posicion.getNombreCompeticion()}" data-toggle="modal" data-target="#playOffsModal">
                 <h3 style="margin-left: 30px"> Clasificado a playoffs </h3>
                 <div th:data-nombreCategoria="${posicion.getNombreCategoria()}" style="width: 75px; height: 75px">
-                    <a onclick="loadModal(this)" th:data-nombreCategoria="${posicion.getNombreCategoria()}" data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
+                    <a onclick="loadModal(this)" th:data-nombreCategoria="${posicion.getNombreCategoria()}" th:data-nombreCompeticion="${posicion.getNombreCompeticion()}" data-toggle="modal" data-target="#playOffsModal" class="bouncyContainer">
                         <img class="bouncyButton" th:if="${posicion.getMedalla() != null}" th:src="'/img/'+${posicion.getMedalla()+'.png'}"/>
                         <img class="bouncyButton podio" th:if="${posicion.getMedalla() == null}"  src="/img/bracket.png"/>
                     </a>
@@ -168,7 +168,9 @@
     function loadModal(activador) {
 
         var nombreCategoria = $(activador).attr("data-nombreCategoria");
-        loadBracket(nombreCategoria);
+        var nombreCompeticion = $(activador).attr("data-nombreCompeticion");
+
+        loadBracket(nombreCategoria, nombreCompeticion, "cuerpoModal", true);
     }
 
 </script>

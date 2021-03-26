@@ -20,7 +20,7 @@ public class DivisionJornada {
         this.nueva = nueva;
     }
     public DivisionJornada(List<ParticipanteModel> participantes, boolean nueva) {
-        setParticipantes(participantes);
+        this.participantes = participantes;
         this.nueva = nueva;
     }
 
