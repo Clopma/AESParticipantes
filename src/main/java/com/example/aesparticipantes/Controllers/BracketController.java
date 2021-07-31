@@ -6,6 +6,7 @@ import com.example.aesparticipantes.Models.Posicion;
 import com.example.aesparticipantes.Models.TimelinePointDivisiones;
 import com.example.aesparticipantes.Repositories.*;
 import com.example.aesparticipantes.Utils.AESUtils;
+import com.example.aesparticipantes.Utils.SpecialCaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
+//TODO: Toda esta clase es terriblemente terrible, aquí no hace falta un refactor, aquí hace falta eliminar todo y rehacerlo
 public class BracketController {
 
     @Autowired
@@ -65,15 +67,15 @@ public class BracketController {
         Optional<Competicion> competicion = competicionRepository.findByNombre(nombreCompeticion);
         Optional<Categoria> categoria = categoriaRepository.findByNombre(nombreCategoria);
 
-        if(!competicion.isPresent() || !categoria.isPresent()){
-            model.addAttribute("mensaje", "No hay ninguna competición llamada "+ nombreCompeticion +" o categoría llamada " + nombreCategoria + ".");
+        if (!competicion.isPresent() || !categoria.isPresent()) {
+            model.addAttribute("mensaje", "No hay ninguna competición llamada " + nombreCompeticion + " o categoría llamada " + nombreCategoria + ".");
             return "error/404";
         }
 
         Optional<Evento> evento = eventoRepository.findByCategoriaAndCompeticion(categoria.get(), competicion.get());
 
-        if(!evento.isPresent()){
-            model.addAttribute("mensaje", "El evento compuesto por "+ nombreCompeticion +" y " + nombreCategoria + " no existe.");
+        if (!evento.isPresent()) {
+            model.addAttribute("mensaje", "El evento compuesto por " + nombreCompeticion + " y " + nombreCategoria + " no existe.");
         }
 
         model.addAttribute("tamano", evento.get().getCortePlayOffs());
@@ -87,14 +89,14 @@ public class BracketController {
         Clasificado[] semisClasi;
 
 
-        if(evento.get().getCortePlayOffs() == 8){
-            cuartosClasi = iniciarBracket(rankingGeneralController.getRankingGlobal(evento.get(), descalificacionRepository.findAllByEvento(evento.get()), clasificadoRepository.findAllByEvento(evento.get())), descalificacionRepository.findAllByEvento(evento.get()), 8, semis, cuartos);
-            semisClasi = rellenarBracket(semis, 4, evento, Optional.empty(),finales, Arrays.asList(cuartosClasi));
+        if (evento.get().getCortePlayOffs() == 8) {
+            cuartosClasi = iniciarBracket(rankingGeneralController.getRankingGlobal(evento.get(), descalificacionRepository.findAllByEvento(evento.get()), clasificadoRepository.findAllByEvento(evento.get())), descalificacionRepository.findAllByEvento(evento.get()), 8, semis, cuartos, evento);
+            semisClasi = rellenarBracket(semis, 4, evento, Optional.empty(), finales, Arrays.asList(cuartosClasi));
             model.addAttribute("listaCuartos", cuartosClasi);
             model.addAttribute("listaSemis", semisClasi);
             model.addAttribute("listaFinal", rellenarBracket(finales, 2, evento, Optional.empty(), ganador, Arrays.asList(semisClasi)));
-        } else if (evento.get().getCortePlayOffs()  == 4) {
-            semisClasi = iniciarBracket(rankingGeneralController.getRankingGlobal(evento.get(), descalificacionRepository.findAllByEvento(evento.get()), clasificadoRepository.findAllByEvento(evento.get())), descalificacionRepository.findAllByEvento(evento.get()), 4, finales, semis);
+        } else if (evento.get().getCortePlayOffs() == 4) {
+            semisClasi = iniciarBracket(rankingGeneralController.getRankingGlobal(evento.get(), descalificacionRepository.findAllByEvento(evento.get()), clasificadoRepository.findAllByEvento(evento.get())), descalificacionRepository.findAllByEvento(evento.get()), 4, finales, semis, evento);
             model.addAttribute("listaSemis", semisClasi);
             model.addAttribute("listaFinal", rellenarBracket(finales, 2, evento, Optional.empty(), ganador, Arrays.asList(semisClasi)));
         }
@@ -110,15 +112,15 @@ public class BracketController {
         Optional<Temporada> temporada = temporadaRepository.findByNombre(nombreTemporada);
         Optional<Categoria> categoria = categoriaRepository.findByNombre(nombreCategoria);
 
-        if(!temporada.isPresent() || !categoria.isPresent()){
-            model.addAttribute("mensaje", "No hay ninguna temoprada llamada "+ nombreTemporada +" o categoría llamada " + nombreCategoria + ".");
+        if (!temporada.isPresent() || !categoria.isPresent()) {
+            model.addAttribute("mensaje", "No hay ninguna temoprada llamada " + nombreTemporada + " o categoría llamada " + nombreCategoria + ".");
             return "error/404";
         }
 
         Optional<Clasificacion> clasificacion = clasificacionRepository.findByCategoriaAndTemporada(categoria.get(), temporada.get());
 
-        if(!clasificacion.isPresent()){
-            model.addAttribute("mensaje", "La clasificación compuesta por "+ nombreTemporada +" y " + nombreCategoria + " no existe.");
+        if (!clasificacion.isPresent()) {
+            model.addAttribute("mensaje", "La clasificación compuesta por " + nombreTemporada + " y " + nombreCategoria + " no existe.");
         }
 
 
@@ -133,14 +135,14 @@ public class BracketController {
         Clasificado[] semisClasi;
 
 
-        if(clasificacion.get().getTamanoDivisiones() - 4 == 8){
-            cuartosClasi = iniciarBracket(clasificacion.get(), 8, semis, cuartos);
+        if (clasificacion.get().getTamanoDivisiones() - 4 == 8) {
+            cuartosClasi = iniciarBracketTemporada(clasificacion.get(), 8, semis, cuartos);
             semisClasi = rellenarBracket(semis, 4, Optional.empty(), clasificacion, finales, Arrays.asList(cuartosClasi));
             model.addAttribute("listaCuartos", cuartosClasi);
             model.addAttribute("listaSemis", semisClasi);
             model.addAttribute("listaFinal", rellenarBracket(finales, 2, Optional.empty(), clasificacion, ganador, Arrays.asList(semisClasi)));
         } else if (clasificacion.get().getTamanoDivisiones() - 4 == 4) {
-            semisClasi = iniciarBracket(clasificacion.get(), 4, finales, semis);
+            semisClasi = iniciarBracketTemporada(clasificacion.get(), 4, finales, semis);
             model.addAttribute("listaSemis", semisClasi);
             model.addAttribute("listaFinal", rellenarBracket(finales, 2, Optional.empty(), clasificacion, ganador, Arrays.asList(semisClasi)));
         }
@@ -153,7 +155,7 @@ public class BracketController {
     @GetMapping("/bracket/evento/{evento}")
     public String getBracketCompeticion(@PathVariable("evento") String evento) {
 
-        return "fragments/eventos/"+evento;
+        return "fragments/eventos/" + evento;
     }
 
     private Clasificado[] rellenarBracket(List<Clasificado> clasificados, int numClasificados, Optional<Evento> evento, Optional<Clasificacion> clasificacion, List<Clasificado> siguienteRonda, List<Clasificado> rondaAnterior) {
@@ -163,18 +165,22 @@ public class BracketController {
         for (int i = 0; i < numClasificados; i++) {
             int finalI = i;
 
-            clasificados.forEach(c -> c.setPosicion((rondaAnterior.indexOf(rondaAnterior.stream().filter(a -> a.getParticipante().equals(c.getParticipante())).findFirst().get())/2)));
+            clasificados.forEach(c -> c.setPosicion((rondaAnterior.indexOf(rondaAnterior.stream().filter(a -> a.getParticipante().equals(c.getParticipante())).findFirst().get()) / 2)));
             rondas[i] = clasificados.stream().filter(c -> c.getPosicion() == finalI).findFirst().orElse(
                     Clasificado.builder().participante(Participante.builder().nombre(tamano == numClasificados ? puestoEnLugar(finalI, numClasificados) : "-").build()).posicion(i).build());
             int finalI1 = i;
             rondas[i].setVictoria(siguienteRonda.stream().anyMatch(s -> rondas[finalI1].getParticipante().equals(s.getParticipante())));
-            if(evento.isPresent()){
-                rondas[i].setMedalla(AESUtils.getPosicionFinal(clasificadoRepository.getRondasParticipante(rondas[i].getParticipante(), evento.get())));
-            } else {
-                rondas[i].setMedalla(AESUtils.getPosicionFinal(clasificadoRepository.getRondasParticipante(rondas[i].getParticipante(), clasificacion.get())));
-            }
         }
+        setMedallas(evento, clasificacion, rondas);
         return rondas;
+    }
+
+    private void setMedallas(Optional<Evento> evento, Optional<Clasificacion> clasificacion, Clasificado[] rondas) {
+        if (evento.isPresent()) { // Si es competición o temporada
+            Arrays.asList(rondas).forEach(r -> r.setMedalla(AESUtils.getPosicionFinal(clasificadoRepository.getRondasParticipante(r.getParticipante(), evento.get()))));
+        } else {
+            Arrays.asList(rondas).forEach(r -> r.setMedalla(AESUtils.getPosicionFinal(clasificadoRepository.getRondasParticipante(r.getParticipante(), clasificacion.get()))));
+        }
     }
 
     private String puestoEnLugar(int finalI, int numClasificados) {
@@ -193,16 +199,23 @@ public class BracketController {
     }
 
 
-    private Clasificado[] iniciarBracket(Clasificacion clasificacion, int numClasificados, List<Clasificado> siguienteRonda, List<Clasificado> rondaActual)  {
+    private Clasificado[] iniciarBracketTemporada(Clasificacion clasificacion, int numClasificados, List<Clasificado> siguienteRonda, List<Clasificado> rondaActual) {
 
-        TimelinePointDivisiones timelinePoint = TimelinePointDivisiones.getUltimaAcabada(clasificacion.getTemporada());
-        List<DivisionJornada> divisionesJornada = divisionController.getVistaDivision(timelinePoint, Evento.builder().competicion(timelinePoint.getJornada().getCompeticion()).categoria(clasificacion.getCategoria()).build())[1].getDivisiones();
+        TimelinePointDivisiones timelinePoint;
 
-        if(divisionesJornada.isEmpty()){
+        try {
+            timelinePoint = TimelinePointDivisiones.getUltimaAcabada(clasificacion.getTemporada());
+        } catch (SpecialCaseException sce){
             return new Clasificado[0]; //La temporada acaba de empezar
         }
 
-        if(divisionesJornada.get(0).getParticipantes().size() < numClasificados){
+        List<DivisionJornada> divisionesJornada = divisionController.getVistaDivision(timelinePoint, Evento.builder().competicion(timelinePoint.getJornada().getCompeticion()).categoria(clasificacion.getCategoria()).build())[1].getDivisiones();
+
+        if (divisionesJornada.isEmpty()) {
+            return new Clasificado[0]; //La temporada acaba de empezar
+        }
+
+        if (divisionesJornada.get(0).getParticipantes().size() < numClasificados) {
             return new Clasificado[0]; //No hay suficientes participantes para montar los playoffs
         }
 
@@ -211,23 +224,25 @@ public class BracketController {
                         .participante(Participante.builder().nombre(p.getNombre()).build())
                         .victoria(siguienteRonda.stream().anyMatch(s -> s.getParticipante().getNombre().equals(p.getNombre())))
                         .puntuacion(rondaActual.stream().filter(a -> a.getParticipante().getNombre().equals(p.getNombre())).findFirst().orElse(Clasificado.builder().build()).getPuntuacion())
-                .build())
+                        .build())
                 .collect(Collectors.toList())
                 .subList(0, numClasificados);
 
         Clasificado[] clasificadosEnOrden = new Clasificado[numClasificados];
 
-       for(int i = 0; i < numClasificados; i++){
-           clasificadosEnOrden[numClasificados == 8 ? ordenCuartos.get(i) : ordenSemifinales.get(i)] = clasificados.get(i);
+        for (int i = 0; i < numClasificados; i++) {
+            clasificadosEnOrden[numClasificados == 8 ? ordenCuartos.get(i) : ordenSemifinales.get(i)] = clasificados.get(i);
+        }
 
-       }
+        setMedallas(Optional.empty(), Optional.of(clasificacion), clasificadosEnOrden);
 
-       return clasificadosEnOrden;
+
+        return clasificadosEnOrden;
     }
 
-    private Clasificado[] iniciarBracket(List<Posicion> rankingCategoria, List<Descalificacion> descalificados, int numClasificados, List<Clasificado> siguienteRonda, List<Clasificado> rondaActual)  {
+    private Clasificado[] iniciarBracket(List<Posicion> rankingCategoria, List<Descalificacion> descalificados, int numClasificados, List<Clasificado> siguienteRonda, List<Clasificado> rondaActual, Optional<Evento> evento) {
 
-        List<Clasificado>  clasificados = rankingCategoria.stream().filter(p -> descalificados.stream()
+        List<Clasificado> clasificados = rankingCategoria.stream().filter(p -> descalificados.stream()
                 .noneMatch(d -> p.getNombreParticipante().equals(d.getParticipante().getNombre())))
                 .map(p -> Clasificado.builder()
                         .participante(Participante.builder().nombre(p.getNombreParticipante()).build())
@@ -239,10 +254,11 @@ public class BracketController {
 
         Clasificado[] clasificadosEnOrden = new Clasificado[numClasificados];
 
-        for(int i = 0; i < numClasificados; i++){
+        for (int i = 0; i < numClasificados; i++) {
             clasificadosEnOrden[numClasificados == 8 ? ordenCuartos.get(i) : ordenSemifinales.get(i)] = clasificados.get(i);
-
         }
+        setMedallas(evento, Optional.empty(), clasificadosEnOrden);
+
 
         return clasificadosEnOrden;
     }

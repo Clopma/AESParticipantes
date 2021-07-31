@@ -89,6 +89,8 @@ table.centerCols tbody.alto td {
 
 
 .whitePanel.top {
+    padding-top: 0;
+    padding-bottom: 5px;
     display: flex;
     align-items: center;
     border-top-right-radius: 0px;
@@ -481,6 +483,10 @@ h5 {
     width: 5em !important;
     text-align: center;
 }
+.centesimas{
+    width: 7em !important;
+}
+
 .texto_largo h1 {
     padding-bottom: 10px;
     padding-top: 40px;

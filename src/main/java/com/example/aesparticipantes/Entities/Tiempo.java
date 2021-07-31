@@ -49,6 +49,16 @@ public class Tiempo implements Comparable {
     @NotNull
     private double tiempo5;
 
+    private Integer penalizacionTiempo1;
+
+    private Integer penalizacionTiempo2;
+
+    private Integer penalizacionTiempo3;
+
+    private Integer penalizacionTiempo4;
+
+    private Integer penalizacionTiempo5;
+
     private String solucion;
 
     @Column(length = 2000)
@@ -115,22 +125,22 @@ public class Tiempo implements Comparable {
         single = singleMediaYpeor[0];
         media = singleMediaYpeor[1];
 
-        tiempo1Str = tiempo1 == 0 ? AESUtils.DNF : formatTime(this.tiempo1, categoria);
+        tiempo1Str = tiempo1 == 0 ? AESUtils.DNF : formatTime(this.tiempo1, this.penalizacionTiempo1, categoria);
 
         if (categoria.getNumTiempos() > 1) {
 
-            tiempo2Str = tiempo2 == 0 ? AESUtils.DNF : formatTime(tiempo2, categoria);
-            tiempo3Str = tiempo3 == 0 ? AESUtils.DNF : formatTime(tiempo3, categoria);
+            tiempo2Str = tiempo2 == 0 ? AESUtils.DNF : formatTime(tiempo2, this.penalizacionTiempo2, categoria);
+            tiempo3Str = tiempo3 == 0 ? AESUtils.DNF : formatTime(tiempo3, this.penalizacionTiempo3, categoria);
         }
 
         if (categoria.getNumTiempos() > 3) {
 
-            tiempo4Str = tiempo4 == 0 ? AESUtils.DNF : formatTime(tiempo4, categoria);
-            tiempo5Str = tiempo5 == 0 ? AESUtils.DNF : formatTime(tiempo5, categoria);
+            tiempo4Str = tiempo4 == 0 ? AESUtils.DNF : formatTime(tiempo4, this.penalizacionTiempo4, categoria);
+            tiempo5Str = tiempo5 == 0 ? AESUtils.DNF : formatTime(tiempo5, this.penalizacionTiempo5, categoria);
         }
 
-        singleStr = single == 0 ? AESUtils.DNF : formatTime(single, categoria);
-        mediaStr = media == 0 ? AESUtils.DNF : formatTime(media, categoria);
+        singleStr = single == 0 ? AESUtils.DNF : formatTime(single, null, categoria);
+        mediaStr = media == 0 ? AESUtils.DNF : formatTime(media, null, categoria);
 
         //Si la media no es un DNF
         if (media > 0 && categoria.getNumTiempos() == 5) {

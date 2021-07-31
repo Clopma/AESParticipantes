@@ -6,6 +6,7 @@ import com.example.aesparticipantes.Models.PosicionTemporada;
 import com.example.aesparticipantes.Models.TimelinePointDivisiones;
 import com.example.aesparticipantes.Repositories.*;
 import com.example.aesparticipantes.Seguridad.UserData;
+import com.example.aesparticipantes.Utils.SpecialCaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -97,9 +98,15 @@ public class ParticipanteController {
     public Map<String, List<PosicionTemporada>> getPosicionesEnTemporadas(Participante participante) {
         return participante.getTemporadas(tiempoRepository).entrySet().stream()
                 .collect(Collectors.toMap(e -> e.getKey().getNombre(), e -> {
-                    TimelinePointDivisiones timelineActualTemporadaActual = TimelinePointDivisiones.getUltimaAcabada(e.getKey());
-                    return e.getValue().stream().filter(c -> timelineActualTemporadaActual.getTemporada().getClasificaciones().stream().anyMatch(cl -> cl.getCategoria().equals(c))/*001-C*/).map(c -> {
-                                int[] divisionYPosicion = timelineActualTemporadaActual.getDivisionYPosicionParticipante(participante, c, divisionController);
+                    TimelinePointDivisiones timelineActualTemporadaActual = null;
+                    try {
+                        timelineActualTemporadaActual = TimelinePointDivisiones.getUltimaAcabada(e.getKey());
+                    } catch (SpecialCaseException ex) {
+                        return new ArrayList<>();
+                    }
+                    TimelinePointDivisiones finalTimelineActualTemporadaActual = timelineActualTemporadaActual;
+                    return e.getValue().stream().filter(c -> finalTimelineActualTemporadaActual.getTemporada().getClasificaciones().stream().anyMatch(cl -> cl.getCategoria().equals(c))/*001-C*/).map(c -> {
+                                int[] divisionYPosicion = finalTimelineActualTemporadaActual.getDivisionYPosicionParticipante(participante, c, divisionController);
                                 return PosicionTemporada.builder()
                                         .categoria(c.getNombre())
                                         .division(divisionYPosicion[0])

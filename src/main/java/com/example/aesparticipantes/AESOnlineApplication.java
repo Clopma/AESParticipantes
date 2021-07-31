@@ -10,7 +10,6 @@ import org.springframework.cache.annotation.EnableCaching;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.IOException;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @EnableCaching
@@ -40,7 +39,7 @@ public class AESOnlineApplication {
     }
 
     @PostConstruct
-    public void test() throws IOException {
+    public void test() {
 
 
         try {
@@ -53,8 +52,7 @@ public class AESOnlineApplication {
                 }
             }
         } catch (Exception e) {
-
-//Por si se me olvida comentarlo al subir a live
+            // Live
         }
 
     }

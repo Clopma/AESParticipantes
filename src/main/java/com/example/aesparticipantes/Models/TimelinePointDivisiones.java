@@ -2,6 +2,7 @@ package com.example.aesparticipantes.Models;
 
 import com.example.aesparticipantes.Controllers.DivisionController;
 import com.example.aesparticipantes.Entities.*;
+import com.example.aesparticipantes.Utils.SpecialCaseException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -58,11 +59,11 @@ public class TimelinePointDivisiones {
         return new TimelinePointDivisiones(temporada, competicion.getPrimeraJornada());
     }
 
-    public static TimelinePointDivisiones getUltimaAcabada(Temporada temporada){
+    public static TimelinePointDivisiones getUltimaAcabada(Temporada temporada) throws SpecialCaseException {
         List<TimelinePointDivisiones> acabadas = getTimelineCompleta(temporada).stream().filter(t -> t.getJornada().isAcabada()).collect(Collectors.toList());
         return acabadas.stream().filter(t -> t.getJornada().isActiva()).findAny()
                 .orElse(acabadas.stream().reduce((acc, val) -> acc.getJornada().getFechaInicio().after(val.getJornada().getFechaInicio()) ? acc : val)
-                        .orElseThrow(() -> new RuntimeException("Error: No se ha encontrado el último timelinePoint de la temporada " + temporada.getNombre() + ". Esto no debería ocurrir.")));
+                        .orElseThrow(() -> new SpecialCaseException("Error: No se ha encontrado el último timelinePoint de la temporada " + temporada.getNombre() + ", probablemente porque la temporada acabe de empezar.")));
     }
 
     public static List<TimelinePointDivisiones> getTimelineCompleta(Temporada temporada) {

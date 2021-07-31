@@ -63,7 +63,7 @@ public class AESUtils {
         return new double[]{mejorTiempo, (double) Math.round(media * 100)/100, peorTiempo};
     }
 
-    public static String formatTime(double time, Categoria categoria) {
+    public static String formatTime(double time, Integer penalizacion, Categoria categoria) {
 
         try {
             if(categoria.getNombre().equals("FMC")){
@@ -77,10 +77,11 @@ public class AESUtils {
             if (fractional.length() == 1) {
                 fractional += "0";
             }
+            String penalizacionStr = penalizacion == null ? "" : (new String(new char[penalizacion/2]).replace("\0", "+"));
             if (mins > 0) {
-                return String.format("%01d:%02d.", mins, secs) + fractional;
+                return String.format("%01d:%02d.", mins, secs) + fractional + penalizacionStr;
             } else {
-                return String.format("%01d.", secs) + fractional;
+                return String.format("%01d.", secs) + fractional + penalizacionStr;
             }
         } catch (Exception e) {
             return "CCA";

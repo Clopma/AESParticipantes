@@ -93,12 +93,12 @@
 <div class="vertical-flex-wrapper">
     <div class="mensajeSuperior" style="margin-left: auto; margin-right: auto">
         <div th:if="${'N'.equals(tipoUsuario)}" class="whitePanel top">
-            <div class="bouncyContainer backward" style="width: 120px; height: 120px">
+            <div class="bouncyContainer backward" style="width: 100px; height: 100px">
                 <a class="bouncyContainer">
                     <img onclick="irAWCA()" class="bouncyButton" src="/img/WCAlogo.png"/>
                 </a>
             </div>
-            <h1><a class="clicker" onclick="irAWCA()">Iniciar sesión con WCA</a></h1>
+            <h2><a class="clicker" onclick="irAWCA()">Iniciar sesión con WCA</a></h2>
         </div>
         <div th:if="${'C'.equals(tipoUsuario)}" class="whitePanel top">
             <h3>Bienvenido, <a th:href="@{|/participante/${nombreParticipante}|}" th:text="${nombreParticipante}" style="font-weight: bold;"> desconocido (reemplazado) </a>.</h3>
@@ -135,14 +135,14 @@
     <div class="login-content">
 
         <div class="whitePanel left" style="margin-left: 0px;">
-            <img src="/img/copas/copa.png" class="sombra" width="150px"/>
+            <img src="/img/copas/copa.png" class="sombra" width="120px"/>
             <h2>COMPETICIONES</h2>
 
-            <p style="font-size: large">Haz click en una competición para ver toda la información:</p>
+            <p style="font-size: large; margin-bottom: 0">Estas son las competiciones especiales que no pertenecen a ninguna división. Haz click en una copa para ver toda la información:</p>
 
             <div style="display: flex; justify-content: space-around">
                 <div>
-                    <div class="bouncyContainer podio" style="width: 150px; height: 150px; margin: auto">
+                    <div class="bouncyContainer podio" style="width: 130px; height: 130px; margin: auto">
                         <a href="/competicion/Nacionline%202020" class="bouncyContainer">
                             <img class="bouncyButton podio" src="/img/copas/copa_Nacionline%202020.png"/>
                         </a>
@@ -150,25 +150,26 @@
                     <h4>Nacionline 2020</h4>
                 </div>
                 <div>
-                    <div class="bouncyContainer podio" style="width: 150px; height: 150px; margin: auto">
+                    <div class="bouncyContainer podio" style="width: 130px; height: 130px; margin: auto">
                         <a href="/competicion/Navidades%20Online" class="bouncyContainer">
                             <img class="bouncyButton podio" src="/img/copas/copa_Navidades%20Online.png"/>
                         </a>
                     </div>
                     <h4>Navidades Online</h4>
                 </div>
-            </div>
-            <div style="display: flex; justify-content: space-around">
                 <div>
-                    <div class="bouncyContainer podio" style="width: 150px; height: 150px; margin: auto">
+                    <div class="bouncyContainer podio" style="width: 130px; height: 130px; margin: auto">
                         <a href="/competicion/San%20Valentín%20Online" class="bouncyContainer">
                             <img class="bouncyButton podio" src="/img/copas/copa_San%20Valentín%20Online.png"/>
                         </a>
                     </div>
                     <h4>San Valentín Online</h4>
                 </div>
+            </div>
+            <div style="display: flex; justify-content: space-around">
+
                 <div>
-                    <div class="bouncyContainer podio" style="width: 150px; height: 150px; margin: auto">
+                    <div class="bouncyContainer podio" style="width: 130px; height: 130px; margin: auto">
                         <a href="/competicion/Pi%20Online" class="bouncyContainer">
                             <img class="bouncyButton podio" src="/img/copas/copa_Pi%20Online.png"/>
                         </a>
@@ -176,14 +177,27 @@
                     <h4>Pi Online</h4>
                 </div>
                 <div>
-                    <div class="bouncyContainer podio" style="width: 150px; height: 150px; margin: auto">
+                    <div class="bouncyContainer podio" style="width: 130px; height: 130px; margin: auto">
                         <a href="/competicion/Pascua%20Online" class="bouncyContainer">
                             <img class="bouncyButton podio" src="/img/copas/copa_Pascua%20Online.png"/>
                         </a>
                     </div>
                     <h4>Pascua Online</h4>
                 </div>
+                <div>
+                    <div class="bouncyContainer podio" style="width: 130px; height: 130px; margin: auto">
+                        <a href="/competicion/Chiste%20Online" class="bouncyContainer">
+                            <img class="bouncyButton podio" src="/img/copas/copa_Chiste%20Online.png"/>
+                        </a>
+                    </div>
+                    <h4>Chiste Online</h4>
+                </div>
             </div>
+
+            <hr></hr>
+            <h3>COMPETICIONES DE TEMPORADA:</h3>
+            Puedes encontrar el resto de competiciones (de las temporadas completadas) en las páginas de sus respectivas temporadas:<br />
+            <a style="font-size: large" href="/temporada/Primavera%202021">PRIMAVERA ONLINE</a>
 
         </div>
         <div class="anchoEnMovil" style="display: flex; flex-direction: column; height: 100%; max-width: 50%; justify-content: space-around; padding-bottom: 4em">
@@ -207,48 +221,7 @@
                     </div>
                 </div>
                 <h4>Participando en los campeonatos mensuales entrarás en las <b>divisiones de la Liga</b>, ¡los primeros clasificados de la primera división se clasificarán a los playoffs!</h4>
-                <h4>Actualmente se celebra la <a href="/temporada/Primavera%202021">Temporada de Primavera 2021</a>, que consta de los siguientes campeonatos:</h4>
-                <div style="display: flex; justify-content: center; background-image: url('/img/primavera.png'); background-position: center;
-                background-size: cover; border-radius: 20px; margin-top: 10px; margin-bottom: 10px; align-items: center; padding: 10px">
-                    <div class="copaInicio">
-                        <div>
-                            <div class="bouncyContainer podio">
-                                <a href="/competicion/Enero%20Online" class="bouncyContainer">
-                                    <img class="bouncyButton podio" src="/img/copas/copa_Enero%20Online.png"/>
-                                </a>
-                            </div>
-                        </div>
-                        <h4>Enero Online</h4>
-                    </div>
-                    <img src="/img/forwardbutton.png" style="width: 60px; height: 60px; margin: auto 0;"/>
-                    <div class="copaInicio">
-                        <div class="bouncyContainer podio">
-                            <a href="/competicion/Febrero%20Online" class="bouncyContainer">
-                                <img class="bouncyButton podio" src="/img/copas/copa_Febrero%20Online.png"/>
-                            </a>
-                        </div>
-                        <h4>Febrero Online</h4>
-                    </div>
-                    <img src="/img/forwardbutton.png" style="width: 60px; height: 60px; margin: auto 0;"/>
-                    <div class="copaInicio">
-                        <div class="bouncyContainer podio">
-                            <a href="/competicion/Primavera%20Online" class="bouncyContainer">
-                                <img class="bouncyButton podio" src="/img/copas/copa_Primavera%20Online.png"/>
-                            </a>
-                        </div>
-                        <h4>Primavera Online</h4>
-                    </div>
-                    <img src="/img/forwardbutton.png" style="width: 60px; height: 60px; margin: auto 0;"/>
-                    <div class="copaInicio">
-                        <div class="bouncyContainer podio">
-                            <a href="https://www.twitch.tv/aespeedcubing" class="bouncyContainer">
-                                <img class="bouncyButton podio" src="/img/twitch-logo.png"/>
-                            </a>
-                        </div>
-                        <h4>Playoffs Primavera</h4>
-                    </div>
-                </div>
-                <h4>Cuando acabe esta temporada, ¡reiniciamos las divisiones y comenzamos nueva temporada!, ya puedes inscribirte a la <a href="/temporada/Verano%202021">Temporada de Verano 2021</a>, que constará de los siguientes campeonatos:</h4>
+                <h4>Actualmente se celebra la <a href="/temporada/Verano%202021">Temporada de Verano 2021</a>:</h4>
                 <div style="display: flex; justify-content: center; background-image: url('/img/verano.png'); background-position: center;
                 background-size: cover; border-radius: 20px; margin-top: 10px; margin-bottom: 10px; align-items: center; padding: 10px">
                     <div class="copaInicio">
@@ -289,19 +262,52 @@
                         <h4>Playoffs Verano</h4>
                     </div>
                 </div>
+                <h4>Cuando acabe esta temporada, damos paso a tres campeonatos independientes entre ellos:</h4>
+                <div style="display: flex; justify-content: center; background-image: url('/img/otono.png'); background-position: center;
+                /*background-size: cover;*/ border-radius: 20px; margin-top: 10px; margin-bottom: 10px; align-items: center; padding: 10px">
+                    <div class="copaInicio" style="margin: 0 30px 0 35px">
+                        <div class="bouncyContainer podio">
+                            <div>
+                                <a href="/competicion/Julio%20Online" class="bouncyContainer">
+                                    <img class="bouncyButton podio" src="/img/copas/copa_Julio%20Online.png"/>
+                                </a>
+                            </div>
+                        </div>
+                        <h4>Julio Online</h4>
+                    </div>
+                    <div class="copaInicio" style="margin: 0 30px 0 35px">
+                        <div class="bouncyContainer podio">
+                            <a href="/competicion/Agosto%20Online" class="bouncyContainer">
+                                <img class="bouncyButton podio" src="/img/copas/copa_Agosto%20Online.png"/>
+                            </a>
+                        </div>
+                        <h4>Agosto Online</h4>
+                    </div>
+                    <div class="copaInicio" style="margin: 0 30px 0 35px">
+                        <div class="bouncyContainer podio">
+                            <a href="/competicion/Otoño%20Online" class="bouncyContainer">
+                                <img class="bouncyButton podio" src="/img/copas/copa_Otoño%20Online.png"/>
+                            </a>
+                        </div>
+                        <h4>Otoño Online</h4>
+                    </div>
+                </div>
             </div>
         </div>
         <div style="display: flex; flex-direction: column">
-            <div class="whitePanel right" style="margin-right: 0px">
+            <div th:if="${temporadaActual != null}" class="whitePanel right" style="margin-right: 0px">
                 <div class="bouncyContainer podio" style="width: 175px; height: 175px; margin: auto">
-                    <a th:href="${'/temporada/'+ temporadaActual + '/competicion/'+ jornadaActual.getCompeticion().getNombre() +'/jornada/'+ jornadaActual.getNumeroJornada() +'/categoria/3x3x3'}" class="bouncyContainer">
+                    <a th:href="${'/temporada/'+ temporadaActual + '/competicion/'+ jornadaActual.getCompeticion().getNombre() +'/jornada/'+ jornadaActual.getNumeroJornada() +'/categoria/3x3x3'}"
+                       class="bouncyContainer">
                         <img class="bouncyButton podio" src="/img/corona.png"/>
                     </a>
                 </div>
-                <a th:href="${'/temporada/'+ temporadaActual + '/competicion/'+ jornadaActual.getCompeticion().getNombre() +'/jornada/'+ jornadaActual.getNumeroJornada() +'/categoria/3x3x3'}" class="bouncyContainer"><h3>DIVISIONES</h3></a>
-            <p style="font-size: large">Echa un ojo al estado actual de las divisiones en la Temporada de Primavera.</p>
+                <a th:href="${'/temporada/'+ temporadaActual + '/competicion/'+ jornadaActual.getCompeticion().getNombre() +'/jornada/'+ jornadaActual.getNumeroJornada() +'/categoria/3x3x3'}"
+                   class="bouncyContainer"><h3>DIVISIONES</h3></a>
+                <p style="font-size: large">Echa un ojo al estado actual de las divisiones en la Temporada de
+                    Verano.</p>
 
-        </div>
+            </div>
             <div class="whitePanel right" style="margin-right: 0px">
                 <img src="/img/userIcon.png" width="125px;" class="sombra"/>
                 <h3>PARTICIPANTES</h3>
@@ -329,7 +335,7 @@
     </div>
     <footer  th:replace="fragments/footer :: creditFooter"/>
     <footer class = "credit desaparecerHorizontal" style="bottom: 0; right: 10px;">
-        <span> v1.1.13 <a href="/cambios">Ver cambios</a>
+        <span> v1.1.18 <a href="/cambios">Ver cambios</a>
         </span>
     </footer>
 </div>

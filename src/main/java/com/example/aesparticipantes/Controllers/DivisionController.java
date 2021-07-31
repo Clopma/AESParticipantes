@@ -219,7 +219,7 @@ public class DivisionController {
             }
         }
 
-        return new DivisionesEnJornada[]{fase0, fase1};
+        return new DivisionesEnJornada[]{fase0, fase1.clone()};
     }
 
     private int getTamanyoDivision(Temporada temporada, Categoria categoria, int numDivision /* base 0 */) {

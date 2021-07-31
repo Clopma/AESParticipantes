@@ -9,7 +9,7 @@
 
 <body class="cubosbg">
 <div class="bouncyContainer back">
-    <a th:href="'/competicion/' + ${nombre}" class="bouncyContainer">
+    <a th:href="${isCompeticion ? '/competicion/' : '/temporada/'} + ${nombre}" class="bouncyContainer">
         <img class="bouncyButton" src="/img/backbutton.png"/>
     </a> <div class="tagNav"><h2 class="whitePanel" style="font-weight: bold; padding: 0 15px" th:text="${nombre}"/></div>
 </div>

@@ -176,6 +176,11 @@ public class ParticiparController {
                                                 @RequestHeader(value = "tiempo3", required = false) String tiempo3op,
                                                 @RequestHeader(value = "tiempo4", required = false) String tiempo4op,
                                                 @RequestHeader(value = "tiempo5", required = false) String tiempo5op,
+                                                @RequestHeader(value = "penalizacionTiempo1", required = false) String penalizacionTiempo1,
+                                                @RequestHeader(value = "penalizacionTiempo2", required = false) String penalizacionTiempo2,
+                                                @RequestHeader(value = "penalizacionTiempo3", required = false) String penalizacionTiempo3,
+                                                @RequestHeader(value = "penalizacionTiempo4", required = false) String penalizacionTiempo4,
+                                                @RequestHeader(value = "penalizacionTiempo5", required = false) String penalizacionTiempo5,
                                                 @RequestHeader(value = "solucion", required = false) String solucion,
                                                 @RequestHeader(value = "explicacion", required = false) String explicacion, Principal principal) {
 
@@ -217,7 +222,7 @@ public class ParticiparController {
         Optional<Tiempo> posibleTiempo = tiempoRepository.getByParticipanteAndCategoriaAndJornada(participanteLogeado.get(), categoria.get(), jornadaActiva.get());
 
         if(!posibleTiempo.isPresent()){
-            return new ResponseEntity<>("Tiempo de inicio no encontrado. " + FRASE_HACKER, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Tiempo no encontrado. Esto probablemente se deba a que la jornada ha finalizado mientras estabas compitiendo.", HttpStatus.FORBIDDEN);
         }
 
         Tiempo tiempo = posibleTiempo.get();
@@ -231,6 +236,11 @@ public class ParticiparController {
         tiempo.setTiempo3(tiempo3.doubleValue());
         tiempo.setTiempo4(tiempo4.doubleValue());
         tiempo.setTiempo5(tiempo5.doubleValue());
+        tiempo.setPenalizacionTiempo1(penalizacionTiempo1 == null || penalizacionTiempo1.equals("null") ? null : Integer.parseInt(penalizacionTiempo1));
+        tiempo.setPenalizacionTiempo2(penalizacionTiempo2 == null || penalizacionTiempo2.equals("null") ? null : Integer.parseInt(penalizacionTiempo2));
+        tiempo.setPenalizacionTiempo3(penalizacionTiempo3 == null || penalizacionTiempo3.equals("null") ? null : Integer.parseInt(penalizacionTiempo3));
+        tiempo.setPenalizacionTiempo4(penalizacionTiempo4 == null || penalizacionTiempo4.equals("null") ? null : Integer.parseInt(penalizacionTiempo4));
+        tiempo.setPenalizacionTiempo5(penalizacionTiempo5 == null || penalizacionTiempo5.equals("null") ? null : Integer.parseInt(penalizacionTiempo5));
         tiempo.setExplicacion(explicacion == null ? null : new String(Base64.getDecoder().decode(explicacion.getBytes()), StandardCharsets.UTF_8));
         tiempo.setSolucion(solucion == null ? null : new String(Base64.getDecoder().decode(solucion.getBytes()), StandardCharsets.UTF_8));
 

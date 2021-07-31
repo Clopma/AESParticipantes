@@ -78,35 +78,41 @@
     </div>
 
     <div th:if="${!temporadas.isEmpty()}" class="whitePanel" style="margin-top: 50px;">
-        <h1 style="text-align: center; padding-bottom: 30px">
-            <div th:each="temporada : ${temporadas}">
-                <span>Temporada de </span><a th:href="${'/temporada/'+ temporada.getKey()}"><span th:text="${temporada.getKey()}"/></a>
-            <table class="table dataTable centerCols" style="font-size: 20px;">
-                <tbody class="alto">
-                <tr>
-                    <td th:each="posicion : ${temporada.getValue()}" style="border-bottom: 0">
-                       <span th:class="'cubing-icon event-' + ${posicion.getCategoria()}"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td th:each="posicion : ${temporada.getValue()}" style="border-bottom: 0">
+
+        <div th:each="temporada : ${temporadas}">
+            <h1 style="text-align: center; padding-bottom: 30px">
+                <span>Temporada de </span><a th:href="${'/temporada/'+ temporada.getKey()}"><span
+                    th:text="${temporada.getKey()}"/></a>
+                <table th:if="${!temporada.getValue().isEmpty()}" class="table dataTable centerCols" style="font-size: 20px;">
+                    <tbody class="alto">
+                    <tr>
+                        <td th:each="posicion : ${temporada.getValue()}" style="border-bottom: 0">
+                            <span th:class="'cubing-icon event-' + ${posicion.getCategoria()}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td th:each="posicion : ${temporada.getValue()}" style="border-bottom: 0">
                         <span th:if="${posicion.getPosicionEnDivision()} > 0">
-                            <img th:src="'/img/divisiones/' + ${posicion.getDivision()} + 'division.png'" style="width: 75px; height: 75px; margin-bottom: 15px"/>
-                            <br />
+                            <img th:src="'/img/divisiones/' + ${posicion.getDivision()} + 'division.png'"
+                                 style="width: 75px; height: 75px; margin-bottom: 15px"/>
+                            <br/>
                             <h3>DIVISIÓN</h3>
                             <span th:text="'(' + ${posicion.getPosicionEnDivision()} + 'ª posición)'"/>
                         </span>
-                        <span th:if="${posicion.getPosicionEnDivision()} == 0">
+                            <span th:if="${posicion.getPosicionEnDivision()} == 0">
                             <h4>PENDIENTE DE CLASIFICACIÓN</h4>
                             <h5>Ha participado tan solo en una jornada que aun no ha finalizado</h5>
                         </span>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </h1>
+            <div th:if="${temporada.getValue().isEmpty()}" style="padding-bottom: 20px">El participante ha participado en esta temporada, pero a falta de los primeros
+                resultados no está en ninguna división hasta el momento.
             </div>
-        </h1>
+        </div>
     </div>
 
 
@@ -309,7 +315,7 @@
                     <h4>Tu correo</h4>
                         <input th:value="${participante.getEmail()}" id="email" class="form-control" type="email" placeholder="ejemplo@gmail.com" style="width: auto; margin: auto; text-align: center;"></input>
                     <br/>
-                    <h5>¿Cuándo te gustaría ser notificado?</h5>
+                    <h4>¿Cuándo te gustaría ser notificado?</h4>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" th:checked="${(participante.getAnuncioNuevaCompeticion() == null || participante.getAnuncioNuevaCompeticion()) ? true : false}" id="anuncioNuevaCompeticion"/>
                             <label class="form-check-label" for="anuncioNuevaCompeticion">

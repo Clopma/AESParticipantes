@@ -35,6 +35,11 @@ public class Mezcla {
     @Column(length = 1000)
     private String texto;
 
+    public String getTexto(){
+        if(!categoria.getNombre().equals("Megaminx")) return texto;
+        return texto.replaceAll("((?:\\S+\\s){10}\\S+)\\s", "$1<br />");
+    }
+
     @NotNull
 //    @Column(unique = true) //TODO: Testing las repite :/
     private String imagenUrl;

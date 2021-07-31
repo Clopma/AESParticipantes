@@ -8,6 +8,7 @@ import com.example.aesparticipantes.Repositories.ParticipanteRepository;
 import com.example.aesparticipantes.Repositories.TemporadaRepository;
 import com.example.aesparticipantes.Seguridad.UserData;
 import com.example.aesparticipantes.Utils.AESUtils;
+import com.example.aesparticipantes.Utils.SpecialCaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
@@ -63,13 +64,17 @@ public class InicioController {
             }
         } else {
             model.addAttribute("tipoUsuario", AESUtils.TiposUsuarios.N.name());
-
         }
 
-        TimelinePointDivisiones timeline = TimelinePointDivisiones.getUltimaAcabada(temporadaRepository.findByNombre("Primavera 2021").get()); //TODO: Hacer , cachear, usar modelos y no entidades...
+        try {
+            TimelinePointDivisiones timeline;
+            timeline = TimelinePointDivisiones.getUltimaAcabada(temporadaRepository.findByNombre("Verano 2021").get());//TODO: Hacer, cachear, usar modelos y no entidades...
+            model.addAttribute("temporadaActual", timeline.getTemporada());
+            model.addAttribute("jornadaActual", timeline.getJornada());
+        } catch (SpecialCaseException e) {
+           // Los parámetros del model serán null y se tratarán desde el template
+        }
 
-        model.addAttribute("temporadaActual", timeline.getTemporada());
-        model.addAttribute("jornadaActual", timeline.getJornada());
         model.addAttribute("participantes", self.getParticipantes()); //TODO: Ponerte a ti mismo primero quizás...
         model.addAttribute("categorias", categoriaRepository.findAllByOrderByOrden());
         model.addAttribute("numJornadas", 5);
